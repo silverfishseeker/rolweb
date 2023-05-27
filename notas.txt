@@ -1,0 +1,22 @@
+bin/rails server
+    start server
+
+bin/rails generate controller {controlador1} {controlador2} {...} {--skip-routes}
+    generar controladores para los modelos o rutas, no sé ej:
+        bin/rails generate controller Articles index --skip-routes
+        bin/rails generate controller Comments
+
+
+bin/rails generate model {nombre modelo} [{símbolo1}:{tipo1}  {símbolo2}:{tipo2} {...}]
+    generar modelo {nombre modelo} (como clase y para luego tabla en DB)
+    el tipo :references es especial, se usa para una asociación de uno a muchos. (lo ponemos en el muchos)
+
+bin/rails db:migrate
+    meter modelos en la DB
+
+bin/rails console
+    meterse en la consola de rails, para interactuar con modelos
+
+
+bin/rails generate migration AddStatusToArticles status:string
+bin/rails generate migration AddStatusToComments status:string
