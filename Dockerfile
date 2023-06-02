@@ -18,4 +18,5 @@ EXPOSE 3000
 
 # Define el comando para iniciar el servidor de Rails
 # Migrar base de datos e iniciar rails
-CMD bin/rails db:migrate RAILS_ENV=development && bin/rails server -b 0.0.0.0
+# Puto tmp
+CMD rm -rf /app/tmp/* && bin/rails db:migrate RAILS_ENV=development && bin/rails server -b 0.0.0.0
