@@ -15,9 +15,9 @@ class ClasesController < ApplicationController
       @clase = Clase.new(clase_params)
   
       if @clase.save
-        redirect_to @clase
+        redirect_to @clase  
       else
-        render :new, status: :unprocessable_entity
+        render :new
       end
     end
 
@@ -31,7 +31,7 @@ class ClasesController < ApplicationController
       if @clase.update(clase_params)
         redirect_to @clase
       else
-        render :edit, status: :unprocessable_entity
+        render :edit
       end
     end
   
@@ -44,6 +44,6 @@ class ClasesController < ApplicationController
 
   private
     def clase_params
-      params.require(:clase).permit(:efecto, :descripcion, :nombre, :nivel)
+      params.require(:clase).permit(:efecto, :descripcion, :nombre, :nivel, :image)
     end
 end

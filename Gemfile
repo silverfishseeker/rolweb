@@ -70,3 +70,6 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+# para las imágenes
+gem 'carrierwave', '~> 1.0'

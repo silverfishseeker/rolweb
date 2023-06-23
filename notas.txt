@@ -26,6 +26,9 @@ bin/rails generate model {nombre modelo} [{símbolo1}:{tipo1}  {símbolo2}:{tipo
         :time
         :timestamp
 
+bin/rails generate migration AddNombreDeCampoToNombreDeModelo nombre_de_campo:data_type
+bin/rails generate migration RemoveNombreDeColumnaFromNombreDeModelo nombre_de_columna:data_type
+
 
 bin/rails db:migrate
     meter modelos en la DB

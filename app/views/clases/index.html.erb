@@ -3,7 +3,7 @@
 
 
 <% @clases.each do |clase| %>
-    <%= render "mini", clase: clase %>
+    <%= render "clase", clase: clase %>
 <% end %>
 
 <%= link_to "crear clase", new_clase_path %>

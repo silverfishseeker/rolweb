@@ -3,4 +3,5 @@
 
     <p><%= clase.efecto %></p>
     <p><%= clase.descripcion %></p>
+    <%= image_tag(clase.image.url, alt: 'Imagen') if clase.image? %>
 </div>
