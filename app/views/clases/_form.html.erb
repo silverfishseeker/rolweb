@@ -1,0 +1,25 @@
+<%= form_with model: clase do |form| %>
+  <div>
+    <%= form.label :nombre %><br>
+    <%= form.text_field :nombre %>
+  </div>
+
+  <div>
+    <%= form.label :nivel %><br>
+    <%= form.number_field :nivel, in: 0..100 %><br>
+  </div>
+
+  <div>
+    <%= form.label :efecto %><br>
+    <%= form.text_area :efecto %><br>
+  </div>
+  
+  <div>
+    <%= form.label :descripcion %><br>
+    <%= form.text_area :descripcion %><br>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

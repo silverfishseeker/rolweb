@@ -1,0 +1,13 @@
+<h1>Clases</h1>
+
+
+
+<ul>
+  <% @clases.each do |clase| %>
+    <li>
+      <%= link_to clase.nombre, clase %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "crear clase", new_clase_path %>

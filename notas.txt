@@ -1,3 +1,5 @@
+docker exec -it rolweb-web-1 bash
+
 bin/rails server
     start server
 
@@ -10,6 +12,20 @@ bin/rails generate controller {controlador1} {controlador2} {...} {--skip-routes
 bin/rails generate model {nombre modelo} [{símbolo1}:{tipo1}  {símbolo2}:{tipo2} {...}]
     generar modelo {nombre modelo} (como clase y para luego tabla en DB)
     el tipo :references es especial, se usa para una asociación de uno a muchos. (lo ponemos en el muchos)
+    tipos:
+        :binary
+        :boolean
+        :date
+        :datetime
+        :decimal
+        :float
+        :integer
+        :primary_key
+        :string
+        :text
+        :time
+        :timestamp
+
 
 bin/rails db:migrate
     meter modelos en la DB
