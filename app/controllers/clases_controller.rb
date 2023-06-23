@@ -21,6 +21,27 @@ class ClasesController < ApplicationController
       end
     end
 
+    def edit
+      @clase = Clase.find(params[:id])
+    end
+
+    def update
+      @clase = Clase.find(params[:id])
+  
+      if @clase.update(clase_params)
+        redirect_to @clase
+      else
+        render :edit, status: :unprocessable_entity
+      end
+    end
+  
+    def destroy
+      @clase = Clase.find(params[:id])
+      @clase.destroy
+  
+      redirect_to root_path, status: :see_other
+    end
+
   private
     def clase_params
       params.require(:clase).permit(:efecto, :descripcion, :nombre, :nivel)

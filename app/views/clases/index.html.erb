@@ -2,12 +2,8 @@
 
 
 
-<ul>
-  <% @clases.each do |clase| %>
-    <li>
-      <%= link_to clase.nombre, clase %>
-    </li>
-  <% end %>
-</ul>
+<% @clases.each do |clase| %>
+    <%= render "mini", clase: clase %>
+<% end %>
 
 <%= link_to "crear clase", new_clase_path %>

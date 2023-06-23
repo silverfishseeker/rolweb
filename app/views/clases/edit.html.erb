@@ -1,0 +1,5 @@
+<h1>Editar clase</h1>
+
+<%= render "form", clase: @clase %>
+
+<%= link_to "Destroy", clase_path(@clase), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
