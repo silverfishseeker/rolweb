@@ -1,4 +1,4 @@
-<%= form_with model: clase do |form| %>
+<%= form_with model: habil do |form| %>
   <div>
     <%= form.label :nombre %><br>
     <%= form.text_field :nombre %>
@@ -13,18 +13,13 @@
     <%= form.label :efecto %><br>
     <%= form.text_area :efecto %><br>
   </div>
-  
-  <div>
-    <%= form.label :descripcion %><br>
-    <%= form.text_area :descripcion %><br>
-  </div>
 
   <div>
     <%= form.label :image %>
     <%= form.file_field :image %>
   </div>
 
-  <%= render "shared/image", image: clase.image %>
+  <%= render "shared/image", image: habil.image %>
 
   <div>
     <%= form.submit %>

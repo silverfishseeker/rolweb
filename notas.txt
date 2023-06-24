@@ -28,6 +28,9 @@ bin/rails generate model {nombre modelo} [{símbolo1}:{tipo1}  {símbolo2}:{tipo
 
 bin/rails generate migration AddNombreDeCampoToNombreDeModelo nombre_de_campo:data_type
 bin/rails generate migration RemoveNombreDeColumnaFromNombreDeModelo nombre_de_columna:data_type
+rails generate migration Drophabilidad
+rails generate migration drop_Habilidad
+
 
 
 bin/rails db:migrate
@@ -36,13 +39,14 @@ bin/rails db:migrate
 bin/rails console
     meterse en la consola de rails, para interactuar con modelos
 
-
-bin/rails generate migration AddStatusToArticles status:string
-bin/rails generate migration AddStatusToComments status:string
+bin/rails generate model
 
 
-    <h1><%= link_to clase.nombre, clase_path(clase) %>  NL: <%= clase.nivel %></h1>
 
-    <p><%= clase.efecto %></p>
-    <p><%= clase.descripcion %></p>
-    <%= image_tag(clase.image.url, alt: 'Imagen') if clase.image? %>
+
+
+
+bin/rails generate migration RemoveimagenFromHabilidad imagen:string
+bin/rails generate migration AddimageToHabilidad image:string
+
+bin/rails generate model Habilidad nombre:string nivel:integer efecto:string

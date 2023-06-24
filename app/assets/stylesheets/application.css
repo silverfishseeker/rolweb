@@ -96,6 +96,10 @@ h1, h2 {
     border: 2px solid #ca6702;
     border-radius: 5px;
 }
+.clase-effectBig {
+    height: 98%;
+    width: 80%;
+}
 
 .clase-image {
     width: 40%;

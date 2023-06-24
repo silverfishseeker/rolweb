@@ -1,0 +1,10 @@
+<h2>Habilidades</h2>
+
+
+<div class="grid-container">
+    <% @habilidades.each do |habil| %>
+        <%= render "habilidad", habil: habil %>
+    <% end %>
+</div>
+
+<%= link_to "Crear habilidad", new_habilidad_path %>
