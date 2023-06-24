@@ -1,9 +1,10 @@
 <h1>Clases</h1>
 
 
-
-<% @clases.each do |clase| %>
-    <%= render "clase", clase: clase %>
-<% end %>
+<div class="grid-container">
+    <% @clases.each do |clase| %>
+        <%= render "clase", clase: clase %>
+    <% end %>
+</div>
 
 <%= link_to "crear clase", new_clase_path %>

@@ -39,3 +39,10 @@ bin/rails console
 
 bin/rails generate migration AddStatusToArticles status:string
 bin/rails generate migration AddStatusToComments status:string
+
+
+    <h1><%= link_to clase.nombre, clase_path(clase) %>  NL: <%= clase.nivel %></h1>
+
+    <p><%= clase.efecto %></p>
+    <p><%= clase.descripcion %></p>
+    <%= image_tag(clase.image.url, alt: 'Imagen') if clase.image? %>

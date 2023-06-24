@@ -1,7 +1,17 @@
-<div>
-    <h1><%= link_to clase.nombre, clase_path(clase) %>  NL: <%= clase.nivel %></h1>
-
-    <p><%= clase.efecto %></p>
-    <p><%= clase.descripcion %></p>
-    <%= image_tag(clase.image.url, alt: 'Imagen') if clase.image? %>
+<div class="clase-item bodeOscuro">
+    <div class="clase-header">
+        <p class="clase-level bodeOscuro">
+            <%= clase.nivel %>
+        </p>
+        <h3 class="clase-title"><%= link_to clase.nombre, clase_path(clase) %></h3>
+    </div>
+    <div class="clase-contents">
+        <div class="clase-details">
+            <p class="clase-effect"><%= clase.efecto %></p>
+            <p class="clase-description"><%= clase.descripcion %></p>
+        </div>
+        <div class="clase-image">
+            <%= render "clase_image", image: clase.image %>
+        </div>
+    </div>
 </div>
