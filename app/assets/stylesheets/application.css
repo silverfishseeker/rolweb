@@ -45,6 +45,10 @@ h1, h2 {
     margin: 10px;
 }
 
+form {
+    margin: 20px;
+}
+
 .bodeOscuro {
     border: 4px solid #001219;
     border-radius: 10px;

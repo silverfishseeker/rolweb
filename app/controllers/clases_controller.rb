@@ -20,7 +20,7 @@ class ClasesController < ApplicationController
     if @clase.save
       redirect_to @clase  
     else
-      render :new
+      redirect_to new_clase_path , notice: 'La jodiste.'
     end
   end
 

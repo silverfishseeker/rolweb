@@ -3,23 +3,33 @@
     <%= form.label :nombre %><br>
     <%= form.text_field :nombre %>
   </div>
+  <br>
 
   <div>
     <%= form.label :nivel %><br>
     <%= form.number_field :nivel, in: 0..100 %><br>
   </div>
+  <br>
+
+  <div>
+    <%= form.label :clase_ids, 'Clases' %><br>
+    <%= form.collection_select :clase_ids, Clase.order(:nombre), :id, :nombre, {}, multiple: true, style: "height: 100%;" %>
+  </div>
+  <br>
 
   <div>
     <%= form.label :efecto %><br>
     <%= form.text_area :efecto %><br>
   </div>
+  <br>
 
   <div>
-    <%= form.label :image %>
+    <%= form.label :image %><br>
     <%= form.file_field :image %>
   </div>
 
   <%= render "shared/image", image: habil.image %>
+  <br>
 
   <div>
     <%= form.submit %>

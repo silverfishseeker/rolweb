@@ -20,7 +20,7 @@ class HabilidadsController < ApplicationController
       if @habilidad.save
         redirect_to @habilidad  
       else
-        render :new
+        redirect_to new_habilidad_path , notice: 'La jodiste.'
       end
     end
   
@@ -47,6 +47,6 @@ class HabilidadsController < ApplicationController
   
     private
       def habilidad_params
-        params.require(:habilidad).permit(:nombre, :nivel, :efecto, :image)
+        params.require(:habilidad).permit(:nombre, :nivel, :efecto, :image, clase_ids: [])
       end
 end

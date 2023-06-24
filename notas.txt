@@ -50,3 +50,9 @@ bin/rails generate migration RemoveimagenFromHabilidad imagen:string
 bin/rails generate migration AddimageToHabilidad image:string
 
 bin/rails generate model Habilidad nombre:string nivel:integer efecto:string
+
+
+
+    <% habil.clases.each do |clase| %>
+      <%= clase.nombre %>
+    <% end %>
