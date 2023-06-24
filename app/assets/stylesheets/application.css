@@ -34,15 +34,20 @@ color:  #001219
         #9b2226
 }
 
-.bodeOscuro {
-    border: 4px solid #001219;
-    border-radius: 10px;
-}
-
 body {
     font-family: "Open Sans", sans-serif;
     color: #001219;
     background-color: #bed1cb;
+    margin: 0;
+}
+
+h1, h2 {
+    margin: 10px;
+}
+
+.bodeOscuro {
+    border: 4px solid #001219;
+    border-radius: 10px;
 }
 
 .clase-item {
@@ -60,7 +65,7 @@ body {
     margin: 10px;
     font-size: 20px;
     font-weight: bold;
-    height: 10%;
+    height: 8%;
 }
 
 .clase-level {
@@ -82,8 +87,8 @@ body {
 
 .clase-effect,
 .clase-description {
-    width: 100%;
-    height: 50%;
+    width: 95%;
+    height: 48%;
     font-size: 14px;
     background-color: #e9d8a6;
     margin: 10px;
@@ -106,6 +111,7 @@ body {
 }
 
 .grid-container {
+    margin: 10px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /*400 es el tamaño del item de dentro*/
     grid-gap: 10px;
@@ -115,6 +121,7 @@ body {
 /* Estilos CSS para la barra de direcciones */
 .navbar {
     background-color: #9b2226;
+    color: #e9d8a6;
     padding: 10px;
 }
 
@@ -131,10 +138,13 @@ body {
 
 .navbar a {
     text-decoration: none;
-    color: #e9d8a6;
     padding: 5px;
 }
 
 .navbar a:hover {
     background-color: #ae2012; /* Cambia el color de fondo al pasar el cursor sobre el enlace */
+}
+
+.navbar a:visited {
+    color: #e9d8a6;
 }
