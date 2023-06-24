@@ -1,46 +1,49 @@
 class ClasesController < ApplicationController
-    def index
-        @clases = Clase.all
-    end
 
-    def show
-        @clase = Clase.find(params[:id])
-    end
+  http_basic_authenticate_with name: "yomismo", password: "yasabes", except: [:index, :show]
 
-    def new
-      @clase = Clase.new
-    end
-  
-    def create
-      @clase = Clase.new(clase_params)
-  
-      if @clase.save
-        redirect_to @clase  
-      else
-        render :new
-      end
-    end
+  def index
+      @clases = Clase.all
+  end
 
-    def edit
+  def show
       @clase = Clase.find(params[:id])
-    end
+  end
 
-    def update
-      @clase = Clase.find(params[:id])
-  
-      if @clase.update(clase_params)
-        redirect_to @clase
-      else
-        render :edit
-      end
+  def new
+    @clase = Clase.new
+  end
+
+  def create
+    @clase = Clase.new(clase_params)
+
+    if @clase.save
+      redirect_to @clase  
+    else
+      render :new
     end
-  
-    def destroy
-      @clase = Clase.find(params[:id])
-      @clase.destroy
-  
-      redirect_to root_path, status: :see_other
+  end
+
+  def edit
+    @clase = Clase.find(params[:id])
+  end
+
+  def update
+    @clase = Clase.find(params[:id])
+
+    if @clase.update(clase_params)
+      redirect_to @clase
+    else
+      render :edit
     end
+  end
+
+  def destroy
+    @clase = Clase.find(params[:id])
+    @clase.destroy
+
+    redirect_to root_path, status: :see_other
+  end
 
   private
     def clase_params
