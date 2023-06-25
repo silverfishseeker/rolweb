@@ -21,11 +21,10 @@
 <ul>
     <li>(FU) Fuerza</li>
     <li>(IN) Inteligencia</li>
-    <li>(RE) Resistencia</li>
     <li>(DE) Destreza</li>
     <li>(AC) Acrobacia</li>
     <li>(CO) Constitución</li>
-    <li>(AG) Aguante</li>
+    <li>(RE) Resistencia</li>
 </ul>
 
 <h1>Tu estado</h1>
@@ -36,16 +35,16 @@
 <h2>Partes del cuerpo</h2>
 <p>Existen 8 partes del cuerpo numeradas. Se agrupan en las partes altas y en las bajas, esto es relevante para algunos tipos de golpes. Son:</p>
 <ol>
+    <p>Partes altas:</p>
+    <li>cabeza</li>
+    <li>torso</li>
+    <li>brazo izquierdo</li>
+    <li>brazo derecho</li>
     <p>Partes bajas:</p>
-    <li>pierna izquierda</li>
-    <li>pierna derecha</li>
-    <li>Abdomen</li>
-    <li>Genitales</li>    
-    <p>Partes altas</p>
-    <li>(1) brazo izquierdo</li>
-    <li>(2) brazo derecho</li>
-    <li>(3) torso</li>
-    <li>(4) cabeza</li>
+    <li>(1) pierna izquierda</li>
+    <li>(2) pierna derecha</li>
+    <li>(3) Abdomen</li>
+    <li>(4) Genitales</li>
 </ol>
 <p>Piernas, brazos y genitales se consideran <b>apéndices</b>. Abdomen, torso y cabeza se consideran <b>principales</b>.</p>
 <p>Cada parte puede estar en 4 estados: <b>saludable</b>, <b>herido</b>, <b>grave</b> y <b>muy grave</b>. Veremos las consecuencias de estos estados más adelante.</p>
@@ -64,18 +63,19 @@
 <ul>
     <li>La acciones que involucren extremidades en estado grave obtienen acumulaciones de desventaja por cada extremidad.</li>
     <li>No puedes realizar acciones que involucren partes del cuerpo muy graves.</li>
-    <li>Un impacto en una parte del cuerpo grave o muy grave  desangra como efecto adicional.</li>
-    <li>Un impacto en una parte principal muy grave provoca una tirada de muerte.</li>
-    <li>Un impacto en un apéndice muy grave  provoca una tirada de muerte, si la fallas pierdes la extremidad permanentemente en vez de morir.</li>
+    <li>Dañar una parte del cuerpo grave o muy grave  desangra como efecto adicional.</li>
+    <li>Dañar una parte principal muy grave provoca una tirada de muerte.</li>
+    <li>Dañar un apéndice muy grave provoca una tirada de muerte, si la fallas pierdes la extremidad permanentemente en vez de morir.</li>
 </ul>
 
 
 <h1>Combate</h1>
 <p>Ahora vamos a echar un vistazo cómo funciona el sistema de combate.</p>
 <p>Es por turnos. En cada turno cada jugador o enemigo puede realizar una acción; que normalmente será usar una de sus habilidades activas o bien intentar hacer cualquier otra cosa razonable. El orden de turnos se decide con una tirada inicial de todos los participantes de 1d10 + destreza (veremos esta estadística luego).</p>
-<p>Entonces, cuando intentas atacar a alguien (o te atacan) haces una <b>tirada de precisión</b>, que consiste en 1d20+DE, luego comparas este valor con la estabilidad del objetivo. Si el valor es mayor entonces se da un impacto y ahora hay que mirar la armadura.</p>
+<p>Entonces, cuando intentas atacar a alguien (o te atacan) haces una <b>tirada de precisión</b>, que consiste en 1d20+<b>puntería</b> (que es DE/2), luego comparas este valor con la estabilidad del objetivo. Si el valor es mayor entonces se da un impacto y ahora hay que mirar la armadura.</p>
 <p>En la segunda parte, tras un impacto efectivo, primero vemos si el ataque era de naturaleza <b>física</b> o <b>mágica</b>. Si era físico entonces tu <b>penetración física</b> debe de ser mayor que la <b>armadura física</b> para poder aplicar el efecto del ataque, si no, no hace nada (pero aún hay impacto). En el caso de que sea mágico, se hace lo mismo pero con tu <b>penetración mágica</b> y su <b>armadura mágica</b>.</p>
-<p>Sin embargo, si en la tirada de precisión obtines un 20, el ataque se considera <b>crítico</b>, impacta y aplica su efecto ignorando completamente la armadura. Pero si sacas un 1, es una <b>pifia</b> y el ataque falla completamente automáticamente. Existen efectos que pueden aumentar tu probabilidad de crítico y de pifia, en tal caso también cuentas los siguientes números del dado. Es muy importante tener en cuenta que son los valores originales del dado los que cuentan, sin la modificación de DE o cualquier otra.</p>
+<p>Una distinción importante entre la armadura física y mágica es que la primera es propia de cada parte del cuerpo y se determina por tu equipamento, mientras que la segunda es única y se aplica a todas a la vez y se determina principalmente por tus estadísticas.</p>
+<p>Sin embargo, si en la tirada de precisión obtienes un 20, el ataque se considera <b>crítico</b>, impacta y aplica su efecto ignorando completamente la armadura. Pero si sacas un 1, es una <b>pifia</b> y el ataque falla completamente automáticamente. Existen efectos que pueden aumentar tu probabilidad de crítico y de pifia, en tal caso también cuentas los siguientes números del dado. Es muy importante tener en cuenta que son los valores originales del dado los que cuentan, sin la modificación de DE o cualquier otra.</p>
 <p>Siempre que se acierte un impacto, independientemente de si atraviesa la armadura, reduce la estabilidad del objetivo en uno. Puedes gastar un turno para recuperar toda la estabilidad.  Mientras que la estabilidad es 0, todos los impactos recibidos son críticos. La estabilidad se recupera automáticamente al final del combate. La estabilidad no puede bajar de 0.<p>
 
 <h1>Creación de personaje</h1>
@@ -86,11 +86,10 @@
 <ul>
     <li>(FU) Fuerza: determina tu penetración física</li>
     <li>(IN) Inteligencia: determina tu armadura y penetración mágica</li>
-    <li>(RE) Resistencia: determina tu armadura física</li>
     <li>(DE) Destreza: se usa en sí.</li>
     <li>(AC) Acrobacia: se multiplica por dos para establecer tu estabilidad máxima</li>
     <li>(CO) Constitución: determina tu sangre máxima</li>
-    <li>(AG) Aguante: determina tu peso máximo</li>
+    <li>(RE) Resistencia: determina tu peso máximo</li>
 </ul>
 <p>Cualquiera puede ser negativa pero si se utiliza para determinar algo que no tiene sentido en negativo, pues es 0.</p>
 

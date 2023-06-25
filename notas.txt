@@ -44,7 +44,7 @@ bin/rails generate model
 
 
 
-
+bin/rails generate model Mob nombre:string cuerpo:string 
 bin/rails generate model Item nombre:string coste:decimal peso:decimal efecto:text image:string
 bin/rails generate controller Item
 
@@ -58,3 +58,26 @@ bin/rails generate model Habilidad nombre:string nivel:integer efecto:string
     <% habil.clases.each do |clase| %>
       <%= clase.nombre %>
     <% end %>
+
+
+Humano tonto
+
+Partes bajas:
+    4 pierna izquierda
+    4 pierna derecha
+    4 Abdomen
+    4 Genitales
+Partes altas
+    4 (1) brazo izquierdo
+    4 (2) brazo derecho
+    4 (3) torso
+     4 (4) cabeza
+
+Sangre: 5
+
+Armadura física 5
+Armadura mágica 0
+Penetración física 10
+Penetración mágica 0
+Estabilidad 10
+Destreza 0
