@@ -1,3 +1,30 @@
-<%= render "clase", clase: @clase %>
-<br>
+<div class="clase-show">
+    <div class="clase-header">
+        <p class="clase-level bodeOscuro">
+            <%= @clase.nivel %>
+        </p>
+        <h3 class="clase-title"><%= link_to @clase.nombre, @clase %></h3>
+    </div>
+    <div class="clase-contents">
+        <div class="clase-details">
+            <p class="clase-effect"><%= @clase.efecto %></p>
+            <p class="clase-description"><%= @clase.descripcion %></p>
+        </div>
+        <div class="clase-image">
+            <%= render "shared/image", image: @clase.image %>
+        </div>
+    </div>
+
+    <div class="grid-container">
+        <% @clase.habilidads.each do |habil| %>
+            <%= render "habilidads/habilidad", habil: habil %>
+        <% end %>
+    </div>
+
+
+</div>
+
+
+
+
 <%= link_to "Edit", edit_clase_path(@clase) %>
