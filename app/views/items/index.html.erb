@@ -1,0 +1,10 @@
+<h2>Items</h2>
+
+
+<div class="grid-container">
+    <% @items.each do |item| %>
+        <%= render "item", item: item %>
+    <% end %>
+</div>
+
+<%= link_to "Crear item", new_item_path %>

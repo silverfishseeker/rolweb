@@ -5,5 +5,6 @@ Rails.application.routes.draw do
   root "clases#index"
   resources :clases
   resources :habilidads
+  resources :items
   get '/reglas', to: 'info#reglas'
 end

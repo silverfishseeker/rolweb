@@ -15,11 +15,14 @@
         </div>
     </div>
 
+    <h1>Lista de Hablidades relacionadas:</h1>
     <div class="grid-container">
         <% @clase.habilidads.each do |habil| %>
             <%= render "habilidads/habilidad", habil: habil %>
         <% end %>
     </div>
+    
+    <h1>Lista de items relacionados:</h1>
 
 
 </div>

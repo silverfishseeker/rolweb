@@ -45,6 +45,8 @@ bin/rails generate model
 
 
 
+bin/rails generate model Item nombre:string coste:decimal peso:decimal efecto:text image:string
+bin/rails generate controller Item
 
 bin/rails generate migration RemoveimagenFromHabilidad imagen:string
 bin/rails generate migration AddimageToHabilidad image:string

@@ -1,0 +1,43 @@
+<%= form_with model: item do |form| %>
+  <div>
+    <%= form.label :nombre %><br>
+    <%= form.text_field :nombre %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :coste %><br>
+    <%= form.number_field :coste, in: 0..100 %><br><%#step: 0.01% %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :peso %><br>
+    <%= form.number_field :peso, in: 0..100 %><br>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :clase_ids, 'Clases' %><br>
+    <%= form.collection_select :clase_ids, Clase.order(:nombre), :id, :nombre, {}, multiple: true, style: "height: 100%;" %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :efecto %><br>
+    <%= form.text_area :efecto %><br>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :image %><br>
+    <%= form.file_field :image %>
+  </div>
+
+  <%= render "shared/image", image: item.image %>
+  <br>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

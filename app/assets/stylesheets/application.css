@@ -83,6 +83,14 @@ form {
     margin: 10px;
 }
 
+.clase-coste {
+    background-color: #e9d8a6;
+}
+
+.clase-peso {
+    background-color: #ee9b00;
+}
+
 .clase-contents {
     height: 90%;
     display: flex;
