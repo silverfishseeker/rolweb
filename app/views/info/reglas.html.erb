@@ -1,0 +1,113 @@
+<div style="margin:20px">
+
+<br>    
+<p>Bienvenido a Door Maze. En esta sección vamos a ver las reglas para crear a tu personaje y para poder batallar y demás.</p>
+<br>
+
+<%# <h1> Indice</h1>
+<p>(Puedes pinchar para ir a esa sección.)</p>
+
+<a href="#Estadísticas">Estadísticas</a> %>
+
+<h1>Nomenclatura</h1>
+<p>Lo primero de todo vamos a ver la terminología que se usa en este juego.</p>
+<h2>Dados</h2>
+<p>Cuando se te pide que lances 1d20, se refiere a que lances un dado de 20 caras y uses el resultado para lo que se te pida. Entonces siempre es [número de dados]d[número de caras de los dados]. Si hay más de un dado sumas el total de todas las caras que han salido, y es común que ha este resultado se le sumen otros valores especificados (o restar también).</p>
+<h2>Ventaja/desventaja</h2>
+<p>Cuando lanzas un dado con <b>ventaja</b> lanzas un dado extra y luego te quedas con el resultado que sea más favorable. Si varios dados están involucrados en la tirada, escoges uno para lanzarlo "2 veces". <b>Desventaja</b> es exactamente los mismo pero te quedas con el peor resultado. Para ambos casos puedes ganar mútiples acumulaciones, si tienes 2 de ventaja lanzarías 2 dados extras y te quedas con el mejor entre los 3, igual con desventaja. Las acumulaciones de ventaja y de desventaja se neutralizan entre sí. Ej: un efecto hace que ganes ventaja pero otro te da 3 de desventaja, en total aplicas 2 de desventaja normalmente.</p>
+
+<h2>Estadísticas</h2>
+<p>Tu personaje y otros seres tienen una serie de estadísticas. No vamos a explicarlas ahora, pero las enumeraremos junto a sus iniciales que usaremos para referirnos a ellas de aquí en adelante:</p>
+<ul>
+    <li>(FU) Fuerza</li>
+    <li>(IN) Inteligencia</li>
+    <li>(RE) Resistencia</li>
+    <li>(DE) Destreza</li>
+    <li>(AC) Acrobacia</li>
+    <li>(CO) Constitución</li>
+    <li>(AG) Aguante</li>
+</ul>
+
+<h1>Tu estado</h1>
+<p>A diferencia de otros sistemas, en este no tienes puntos de salud, si no que tienes <b>partes del cuerpo</b>, sangre y estabilidad. Bebes de procuparar de mantener ambos en buen estado y debes tener apuntado en todo momento sus valores actuales.</p>
+<p>Antes de empezar vamos a ver cómo se puede morir. Un término esencial es la <b>tirada de muerte</b>. Esta consiste en lanzar 1d20 + CO. Si el resultado es estríctamente menor que 15, tu personaje muere permanentemente y ya no puedes seguir participando con él. Tu objetivo es no tener que llegar a tener que hacer esta tirada nunca.</p>
+
+
+<h2>Partes del cuerpo</h2>
+<p>Existen 8 partes del cuerpo numeradas. Se agrupan en las partes altas y en las bajas, esto es relevante para algunos tipos de golpes. Son:</p>
+<ol>
+    <p>Partes bajas:</p>
+    <li>pierna izquierda</li>
+    <li>pierna derecha</li>
+    <li>Abdomen</li>
+    <li>Genitales</li>    
+    <p>Partes altas</p>
+    <li>(1) brazo izquierdo</li>
+    <li>(2) brazo derecho</li>
+    <li>(3) torso</li>
+    <li>(4) cabeza</li>
+</ol>
+<p>Piernas, brazos y genitales se consideran <b>apéndices</b>. Abdomen, torso y cabeza se consideran <b>principales</b>.</p>
+<p>Cada parte puede estar en 4 estados: <b>saludable</b>, <b>herido</b>, <b>grave</b> y <b>muy grave</b>. Veremos las consecuencias de estos estados más adelante.</p>
+
+<h2>Sangre</h2>
+<p>Tienes un medidor de sangre que indica la sangre que tienes en el cuerpo, así como las reservas internas de energía. Si está por debajo de la mitad obtienes desventaja en todas tus tiradas. Si llega a 0 realiza una tirada de muerte; si la superas, establece tu sangre a 1.</p>
+<p>Una acción esencial sobre la sangre es <b>desangrar</b>. Al aplicarse pierdes 1 de sangre y obtienes estado de <b>desangrando</b>. Mientras que estas en este estado pierdes 1 de sangre cada 10 minutos hasta que alguien pare el sangrado.</p>
+<p>Tras un descanso largo puedes gastar 1 de sangre por parte del cuerpo dañada para recuperarla en un estado. Tienes que tener suficiente sangre para recuperar en 1 todas las partes dañadas, si no puedes, entonces ninguna se puede recuperar. Después de esto, si comiste hoy, recupera la mitad de tu total de sangre.<p>
+
+<h1>Estabilidad</h1>
+<p>Representa tu equilibrio físico actual, si te has caído al suelo o no y tal, así como el cansancio que llevas encima para recibir golpes contundentes. Te permite esquivar ataques, lo veremos más adelante.
+</p>
+
+<h1>Consecuencias</h1>
+<p>Ahora sí, con todo esto vamos a ver las consecuencias de que empeore el estado de tus partes del cuerpo:</p>
+<ul>
+    <li>La acciones que involucren extremidades en estado grave obtienen acumulaciones de desventaja por cada extremidad.</li>
+    <li>No puedes realizar acciones que involucren partes del cuerpo muy graves.</li>
+    <li>Un impacto en una parte del cuerpo grave o muy grave  desangra como efecto adicional.</li>
+    <li>Un impacto en una parte principal muy grave provoca una tirada de muerte.</li>
+    <li>Un impacto en un apéndice muy grave  provoca una tirada de muerte, si la fallas pierdes la extremidad permanentemente en vez de morir.</li>
+</ul>
+
+
+<h1>Combate</h1>
+<p>Ahora vamos a echar un vistazo cómo funciona el sistema de combate.</p>
+<p>Es por turnos. En cada turno cada jugador o enemigo puede realizar una acción; que normalmente será usar una de sus habilidades activas o bien intentar hacer cualquier otra cosa razonable. El orden de turnos se decide con una tirada inicial de todos los participantes de 1d10 + destreza (veremos esta estadística luego).</p>
+<p>Entonces, cuando intentas atacar a alguien (o te atacan) haces una <b>tirada de precisión</b>, que consiste en 1d20+DE, luego comparas este valor con la estabilidad del objetivo. Si el valor es mayor entonces se da un impacto y ahora hay que mirar la armadura.</p>
+<p>En la segunda parte, tras un impacto efectivo, primero vemos si el ataque era de naturaleza <b>física</b> o <b>mágica</b>. Si era físico entonces tu <b>penetración física</b> debe de ser mayor que la <b>armadura física</b> para poder aplicar el efecto del ataque, si no, no hace nada (pero aún hay impacto). En el caso de que sea mágico, se hace lo mismo pero con tu <b>penetración mágica</b> y su <b>armadura mágica</b>.</p>
+<p>Sin embargo, si en la tirada de precisión obtines un 20, el ataque se considera <b>crítico</b>, impacta y aplica su efecto ignorando completamente la armadura. Pero si sacas un 1, es una <b>pifia</b> y el ataque falla completamente automáticamente. Existen efectos que pueden aumentar tu probabilidad de crítico y de pifia, en tal caso también cuentas los siguientes números del dado. Es muy importante tener en cuenta que son los valores originales del dado los que cuentan, sin la modificación de DE o cualquier otra.</p>
+<p>Siempre que se acierte un impacto, independientemente de si atraviesa la armadura, reduce la estabilidad del objetivo en uno. Puedes gastar un turno para recuperar toda la estabilidad.  Mientras que la estabilidad es 0, todos los impactos recibidos son críticos. La estabilidad se recupera automáticamente al final del combate. La estabilidad no puede bajar de 0.<p>
+
+<h1>Creación de personaje</h1>
+<p>Ahora toca ver en qué cosiste tu personaje exactamente y luego cómo es el proceso para crearlo. Ya hemos visto que tiene sangre, estabilidad y cuerpo, veamos cómo se calculan estos valores.</p>
+
+<h2>Estadísticas (ahora de verdad)</h2>
+<p>Vamos a volver a verlas pero esta vez explicándolas.</p>
+<ul>
+    <li>(FU) Fuerza: determina tu penetración física</li>
+    <li>(IN) Inteligencia: determina tu armadura y penetración mágica</li>
+    <li>(RE) Resistencia: determina tu armadura física</li>
+    <li>(DE) Destreza: se usa en sí.</li>
+    <li>(AC) Acrobacia: se multiplica por dos para establecer tu estabilidad máxima</li>
+    <li>(CO) Constitución: determina tu sangre máxima</li>
+    <li>(AG) Aguante: determina tu peso máximo</li>
+</ul>
+<p>Cualquiera puede ser negativa pero si se utiliza para determinar algo que no tiene sentido en negativo, pues es 0.</p>
+
+<h2>Clases y habilidades</h2>
+<h3>Clase</h3>
+<p>Cada clase tiene un título, nível, descripción y efectos (imagen si eso tmbn). Representan cosas como oficios o razas. Cada personaje empieza con X clases iniciales, que son inmutables por el resto de la partida excepto en situaciones excepcionales.</p>
+<h3>Habilidad</h3>
+<p>Cada habilidad tiene un nombre, nivel, requisitos y efecto. Igual que antes en rol2. Los requisitos pueden ser tener ciertas clases o haber aprendido otras habilidades antes.</p>
+
+
+<h2>Item</h2>
+<p>Cada item tiene un nombre, coste,  peso, requisitos y efecto. Los requisitos pueden ser alguna clase. Necesitas tener suficiente peso para poder llevar un item encima.</p>
+
+
+
+<h1></h1>
+<h2></h2>
+<p></p>
+<b></b>
+</div>
