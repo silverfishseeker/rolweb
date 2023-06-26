@@ -63,7 +63,7 @@ textarea {
 }
 
 select {
-    height: 200px;
+    height: 400px;
     width: 100px;
 }
 
@@ -151,7 +151,7 @@ select {
 }
 
 .clase-clases a {
-    background-color: #bb3e03;
+    background-color: #ae2012;
     color: #e9d8a6;
     display: inline-block;
     margin: 5px;
@@ -183,9 +183,19 @@ select {
 
 /* Estilos CSS para la barra de direcciones */
 .navbar {
-    background-color: #9b2226;
+    background-color: #bb3e03
+    ;
     color: #e9d8a6;
     padding: 10px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.navbar h1 {
+    margin: 10px;
 }
 
 .navbar ul {

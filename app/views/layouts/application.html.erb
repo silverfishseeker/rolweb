@@ -15,12 +15,14 @@
     <h1>Doors Maze</h1>
       <ul>
         <li><a href="/reglas">Reglas</a></li>
+        <li><a href="/estadosAlterados">Estados Alterados</a></li>
         <li><%= link_to "Clases", clases_path %></li>
         <li><%= link_to "Hablidades", habilidads_path %></li>
         <li><%= link_to "Items", items_path %></li>
       </ul>
     </div>
-
-    <%= yield %>
+    <div style="margin-top: 110px;">
+      <%= yield %>
+    </div>
   </body>
 </html>
