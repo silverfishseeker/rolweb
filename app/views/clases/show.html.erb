@@ -27,7 +27,5 @@
 
 </div>
 
-
-
-
 <%= link_to "Edit", edit_clase_path(@clase) %>
+<%= link_to "Destroy", clase_path(@clase), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>

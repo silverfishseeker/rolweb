@@ -39,6 +39,9 @@ body {
     color: #001219;
     background-color: #bed1cb;
     margin: 0;
+
+    background-image: url('sky.jpg');
+    background-size: cover;
 }
 
 h1, h2, h3 {

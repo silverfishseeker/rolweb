@@ -3,3 +3,4 @@
 <div>
 <br>
 <%= link_to "Edit", edit_item_path(@item) %>
+<%= link_to "Destroy", item_path(@item), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
