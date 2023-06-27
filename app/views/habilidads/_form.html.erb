@@ -13,7 +13,13 @@
 
   <div>
     <%= form.label :clase_ids, 'Clases' %><br>
-    <%= form.collection_select :clase_ids, Clase.order(:nombre), :id, :nombre, {}, multiple: true, style: "height: 100%;" %>
+    <%= form.collection_select :clase_ids, Clase.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
+  </div>
+  <br>
+  
+  <div>
+    <%= form.label :item_ids, 'Items' %><br>
+    <%= form.collection_select :item_ids, Item.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
   </div>
   <br>
 

@@ -230,3 +230,7 @@ select {
 .navbar a:visited {
     color: #e9d8a6;
 }
+
+.form-select {
+    height: 200px;
+}

@@ -19,7 +19,7 @@
 
   <div>
     <%= form.label :clase_ids, 'Clases' %><br>
-    <%= form.collection_select :clase_ids, Clase.order(:nombre), :id, :nombre, {}, multiple: true, style: "height: 100%;" %>
+    <%= form.collection_select :clase_ids, Clase.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
   </div>
   <br>
 

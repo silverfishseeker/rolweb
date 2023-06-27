@@ -23,6 +23,11 @@
     </div>
     
     <h1>Lista de items relacionados:</h1>
+    <div class="grid-container">
+        <% @clase.items.each do |it| %>
+            <%= render "items/item", item: it %>
+        <% end %>
+    </div>
 
 
 </div>

@@ -10,6 +10,9 @@
         <% habil.clases.each do |clase| %>
             <%= link_to clase.nombre, clase %>
         <% end %>
+        <% habil.items.each do |it| %>
+            <%= link_to it.nombre, it %>
+        <% end %>
     </div>
 
     <div class="clase-contents">

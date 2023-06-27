@@ -47,6 +47,6 @@ class HabilidadsController < ApplicationController
   
     private
       def habilidad_params
-        params.require(:habilidad).permit(:nombre, :nivel, :efecto, :image, clase_ids: [])
+        params.require(:habilidad).permit(:nombre, :nivel, :efecto, :image, clase_ids: [], item_ids: [])
       end
 end
