@@ -6,6 +6,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - db_data:/var/lib/postgresql/data
+    restart: always
   web:
     build: .
     ports:
@@ -16,5 +17,6 @@ services:
       - db
     environment:
       DATABASE_HOST: db
+    restart: always
 volumes:
   db_data:
