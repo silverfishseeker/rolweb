@@ -17,6 +17,8 @@ COPY . .
 EXPOSE 3000
 
 # Define el comando para iniciar el servidor de Rails
-# Migrar base de datos e iniciar rails
-# Puto tmp
-CMD bundle install && rm -rf /app/tmp/* && bin/rails db:migrate RAILS_ENV=development && bin/rails server -b 0.0.0.0
+# Instalar dependencias -> bundle install && 
+# Migrar base de datos e  -> && bin/rails db:migrate RAILS_ENV=development
+# Puto tmp  
+# iniciar rails
+CMD rm -rf /app/tmp/* && bin/rails server -b 0.0.0.0
