@@ -44,6 +44,10 @@ class HabilidadsController < ApplicationController
   
       redirect_to habilidads_path, status: :see_other
     end
+
+    def habilidadesIndependientes
+      @habilidades = Habilidad.left_outer_joins(:items, :clases).where(items: { id: nil }, clases: { id: nil })
+    end
   
     private
       def habilidad_params
