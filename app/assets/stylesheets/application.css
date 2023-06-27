@@ -51,6 +51,7 @@ h1, h2, h3 {
 
 p {
     margin: 10px;
+    overflow-y: auto;
 }
 
 form {
@@ -104,6 +105,10 @@ select {
     background-color: #ee9b00;
 }
 
+.clase-title {
+    width: 60%;
+}
+
 .clase-contents {
     height: 90%;
     display: flex;
@@ -136,6 +141,10 @@ select {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.clase-imageFixed {
+    height: 400px;
 }
 
 .clase-image img {
