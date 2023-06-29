@@ -1,5 +1,5 @@
 <div class="grid-container">
-    <% habilidades.each do |habil| %>
+    <% habilidades.sort_by(&:nombre).each do |habil| %>
         <%= render "habilidad", habil: habil %>
     <% end %>
 </div>
