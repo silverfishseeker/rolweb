@@ -63,10 +63,15 @@ textarea {
     width: 500px;
 }
 
-select {
-    height: 400px;
-    width: 100px;
+.inBody {
+    margin: 5px;
+    margin-top: 110px;
 }
+
+
+
+
+
 
 .bodeOscuro {
     border: 4px solid #001219;
@@ -233,4 +238,5 @@ select {
 
 .form-select {
     height: 200px;
+    width: 200px;
 }

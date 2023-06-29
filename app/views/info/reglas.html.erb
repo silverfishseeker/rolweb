@@ -1,5 +1,3 @@
-<div style="margin:20px">
-
 <br>    
 <p>Bienvenido a Door Maze. En esta sección vamos a ver las reglas para crear a tu personaje y para poder batallar y demás.</p>
 <br>
@@ -12,7 +10,8 @@
 <h1>Nomenclatura</h1>
 <p>Lo primero de todo vamos a ver la terminología que se usa en este juego.</p>
 <h2>Dados</h2>
-<p>Cuando se te pide que lances 1d20, se refiere a que lances un dado de 20 caras y uses el resultado para lo que se te pida. Entonces siempre es [número de dados]d[número de caras de los dados]. Si hay más de un dado sumas el total de todas las caras que han salido, y es común que ha este resultado se le sumen otros valores especificados (o restar también).</p>
+<p>Cuando se te pide que lances 1d20, se refiere a que lances un dado de 20 caras y uses el resultado para lo que se te pida. Entonces siempre es [número de dados]d[número de caras de los dados]. Si hay más de un dado sumas el total de todas las caras que han salido, y es común que a este resultado se le sumen otros valores especificados (o restar también).</p>
+<p>En relación a esto, a veces se utiliza una notación del tipo <b>X/1d20</b>, donde X es un número que es un valor objetivo; este tipo de tiradas se llaman pruebas, se dice que la superas si el resultado de los dados (más cosas que les sumes) es mayor que X. Tamién es posible que durante la aventura se te pide que hagas una prueba de alguna estadística, para ver si consigues hacer algo o no, simplemente tiras 1d20 y le sumas la estadística nombrada.</p>
 <h2>Ventaja/desventaja</h2>
 <p>Cuando lanzas un dado con <b>ventaja</b> lanzas un dado extra y luego te quedas con el resultado que sea más favorable. Si varios dados están involucrados en la tirada, escoges uno para lanzarlo "2 veces". <b>Desventaja</b> es exactamente los mismo pero te quedas con el peor resultado. Para ambos casos puedes ganar mútiples acumulaciones, si tienes 2 de ventaja lanzarías 2 dados extras y te quedas con el mejor entre los 3, igual con desventaja. Las acumulaciones de ventaja y de desventaja se neutralizan entre sí. Ej: un efecto hace que ganes ventaja pero otro te da 3 de desventaja, en total aplicas 2 de desventaja normalmente.</p>
 
@@ -22,13 +21,12 @@
     <li>(FU) Fuerza</li>
     <li>(IN) Inteligencia</li>
     <li>(DE) Destreza</li>
-    <li>(AC) Acrobacia</li>
     <li>(CO) Constitución</li>
     <li>(RE) Resistencia</li>
 </ul>
 
 <h1>Tu estado</h1>
-<p>A diferencia de otros sistemas, en este no tienes puntos de salud, si no que tienes <b>partes del cuerpo</b>, sangre y estabilidad. Bebes de procuparar de mantener ambos en buen estado y debes tener apuntado en todo momento sus valores actuales.</p>
+<p>A diferencia de otros sistemas, en este no tienes puntos de salud, si no que tienes <b>partes del cuerpo</b>, sangre y agilidad. Bebes de procuparar de mantener ambos en buen estado y debes tener apuntado en todo momento sus valores actuales.</p>
 <p>Antes de empezar vamos a ver cómo se puede morir. Un término esencial es la <b>tirada de muerte</b>. Esta consiste en lanzar 1d20 + CO. Si el resultado es estríctamente menor que 15, tu personaje muere permanentemente y ya no puedes seguir participando con él. Tu objetivo es no tener que llegar a tener que hacer esta tirada nunca.</p>
 
 
@@ -72,11 +70,11 @@
 <h1>Combate</h1>
 <p>Ahora vamos a echar un vistazo cómo funciona el sistema de combate.</p>
 <p>Es por turnos. En cada turno cada jugador o enemigo puede realizar una acción; que normalmente será usar una de sus habilidades activas o bien intentar hacer cualquier otra cosa razonable. El orden de turnos se decide con una tirada inicial de todos los participantes de 1d10 + destreza (veremos esta estadística luego).</p>
-<p>Entonces, cuando intentas atacar a alguien (o te atacan) haces una <b>tirada de precisión</b>, que consiste en 1d20+<b>puntería</b> (que es DE/2), luego comparas este valor con la estabilidad del objetivo. Si el valor es mayor entonces se da un impacto y ahora hay que mirar la armadura.</p>
+<p>Entonces, cuando intentas atacar a alguien (o te atacan) haces una <b>tirada de precisión</b>, que consiste en 1d20, luego comparas este valor con la agilidad del objetivo. Si el valor es mayor entonces se da un impacto y ahora hay que mirar la armadura.</p>
 <p>En la segunda parte, tras un impacto efectivo, primero vemos si el ataque era de naturaleza <b>física</b> o <b>mágica</b>. Si era físico entonces tu <b>penetración física</b> debe de ser mayor que la <b>armadura física</b> para poder aplicar el efecto del ataque, si no, no hace nada (pero aún hay impacto). En el caso de que sea mágico, se hace lo mismo pero con tu <b>penetración mágica</b> y su <b>armadura mágica</b>.</p>
 <p>Una distinción importante entre la armadura física y mágica es que la primera es propia de cada parte del cuerpo y se determina por tu equipamento, mientras que la segunda es única y se aplica a todas a la vez y se determina principalmente por tus estadísticas.</p>
-<p>Sin embargo, si en la tirada de precisión obtienes un 20, el ataque se considera <b>crítico</b>, impacta y aplica su efecto ignorando completamente la armadura. Pero si sacas un 1, es una <b>pifia</b> y el ataque falla completamente automáticamente. Existen efectos que pueden aumentar tu probabilidad de crítico y de pifia, en tal caso también cuentas los siguientes números del dado. Es muy importante tener en cuenta que son los valores originales del dado los que cuentan, sin la modificación de DE o cualquier otra.</p>
-<p>Puedes perder estabilidad como coste o ciertos efectos. Puedes gastar un turno para recuperarla toda.  Mientras que la estabilidad es 0, todos los impactos recibidos son críticos. La estabilidad se recupera automáticamente al final del combate. La estabilidad no puede bajar de 0.<p>
+<p>Sin embargo, si en la tirada de precisión obtienes un 20, el ataque se considera <b>crítico</b>, impacta y aplica su efecto ignorando completamente la armadura. Pero si sacas un 1, es una <b>pifia</b> y el ataque falla completamente automáticamente. Existen efectos que pueden aumentar tu probabilidad de crítico y de pifia, en tal caso también cuentas los siguientes números del dado. Es muy importante tener en cuenta que son los valores originales del dado los que cuentan.</p>
+<p>Puedes perder agilidad como coste o ciertos efectos. Puedes gastar un turno para recuperarla toda.  Mientras que la agilidad es 0, todos los impactos recibidos son críticos. La agilidad se recupera automáticamente al final del combate. La agilidad no puede bajar de 0.<p>
 <p><b>Alcance y composición.</b> Según cómo el equipo vaya en ese momento o la situación, conformaréis cierta composición al entrar en combate. Exsiten 3 posiciones para cada equipo involucrado en el ataque: <b>vanguardia</b>, <b>guardia</b> y <b>retaguardia</b>. El grupo enemigo lo mismo. Podemos pensar que estando las 2 vanguardias en el centro del combate, el resto de posiciones están a 1 de distancia entre sí. Entonces, armas y habilidades tiene cierto alcance (tanto ofensiva, como defensivamente):</p>
 <ul>
     <li>Corto: sólo llegas a posiciones a <b>1</b> de distancia.</li>
@@ -86,19 +84,19 @@
 </ul>
 
 <h1>Creación de personaje</h1>
-<p>Ahora toca ver en qué cosiste tu personaje exactamente y luego cómo es el proceso para crearlo. Ya hemos visto que tiene sangre, estabilidad y cuerpo, veamos cómo se calculan estos valores.</p>
+<p>Ahora toca ver en qué cosiste tu personaje exactamente y luego cómo es el proceso para crearlo. Ya hemos visto que tiene sangre, agilidad y cuerpo, veamos cómo se calculan estos valores.</p>
 
 <h2>Estadísticas (ahora de verdad)</h2>
 <p>Vamos a volver a verlas pero esta vez explicándolas.</p>
 <ul>
     <li>(FU) Fuerza: determina tu penetración física</li>
     <li>(IN) Inteligencia: determina tu armadura y penetración mágicas</li>
-    <li>(DE) Destreza: se usa en sí.</li>
-    <li>(AC) Acrobacia: se multiplica por dos para establecer tu estabilidad máxima</li>
+    <li>(DE) Destreza: establece tu agilidad máxima</li>
     <li>(CO) Constitución: determina tu sangre máxima</li>
     <li>(RE) Resistencia: determina tu peso máximo</li>
 </ul>
 <p>Cualquiera puede ser negativa pero si se utiliza para determinar algo que no tiene sentido en negativo, pues es 0.</p>
+
 
 <h2>Clases y habilidades</h2>
 <h3>Clase</h3>
@@ -116,9 +114,11 @@
 <ul>
     <li>Objetivo del ataque: Si una habilidad está dirigida a una única parte del cuerpo, debes de declarar a cuál antes de tirar precisión. Si es un <b>golpe alto</b>, sólo puedes escoger entre las partes del cuerpo superiores, si es un <b>golpe bajo</b>, de entre las bajas. Si es un <b>golpe aleatorio</b>, tras impactar tira 1d8 para decidir en que parte se acertó; si además es aleatorio pero bajo o alto, usa 1d4.</li>
     <li><b>Dañar:</b> cuando una habilidad daña, hace que la/s parte/s del cuerpo afectada/s desciendan una vez en su estado de salud.</li>
-    <li><b>Pasiva:</b> las habilidades pasivas no se pueden activar, si no que tienen algún efecto permanente que se tiene en cuenta siempre.</li>
+    <li><b>Pasiva:</b> las habilidades pasivas no se pueden activar, si no que tienen algún efecto permanente que se tiene en cuenta siempre. Algunas habilidades son pasivas pero no se pone explícitamente porque se entiende por el contexto.</li>
     <li>Costes: Alguna habilidades usan el símbolo <b>></b> para indicar algún tipo de coste. A la izquierda está lo que hace falta gastar y a la derecha el efecto en sí.</li> 
     <li><b>Instanténeo:</b> una habilidad instantánea puede usarse en cualquier turno, pero sólo una vez por turno. Si se usa en el turno de un enemigo debe de ser una vez se haya declarado el objetivo pero antes de que haga su tirada de precisión.</li>
+    <li><b>Mágico:</b> las habilidades ofensivas de carater mágico tiene esta palabra clave. Es decir, </li>
+    <li><b>atar:</b> algunas habilidades pueden tratar de matar al objetivo directamente, pero si el objetivo es un jugador realiza una tirada de muerte.</li>
     <li><b></b></li>
 </ul>
 
@@ -150,4 +150,3 @@
 <p></p>
 <b></b>
 -->
-</div>

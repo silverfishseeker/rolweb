@@ -5,4 +5,6 @@ class InfoController < ApplicationController
     def estadosAlterados
     end
     
+    def lore
+    end
 end
