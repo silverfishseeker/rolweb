@@ -20,6 +20,7 @@
         <li><%= link_to "Clases", clases_path %></li>
         <li><%= link_to "Hablidades", habilidads_path %></li>
         <li><%= link_to "Items", items_path %></li>
+        <li><a href="/control">Control</a></li>
       </ul>
     </div>
     
@@ -27,9 +28,5 @@
       <%= yield %>
     </div>
 
-    <% urlCompleta = "http://"+HTTParty.get('http://whatismyip.akamai.com')+":3000"
-       # si este servidor falla, mirar algún otro de aquí: https://stackoverflow.com/questions/13270042/get-public-remote-ip-address
-    %>
-    <p>Dirección actual: <a href="<%=urlCompleta%>"><%=urlCompleta%><a></p>
   </body>
 </html>

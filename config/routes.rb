@@ -9,5 +9,6 @@ Rails.application.routes.draw do
   get '/reglas', to: 'info#reglas'
   get '/estadosAlterados', to: 'info#estadosAlterados'
   get '/lore', to: 'info#lore'
+  get '/control', to: 'info#control'
   get '/habilidadesIndependientes', to: 'habilidads#habilidadesIndependientes'
 end
