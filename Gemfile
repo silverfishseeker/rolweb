@@ -73,3 +73,6 @@ end
 
 # para las imágenes
 gem 'carrierwave', '~> 1.0'
+
+# para hacer peticiones GET y tal
+gem 'httparty'

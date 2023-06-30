@@ -12,7 +12,7 @@
 
   <body>
     <div class="navbar">
-    <h1>Doors Maze</h1>
+      <h1>Doors Maze</h1>
       <ul>
         <li><a href="/lore">Lore</a></li>
         <li><a href="/reglas">Reglas</a></li>
@@ -26,5 +26,10 @@
     <div class="inBody">
       <%= yield %>
     </div>
+
+    <% urlCompleta = "http://"+HTTParty.get('http://whatismyip.akamai.com')+":3000"
+       # si este servidor falla, mirar algún otro de aquí: https://stackoverflow.com/questions/13270042/get-public-remote-ip-address
+    %>
+    <p>Dirección actual: <a href="<%=urlCompleta%>"><%=urlCompleta%><a></p>
   </body>
 </html>
