@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :clases
   resources :habilidads
   resources :items
+  resources :pictures
   get '/reglas', to: 'info#reglas'
   get '/estadosAlterados', to: 'info#estadosAlterados'
   get '/lore', to: 'info#lore'

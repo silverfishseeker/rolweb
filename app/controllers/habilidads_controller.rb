@@ -1,4 +1,4 @@
-class HabilidadsController < ApplicationController
+class HabilidadsController < ModelController
   
     def index
         @habilidades = Habilidad.all

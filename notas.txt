@@ -44,6 +44,7 @@ bin/rails generate model
 
 
 
+bin/rails generate model picture nombre:string image:string
 bin/rails generate model Mob nombre:string cuerpo:string 
 bin/rails generate model Item nombre:string coste:decimal peso:decimal efecto:text image:string
 bin/rails generate controller Item
