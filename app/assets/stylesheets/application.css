@@ -217,8 +217,7 @@ textarea {
 
 /* Estilos CSS para la barra de direcciones */
 .navbar {
-    background-color: #bb3e03
-    ;
+    background-color: #bb3e03;
     color: #e9d8a6;
     padding: 10px;
 
@@ -226,6 +225,17 @@ textarea {
     top: 0;
     left: 0;
     width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.navbar img{
+    width: 7%;
+    height: 7%;
+}
+
+.subnavbar {
+    width: 93%;
 }
 
 .navbar h1 {
