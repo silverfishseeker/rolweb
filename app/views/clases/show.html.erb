@@ -3,28 +3,28 @@
         <p class="clase-level bodeOscuro">
             <%= @clase.nivel %>
         </p>
-        <h3 class="clase-title"><%= link_to @clase.nombre, @clase %></h3>
+        <h3 class="clase-title"><%= link_to @x.nombre, @x %></h3>
     </div>
     <div class="clase-contents">
         <div class="clase-details">
-            <p class="clase-effect"><%= @clase.efecto %></p>
-            <p class="clase-description"><%= @clase.descripcion %></p>
+            <p class="clase-effect"><%= @x.efecto %></p>
+            <p class="clase-description"><%= @x.descripcion %></p>
         </div>
         <div class="clase-image clase-imageFixed">
-            <%= render "shared/image", image: @clase.image %>
+            <%= render "shared/image", image: @x.image %>
         </div>
     </div>
 
     <h1>Lista de Hablidades relacionadas:</h1>
     <div class="grid-container">
-        <% @clase.habilidads.each do |habil| %>
+        <% @x.habilidads.each do |habil| %>
             <%= render "habilidads/habilidad", habil: habil %>
         <% end %>
     </div>
     
     <h1>Lista de items relacionados:</h1>
     <div class="grid-container">
-        <% @clase.items.each do |it| %>
+        <% @x.items.each do |it| %>
             <%= render "items/item", item: it %>
         <% end %>
     </div>
@@ -32,5 +32,5 @@
 
 </div>
 
-<%= link_to "Edit", edit_clase_path(@clase) %>
-<%= link_to "Destroy", clase_path(@clase), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+<%= link_to "Edit", edit_clase_path(@x) %>
+<%= link_to "Destroy", clase_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>

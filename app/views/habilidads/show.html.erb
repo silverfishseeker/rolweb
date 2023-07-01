@@ -1,6 +1,6 @@
 <div class="clase-show">
-    <%= render "habilidad", habil: @habilidad %>
+    <%= render "habilidad", habil: @x %>
 <div>
 <br>
-<%= link_to "Edit", edit_habilidad_path(@habilidad) %>
-<%= link_to "Destroy", habilidad_path(@habilidad), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+<%= link_to "Edit", edit_habilidad_path(@x) %>
+<%= link_to "Destroy", habilidad_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
