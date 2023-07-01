@@ -1,0 +1,4 @@
+<%= render "picture", x: @x %>
+
+<%= link_to "Edit", edit_picture_path(@x) %>
+<%= link_to "Destroy", picture_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>

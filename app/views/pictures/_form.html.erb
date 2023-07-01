@@ -1,0 +1,19 @@
+<%= form_with model: @x do |form| %>
+  <div>
+    <%= form.label :nombre %><br>
+    <%= form.text_field :nombre %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :image %><br>
+    <%= form.file_field :image %>
+  </div>
+
+  <%= render "shared/image", image: @x.image %>
+  <br>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

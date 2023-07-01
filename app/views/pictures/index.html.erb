@@ -1,0 +1,8 @@
+<h2>Galería</h2>
+
+
+<div class="grid-container">
+    <% @xs.sort_by(&:nombre).each do |x| %>
+        <%= render "picture", x: x%>
+    <% end %>
+</div>

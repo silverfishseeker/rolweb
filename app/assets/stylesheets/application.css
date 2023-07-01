@@ -187,12 +187,32 @@ textarea {
     margin: 10px;
 }
 
+.clase-picture {
+    width: 400px;
+    height: 400px;
+}
+.clase-picture img {
+    width: 100%;
+    height: auto;
+}
+  
+.clase-picture-desc{
+    text-align: center;
+    font-size: 14px;
+    background-color: #e9d8a6;
+    padding: 10px;
+    
+    border: 2px solid #ca6702;
+    border-radius: 5px;
+}
+
 .grid-container {
     margin: 10px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /*400 es el tamaño del item de dentro*/
     grid-gap: 10px;
 }
+
 
 
 /* Estilos CSS para la barra de direcciones */
