@@ -1,14 +1,14 @@
 <div class="clase-show">
-    <%= render "item", item: @item %>
+    <%= render "item", item: @x %>
 <div>
 <br>
 
 <h1>Lista de Hablidades relacionadas:</h1>
 <div class="grid-container">
-    <% @item.habilidads.each do |habil| %>
+    <% @x.habilidads.each do |habil| %>
         <%= render "habilidads/habilidad", habil: habil %>
     <% end %>
 </div>
 
-<%= link_to "Edit", edit_item_path(@item) %>
-<%= link_to "Destroy", item_path(@item), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+<%= link_to "Edit", edit_item_path(@x) %>
+<%= link_to "Destroy", item_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>

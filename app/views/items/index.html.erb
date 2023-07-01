@@ -2,7 +2,7 @@
 
 
 <div class="grid-container">
-    <% @items.sort_by(&:nombre).each do |item| %>
+    <% @xs.sort_by(&:nombre).each do |item| %>
         <%= render "item", item: item %>
     <% end %>
 </div>
