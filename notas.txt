@@ -7,7 +7,7 @@ docker exec -it rolweb-web-1 bash
 bin/rails server
     start server
 
-bin/rails generate controller {controlador1} {controlador2} {...} {--skip-routes}
+bin/rails generate controller {controlador1s} {controlador2s} {...} {--skip-routes}
     generar controladores para los modelos o rutas, no sé ej:
         bin/rails generate controller Articles index --skip-routes
         bin/rails generate controller Comments
@@ -32,6 +32,8 @@ bin/rails generate model {nombre modelo} [{símbolo1}:{tipo1}  {símbolo2}:{tipo
 
 bin/rails generate migration AddNombreDeCampoToNombreDeModelo nombre_de_campo:data_type
 bin/rails generate migration RemoveNombreDeColumnaFromNombreDeModelo nombre_de_columna:data_type
+bin/rails generate migration CreateJoinTablePrimerosSegundos primeros segundos
+
 rails generate migration Drophabilidad
 rails generate migration drop_Habilidad
 
@@ -48,6 +50,24 @@ bin/rails generate model
 
 
 
+bin/rails generate model mob nombre:string image:string cuerpo:text estabilidad:integer armaduraMagica:integer penetracionFisica:integer penetracionMagica:integer sangre:integer descripcion:text oro:decimal
+bin/rails generate controller Mobs
+bin/rails generate migration CreateJoinTableMobsItems mobs items
+
+nombre
+image
+cuerpo
+estabilidad
+armaduraMagica
+penetracionFisica
+penetracionMagica
+sangre
+oro
+habilidads
+
+items n:m
+
+
 bin/rails generate model picture nombre:string image:string
 bin/rails generate model Mob nombre:string cuerpo:string 
 bin/rails generate model Item nombre:string coste:decimal peso:decimal efecto:text image:string
@@ -57,32 +77,3 @@ bin/rails generate migration RemoveimagenFromHabilidad imagen:string
 bin/rails generate migration AddimageToHabilidad image:string
 
 bin/rails generate model Habilidad nombre:string nivel:integer efecto:string
-
-
-
-    <% habil.clases.each do |clase| %>
-      <%= clase.nombre %>
-    <% end %>
-
-
-Humano tonto
-
-Partes bajas:
-    4 pierna izquierda
-    4 pierna derecha
-    4 Abdomen
-    4 Genitales
-Partes altas
-    4 (1) brazo izquierdo
-    4 (2) brazo derecho
-    4 (3) torso
-     4 (4) cabeza
-
-Sangre: 5
-
-Armadura física 5
-Armadura mágica 0
-Penetración física 10
-Penetración mágica 0
-Estabilidad 10
-Destreza 0

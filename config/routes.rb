@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :habilidads
   resources :items
   resources :pictures
+  resources :mobs
   get '/reglas', to: 'info#reglas'
   get '/estadosAlterados', to: 'info#estadosAlterados'
   get '/lore', to: 'info#lore'

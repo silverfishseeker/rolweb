@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_30_141702) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_04_124449) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -60,6 +60,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_30_141702) do
     t.decimal "peso"
     t.text "efecto"
     t.string "image"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "items_mobs", id: false, force: :cascade do |t|
+    t.bigint "mob_id", null: false
+    t.bigint "item_id", null: false
+    t.index ["item_id", "mob_id"], name: "index_items_mobs_on_item_id_and_mob_id"
+    t.index ["mob_id", "item_id"], name: "index_items_mobs_on_mob_id_and_item_id"
+  end
+
+  create_table "mobs", force: :cascade do |t|
+    t.string "nombre"
+    t.string "image"
+    t.text "cuerpo"
+    t.integer "estabilidad"
+    t.integer "armaduraMagica"
+    t.integer "penetracionFisica"
+    t.integer "penetracionMagica"
+    t.integer "sangre"
+    t.text "descripcion"
+    t.decimal "oro"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

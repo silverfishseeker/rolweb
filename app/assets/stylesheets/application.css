@@ -213,6 +213,45 @@ textarea {
     grid-gap: 10px;
 }
 
+/* Estilos CSS para mobs */
+.mob-item {
+    background-color: #94d2bd;
+    width: 400px;
+}
+.mob-subGrid {
+    display: grid;
+    grid-template-areas:
+      'estabilidad  sangre      oro'
+      'armMag       penFis      penMag'
+      'cuerpo       cuerpo      cuerpo'
+      'descripcion   descripcion descripcion';
+    gap: 10px;
+    font-size: 14px;
+    background-color: #e9d8a6;
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid #ca6702;
+    border-radius: 5px;
+    font-size: 14px;
+}
+.mob-estabilidad { grid-area: estabilidad; }
+.mob-sangre { grid-area: sangre; }
+.mob-oro { grid-area: oro; }
+.mob-armMag { grid-area: armMag; }
+.mob-penFis { grid-area: penFis; }
+.mob-penMag { grid-area: penMag; }
+.mob-cuerpo { grid-area: cuerpo; }
+.mob-descripcion { grid-area: descripcion; }
+.mob-cuerpo, .mob-descripcion {
+    background-color: #e9d8a6;
+    padding: 10px;
+    border: 2px solid #ca6702;
+    border-radius: 5px;
+}
+.mob-image img {
+    width: 40px;
+}
+
 
 
 /* Estilos CSS para la barra de direcciones */

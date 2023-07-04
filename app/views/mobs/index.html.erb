@@ -1,0 +1,7 @@
+<h2>Mobs</h2>
+
+<div class="grid-container">
+    <% @xs.sort_by(&:nombre).each do |i| %>
+        <%= render "mob", mob: i %>
+    <% end %>
+</div>

@@ -1,0 +1,73 @@
+<%= form_with model: mob do |form| %>
+  <div>
+    <%= form.label :nombre %><br>
+    <%= form.text_field :nombre %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :estabilidad %><br>
+    <%= form.number_field :estabilidad %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :sangre %><br>
+    <%= form.number_field :sangre %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :armaduraMagica %><br>
+    <%= form.number_field :armaduraMagica %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :penetracionFisica %><br>
+    <%= form.number_field :penetracionFisica %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :penetracionMagica %><br>
+    <%= form.number_field :penetracionMagica %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :cuerpo %><br>
+    <%= form.text_area :cuerpo %><br>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :descripcion %><br>
+    <%= form.text_area :descripcion %><br>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :oro %><br>
+    <%= form.number_field :oro, step: :any %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :item_ids, 'Items' %><br>
+    <%= form.collection_select :item_ids, Item.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :image %><br>
+    <%= form.file_field :image %>
+  </div>
+
+  <%= render "shared/image", image: mob.image %>
+  <br>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

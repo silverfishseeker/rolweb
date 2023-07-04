@@ -1,0 +1,23 @@
+<div class="bodeOscuro mob-item">
+    <div class="clase-header">
+        <h3 class="clase-title"><%= link_to mob.nombre, mob %></h3>
+    </div>
+    <div class="mob-subGrid">
+        <div class="mob-estabilidad">ES: <b><%=mob.estabilidad%></b></div>
+        <div class="mob-sangre">Sangre: <b><%=mob.sangre%></b></div>
+        <div class="mob-oro">oro: <b><%=mob.oro%></b></div>
+        <div class="mob-armMag">ArmMag: <b><%=mob.armaduraMagica%></b></div>
+        <div class="mob-penFis">PenFis: <b><%=mob.penetracionFisica%></b></div>
+        <div class="mob-penMag">PenMag: <b><%=mob.penetracionMagica%></b></div>
+        <div class="mob-cuerpo"><%=mob.cuerpo%></div>
+        <div class="mob-descripcion"><%=mob.descripcion%></div>
+    </div>
+    <div class="clase-clases bodeOscuro">
+        <% mob.items.each do |it| %>
+            <%= link_to it.nombre, it %>
+        <% end %>
+    </div>
+    <div class="mob-image">
+        <%= render "shared/image", image: mob.image %>
+    </div>
+</div>

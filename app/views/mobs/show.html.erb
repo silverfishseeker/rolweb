@@ -1,0 +1,7 @@
+<div class="clase-show">
+    <%= render "mob", mob: @x %>
+<div>
+<br>
+
+<%= link_to "Edit", edit_mob_path(@x) %>
+<%= link_to "Destroy", mob_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
