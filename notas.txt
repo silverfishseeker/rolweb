@@ -1,6 +1,4 @@
 
-        si te vas, te sigues
-
 
 docker exec -it rolweb-web-1 bash
 
