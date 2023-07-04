@@ -65,7 +65,7 @@ textarea {
 
 .inBody {
     margin: 5px;
-    margin-top: 110px;
+    margin-top: 150px;
 }
 
 
@@ -230,8 +230,8 @@ textarea {
 }
 
 .navbar img{
-    width: 7%;
-    height: 7%;
+    height: 72px;
+    width: auto;
 }
 
 .subnavbar {

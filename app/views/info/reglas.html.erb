@@ -23,10 +23,11 @@
     <li>(DE) Destreza</li>
     <li>(CO) Constitución</li>
     <li>(RE) Resistencia</li>
+    <li>(AP) Aprendizaje</li>
 </ul>
 
 <h1>Tu estado</h1>
-<p>A diferencia de otros sistemas, en este no tienes puntos de salud, si no que tienes <b>partes del cuerpo</b>, sangre y agilidad. Bebes de procuparar de mantener ambos en buen estado y debes tener apuntado en todo momento sus valores actuales.</p>
+<p>A diferencia de otros sistemas, en este no tienes puntos de salud, si no que tienes <b>partes del cuerpo</b>, sangre y estabilidad. Bebes de procuparar de mantener ambos en buen estado y debes tener apuntado en todo momento sus valores actuales.</p>
 <p>Antes de empezar vamos a ver cómo se puede morir. Un término esencial es la <b>tirada de muerte</b>. Esta consiste en lanzar 1d20 + CO. Si el resultado es estríctamente menor que 15, tu personaje muere permanentemente y ya no puedes seguir participando con él. Tu objetivo es no tener que llegar a tener que hacer esta tirada nunca.</p>
 
 
@@ -70,11 +71,11 @@
 <h1>Combate</h1>
 <p>Ahora vamos a echar un vistazo cómo funciona el sistema de combate.</p>
 <p>Es por turnos. En cada turno cada jugador o enemigo puede realizar una acción; que normalmente será usar una de sus habilidades activas o bien intentar hacer cualquier otra cosa razonable. El orden de turnos se decide con una tirada inicial de todos los participantes de 1d10 + destreza (veremos esta estadística luego).</p>
-<p>Entonces, cuando intentas atacar a alguien (o te atacan) haces una <b>tirada de precisión</b>, que consiste en 1d20, luego comparas este valor con la agilidad del objetivo. Si el valor es mayor entonces se da un impacto y ahora hay que mirar la armadura.</p>
+<p>Entonces, cuando intentas atacar a alguien (o te atacan) haces una <b>tirada de precisión</b>, que consiste en 1d20, luego comparas este valor con la <b>estabilidad (ES)</b> del objetivo. Si el valor es mayor entonces se da un impacto y ahora hay que mirar la armadura.</p>
 <p>En la segunda parte, tras un impacto efectivo, primero vemos si el ataque era de naturaleza <b>física</b> o <b>mágica</b>. Si era físico entonces tu <b>penetración física</b> debe de ser mayor que la <b>armadura física</b> de la zona del ataque, para poder aplicar el efecto del ataque, si no, no hace nada (pero aún hay impacto). En el caso de que sea mágico, se hace lo mismo pero con tu <b>penetración mágica</b> y su <b>armadura mágica</b>.</p>
 <p>Una distinción importante entre la armadura física y mágica es que la primera es propia de cada parte del cuerpo y se determina por tu equipamento, mientras que la segunda es única y se aplica a todas a la vez y se determina principalmente por tus estadísticas.</p>
 <p>Sin embargo, si en la tirada de precisión obtienes un 20, el ataque se considera <b>crítico</b>, impacta y aplica su efecto ignorando completamente la armadura. Pero si sacas un 1, es una <b>pifia</b> y el ataque falla completamente automáticamente. Existen efectos que pueden aumentar tu probabilidad de crítico y de pifia, en tal caso también cuentas los siguientes números del dado. Es muy importante tener en cuenta que son los valores originales del dado los que cuentan.</p>
-<p>Puedes perder agilidad como coste o ciertos efectos. Puedes gastar un turno para recuperarla toda.  Mientras que la agilidad es 0, todos los impactos recibidos son críticos. La agilidad se recupera automáticamente al final del combate. La agilidad no puede bajar de 0.<p>
+<p>Puedes perder estabilidad como coste o ciertos efectos. Puedes gastar un turno para recuperarla toda.  Mientras que la estabilidad es 0, todos los impactos recibidos son críticos. La estabilidad se recupera automáticamente al final del combate. La estabilidad no puede bajar de 0.<p>
 <p><b>Alcance y composición.</b> Según cómo el equipo vaya en ese momento o la situación, conformaréis cierta composición al entrar en combate. Exsiten 3 posiciones para cada equipo involucrado en el ataque: <b>vanguardia</b>, <b>guardia</b> y <b>retaguardia</b>. El grupo enemigo lo mismo. Podemos pensar que estando las 2 vanguardias en el centro del combate, el resto de posiciones están a 1 de distancia entre sí. Entonces, armas y habilidades tiene cierto alcance (tanto ofensiva, como defensivamente):</p>
 <ul>
     <li>Corto: sólo llegas a posiciones a <b>1</b> de distancia.</li>
@@ -83,19 +84,20 @@
     <li>ilimitado: no importa la distancia.</li>
 </ul>
 
-<h1>Creación de personaje</h1>
-<p>Ahora toca ver en qué cosiste tu personaje exactamente y luego cómo es el proceso para crearlo. Ya hemos visto que tiene sangre, agilidad y cuerpo, veamos cómo se calculan estos valores.</p>
+<h1>Definición de personaje</h1>
+<p>Ahora toca ver en qué cosiste tu personaje exactamente y luego cómo es el proceso para crearlo. Ya hemos visto que tienes sangre, estabilidad y cuerpo, veamos cómo se calculan estos valores.</p>
 
 <h2>Estadísticas (ahora de verdad)</h2>
 <p>Vamos a volver a verlas pero esta vez explicándolas.</p>
 <ul>
-    <li>(FU) Fuerza: determina tu penetración física</li>
-    <li>(IN) Inteligencia: determina tu armadura y penetración mágicas</li>
-    <li>(DE) Destreza: establece tu agilidad máxima</li>
-    <li>(CO) Constitución: determina tu sangre máxima</li>
-    <li>(RE) Resistencia: determina tu peso máximo</li>
+    <li>(FU) Fuerza: determina tu penetración física.</li>
+    <li>(IN) Inteligencia: determina tu armadura y penetración mágicas.</li>
+    <li>(DE) Destreza: establece tu estabilidad máxima. (Mínimo 0.)</li>
+    <li>(CO) Constitución: determina tu sangre máxima. (Mínimo 2).</li>
+    <li>(RE) Resistencia: determina tu peso máximo. (Mínimo 0).</li>
+    <li>(AP) Aprendizaje: Indica los niveles que se han invertido para adquirir clases y Habilidades. (Mínimo 0)</li>
 </ul>
-<p>Cualquiera puede ser negativa pero si se utiliza para determinar algo que no tiene sentido en negativo, pues es 0.</p>
+<p>Cualquiera puede ser negativa pero si es menor que el mínimo de algo que determina, pues esa cosa es su mínimo.</p>
 
 
 <h2>Clases y habilidades</h2>
@@ -115,7 +117,7 @@
     <li>Objetivo del ataque: Si una habilidad está dirigida a una única parte del cuerpo, debes de declarar a cuál antes de tirar precisión. Si es un <b>golpe alto</b>, sólo puedes escoger entre las partes del cuerpo superiores, si es un <b>golpe bajo</b>, de entre las bajas. Si es un <b>golpe aleatorio</b>, tras impactar tira 1d8 para decidir en que parte se acertó; si además es aleatorio pero bajo o alto, usa 1d4.</li>
     <li><b>Dañar:</b> cuando una habilidad daña, hace que la/s parte/s del cuerpo afectada/s desciendan una vez en su estado de salud.</li>
     <li><b>Pasiva:</b> las habilidades pasivas no se pueden activar, si no que tienen algún efecto permanente que se tiene en cuenta siempre. Algunas habilidades son pasivas pero no se pone explícitamente porque se entiende por el contexto.</li>
-    <li>Costes: Alguna habilidades usan el símbolo <b>></b> para indicar algún tipo de coste. A la izquierda está lo que hace falta gastar y a la derecha el efecto en sí.</li> 
+    <li><b>Costes:</b> Alguna habilidades usan el símbolo <b>></b> para indicar algún tipo de coste. A la izquierda está lo que hace falta gastar y a la derecha el efecto en sí. Algunas pueden usar estabilidad (ES) como coste, las bajas temporalmente por esa cantidad.</li> 
     <li><b>Instanténeo:</b> una habilidad instantánea puede usarse en cualquier turno, pero sólo una vez por turno. Si se usa en el turno de un enemigo debe de ser una vez se haya declarado el objetivo pero antes de que haga su tirada de precisión.</li>
     <li><b>Mágico:</b> las habilidades ofensivas de carater mágico tiene esta palabra clave. Es decir, </li>
     <li><b>atar:</b> algunas habilidades pueden tratar de matar al objetivo directamente, pero si el objetivo es un jugador realiza una tirada de muerte.</li>
@@ -134,12 +136,26 @@
 <p>Además, mecánicas principales que los ítems pueden usar:</p>
 <ul>
     <li>Consumibles: cuando un items tiene un efecto de la forma "<b>C ></b>" significa que lo gastas para realizar su efcto.</li>
-    <li></li>
-    <li></li>
+
 </ul>
 
+<h1>Creación de personaje</h1>
+<p>Ahora que conoces todos los elementos que hay vamos a ver cómo se crea tu personaje. Hay que hacer varias cosas, vamos a verlas independientemente.</p>
+<h2>Estadísticas</h2>
+<p>Además de las 6 estadística básicas hay que establecer tu oro inicial. Para inicializarlas, lanzas 8 dados de 20 caras y le restas 5 a cada uno de los resultados. Acontinuación debes de repartir los valores libremente entre las 6 estadísticas iniciales y el oro (sobra un dado que descartas). Si crees que la tirada es mala, antes de hacer nada más, tienes la oportunidad de repetirla entera; te quedas con el resultado sin poder cambiarlo; pero si el resultado total es menor que 20, puedes repetirno idefinidamente hasta que sea mayor que 20. Si el oro es negativo, lo estableces a 0.</p>
+<h2>Clases y habilidades</h2>
+<p>Gastas puntos de tu aprendizaje para aprender clases y habilidades libremente (cumpliendo sus requisistos). Aprender una clase o habilidad te cuesta puntos igual a su nivel. Puedes dejar punto de aprendizaje sin gastar para más adelante.</p>
+<h2>Items</h2>
+<p>Puedes comprar items iniciales con tu oro inicial. (No tienes porqué gastarlo todo.) Además de gastar el oro, aseguráte de que tienes peso para llevarlos encima.</p>
+<br>
+<p>Aunque normalmente habría que seguir estos pasos, puedes ir haciendo todo a la vez, mientras que respetes la tirada de estadísticas y que al final se quede todo bien, no hay problema.</p>
 
-<!--
+<h1>Progresión</h1>
+<p>La forma de progresar es completando misiones satisfactoriamente. Cada misión tiene como recompensa cierta cantidad de niveles libres (por lo general 1) y de oro. Puedes usar estos nivles para aumentar tus estadísticas (incluyendo estadísticas extras de cartas o habilidades), pero no puedes utilizarlo para aumentar tu oro o para "estadísticas especiales" (denominadas así). Todos los integrantes que participen en la misión reciben los mismos niveles libres, pero tienen que repartir el oro entre ellos a su discreción.</p>
+<p>Si inviertes el nivel en aprendizaje puedes gastarlo para aprender nuevas habilidades (cumpliendo los requisistos) pero no nuevas clases.</p>
+
+
+<%#
 <ul>
     <li></li>
     <li></li>
@@ -147,6 +163,7 @@
 </ul>
 <h1></h1>
 <h2></h2>
+<h3></h3>
 <p></p>
 <b></b>
--->
+%>
