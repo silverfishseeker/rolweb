@@ -1,5 +1,5 @@
 <h2>Habilidades</h2>
 
-<h3><a href='/habilidadesIndependientes'>Habilidades independientes</a></h3>
+<h3><%= link_to "Habilidades independientes", habilidads_path(indep: "t")%></h3>
 
 <%= render "lista", habilidades: @xs%>

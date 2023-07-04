@@ -5,8 +5,12 @@ class HabilidadsController < ModelController
     @tipo = Habilidad
   end
 
-  def habilidadesIndependientes
-    @xs = Habilidad.left_outer_joins(:items, :clases).where(items: { id: nil }, clases: { id: nil })
+  def index
+    if params[:indep] == "t"
+      @xs = Habilidad.left_outer_joins(:items, :clases).where(items: { id: nil }, clases: { id: nil })
+    else
+      super
+    end
   end
   
   def model_params
