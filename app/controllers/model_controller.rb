@@ -1,6 +1,6 @@
 class ModelController < ApplicationController
     
-    http_basic_authenticate_with name: "yomismo", password: "yasabes", except: [:index, :show]
+    http_basic_authenticate_with name: "yomismo", password: "yasabess", except: [:index, :show]
     
     def index
         @xs = @tipo.all
