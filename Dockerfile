@@ -7,7 +7,7 @@ WORKDIR /app
 # Copia el archivo Gemfile y Gemfile.lock al contenedor
 COPY Gemfile Gemfile.lock ./
 
-# Instala las gemas de la aplicación
+# Instala las gemas de la aplicación (dependencias)
 RUN bundle install
 
 # Copia el resto de la aplicación al contenedor
@@ -17,8 +17,6 @@ COPY . .
 EXPOSE 3000
 
 # Define el comando para iniciar el servidor de Rails
-# Instalar dependencias -> bundle install && 
-# Migrar base de datos e  -> && bin/rails db:migrate RAILS_ENV=development
 # Puto tmp  
 # iniciar rails
 CMD rm -rf /app/tmp/* && bin/rails server -b 0.0.0.0
