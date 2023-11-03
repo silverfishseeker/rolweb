@@ -23,8 +23,13 @@
     <li>(DE) Destreza</li>
     <li>(CO) Constitución</li>
     <li>(RE) Resistencia</li>
-    <li>(AP) Aprendizaje</li>
 </ul>
+
+<h2>Modificadores</h2>
+<p>Cuando se usan las siglas de una habilidad, no se refiere a la habilidad en sí si no a su modificador. Éste número se calcula según la siguiente tabla y se usa en numerosos efectos. Simplemente mira el valor actual de la estadística y usa el número correspondiente para la suma.</p>
+<%= image_tag "tabla_mods.jpg" %>
+
+
 
 <h1>Tu estado</h1>
 <p>A diferencia de otros sistemas, en este no tienes puntos de salud, si no que tienes <b>partes del cuerpo</b>, sangre y estabilidad. Bebes de procuparar de mantener ambos en buen estado y debes tener apuntado en todo momento sus valores actuales.</p>
@@ -93,24 +98,23 @@
 <p>Vamos a volver a verlas pero esta vez explicándolas.</p>
 <ul>
     <li>(FU) Fuerza: determina tu penetración física.</li>
-    <li>(IN) Inteligencia: determina tu armadura y penetración mágicas.</li>
+    <li>(IN) Inteligencia: determina tu penetración mágica.</li>
     <li>(DE) Destreza: establece tu estabilidad máxima. (Mínimo 0.)</li>
     <li>(CO) Constitución: determina tu sangre máxima. (Mínimo 2).</li>
     <li>(RE) Resistencia: determina tu peso máximo. (Mínimo 0).</li>
-    <li>(AP) Aprendizaje: Indica los niveles que se han invertido para adquirir clases y Habilidades. (Mínimo 0)</li>
 </ul>
 <p>Cualquiera puede ser negativa pero si es menor que el mínimo de algo que determina, pues esa cosa es su mínimo.</p>
 
 
 <h2>Clases y habilidades</h2>
 <h3>Clase</h3>
-<p>Cada clase tiene un título, nível, descripción y efectos (imagen si eso tmbn). Representan cosas como oficios o razas. Cada personaje empieza con X clases iniciales, que son inmutables por el resto de la partida excepto en situaciones excepcionales.</p>
+<p>Cada clase tiene un título, nível, descripción y efectos (imagen si eso tmbn). Representan cosas como oficios o razas.</p>
 <h3>Habilidad</h3>
 <p>Cada habilidad tiene:</p>
 
 <ul>
     <li>Nombre: sin más.</li>
-    <li>Nivel: indica la cantidad de experiencia necesaria para aprender esta habilidad.</li>
+    <li>Nivel: indica el nivel de clase necesario para aprender esta habilidad.</li>
     <li>Requisitos: para aprender una habilidad debes de ser alguna de estas clases. A veces también se requiere que uses algún item para usar esta habilidad.</li>
     <li>Descripción: indica algún requisito adicional, así como sus efectos.</li>
 </ul>
@@ -120,7 +124,7 @@
     <li><b>Dañar:</b> cuando una habilidad daña, hace que la/s parte/s del cuerpo afectada/s desciendan una vez en su estado de salud.</li>
     <li><b>Pasiva:</b> las habilidades pasivas no se pueden activar, si no que tienen algún efecto permanente que se tiene en cuenta siempre. Algunas habilidades son pasivas pero no se pone explícitamente porque se entiende por el contexto.</li>
     <li><b>Costes:</b> Alguna habilidades usan el símbolo <b>></b> para indicar algún tipo de coste. A la izquierda está lo que hace falta gastar y a la derecha el efecto en sí. Algunas pueden usar estabilidad (ES) como coste, las bajas temporalmente por esa cantidad.</li> 
-    <li><b>Instanténeo:</b> una habilidad instantánea puede usarse en cualquier turno, pero sólo una vez por turno. Si se usa en el turno de un enemigo debe de ser una vez se haya declarado el objetivo pero antes de que haga su tirada de precisión.</li>
+    <li><b>Instanténeo:</b> una habilidad instantánea puede usarse en cualquier turno; pero sólo puedes unar una habilidad instantánea por turno. Si se usa en el turno de un enemigo, debe de ser una vez se haya declarado el objetivo, pero antes de que haga su tirada de precisión.</li>
     <li><b>Mágico:</b> las habilidades ofensivas de carater mágico tiene esta palabra clave. Es decir, te fijas en la armadura y penetración mágicas en vez de físicas.</li>
     <li><b>Golpe al alma:</b> algunas habilidades mágicas no hacen objetivo a una parte del cuerpo concreta, si no al "alma" del objetivo, por lo que ignoras efectos ligados a una parte del cuerpo concreta.</li>
     <li><b>Matar:</b> algunas habilidades pueden tratar de matar al objetivo directamente, pero si el objetivo es un jugador realiza una tirada de muerte.</li>
@@ -142,17 +146,32 @@
 <h1>Creación de personaje</h1>
 <p>Ahora que conoces todos los elementos que hay vamos a ver cómo se crea tu personaje. Hay que hacer varias cosas, vamos a verlas independientemente.</p>
 <h2>Estadísticas</h2>
-<p>Además de las 6 estadística básicas hay que establecer tu oro inicial. Para inicializarlas, lanzas 8 dados de 20 caras y le restas 5 a cada uno de los resultados. Acontinuación debes de repartir los valores libremente entre las 6 estadísticas iniciales y el oro (sobra un dado que descartas). Si crees que la tirada es mala, antes de hacer nada más, tienes la oportunidad de repetirla entera; te quedas con el resultado sin poder cambiarlo; pero si el resultado total es menor que 20, puedes repetirno idefinidamente hasta que sea mayor que 20. Si el oro es negativo, lo estableces a 0.</p>
+<p>Además de las 6 estadística básicas hay que establecer tu oro inicial. Para inicializarlas, lanzas 6 dados de 20 caras y vuelve a tirar el más bajo; luego le restas 5 a cada uno de los resultados. A continuación debes de repartir los valores libremente entre las 5 estadísticas iniciales y el oro. Si crees que la tirada es mala, antes de hacer nada más, tienes la oportunidad de repetirla entera; te quedas con el resultado sin poder cambiarlo; pero si el resultado total es menor que 20, puedes repetirno idefinidamente hasta que sea mayor que 20. Si el oro es negativo, lo estableces a 0.</p>
 <h2>Clases y habilidades</h2>
-<p>Gastas puntos de tu aprendizaje para aprender clases y habilidades libremente (cumpliendo sus requisistos). Aprender una clase o habilidad te cuesta puntos igual a su nivel. Puedes dejar punto de aprendizaje sin gastar para más adelante.</p>
+<p>Tienes <b>5</b> niveles disponibles para aprender clases y habilidades. </p>
+<h3>Clases</h3>
+<p>Para aprender una clase gasta un nivel, pero hay que tener en cuenta ciertas condiciones. Es importante ditinguir entre clases radicales, clases de raza y el resto. Sólo puedes aprender clases de raza al crear un personaje. Las que no son de raza pueden tener clases madres e hijas; las clases que no tienen ninguna madre se consideran radicales. Puedes aprender clases radicales libremente, pero para las otras necesitas haber aprendido todas sus madres antes.</p>
+<h3>Hablidades</h3>
+<p>Al aprender una clases tienes acceso a las habilidades propias de la misma. Al principio aprendes automáticamente todas las habilidades de nivel 0 y puedes gastar niveles para aprender las habilidades de nivel 1 de las clases que tengas.</p>
+<h3>Hablidades independientes</h3>
+<p>Algunas habilidades no pertenecen a ninguna clase. Para poder aprenderlas necesita gastar niveles igual a su nivel.</p>
 <h2>Items</h2>
 <p>Puedes comprar items iniciales con tu oro inicial. (No tienes porqué gastarlo todo.) Además de gastar el oro, aseguráte de que tienes peso para llevarlos encima.</p>
 <br>
 <p>Aunque normalmente habría que seguir estos pasos, puedes ir haciendo todo a la vez, mientras que respetes la tirada de estadísticas y que al final se quede todo bien, no hay problema.</p>
 
 <h1>Progresión</h1>
-<p>La forma de progresar es completando misiones satisfactoriamente. Cada misión tiene como recompensa cierta cantidad de niveles libres (por lo general 1) y de oro. Puedes usar estos nivles para aumentar tus estadísticas (incluyendo estadísticas extras de cartas o habilidades), pero no puedes utilizarlo para aumentar tu oro o para "estadísticas especiales" (denominadas así). Todos los integrantes que participen en la misión reciben los mismos niveles libres, pero tienen que repartir el oro entre ellos a su discreción.</p>
-<p>Si inviertes el nivel en aprendizaje puedes gastarlo para aprender nuevas habilidades (cumpliendo los requisistos) pero no nuevas clases.</p>
+<p>Conforme avance la aventura irás consiguiendo nuevos niveles. Puedes invertir estos niveles de 4 formas diferentes:</p>
+<ul>
+    <li>1. Aprender una nueva habilidad independiente gastando niveles igual a su nivel. </li>
+    <li>2. Cada clase tiene su propio nivel que comienza en 1. Puedes invertir un nivel para aumentar el nivel de cierta clase en 1.</li>
+    <li>3. Aprender una habilidad de clase por un nivel, pero sólo si tu nivel de clase es igual o mayor al nivel de la habilidad.</li>
+    <li>4. Aprender una nueva clase, sólo si ya has adquirido todas sus clases madres.</li>
+    <li>5. Aprender una nueva clase radical por 3 niveles.</li>
+    <li>5. Gastar 2 niveles en aumentar en 1 una estadística (hasta 20).</li>
+</ul>
+<p>Nótese que las clases de raza no se puede aprender.</p>
+<p>Tienes la posibilidad de guardarte niveles para no gastarlos inmediatamente al obtenerlos. </p>
 
 
 <%#
