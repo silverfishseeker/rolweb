@@ -4,9 +4,19 @@
     <%= form.text_field :nombre %>
   </div>
 
-  <div>
+  <!--<div>
     <%= form.label :nivel %><br>
     <%= form.number_field :nivel, in: 0..100 %><br>
+  </div>-->
+  
+  <div>
+    <%= form.label :parent_ids, 'Madres' %><br>
+    <%= form.collection_select :parent_ids,    Clase.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
+  </div>
+  
+  <div>
+    <%= form.label :child_ids, 'Hijas' %><br>
+    <%= form.collection_select :child_ids, Clase.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
   </div>
 
   <div>

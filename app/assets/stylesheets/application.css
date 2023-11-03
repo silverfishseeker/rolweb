@@ -125,6 +125,11 @@ textarea {
     width: 60%;
 }
 
+.clase-herencia {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
 .clase-effect,
 .clase-description {
     width: 95%;
@@ -162,6 +167,11 @@ textarea {
     background-color: #005f73;
     margin: 10px;
     padding: 0px;
+}
+
+.clase-clases h4 {
+    margin: 10px;
+    color:#e9d8a6;
 }
 
 .clase-clases a {
