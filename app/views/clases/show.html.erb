@@ -28,11 +28,7 @@
     </div>
 
     <h1>Lista de Hablidades relacionadas:</h1>
-    <div class="grid-container">
-        <% @x.habilidads.each do |habil| %>
-            <%= render "habilidads/habilidad", habil: habil %>
-        <% end %>
-    </div>
+    <%= render "habilidads/lista", habilidades: @x.habilidads%>
     
     <h1>Lista de items relacionados:</h1>
     <div class="grid-container">
