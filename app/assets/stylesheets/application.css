@@ -96,6 +96,12 @@ textarea {
     height: 8%;
 }
 
+.clase-show-header {
+    margin: 10px;
+    font-size: 25px;
+    font-weight: bold;
+}
+
 .clase-level {
     background-color: #0a9396;
     padding: 5px;
