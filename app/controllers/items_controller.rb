@@ -19,6 +19,6 @@ class ItemsController < ModelController
   end
 
   def model_params
-    params.require(:item).permit(:nombre, :coste, :peso, :efecto, :image, clase_ids: [])
+    params.require(:item).permit(:nombre, :coste, :peso, :efecto, :image, categ_ids: [], clase_ids: [])
   end
 end

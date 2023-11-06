@@ -6,6 +6,12 @@
   <br>
 
   <div>
+    <%= form.label :categ_ids, 'Categorías' %><br>
+    <%= form.collection_select :categ_ids, Categ.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
+  </div>
+  <br>
+
+  <div>
     <%= form.label :coste %><br>
     <%= form.number_field :coste, in: 0..100, step: 0.01 %><br>
   </div>

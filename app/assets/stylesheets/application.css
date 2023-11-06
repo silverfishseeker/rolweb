@@ -193,6 +193,11 @@ textarea {
     color:#e9d8a6;
 }
 
+.clase-clases a.neutral {
+    border: none;
+    background: none;
+}
+
 .clase-clases a {
     background-color: #ae2012;
     color: #e9d8a6;

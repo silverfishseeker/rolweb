@@ -1,3 +1,10 @@
+
+<div class="clase-clases bodeOscuro">
+    <% @x.categs.each do |ct| %>
+        <%= link_to ct.nombre, ct, class: "neutral" %>
+    <% end %>
+</div>
+
 <div class="clase-show">
     <%= render "item", item: @x %>
 <div>
