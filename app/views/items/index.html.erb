@@ -1,10 +1,12 @@
 <h2>Items</h2>
 
-<h3><%= link_to "Items sin peso", items_path(isPeso: "t")%></h3>
-<h3><%= link_to "Items con peso", items_path(isPeso: "f")%></h3>
+<% Categ.all.sort_by(&:nombre).each do |ct| %>
+    <%= render "categs/categ", x: ct %>
+<% end %>
 
+<h2> Sin categoría </h2>
 <div class="grid-container">
-    <% @xs.sort_by(&:nombre).each do |item| %>
-        <%= render "item", item: item %>
+    <% Item.all.includes(:categs).where(categs: { id: nil }).sort_by(&:nombre).each do |item| %>
+        <%= render "items/item", item: item %>
     <% end %>
 </div>

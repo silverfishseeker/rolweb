@@ -1,7 +1,7 @@
-<h2><%=link_to @x.nombre, @x%></h2>
+<h2><%=link_to x.nombre, x%></h2>
 
 <div class="grid-container">
-    <% @x.items.sort_by(&:nombre).each do |item| %>
+    <% x.items.sort_by(&:nombre).each do |item| %>
         <%= render "items/item", item: item %>
     <% end %>
 </div>
