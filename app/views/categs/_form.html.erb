@@ -1,0 +1,16 @@
+<%= form_with model: x do |form| %>
+  <div>
+    <%= form.label :nombre %><br>
+    <%= form.text_field :nombre %>
+  </div>
+
+  <div>
+    <%= form.label :item_ids, 'items' %><br>
+    <%= form.collection_select :item_ids, Item.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

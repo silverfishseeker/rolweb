@@ -1,0 +1,5 @@
+<h2>Categorías</h2>
+
+<% @xs.sort_by(&:nombre).each do |x| %>
+    <h4> <%= link_to x.nombre, x %> </h4>
+<% end %>

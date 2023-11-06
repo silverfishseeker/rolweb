@@ -2,16 +2,16 @@
 
 docker exec -it rolweb-web-1 bash
 
-bin/rails server
+rails server
     start server
 
-bin/rails generate controller {controlador1s} {controlador2s} {...} {--skip-routes}
+rails generate controller {controlador1s} {controlador2s} {...} {--skip-routes}
     generar controladores para los modelos o rutas, no sé ej:
-        bin/rails generate controller Articles index --skip-routes
-        bin/rails generate controller Comments
+        rails generate controller Articles index --skip-routes
+        rails generate controller Comments
 
 
-bin/rails generate model {nombre modelo} [{símbolo1}:{tipo1}  {símbolo2}:{tipo2} {...}]
+rails generate model {nombre modelo} [{símbolo1}:{tipo1}  {símbolo2}:{tipo2} {...}]
     generar modelo {nombre modelo} (como clase y para luego tabla en DB)
     el tipo :references es especial, se usa para una asociación de uno a muchos. (lo ponemos en el muchos)
     tipos:
@@ -28,29 +28,29 @@ bin/rails generate model {nombre modelo} [{símbolo1}:{tipo1}  {símbolo2}:{tipo
         :time
         :timestamp
 
-bin/rails generate migration AddNombreDeCampoToNombreDeModelo nombre_de_campo:data_type
-bin/rails generate migration RemoveNombreDeColumnaFromNombreDeModelo nombre_de_columna:data_type
-bin/rails generate migration CreateJoinTablePrimerosSegundos primeros segundos
+rails generate migration AddNombreDeCampoToNombreDeModelo nombre_de_campo:data_type
+rails generate migration RemoveNombreDeColumnaFromNombreDeModelo nombre_de_columna:data_type
+rails generate migration CreateJoinTablePrimerosSegundos primeros segundos
 
 rails generate migration Drophabilidad
 rails generate migration drop_Habilidad
 
 
 
-bin/rails db:migrate
+rails db:migrate
     meter modelos en la DB
 
-bin/rails console
+rails console
     meterse en la consola de rails, para interactuar con modelos
 
-bin/rails generate model
+rails generate model
 
 
 
 
-bin/rails generate model mob nombre:string image:string cuerpo:text estabilidad:integer armaduraMagica:integer penetracionFisica:integer penetracionMagica:integer sangre:integer descripcion:text oro:decimal
-bin/rails generate controller Mobs
-bin/rails generate migration CreateJoinTableMobsItems mobs items
+rails generate model mob nombre:string image:string cuerpo:text estabilidad:integer armaduraMagica:integer penetracionFisica:integer penetracionMagica:integer sangre:integer descripcion:text oro:decimal
+rails generate controller Mobs
+rails generate migration CreateJoinTableMobsItems mobs items
 
 nombre
 image
@@ -66,12 +66,12 @@ habilidads
 items n:m
 
 
-bin/rails generate model picture nombre:string image:string
-bin/rails generate model Mob nombre:string cuerpo:string 
-bin/rails generate model Item nombre:string coste:decimal peso:decimal efecto:text image:string
-bin/rails generate controller Item
+rails generate model picture nombre:string image:string
+rails generate model Mob nombre:string cuerpo:string 
+rails generate model Item nombre:string coste:decimal peso:decimal efecto:text image:string
+rails generate controller Item
 
-bin/rails generate migration RemoveimagenFromHabilidad imagen:string
-bin/rails generate migration AddimageToHabilidad image:string
+rails generate migration RemoveimagenFromHabilidad imagen:string
+rails generate migration AddimageToHabilidad image:string
 
-bin/rails generate model Habilidad nombre:string nivel:integer efecto:string
+rails generate model Habilidad nombre:string nivel:integer efecto:string
