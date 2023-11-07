@@ -1,5 +1,11 @@
 <h2>Items</h2>
 
+<div class="clase-clases bodeOscuro">
+    <% Categ.all.sort_by(&:nombre).each do |ct| %>
+        <%= link_to ct.nombre, ct, class: "neutral" %>
+    <% end %>
+</div>
+
 <% Categ.all.sort_by(&:nombre).each do |ct| %>
     <%= render "categs/categ", x: ct %>
 <% end %>
