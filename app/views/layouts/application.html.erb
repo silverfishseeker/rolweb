@@ -21,9 +21,9 @@
         <ul>
           <li><a href="/reglas">Información</a></li>
           <li><%= link_to "Clases", clases_path %></li>
-          <li><%= link_to "Hablidades", habilidads_path %></li>
           <li><%= link_to "Items", items_path %></li>
           <li><%= link_to "Galería", pictures_path %></li>
+          <a href="/control">Admin</a>
         </ul>
       </div>
       
@@ -33,8 +33,6 @@
       <%= yield %>
     </div>
     
-    <br>
-    <a href="/control">Admin</a>
 
   </body>
 </html>
