@@ -19,14 +19,11 @@
       <div class="subnavbar">
         <h1> Doors Maze</h1>
         <ul>
-          <li><a href="/lore">Lore</a></li>
-          <li><a href="/reglas">Reglas</a></li>
-          <li><a href="/estadosAlterados">Estados Alterados</a></li>
+          <li><a href="/reglas">Información</a></li>
           <li><%= link_to "Clases", clases_path %></li>
           <li><%= link_to "Hablidades", habilidads_path %></li>
           <li><%= link_to "Items", items_path %></li>
           <li><%= link_to "Galería", pictures_path %></li>
-          <li><a href="/control">Admin</a></li>
         </ul>
       </div>
       
@@ -35,6 +32,9 @@
     <div class="inBody">
       <%= yield %>
     </div>
+    
+    <br>
+    <a href="/control">Admin</a>
 
   </body>
 </html>

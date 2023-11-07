@@ -1,6 +1,13 @@
 <div class="clase-show">
     <%= render "categ", x: @x %>
 <div>
+    
+<h1>Lista de Hablidades relacionadas:</h1>
+<div class="grid-container">
+    <% @x.habilidads.each do |habil| %>
+        <%= render "habilidads/habilidad", habil: habil %>
+    <% end %>
+</div>
 
 <%= link_to "Edit", edit_categ_path(@x) %>
 <%= link_to "Destroy", categ_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>

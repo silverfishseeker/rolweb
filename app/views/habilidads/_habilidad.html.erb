@@ -13,6 +13,9 @@
         <% habil.items.each do |it| %>
             <%= link_to it.nombre, it %>
         <% end %>
+        <% habil.categs.each do |ct| %>
+            <%= link_to ct.nombre, ct, class: "neutral" %>
+        <% end %>
     </div>
 
     <div class="clase-contents">
