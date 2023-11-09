@@ -30,7 +30,7 @@
     
     <h1>Lista de items relacionados:</h1>
     <div class="grid-container">
-        <% @x.items.each do |it| %>
+        <% @x.items.order(:nombre).each do |it| %>
             <%= render "items/item", item: it %>
         <% end %>
     </div>
