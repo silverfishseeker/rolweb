@@ -1,8 +1,12 @@
 
-<% urlCompleta = "http://"+HTTParty.get('http://whatismyip.akamai.com')
+<% begin
+    urlCompleta = "http://"+HTTParty.get('http://whatismyip.akamai.com')
     # si este servidor falla, mirar algún otro de aquí: https://stackoverflow.com/questions/13270042/get-public-remote-ip-address
-%>
-<p>Dirección actual: <a href="<%=urlCompleta%>"><%=urlCompleta%><a></p>
+    %>
+    <p>Dirección actual: <a href="<%=urlCompleta%>"><%=urlCompleta%><a></p>
+<% rescue SocketError%>
+    <p>No se puedo establecer la conexión con el servidor para comprobar la ip actual.</p>
+<% end %>
 
 <h2>Estas funciones son solo de administrador</h2>
 
