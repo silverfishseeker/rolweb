@@ -9,7 +9,7 @@
     <%= render "categ", x: @x %>
 <div>
     
-<h1>Lista de Hablidades relacionadas:</h1>
+<h1>Habilidades relacionadas:</h1>
 <div class="grid-container">
     <% @x.habilidads.each do |habil| %>
         <%= render "habilidads/habilidad", habil: habil %>
