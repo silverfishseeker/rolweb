@@ -28,6 +28,12 @@
     <%= form.collection_select :categ_ids, Categ.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
   </div>
   <br>
+  
+  <div>
+    <%= form.label :mob_ids, 'Mobs' %><br>
+    <%= form.collection_select :mob_ids, Mob.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
+  </div>
+  <br>
 
   <div>
     <%= form.label :efecto %><br>
