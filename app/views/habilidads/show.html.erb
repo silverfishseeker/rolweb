@@ -1,6 +1,14 @@
 <div class="clase-show">
     <%= render "habilidad", habil: @x %>
 <div>
+    
+<h1>Items relacionados:</h1>
+<div class="grid-container">
+    <% @x.items.order(:nombre).each do |it| %>
+        <%= render "items/item", item: it %>
+    <% end %>
+</div>
+
 <br>
 <%= link_to "Edit", edit_habilidad_path(@x) %>
 <%= link_to "Destroy", habilidad_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>

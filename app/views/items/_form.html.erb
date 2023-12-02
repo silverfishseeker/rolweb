@@ -30,6 +30,12 @@
   <br>
 
   <div>
+    <%= form.label :habilidad_ids, 'Habilidades' %><br>
+    <%= form.collection_select :habilidad_ids, Habilidad.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
+  </div>
+  <br>
+
+  <div>
     <%= form.label :efecto %><br>
     <%= form.text_area :efecto %><br>
   </div>
