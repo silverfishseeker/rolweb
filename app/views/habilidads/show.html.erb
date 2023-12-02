@@ -1,3 +1,10 @@
+<h3>Clases:</h3>
+<div class="clase-clases bodeOscuro">
+    <% @x.clases.each do |clase| %>
+        <%= link_to clase.nombre, clase %>
+    <% end %>
+</div>
+
 <div class="clase-show">
     <%= render "habilidad", habil: @x %>
 <div>

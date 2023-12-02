@@ -7,9 +7,6 @@
     </div>
 
     <div class="clase-clases bodeOscuro">
-        <% habil.clases.each do |clase| %>
-            <%= link_to clase.nombre, clase %>
-        <% end %>
         <% habil.categs.each do |ct| %>
             <%= link_to ct.nombre, ct, class: "neutral" %>
         <% end %>
