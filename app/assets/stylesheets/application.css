@@ -106,7 +106,7 @@ textarea {
     margin: 10px;
     font-size: 20px;
     font-weight: bold;
-    height: 8%;
+    min-height: 8%;
 }
 
 .clase-show-header {
