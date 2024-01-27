@@ -1,5 +1,7 @@
 class MobsController < ModelController
   
+  http_basic_authenticate_with name: "yomismo", password: "yasabess", except: [:show]
+
   def initialize
     super 
     @tipo = Mob
