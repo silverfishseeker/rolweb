@@ -20,7 +20,14 @@
         <h1> Doors Maze</h1>
         <ul>
           <li><a href="/reglas">Información</a></li>
-          <li><%= link_to "Clases", clases_path %></li>
+          <li class="submenu">
+            <%= link_to "Clases", clases_path %>
+            <ul class="submenu-content clase-clases bodeOscuro">
+              <% Clase.all.sort_by(&:nombre).each do |clase| %>
+                  <li><%= link_to clase.nombre, clase %></li>
+              <% end %>
+            </ul>
+          </li>
           <li><%= link_to "Items", items_path %></li>
           <li><%= link_to "Galería", pictures_path %></li>
           <a href="/control">Admin</a>

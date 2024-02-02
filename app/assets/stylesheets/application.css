@@ -346,3 +346,21 @@ textarea {
     height: 200px;
     width: 200px;
 }
+
+/* Estilos del submenú */
+.submenu-content {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    max-height: 200px; /* Tamaño fijo pequeño del submenú */
+    overflow-y: auto; 
+}
+
+.submenu:hover .submenu-content {
+    display: block;
+}
+
+.submenu-content li {
+    display: block;
+}
+  
