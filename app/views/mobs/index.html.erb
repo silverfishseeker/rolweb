@@ -1,3 +1,13 @@
+<h2>Mobs</h2>
+
+<div class="grid-container">
+    <% @xs.sort_by(&:nombre).each do |i| %>
+        <%= render "mob", mob: i %>
+    <% end %>
+</div>
+
+<br>
+
 <% begin
     urlCompleta = "http://"+HTTParty.get('http://whatismyip.akamai.com')
     # si este servidor falla, mirar algún otro de aquí: https://stackoverflow.com/questions/13270042/get-public-remote-ip-address
@@ -6,11 +16,3 @@
 <% rescue SocketError%>
     <p>No se puedo establecer la conexión con el servidor para comprobar la ip actual.</p>
 <% end %>
-
-<h2>Mobs</h2>
-
-<div class="grid-container">
-    <% @xs.sort_by(&:nombre).each do |i| %>
-        <%= render "mob", mob: i %>
-    <% end %>
-</div>

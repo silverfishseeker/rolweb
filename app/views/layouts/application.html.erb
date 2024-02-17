@@ -23,6 +23,7 @@
           <li class="submenu">
             <%= link_to "Clases", clases_path %>
             <ul class="submenu-content clase-clases bodeOscuro">
+              <b> <%= link_to "Página principal de clases", clases_path %> </b>
               <% Clase.all.sort_by(&:nombre).each do |clase| %>
                   <li><%= link_to clase.nombre, clase %></li>
               <% end %>
