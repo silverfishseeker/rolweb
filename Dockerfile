@@ -17,6 +17,6 @@ COPY . .
 EXPOSE 3000
 
 # Define el comando para iniciar el servidor de Rails
-# Puto tmp  
+# Puto tmp (hay que borrarlo para evitar errores, ni idea de porqué)
 # iniciar rails
 CMD rm -rf /app/tmp/* && bin/rails server -b 0.0.0.0
