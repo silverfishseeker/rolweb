@@ -42,6 +42,9 @@ body {
 
     background-image: url('sky.jpg');
     background-size: cover;
+
+    margin: 5px;
+    margin-top: 150px;
 }
 
 h1, h2, h3 {
@@ -62,13 +65,6 @@ textarea {
     height: 200px;
     width: 500px;
 }
-
-.inBody {
-    margin: 5px;
-    margin-top: 150px;
-}
-
-
 
 
 
