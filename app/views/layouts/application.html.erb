@@ -18,21 +18,21 @@
       
       <div class="subnavbar">
         <h1> Doors Maze</h1>
-        <ul>
-          <li><a href="/reglas">Información</a></li>
-          <li class="submenu">
+        <div class="subsubnavbar">
+          <div><a href="/reglas">Información</a></div>
+          <div class="submenu">
             <%= link_to "Clases", clases_path %>
             <ul class="submenu-content clase-clases bodeOscuro">
               <b> <%= link_to "Página principal de clases", clases_path %> </b>
               <% Clase.all.sort_by(&:nombre).each do |clase| %>
-                  <li><%= link_to clase.nombre, clase %></li>
+                  <div><%= link_to clase.nombre, clase %></div>
               <% end %>
             </ul>
-          </li>
-          <li><%= link_to "Items", items_path %></li>
-          <li><%= link_to "Galería", pictures_path %></li>
-          <a href="/control">Admin</a>
-        </ul>
+          </div>
+          <div><%= link_to "Items", items_path %></div>
+          <div><%= link_to "Galería", pictures_path %></div>
+          <div><a href="/control">Admin</a></div>
+        </div>
       </div>
       
     </div>

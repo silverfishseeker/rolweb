@@ -1,26 +1,3 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
- * vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any other CSS
- * files in this directory. Styles in this file should be added after the last require_* statement.
- * It is generally better to create a new file per style scope.
- *
- *= require_tree .
- *= require_self
- */
- 
-/* .clase-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-} */
-
 .Paleta{
 color:  #001219
         #005f73
@@ -34,20 +11,39 @@ color:  #001219
         #9b2226
 }
 
+/***************
+ * PROGRAMABLE *
+ ***************/
+
+:root {
+    /* PALETA*/
+    --c_base: #38002e;
+    --c_base_alt: #4D003E;
+    --c_contraste: #98c2ff;
+    --c_alternativo: #c375d7;
+    --c_detalle: #6d5ac6;
+
+}
+
+
+/*****************************
+ * ESTILOS DE ETIQUETAS HTML *
+ *****************************/
+
 body {
-    font-family: "Open Sans", sans-serif;
+    font-family: 'EB Garamond', serif;
     color: #001219;
     background-color: #bed1cb;
     margin: 0;
 
-    background-image: url('sky.jpg');
-    background-size: cover;
+    background-color: #F7F7F7;
 
     margin: 5px;
     margin-top: 150px;
 }
 
 h1, h2, h3 {
+    font-family: 'Seagram', serif;
     margin: 10px;
     margin-top: 20px;
 }
@@ -65,6 +61,92 @@ textarea {
     height: 200px;
     width: 500px;
 }
+
+a {  
+    text-decoration: none;
+}
+
+
+/*************************
+ * CLASES CSS INVENTADAS *
+ *************************/
+
+
+/* Estilos CSS para la barra de direcciones */
+.navbar {
+    background-color: var(--c_base);
+    color: var(--c_contraste);
+    padding: 10px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.navbar img{
+    height: 72px;
+    width: auto;
+}
+
+
+.navbar h1 {
+    margin: 10px;
+    text-align: center; 
+}
+
+.subnavbar {
+    width: 93%;
+    
+}
+
+.subsubnavbar {
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    width: 100%;
+}
+
+.subsubnavbar a {
+    text-align: center;
+    padding: 5px;
+    color: var(--c_alternativo); 
+}
+
+.subsubnavbar a:hover {
+    background-color: var(--c_base_alt);
+}
+
+.subsubnavbar a:visited {
+    color: var(--c_contraste); 
+}
+
+/* Estilos del submenú */
+.submenu-content {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    max-height: 200px; /* Tamaño fijo pequeño del submenú */
+    overflow-y: auto; 
+}
+
+.submenu:hover .submenu-content {
+    display: block;
+}
+
+.submenu-content li {
+    display: block;
+}
+
+
+
+
+
+
+
 
 
 
@@ -286,77 +368,8 @@ textarea {
 }
 
 
-
-/* Estilos CSS para la barra de direcciones */
-.navbar {
-    background-color: #bb3e03;
-    color: #e9d8a6;
-    padding: 10px;
-
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-}
-
-.navbar img{
-    height: 72px;
-    width: auto;
-}
-
-.subnavbar {
-    width: 93%;
-}
-
-.navbar h1 {
-    margin: 10px;
-}
-
-.navbar ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-.navbar li {
-    display: inline-block;
-    margin-right: 10px;
-}
-
-.navbar a {
-    text-decoration: none;
-    padding: 5px;
-}
-
-.navbar a:hover {
-    background-color: #ae2012; /* Cambia el color de fondo al pasar el cursor sobre el enlace */
-}
-
-.navbar a:visited {
-    color: #e9d8a6;
-}
-
 .form-select {
     height: 200px;
     width: 200px;
-}
-
-/* Estilos del submenú */
-.submenu-content {
-    display: none;
-    position: absolute;
-    z-index: 1;
-    max-height: 200px; /* Tamaño fijo pequeño del submenú */
-    overflow-y: auto; 
-}
-
-.submenu:hover .submenu-content {
-    display: block;
-}
-
-.submenu-content li {
-    display: block;
 }
   
