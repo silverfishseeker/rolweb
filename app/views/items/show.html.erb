@@ -11,11 +11,7 @@
 <br>
 
 <h1>Lista de Hablidades relacionadas:</h1>
-<div class="grid-container">
-    <% @x.habilidads.each do |habil| %>
-        <%= render "habilidads/habilidad", habil: habil %>
-    <% end %>
-</div>
+<%= render "habilidads/lista", habilidades: @x.habilidads%>
 
 <%= link_to "Edit", edit_item_path(@x) %>
 <%= link_to "Destroy", item_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>

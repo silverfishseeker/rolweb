@@ -1,5 +1,5 @@
 <div class="grid-container">
-    <% habilidades.order(:nivel, :nombre).each do |habil| %>
+    <% habilidades.hide(defined?(@secreto) ? true : false).order(:nivel, :nombre).each do |habil| %>
         <%= render "habilidads/habilidad", habil: habil %>
     <% end %>
 </div>
