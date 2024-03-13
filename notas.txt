@@ -82,6 +82,7 @@ git config --global core.autocrlf false
 pg_commit_ts
 pg_logical/pg_logical
 pg_logical/snapshots
+pg_logical/mappings
 pg_notify
 pg_replslot
 pg_snapshots
