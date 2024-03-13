@@ -7,7 +7,4 @@ class InfoController < ApplicationController
     
     def lore
     end
-
-    def control
-    end
 end

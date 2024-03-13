@@ -1,0 +1,27 @@
+<h2>Estas funciones son solo de administrador</h2>
+
+
+<%= link_to "Habilidades ocultas", habilidads_path(mode: "hidden"), class: "neutral"%>
+<br>
+<%= link_to "Habilidades sueltas", habilidads_path(mode: "indep"), class: "neutral"%>
+<br>
+<%= link_to "Mobs", mobs_path %>
+<br>
+<%= link_to "Crear mob", new_mob_path %>
+<br>
+<%= link_to "Crear clase", new_clase_path %>
+<br>
+<%= link_to "Crear habilidad", new_habilidad_path %>
+<br>
+<%= link_to "Crear item", new_item_path %>
+<br>
+<%= link_to "Crear categoría", new_categ_path %>
+<br>
+<%= link_to "Categorías", categs_path %>
+<br>
+<%= link_to "Añadir cuadro", new_picture_path %>
+<br>
+<p><%=Clase.count%> clases <br>
+<%=Habilidad.count%> habilidades <br>
+<%=Item.count%> ítems <br>
+<%=Mob.count%> mobs</p><br>
