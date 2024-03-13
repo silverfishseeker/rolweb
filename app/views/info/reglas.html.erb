@@ -74,7 +74,7 @@
 <p>Cada parte puede estar en 3 estados: <b>saludable</b>, <b>herido</b> y <b>grave</b>. Veremos las consecuencias de estos estados más adelante.</p>
 
 <h2>Sangre</h2>
-<p>Tienes un medidor de sangre que indica la sangre que tienes en el cuerpo, algo así como las reservas internas de energía. Si está por debajo de la mitad obtienes desventaja en todas tus tiradas. Si llega a 0 realiza una tirada de muerte; si la superas, establece tu sangre a 1.</p>
+<p>Tienes un medidor de sangre que indica la sangre que tienes en el cuerpo, algo así como las reservas internas de energía. Si llega a 0 realiza una tirada de muerte; si la superas, establece tu sangre a 1.</p>
 <p>Una acción esencial sobre la sangre es <b>desangrar</b>. Al aplicarse pierdes 1 de sangre y obtienes estado de <b>desangrando</b>. Mientras que estas en este estado pierdes 1 de sangre por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sangrado.</p>
 <p>Tras un descanso largo debes de gastar sangre para sanar partes del cuerpo dañadas. Para esto resta 1 de sangre por cada una para que pueda pasar al siguiente estado más saludable. Necesitas tener suficiente sangre para curarlas todas, si no es así, no se cura ninguna (y no pierdes sangre). Esta acción debe de intentarse obligatoriamente. Después de esto recupera la mitad de tu total de sangre. Tu sangre puede llegar a 0 antes de recuperarla durante estos cálculos sin provocar una tirada de muerte.<p>
 
@@ -83,8 +83,9 @@
 </p>
 
 <h1>Consecuencias</h1>
-<p>Ahora sí, con todo esto vamos a ver las consecuencias de que empeore el estado de tus partes del cuerpo:</p>
+<p>Ahora sí, con todo esto vamos a ver las consecuencias de que empeore el estado de tus partes del cuerpo (y sangre):</p>
 <ul>
+    <li>Mientras que tu sangre sea la mitad o esté por debajo, obtienes desventaja en todas tus tiradas.</li>
     <li>La acciones que involucren extremidades en estado herido obtienen acumulaciones de desventaja por cada extremidad.</li>
     <li>No puedes realizar acciones que involucren partes del cuerpo graves.</li>
     <li>Dañar una parte del cuerpo herida desangra como efecto adicional.</li>

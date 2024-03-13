@@ -60,6 +60,12 @@
   <br>
 
   <div>
+    <%= form.label :habilidadsOfMob_ids, 'Habilidades que tiene' %><br>
+    <%= form.collection_select :habilidadsOfMob_ids, Habilidad.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
+  </div>
+  <br>
+
+  <div>
     <%= form.label :image %><br>
     <%= form.file_field :image %>
   </div>

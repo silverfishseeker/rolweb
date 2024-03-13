@@ -3,5 +3,8 @@
 <div>
 <br>
 
+<h1>Hablidades inherentes:</h1>
+<%= render "habilidads/lista", habilidades: @x.habilidadsOfMob%>
+
 <%= link_to "Edit", edit_mob_path(@x) %>
 <%= link_to "Destroy", mob_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>

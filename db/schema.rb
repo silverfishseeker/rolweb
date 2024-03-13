@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_11_141748) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_13_113916) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -119,6 +119,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_11_141748) do
     t.decimal "oro"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "mobsHasHabil", force: :cascade do |t|
+    t.integer "mob_id"
+    t.integer "habilidad_id"
+    t.index ["habilidad_id", "mob_id"], name: "index_mobsHasHabil_on_habilidad_id_and_mob_id"
+    t.index ["mob_id", "habilidad_id"], name: "index_mobsHasHabil_on_mob_id_and_habilidad_id"
   end
 
   create_table "pictures", force: :cascade do |t|
