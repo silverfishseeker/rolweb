@@ -1,0 +1,10 @@
+<%# capitalize pone la primera en mayúsucula
+    to_sym transforma string en símbolo
+    constantize transforma string en clase %>
+
+<% campo = (p + "_ids").to_sym %>
+<div>
+<%= form.label campo, p.capitalize + "s" %><br>
+<%= form.collection_select campo, p.capitalize.constantize.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
+</div>
+<br>

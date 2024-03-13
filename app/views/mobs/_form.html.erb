@@ -53,11 +53,7 @@
   </div>
   <br>
 
-  <div>
-    <%= form.label :item_ids, 'Items' %><br>
-    <%= form.collection_select :item_ids, Item.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
-  </div>
-  <br>
+  <%= render "shared/fcs", p:"item", form: form %>
 
   <div>
     <%= form.label :habilidadsOfMob_ids, 'Habilidades que tiene' %><br>
