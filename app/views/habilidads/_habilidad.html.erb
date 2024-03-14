@@ -1,20 +1,24 @@
-<div class="clase-item bodeOscuro">
-    <div class="clase-header">
-        <p class="clase-level bodeOscuro">
+<div class="carta">
+    <div class="carta-header">
+        <p class="carta-number carta-level bodeOscuro">
             <%= habil.nivel %>
         </p>
-        <h3 class="clase-title"><%= link_to habil.nombre, habil %></h3>
+        <div class="carta-title">
+            <%= link_to habil.nombre, habil %>
+        </div>
     </div>
 
-    <div class="clase-clases bodeOscuro">
+    <div class="carta-subtitles">
         <% habil.categs.each do |ct| %>
-            <%= link_to ct.nombre, ct, class: "neutral" %>
+            <%= link_to ct.nombre, ct %>
         <% end %>
         <% habil.mobs.each do |mb| %>
-            <%= link_to mb.nombre, mb, class: "neutral" %>
+            <%= link_to mb.nombre, mb %>
         <% end %>
     </div>
 
-    <p class="clase-effect clase-effectBig"><%= habil.efecto %></p>
+    <p class="carta-description">
+        <%= habil.efecto %>
+    </p>
     
 </div>

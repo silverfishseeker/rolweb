@@ -1,19 +1,21 @@
-<div class="clase-item bodeOscuro">
-    <div class="clase-header">
-        <p class="clase-level clase-coste bodeOscuro">
+<div class="carta">
+    <div class="carta-header">
+        <p class="carta-number carta-coste">
             <%= item.coste %>
         </p>
-        <p class="clase-level clase-peso bodeOscuro">
+        <p class="carta-number carta-peso">
             <%= item.peso %>
         </p>
-        <h3 class="clase-title"><%= link_to item.nombre, item %></h3>
+        <div class="carta-title">
+            <%= link_to item.nombre, item %>
+        </div>
     </div>
 
-    <div class="clase-clases bodeOscuro">
+    <div class="carta-subtitles">
         <% item.clases.each do |clase| %>
             <%= link_to clase.nombre, clase %>
         <% end %>
     </div>
 
-    <p class="clase-effect clase-effectBig"><%= item.efecto %></p>
+    <p class="carta-description"><%= item.efecto %></p>
 </div>
