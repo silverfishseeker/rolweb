@@ -2,7 +2,9 @@
 
 <div class="grid-container">
     <% @xs.sort_by(&:nombre).each do |clase| %>
-        <%= render "clase", clase: clase %>
+        <%unless clase.oculto%>
+            <%= render "clase", clase: clase %>
+        <% end %>
     <% end %>
 </div>
 

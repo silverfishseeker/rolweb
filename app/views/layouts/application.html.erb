@@ -35,7 +35,10 @@
               <%= link_to "Todas las clases", clases_path, class:"mainLink" %>
               <%= link_to "Todas las habilidades", habilidads_path, class:"mainLink" %>
               <%= link_to "Árbol de clases", "https://drive.google.com/file/d/1HBR8AoPRvbim8WksjS18dCjR_5bYLR18/view?usp=sharing", class:"mainLink" %>
-              <% Clase.all.sort_by(&:nombre).each do |clase| %>
+              <% Clase.where(oculto:true).sort_by(&:nombre).each do |clase| %>
+                  <%= link_to clase.nombre, clase, class:"mainLink"  %>
+              <% end %>
+              <% Clase.where(oculto:false).sort_by(&:nombre).each do |clase| %>
                   <%= link_to clase.nombre, clase %>
               <% end %>
             </div>
