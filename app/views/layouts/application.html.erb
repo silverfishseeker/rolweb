@@ -14,24 +14,26 @@
 
   <body>
     <div class="navbar">
-      <a href="/lore"><%= image_tag "icono.png" %></a>
+      <a href="/"><%= image_tag "icono.png" %></a>
       
       <div class="subnavbar">
         <h1> Doors Maze</h1>
         <div class="subsubnavbar">
-          <div><a href="/reglas">Información</a></div>
+          <a href="/reglas">Información</a>
+
           <div class="submenu">
             <%= link_to "Clases", clases_path %>
-            <ul class="submenu-content clase-clases bodeOscuro">
-              <b> <%= link_to "Página principal de clases", clases_path %> </b>
+            <div class="submenu-content">
+              <%= link_to "Página principal de clases", clases_path, class:"mainLink" %>
               <% Clase.all.sort_by(&:nombre).each do |clase| %>
-                  <div><%= link_to clase.nombre, clase %></div>
+                  <%= link_to clase.nombre, clase %>
               <% end %>
-            </ul>
+            </div>
           </div>
-          <div><%= link_to "Items", items_path %></div>
-          <div><%= link_to "Galería", pictures_path %></div>
-          <div><a href="/control">Admin</a></div>
+
+          <%= link_to "Items", items_path %>
+          <%= link_to "Galería", pictures_path %>
+          <a href="/control">Admin</a>
         </div>
       </div>
       
