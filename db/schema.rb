@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_13_113916) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_14_115917) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -69,7 +69,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_13_113916) do
     t.string "nombre"
     t.integer "nivel"
     t.string "efecto"
-    t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "oculto", default: false
@@ -94,7 +93,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_13_113916) do
     t.decimal "coste"
     t.decimal "peso"
     t.text "efecto"
-    t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
