@@ -120,7 +120,7 @@ a {
 
 /* Estilos del submenú */   
 .submenu-content {
-    // display: none;
+    display: none;
     position: absolute;
     max-height: 200px; /* Tamaño fijo pequeño del submenú */
     overflow-y: auto;

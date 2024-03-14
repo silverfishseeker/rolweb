@@ -13,4 +13,5 @@ Rails.application.routes.draw do
   get '/estadosAlterados', to: 'info#estadosAlterados'
   get '/lore', to: 'info#lore'
   get '/control', to: 'admin#control'
+  get '/items_no_categ', to: 'admin#items_no_categ'
 end

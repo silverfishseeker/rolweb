@@ -19,19 +19,36 @@
       <div class="subnavbar">
         <h1> Doors Maze</h1>
         <div class="subsubnavbar">
-          <a href="/reglas">Información</a>
+
+          <div class="submenu">
+            <a href="/reglas">Información</a>
+            <div class="submenu-content">
+                <a href="/lore">Lore</a>
+                <a href="/reglas">Reglas</a>
+                <a href="/estadosAlterados">Estados Alterados</a>
+            </div>
+          </div>
 
           <div class="submenu">
             <%= link_to "Clases", clases_path %>
             <div class="submenu-content">
-              <%= link_to "Página principal de clases", clases_path, class:"mainLink" %>
+              <%= link_to "Todas las clases", clases_path, class:"mainLink" %>
               <% Clase.all.sort_by(&:nombre).each do |clase| %>
                   <%= link_to clase.nombre, clase %>
               <% end %>
             </div>
           </div>
 
-          <%= link_to "Items", items_path %>
+          <div class="submenu">
+            <%= link_to "Items", items_path %>
+            <div class="submenu-content">
+              <%= link_to "Todos los items", items_path, class:"mainLink" %>
+              <% Categ.all.sort_by(&:nombre).each do |ct| %>
+                  <%= link_to ct.nombre, ct %>
+              <% end %>
+            </div>
+          </div>
+
           <%= link_to "Galería", pictures_path %>
           <a href="/control">Admin</a>
         </div>
