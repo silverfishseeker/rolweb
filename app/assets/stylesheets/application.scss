@@ -32,7 +32,7 @@ body {
     margin-top: 150px;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
     font-family: 'Seagram', serif;
     margin: 10px;
     margin-top: 20px;
@@ -62,11 +62,12 @@ a {
  *************************/
 
 
-/* Estilos CSS para la barra de direcciones */
+/* Barra de navegación */
 .navbar {
     background-color: var(--c_base);
     color: var(--c_contraste);
-    padding: 10px;
+    padding: 5px;
+    padding-bottom: 10px;
 
     position: fixed;
     top: 0;
@@ -83,8 +84,10 @@ a {
 
 
 .navbar h1 {
-    margin: 10px;
+    margin: 5px;
     text-align: center;
+    font-size: 40px;
+    font-weight: lighter;
 }
 
 .subnavbar {
@@ -101,9 +104,13 @@ a {
 }
 
 .subsubnavbar a {
+    padding: 10px;
+}
+
+.subsubnavbar a.nblink {
     text-align: center;
-    padding: 5px;
     color: var(--c_alternativo); 
+    font-size: larger;
 }
 
 .subsubnavbar a:hover {
@@ -126,6 +133,7 @@ a {
     overflow-y: auto;
     overflow-x:hidden;
     border: 3px solid var(--c_base);
+    margin-top: 8px;
 }
 
 .submenu-content div {
@@ -136,7 +144,6 @@ a {
     background-color: var(--c_detalle);
     display: block;
     width: 100%;
-    text-align: left;
 }
 
 .submenu-content a.mainLink {

@@ -21,18 +21,20 @@
         <div class="subsubnavbar">
 
           <div class="submenu">
-            <a href="/reglas">Información</a>
+            <a href="/reglas" class="nblink">Información</a>
             <div class="submenu-content">
-                <a href="/lore">Lore</a>
+                <a href="/lore">Historia</a>
                 <a href="/reglas">Reglas</a>
                 <a href="/estadosAlterados">Estados Alterados</a>
             </div>
           </div>
 
           <div class="submenu">
-            <%= link_to "Clases", clases_path %>
+            <%= link_to "Clases", clases_path, class:"nblink" %>
             <div class="submenu-content">
               <%= link_to "Todas las clases", clases_path, class:"mainLink" %>
+              <%= link_to "Todas las habilidades", habilidads_path, class:"mainLink" %>
+              <%= link_to "Árbol de clases", "https://drive.google.com/file/d/1HBR8AoPRvbim8WksjS18dCjR_5bYLR18/view?usp=sharing", class:"mainLink" %>
               <% Clase.all.sort_by(&:nombre).each do |clase| %>
                   <%= link_to clase.nombre, clase %>
               <% end %>
@@ -40,7 +42,7 @@
           </div>
 
           <div class="submenu">
-            <%= link_to "Items", items_path %>
+            <%= link_to "Items", items_path, class:"nblink" %>
             <div class="submenu-content">
               <%= link_to "Todos los items", items_path, class:"mainLink" %>
               <% Categ.all.sort_by(&:nombre).each do |ct| %>
@@ -50,14 +52,13 @@
           </div>
           
           <div class="submenu">
-            <%= link_to "Galería", pictures_path %>
+            <%= link_to "Galería", pictures_path, class:"nblink" %>
           </div>
+
           <div class="submenu">
-            <a href="/control">Admin</a>
-            <div class="submenu-content">
-              
-            </div>
+            <a href="/control" class="nblink">Admin</a>
           </div>
+
         </div>
       </div>
       
