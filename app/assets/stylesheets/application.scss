@@ -63,7 +63,8 @@ a {
  *************************/
 
 
-/* Barra de navegación */
+/* BARRA DE NAVEGACIÓN */
+
 .navbar {
     background-color: var(--c_base);
     color: var(--c_contraste);
@@ -126,7 +127,8 @@ a {
     display: block;
 }
 
-/* Estilos del submenú */   
+/* SUBMENÚ */
+
 .submenu-content {
     display: none;
     position: absolute;
@@ -163,7 +165,8 @@ a {
 
 
 
-/* reglas */
+/* REGLAS */
+
 .mods-table {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -183,7 +186,7 @@ a {
 }
 
 
-/*cartas*/
+/* CARTAS */
 
 :root {
     --ancho_carta:400px;
@@ -216,7 +219,6 @@ a {
     width: var(--ancho_carta_clase);
     height: var(--alto_carta_clase);
     border: 4px solid var(--c_base);
-    // background-color: var(--c_base);
 }
 
 .carta-header {
@@ -298,7 +300,6 @@ a {
 }
 
 .carta-contents {
-    // height: 90%;
     display: flex;
     flex-direction: row;
 }
@@ -399,10 +400,14 @@ a {
 
 
 
+/* CUADROS */
+.body-blackBackground {
+    background-color: var(--c_black);
+}
 
 .clase-picture {
-    margin: 10px;
-    margin-bottom: 36px;
+    margin: 0px;
+    margin-bottom: 40px;
     width: 400px;
     height: 400px;
     text-align: center;
@@ -414,11 +419,9 @@ a {
   
 .clase-picture-desc{
     text-align: center;
-    font-size: 14px;
-    background-color: #e9d8a6;
-    padding: 10px;
-    
-    border: 2px solid #ca6702;
+    background-color: var(--c_detalle);
+    color: var(--c_white);
+    padding: 5px;
     border-radius: 5px;
 }
 
@@ -471,6 +474,8 @@ a {
     max-height: 100%;
 }
 
+
+/* FORMULARIOS*/
 
 .form-select {
     height: 200px;

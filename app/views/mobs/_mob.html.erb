@@ -1,9 +1,9 @@
 <div class="carta">
     <div class="carta-header">
         <%= link_to mob.nombre, mob, class: "carta-title" %>
-        <div class="mob-image">
+        <a class="mob-image" target="_blank" href="<%=mob.image.url%>"> 
             <%= render "shared/image", image: mob.image %>
-        </div>
+        </a>
     </div>
     <div class="mob-subGrid">
         <div class="mob-estabilidad">ES: <b><%=mob.estabilidad%></b></div>
