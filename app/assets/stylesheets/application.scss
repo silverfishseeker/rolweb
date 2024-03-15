@@ -110,7 +110,7 @@ a {
 
 .subsubnavbar a.nblink {
     text-align: center;
-    color: var(--c_alternativo); 
+    color: var(--c_contraste); 
     font-size: larger;
 }
 
@@ -336,9 +336,6 @@ a {
     object-fit: cover;
 }
 
-
-
-
 .carta-subtitles a.clase {
     background-color: var(--c_alternativo);
     color: var();
@@ -347,10 +344,53 @@ a {
 
 
 
+/* CLASE */
+
+.clase-main {
+    margin: 10px;
+}
+
+.clase-contents {
+    height: 90%;
+    display: flex;
+    flex-direction: row;
+}
+
+.clase-details {
+    width: 60%;
+}
+
 .clase-herencia {
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
+
+.miniListadoClases {
+    background-color: var(--c_alternativo);
+    color: var(--c_base);
+    margin: 10px;
+    padding: 5px;
+    padding-bottom: 15px;
+    border-radius: 5px;
+}
+.miniListadoClases h4 {
+    margin: 5px;
+}
+.miniListadoClases .carta-title {
+    margin: 5px;
+    display: inline-block;
+}
+
+.clase-description {
+    background-color: var(--c_contraste);
+    padding: 10px;
+}
+
+
+
+
+
+
 
 
 .clase-imageFixed {
@@ -360,10 +400,6 @@ a {
 .clase-image img {
     max-width: 100%;
     max-height: 100%;
-}
-
-.clase-show {
-    margin: 10px;
 }
 
 

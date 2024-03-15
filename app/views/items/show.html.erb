@@ -1,11 +1,11 @@
 
-<div class="clase-clases bodeOscuro">
+<div class="miniListadoClases">
     <% @x.categs.each do |ct| %>
-        <%= link_to ct.nombre, ct, class: "neutral" %>
+        <%= link_to ct.nombre, ct, class: "carta-title" %>
     <% end %>
 </div>
 
-<div class="clase-show">
+<div class="clase-main">
     <%= render "item", item: @x %>
 <div>
 <br>
