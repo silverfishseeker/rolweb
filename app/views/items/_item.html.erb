@@ -6,9 +6,7 @@
         <p class="carta-number carta-peso">
             <%= item.peso %>
         </p>
-        <div class="carta-title">
-            <%= link_to item.nombre, item %>
-        </div>
+        <%= link_to item.nombre, item, class: "carta-title"%>
     </div>
 
     <div class="carta-subtitles">

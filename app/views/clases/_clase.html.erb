@@ -1,13 +1,13 @@
-<div class="clase-item bodeOscuro">
-    <div class="clase-header">
-        <h3 class="clase-title"><%= link_to clase.nombre, clase %></h3>
+<div class="carta carta_clase">
+    <div class="carta-header">
+        <%= link_to clase.nombre, clase, class:"carta-title carta-title_clase" %>
     </div>
-    <div class="clase-contents">
-        <div class="clase-details">
-            <p class="clase-effect"><%= clase.efecto %></p>
-            <p class="clase-description"><%= clase.descripcion %></p>
+    <div class="carta-contents">
+        <div class="carta-details">
+            <p class="carta-description carta-description_clase"><%= clase.efecto %></p>
+            <p class="carta-description carta-description_clase"><%= clase.descripcion %></p>
         </div>
-        <div class="clase-image">
+        <div class="carta-image">
             <%= render "shared/image", image: clase.image %>
         </div>
     </div>

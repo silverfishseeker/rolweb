@@ -1,6 +1,6 @@
 <h2>Clases</h2>
 
-<div class="grid-container">
+<div class="grid-container grid-container_clase">
     <% @xs.sort_by(&:nombre).each do |clase| %>
         <%unless clase.oculto%>
             <%= render "clase", clase: clase %>
