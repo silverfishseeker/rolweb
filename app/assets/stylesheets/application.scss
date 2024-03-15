@@ -344,7 +344,7 @@ a {
 
 
 
-/* CLASE */
+/* CLASE y shows */
 
 .clase-main {
     margin: 10px;
@@ -370,7 +370,6 @@ a {
     color: var(--c_base);
     margin: 10px;
     padding: 5px;
-    padding-bottom: 15px;
     border-radius: 5px;
 }
 .miniListadoClases h4 {
@@ -386,21 +385,18 @@ a {
     padding: 10px;
 }
 
-
-
-
-
-
-
-
-.clase-imageFixed {
+.clase-image {
     height: 400px;
+    width: 40%;
+    align-items: center;
+    text-align: center;
 }
 
 .clase-image img {
-    max-width: 100%;
     max-height: 100%;
 }
+
+
 
 
 
@@ -428,10 +424,8 @@ a {
 
 
 
+/* CARTA MOB */
 
-
-
-/* Estilos CSS para mobs */
 .mob-item {
     background-color: #94d2bd;
     width: 400px;
@@ -443,14 +437,10 @@ a {
       'armMag       penFis      penMag'
       'cuerpo       cuerpo      cuerpo'
       'descripcion   descripcion descripcion';
-    gap: 10px;
-    font-size: 14px;
-    background-color: #e9d8a6;
+    gap: 5px;
     margin: 10px;
-    padding: 10px;
-    border: 2px solid #ca6702;
-    border-radius: 5px;
-    font-size: 14px;
+    padding: 0;
+    height: 74%;
 }
 .mob-estabilidad { grid-area: estabilidad; }
 .mob-sangre { grid-area: sangre; }
@@ -461,13 +451,24 @@ a {
 .mob-cuerpo { grid-area: cuerpo; }
 .mob-descripcion { grid-area: descripcion; }
 .mob-cuerpo, .mob-descripcion {
-    background-color: #e9d8a6;
     padding: 10px;
-    border: 2px solid #ca6702;
+    margin: 0;
+    border: 2px solid var(--c_detalle);
     border-radius: 5px;
+    overflow-y: scroll;
+}
+
+.mob-listado {
+    margin-bottom: 10px;
+}
+
+.mob-image {
+    margin-left: 10px;
+    height: 100%;
+    text-align: center;
 }
 .mob-image img {
-    width: 40px;
+    max-height: 100%;
 }
 
 

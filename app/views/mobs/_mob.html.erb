@@ -1,6 +1,9 @@
-<div class="bodeOscuro mob-item">
-    <div class="clase-header">
-        <h3 class="clase-title"><%= link_to mob.nombre, mob %></h3>
+<div class="carta">
+    <div class="carta-header">
+        <%= link_to mob.nombre, mob, class: "carta-title" %>
+        <div class="mob-image">
+            <%= render "shared/image", image: mob.image %>
+        </div>
     </div>
     <div class="mob-subGrid">
         <div class="mob-estabilidad">ES: <b><%=mob.estabilidad%></b></div>
@@ -12,12 +15,9 @@
         <div class="mob-cuerpo"><%=mob.cuerpo%></div>
         <div class="mob-descripcion"><%=mob.descripcion%></div>
     </div>
-    <div class="clase-clases bodeOscuro">
+    <div class="carta-subtitles mob-listado">
         <% mob.items.each do |it| %>
             <%= link_to it.nombre, it %>
         <% end %>
-    </div>
-    <div class="mob-image">
-        <%= render "shared/image", image: mob.image %>
     </div>
 </div>
