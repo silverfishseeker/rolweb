@@ -10,6 +10,10 @@
     <%= form.file_field :image %>
   </div>
 
+  <div class="picture-show">
+      <%= render "shared/image", image: @x.image %>
+  </div>
+  
   <div>
     <%= form.submit %>
   </div>
