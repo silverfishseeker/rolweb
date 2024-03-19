@@ -225,7 +225,6 @@ a {
     display: flex;
     align-items: center;
     margin: 10px;
-    margin-bottom: 5px;
     font-size: 20px;
     min-height: 8%;
 }
@@ -475,10 +474,14 @@ a {
 }
 
 
-/* FORMULARIOS*/
+/* FORMULARIOS Y PARECIDOS*/
 
 .form-select {
     height: 200px;
     width: 200px;
 }
+.picture-show img {
+    max-height: 400px;
+}
+
   
