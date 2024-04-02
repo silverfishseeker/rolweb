@@ -215,6 +215,11 @@ a {
     border-radius: 10px;
 }
 
+.carta_extendida {
+    width:auto;
+    height:auto;
+}
+
 .carta_clase {
     width: var(--ancho_carta_clase);
     height: var(--alto_carta_clase);

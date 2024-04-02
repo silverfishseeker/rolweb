@@ -1,22 +1,3 @@
 <div class="carta">
-    <div class="carta-header">
-        <p class="carta-number carta-level bodeOscuro">
-            <%= habil.nivel %>
-        </p>
-        <%= link_to habil.nombre, habil, class:"carta-title" %>
-    </div>
-
-    <div class="carta-subtitles">
-        <% habil.categs.each do |ct| %>
-            <%= link_to ct.nombre, ct %>
-        <% end %>
-        <% habil.mobs.each do |mb| %>
-            <%= link_to mb.nombre, mb %>
-        <% end %>
-    </div>
-
-    <p class="carta-description">
-        <%= habil.efecto %>
-    </p>
-    
+    <%= render "habilidads/habilidad_inner", habil: habil%>
 </div>

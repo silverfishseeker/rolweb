@@ -1,0 +1,17 @@
+<div class="carta-header">
+    <p class="carta-number carta-coste">
+        <%= item.coste %>
+    </p>
+    <p class="carta-number carta-peso">
+        <%= item.peso %>
+    </p>
+    <%= link_to item.nombre, item, class: "carta-title"%>
+</div>
+
+<div class="carta-subtitles">
+    <% item.clases.each do |clase| %>
+        <%= link_to clase.nombre, clase %>
+    <% end %>
+</div>
+
+<p class="carta-description"><%= item.efecto %></p>
