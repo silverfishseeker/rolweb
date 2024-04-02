@@ -8,6 +8,15 @@
         <%= render "habilidads/habilidad", habil: habil %>
     <% end %>
 </div>
+<% clases=@x.clases
+   if clases.any? %>
+    <h1>Clases relocionadas</h1>
+    <div class="miniListadoClases">
+        <% clases.each do |cl| %>
+            <%= link_to cl.nombre, cl, class:"carta-title" %>
+        <% end %>
+    </div>
+<% end %>
 
 <%= link_to "Edit", edit_categ_path(@x) %>
 <%= link_to "Destroy", categ_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
