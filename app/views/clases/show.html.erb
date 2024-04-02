@@ -19,6 +19,11 @@
                     <% end %>
                 </div>
             </div>
+            <div class="carta-subtitles">
+                <% @x.categs.each do |ct| %>
+                    <%= link_to ct.nombre, ct %>
+                <% end %>
+            </div>
             <p class="clase-description"><%= @x.efecto %></p>
             <p class="clase-description"><%= @x.descripcion %></p>
         </div>

@@ -13,6 +13,8 @@
     <%= form.label :child_ids, 'Hijas' %><br>
     <%= form.collection_select :child_ids,  Clase.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
   </div>
+  
+  <%= render "shared/fcs", p:"categ", form: form %>
 
   <div>
     <%= form.label :efecto %><br>
