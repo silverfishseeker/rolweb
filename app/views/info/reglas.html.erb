@@ -1,27 +1,24 @@
- 
-<%= render "infoNavbar"%>
-<br>  
-
+<h1>Reglas</h1>
 <p>Bienvenido a Door Maze. En esta sección vamos a ver las reglas para crear a tu personaje y para poder batallar y demás.</p>
 <p>En estas reglas se da por sentado que se conoce las bases de un juego de rol. Especial incapie en la figura de <b>game master</b>.</p>
 <p>Primero comentar un poco que para muchos casos estas reglas no son estrictas y pueden dar lugar a situaciones en las que no se sepa cómo debe de suceder, al fin y al cabo en un rol puede pasar cualquier cosa. En estos casos hay que ser razonables y si hay discusión el game master tiene la última palabra al final.</p>
 <p>La reglas están detalladas y se habla de muchos casos que sólo hay que tener en cuenta en ocasiones especiales. Si no se aplican en tu caso, puedes pasarlos un poco por encima y revisitarlos cuando lo necesites.</p>
 <br>
 
-<%# <h1> Indice</h1>
+<%# <h2> Indice</h2>
 <p>(Puedes pinchar para ir a esa sección.)</p>
 
 <a href="#Estadísticas">Estadísticas</a> %>
 
-<h1>Nomenclatura</h1>
+<h2>Nomenclatura</h2>
 <p>Lo primero de todo vamos a ver la terminología que se usa en este juego.</p>
-<h2>Dados</h2>
+<h3>Dados</h3>
 <p>Cuando se te pide que lances 1d20, se refiere a que lances un dado de 20 caras y uses el resultado para lo que se te pida. Entonces siempre es [número de dados]d[número de caras de los dados]. Si hay más de un dado sumas el total de todas las caras que han salido, y es común que a este resultado se le sumen otros valores especificados (o restar también).</p>
 <p>En relación a esto, a veces se utiliza una notación del tipo <b>1d20/X</b>, donde X es un número que es un valor objetivo; este tipo de tiradas se llaman pruebas, se dice que la superas si el resultado de los dados (más cosas que les sumes) es mayor que X. Tamién es posible que durante la aventura se te pide que hagas una prueba de alguna estadística, para ver si consigues hacer algo o no, simplemente tiras 1d20 y le sumas el modificador de la estadística nombrada (ver modificadores más adelante).</p>
-<h2>Ventaja/desventaja</h2>
+<h3>Ventaja/desventaja</h3>
 <p>Cuando lanzas un dado con <b>ventaja</b> lanzas un dado extra y luego te quedas con el resultado que sea más favorable. <b>Desventaja</b> es exactamente los mismo pero te quedas con el peor resultado. Para ambos casos puedes ganar mútiples acumulaciones, si tienes 2 de ventaja lanzarías 2 dados extras y te quedas con el mejor entre los 3, igual con desventaja. Las acumulaciones de ventaja y de desventaja se neutralizan entre sí. Ej: un efecto hace que ganes ventaja pero otro te da 3 de desventaja, en total aplicas 2 de desventaja normalmente.</p>
 
-<h2>Estadísticas</h2>
+<h3>Estadísticas</h3>
 <p>Tu personaje y otros seres tienen una serie de estadísticas. No vamos a explicarlas ahora, pero vamos a enumerar las <b>estadísticas básicas</b> junto a sus iniciales que usaremos para referirnos a ellas de aquí en adelante:</p>
 <ul>
     <li>(FU) Fuerza</li>
@@ -31,7 +28,7 @@
     <li>(RE) Resistencia</li>
 </ul>
 
-<h2>Modificadores</h2>
+<h3>Modificadores</h3>
 <p>Cuando se usan las siglas de una habilidad, no se refiere a la habilidad en sí si no a su modificador. Éste número se calcula según la siguiente tabla y se usa en numerosos efectos. Simplemente mira el valor actual de la estadística y usa el número correspondiente para la suma.</p>
 <div class="mods-table">
     <p>Estadística</p> <p>Modificador</p> <p>Estadística</p> <p>Modificador</p>
@@ -49,14 +46,14 @@
 <p>(La tabla se puede extender si es necesario.)</p>
 
 
-<h1>Tu estado</h1>
+<h2>Tu estado</h2>
 <p>A diferencia de otros sistemas, en este no tienes puntos de salud, si no que tienes <b>partes del cuerpo, sangre y estabilidad</b>. Debes de procuparar de mantenerlos en buen estado y debes tener apuntado en todo momento sus valores actuales.</p>
 
-<h3>Tirada de muerte</h3>
+<h4>Tirada de muerte</h4>
 <p>Antes de empezar vamos a ver cómo se puede morir. Un término esencial es la <b>tirada de muerte</b>. Esta consiste en lanzar 1d20. Si el resultado es estríctamente menor que 15, tu personaje muere permanentemente y ya no puedes seguir participando con él. Esta tirada no puede ser modificada por efectos bajo ninguna circustancia. Tu objetivo es no tener que llegar a tener que hacer esta tirada nunca.</p>
 
 
-<h2>Partes del cuerpo</h2>
+<h3>Partes del cuerpo</h3>
 <p>Existen 8 partes del cuerpo numeradas. Se agrupan en las partes altas y en las bajas, esto es relevante para algunos tipos de golpes. Son:</p>
 <ol>
     <p>Partes altas:</p>
@@ -73,18 +70,19 @@
 <p>Piernas, brazos y genitales se consideran <b>apéndices</b>. Abdomen, torso y cabeza se consideran <b>principales</b>.</p>
 <p>Cada parte puede estar en 3 estados: <b>saludable</b>, <b>herido</b> y <b>grave</b>. Veremos las consecuencias de estos estados más adelante.</p>
 
-<h2>Sangre</h2>
-<p>Tienes un medidor de sangre que indica la sangre que tienes en el cuerpo, algo así como las reservas internas de energía. Si está por debajo de la mitad obtienes desventaja en todas tus tiradas. Si llega a 0 realiza una tirada de muerte; si la superas, establece tu sangre a 1.</p>
+<h3>Sangre</h3>
+<p>Tienes un medidor de sangre que indica la sangre que tienes en el cuerpo, algo así como las reservas internas de energía. Si llega a 0 realiza una tirada de muerte; si la superas, establece tu sangre a 1.</p>
 <p>Una acción esencial sobre la sangre es <b>desangrar</b>. Al aplicarse pierdes 1 de sangre y obtienes estado de <b>desangrando</b>. Mientras que estas en este estado pierdes 1 de sangre por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sangrado.</p>
 <p>Tras un descanso largo debes de gastar sangre para sanar partes del cuerpo dañadas. Para esto resta 1 de sangre por cada una para que pueda pasar al siguiente estado más saludable. Necesitas tener suficiente sangre para curarlas todas, si no es así, no se cura ninguna (y no pierdes sangre). Esta acción debe de intentarse obligatoriamente. Después de esto recupera la mitad de tu total de sangre. Tu sangre puede llegar a 0 antes de recuperarla durante estos cálculos sin provocar una tirada de muerte.<p>
 
-<h1>Estabilidad</h1>
+<h2>Estabilidad</h2>
 <p>Representa tu equilibrio físico actual, si te has caído al suelo o no y tal. Te permite esquivar ataques, lo veremos más adelante.
 </p>
 
-<h1>Consecuencias</h1>
-<p>Ahora sí, con todo esto vamos a ver las consecuencias de que empeore el estado de tus partes del cuerpo:</p>
+<h2>Consecuencias</h2>
+<p>Ahora sí, con todo esto vamos a ver las consecuencias de que empeore el estado de tus partes del cuerpo (y sangre):</p>
 <ul>
+    <li>Mientras que tu sangre sea la mitad o esté por debajo, obtienes desventaja en todas tus tiradas.</li>
     <li>La acciones que involucren extremidades en estado herido obtienen acumulaciones de desventaja por cada extremidad.</li>
     <li>No puedes realizar acciones que involucren partes del cuerpo graves.</li>
     <li>Dañar una parte del cuerpo herida desangra como efecto adicional.</li>
@@ -93,7 +91,7 @@
 </ul>
 
 
-<h1>Combate</h1>
+<h2>Combate</h2>
 <p>Ahora vamos a echar un vistazo cómo funciona el sistema de combate.</p>
 <p>Es por turnos. En cada turno cada jugador o enemigo puede realizar una acción; que normalmente será usar una de sus habilidades activas o bien intentar hacer otra cosa razonable. El orden de turnos se decide con una tirada inicial de todos los participantes de 1d10+DE (veremos esta estadística luego).</p>
 <p>Entonces, cuando intentas atacar a alguien (o te atacan) haces una <b>tirada de precisión</b> (que normalmente nos referirnos como precisión a secas), que consiste en 1d20, luego comparas este valor con la <b>estabilidad</b> del objetivo. Si el valor es mayor entonces se da un impacto y ahora hay que mirar la armadura.</p>
@@ -112,10 +110,10 @@
 <p>Según cómo el equipo vaya en ese momento o la situación, conformaréis cierta composición al entrar en combate</p> 
 <p>Una regla especial es el <b>ataque de oportunidad.</b> Cuando un ser, que está en el mismo espacio con uno o varios enemigos, sale de ese espacio, cada uno de sus enemigos gana inmediatamente una acción para atacarle. Esto se aplica bilateralmente entre ambos bandos del combate.</p> 
 
-<h1>Definición de personaje</h1>
+<h2>Definición de personaje</h2>
 <p>Ahora toca ver en qué cosiste tu personaje exactamente y luego cómo es el proceso para crearlo. Ya hemos visto que tienes sangre, estabilidad y cuerpo, veamos cómo se calculan estos valores.</p>
 
-<h2>Estadísticas (ahora de verdad)</h2>
+<h3>Estadísticas (ahora de verdad)</h3>
 <p>Vamos a volver a verlas pero esta vez explicándolas.</p>
 <ul>
     <li>(FU) Fuerza: determina tu penetración física.</li>
@@ -127,10 +125,10 @@
 <p>Cualquiera puede ser negativa. Pero la estadística es menor que el valor mínimo de aquello que está determinando, entonces esa cosa toma su mínimo como valor.</p>
 
 
-<h2>Clases y habilidades</h2>
-<h3>Clase</h3>
+<h3>Clases y habilidades</h3>
+<h4>Clase</h4>
 <p>Cada clase tiene un título, nível, descripción, efectos, clases madres y clases hijas (imagen si eso también). Representan cosas como oficios o razas.</p>
-<h3>Habilidad</h3>
+<h4>Habilidad</h4>
 <p>Cada habilidad tiene:</p>
 <ul>
     <li>Nombre: sin más.</li>
@@ -145,7 +143,7 @@
     <li><b>Objetivo del ataque:</b> Si una habilidad está dirigida a una única parte del cuerpo, debes de declarar a cuál antes de tirar precisión. Si es un <b>golpe alto</b>, sólo puedes escoger entre las partes del cuerpo superiores, si es un <b>golpe bajo</b>, de entre las bajas. Si es un <b>golpe aleatorio</b>, tras impactar tira 1d8 para decidir en que parte se acertó; si además es aleatorio pero bajo o alto, usa 1d4.</li>
     <li><b>Dañar:</b> cuando una habilidad daña, hace que la/s parte/s del cuerpo afectada/s desciendan una vez en su estado de salud.</li>
     <li><b>Mágico:</b> las habilidades ofensivas de carater mágico tienen esta palabra clave. Es decir, te fijas en la armadura y penetración mágicas en vez de físicas.</li>
-    <li><b>[Instanténeo]:</b> una habilidad instantánea puede usarse en cualquier turno; pero sólo puedes unar una habilidad instantánea por turno. Si se usa en el turno de un enemigo, debe de ser una vez se haya declarado el objetivo, pero antes de que haga su tirada de precisión.</li>
+    <li><b>[Instanténeo]:</b> una habilidad instantánea puede usarse en cualquier turno; pero sólo puedes unar una habilidad instantánea por turno. Si se usa en el turno de un enemigo, debe de ser una vez se haya declarado el objetivo, pero antes de que haga su tirada de precisión. Si se utiliza más de un instantáneo por turno, estos se realizan a través de la pila. Después de que alguien declare qué instantáneo va usar, antes de resolverlo, todos tienen la oportunidad de responder con otro instantáneo, al hacerlo se "coloca encima de la pila" y se vuelve a dar la oportunidad a todos de usar un instantáneo. Se sigue así hasta que nadie más quiera usar uno, entonces los instantáneos suceden de arriba abajo, es decir, primero los últimos declarados; inmediatamente después sucede la acción normal del turno y luego el turno termina sin que haya oportunidad de usar más intantáneos.</li>
     <li><b>Golpe al alma:</b> algunas habilidades mágicas no hacen objetivo a una parte del cuerpo concreta, si no al "alma" del objetivo, por lo que ignoras efectos ligados a una parte del cuerpo concreta.</li>
     <li><b>Matar:</b> algunas habilidades pueden tratar de matar al objetivo directamente, pero si el objetivo es un jugador entonces realiza una tirada de muerte.</li>
     <li><b>{}</b> Algunas habilidades requieren como condición adicional que superes cierta prueba para poder aplicar el efecto (normalmente a cambio de hacer tirada de precisión). Se indica de la forma: "coste {prueba} > efecto".</li>
@@ -155,7 +153,7 @@
 </p>Además, por norma general, los efectos de las habilidades no son acumulables, a no ser que se indique lo contrario.</p>
 
 
-<h2>Item</h2>
+<h3>Item</h3>
 <p>Cada item tiene:</p>
 <ul>
     <li>Nombre: sin más.</li>
@@ -166,30 +164,30 @@
 <p>Algunos items pueden consumirse al usarse, como munición, pociones o comida. Los quitas de tu inventario al usar su efecto.</p>
 <p>Algunos items también pueden especificar "1 mano" o "2 manos", esto significa que hay que llevarlos en una mano (o ambas) para aplicar su efecto o usarlos normalmente. Lógicamente no puedes agarrar más de un item a la vez en la misma mano. Al crear a tu personaje decides si eres diestro o zurdo. Si usas un item con tu mano no predominante tienes desventaja en las tiradas relacionadas (no cuenta a dos manos). Esta regla es importante tenerla en cuenta por si te hieren algún brazo. Si pierdes un brazo, te vuelves dominante en el que te queda automáticamente.</p>
 
-<h3>Armadura y ropa</h3>
+<h4>Armadura y ropa</h4>
 <p>No hay una regla estrica para definir que ropa o armaduras puedes tener equipados a la vez (a parte del peso), hay que ser razonable. Además, para simplificar la lectura, las estadísticas de armadura se indican de la forma: "Armadura: M1[F1,F2,F3,F4,,F5,F6,F7,F8]" dónde M1 es la armadura mágica que da y los F son los valores de armadura física para cada parte del cuerpo según el orden normal. Estos valores son aditivos, puedes llevar varias capas de ropa en la misma parte del cuerpo para aumentar su valor, y tu armadura mágica será la suma total de todo lo que lleves (recuerda que tu armaduras base son cero). Algunas conjuntos de ropa/armadura, no incluyen cierta parte del cuerpo, esto se indica con una X en esa parte, esto quiere decir que esta parte está desocupada.</p>
 <p>A diferencia de los efectos de las habilidades, por norma general, los efectos de los items sí son acumulables, incluso si tienes equipados varias copias del mismo.</p>
 
-<h1>Creación de personaje</h1>
+<h2>Creación de personaje</h2>
 <p>Ahora que conoces todos los elementos que hay vamos a ver cómo se crea tu personaje. Hay que hacer varias cosas, vamos a verlas independientemente.</p>
-<h2>Estadísticas</h2>
+<h3>Estadísticas</h3>
 <p>Además de las 5 estadística básicas hay que establecer tu oro inicial. Para inicializarlas, lanzas 6 dados de 20 caras; luego le restas 5 a cada uno de los resultados. A continuación debes de repartir los valores libremente entre las 5 estadísticas iniciales y el oro. Si crees que la tirada es mala, antes de hacer nada más, tienes la oportunidad de repetirla entera; te quedas con el resultado sin poder cambiarlo; pero si el resultado total es menor que 20, puedes repetirno idefinidamente hasta que sea mayor que 20. Si el oro es negativo, lo estableces a 0.</p>
-<h2>Clases y habilidades</h2>
+<h3>Clases y habilidades</h3>
 <p>Tienes <b>5</b> niveles disponibles para aprender clases y habilidades. </p>
-<h3>Clases</h3>
+<h4>Clases</h4>
 <p>Para aprender una clase gasta un nivel, pero hay que tener en cuenta ciertas condiciones. Es importante ditinguir entre clases radicales, clases de raza y el resto. Sólo puedes aprender clases de raza al crear un personaje. Las clases pueden tener clases madres e hijas; las clases que no tienen ninguna madre se consideran radicales. (Se utiliza terminología de parientes para las clases relacionadas.) Puedes aprender clases radicales libremente, pero para las otras necesitas haber aprendido todas sus madres antes.</p>
 <p>Un pequeño consejo. Como se ve abajo, aprender clases radicales más tarde es más costoso. Entonces recomiendo mirar qué clases te interesaría aprender en el futuro para aprender de primera todas las radicales de las que dependan, aunque ahora no las fueras a aprovechar, será un ahorro de niveles.</p>
-<h3>Hablidades</h3>
+<h4>Hablidades</h4>
 <p>Al aprender una clases tienes acceso a las habilidades propias de la misma. Al principio aprendes automáticamente todas las habilidades de nivel 0 y puedes gastar niveles para aprender las habilidades de nivel 1 de las clases que tengas. Algunas habilidades pertenecen a más de una clase, con que tengas al menos una de las clases listadas es suficiente para aprender esa habilidad.</p>
-<h3>Hablidades independientes</h3>
+<h4>Hablidades independientes</h4>
 <p>Algunas habilidades no pertenecen a ninguna clase. Para poder aprenderlas necesita gastar niveles igual a su nivel.</p>
-<h2>Items</h2>
+<h3>Items</h3>
 <p>Puedes comprar items iniciales con tu oro inicial. (No tienes porqué gastarlo todo.) Además de gastar el oro, aseguráte de que tienes peso para llevarlos encima.</p>
 <br>
 <p>Aunque normalmente habría que seguir estos pasos, puedes ir haciendo todo a la vez, mientras que respetes la tirada de estadísticas y que al final se quede todo bien, no hay problema.</p>
-<p>Para crearte el personaje con más comodidad puedes encontrar una plantilla de ficha <%= link_to "aquí", "https://drive.google.com/drive/folders/1END33BiNOJG38i0EPDiZEkhmVlhTcf7R?usp=sharing" %> junto a otros recursos interesantes. </p>
+<p>Para crearte el personaje con más comodidad puedes encontrar una plantilla de ficha <b class="recursos"><%= link_to "aquí", "https://drive.google.com/drive/folders/1END33BiNOJG38i0EPDiZEkhmVlhTcf7R?usp=sharing" %> </b>junto a otros recursos interesantes. </p>
 
-<h1>Progresión</h1>
+<h2>Progresión</h2>
 <p>Conforme avance la aventura irás consiguiendo nuevos niveles. Puedes invertir estos niveles de 6 formas diferentes:</p>
 <ul>
     <li>1. Aprender una nueva habilidad independiente gastando niveles igual a su nivel. </li>
@@ -209,9 +207,9 @@
     <li></li>
     <li><b></b></li>
 </ul>
-<h1></h1>
 <h2></h2>
 <h3></h3>
+<h4></h4>
 <p></p>
 <b></b>
 %>

@@ -1,11 +1,4 @@
-
-<div class="clase-clases bodeOscuro">
-    <% Categ.all.sort_by(&:nombre).each do |ct| %>
-        <%= link_to ct.nombre, ct, class: "neutral" %>
-    <% end %>
-</div>
-
-<div class="clase-show">
+<div class="clase-main">
     <%= render "categ", x: @x %>
 <div>
     

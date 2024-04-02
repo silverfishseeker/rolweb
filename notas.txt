@@ -1,4 +1,4 @@
-
+1rem
 
 docker exec -it rolweb-web-1 bash
 
@@ -76,6 +76,7 @@ rails generate migration AddimageToHabilidad image:string
 
 rails generate model Habilidad nombre:string nivel:integer efecto:string
 
+rails generate migration AddOcultoToHabilidad oculto:boolean
 
 
 git config --global core.autocrlf false

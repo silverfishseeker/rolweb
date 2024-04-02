@@ -6,12 +6,12 @@
   
   <div>
     <%= form.label :parent_ids, 'Madres' %><br>
-    <%= form.collection_select :parent_ids,    Clase.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
+    <%= form.collection_select :parent_ids, Clase.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
   </div>
   
   <div>
     <%= form.label :child_ids, 'Hijas' %><br>
-    <%= form.collection_select :child_ids, Clase.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
+    <%= form.collection_select :child_ids,  Clase.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
   </div>
 
   <div>
@@ -27,6 +27,12 @@
   <div>
     <%= form.label :image %>
     <%= form.file_field :image %>
+  </div>
+  <br>
+
+  <div>
+    <%= form.label :oculto %><br>
+    <%= form.check_box  :oculto %><br>
   </div>
   <br>
 

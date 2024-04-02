@@ -1,5 +1,7 @@
 <h1><%= @x.nombre %></h1>
-<%= render "shared/image", image: @x.image %>
+<div class="picture-show">
+    <%= render "shared/image", image: @x.image %>
+</div>
 <br>
 <%= link_to "Edit", edit_picture_path(@x) %>
 <%= link_to "Destroy", picture_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>

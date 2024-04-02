@@ -12,5 +12,8 @@ Rails.application.routes.draw do
   get '/reglas', to: 'info#reglas'
   get '/estadosAlterados', to: 'info#estadosAlterados'
   get '/lore', to: 'info#lore'
-  get '/control', to: 'info#control'
+  get '/control', to: 'admin#control'
+  get '/items_no_categ', to: 'admin#items_no_categ'
+  get '/habilidads_ocultas', to: 'admin#habilidads_ocultas'
+  get '/habilidads_sueltas', to: 'admin#habilidads_sueltas'
 end

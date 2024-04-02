@@ -1,12 +1,14 @@
 <h3>Clases:</h3>
-<div class="clase-clases bodeOscuro">
+<div class="miniListadoClases">
     <% @x.clases.each do |clase| %>
-        <%= link_to clase.nombre, clase %>
+        <%= link_to clase.nombre, clase, class:"carta-title" %>
     <% end %>
 </div>
 
-<div class="clase-show">
-    <%= render "habilidad", habil: @x %>
+<div class="clase-main">
+    <div class="carta carta_extendida">
+        <%= render "habilidads/habilidad_inner", habil:  @x%>
+    </div>
 <div>
     
 <h1>Items relacionados:</h1>

@@ -1,26 +1,3 @@
-<div class="clase-item bodeOscuro">
-    <div class="clase-header">
-        <p class="clase-level clase-coste bodeOscuro">
-            <%= item.coste %>
-        </p>
-        <p class="clase-level clase-peso bodeOscuro">
-            <%= item.peso %>
-        </p>
-        <h3 class="clase-title"><%= link_to item.nombre, item %></h3>
-    </div>
-
-    <div class="clase-clases bodeOscuro">
-        <% item.clases.each do |clase| %>
-            <%= link_to clase.nombre, clase %>
-        <% end %>
-    </div>
-
-    <div class="clase-contents">
-        <div class="clase-image">
-            <%= render "shared/image", image: item.image %>
-        </div>
-        <div class="clase-details">
-            <p class="clase-effect clase-effectBig"><%= item.efecto %></p>
-        </div>
-    </div>
+<div class="carta">
+    <%= render "items/item_inner", item: item %>
 </div>

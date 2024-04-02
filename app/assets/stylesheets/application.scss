@@ -1,0 +1,492 @@
+/****************
+ * PREMINILARES *
+ ****************/
+
+:root {
+    /* PALETA*/
+    --c_black: #001219;
+    --c_white: #F7F7F7;
+    --c_base: #38002e;
+    --c_base_alt: #4D003E;
+    --c_contraste: #98c2ff;
+    --c_alternativo: #c375d7;
+    --c_alternativo_alt: #D797E7;
+    --c_detalle: #6d5ac6;
+    --c_detalle_alt: #A095D0;
+
+}
+
+@font-face{
+    font-family:'Seagram';
+    src: font-url('Seagram_tfb.ttf') format('truetype');;
+}
+
+/*****************************
+ * ESTILOS DE ETIQUETAS HTML *
+ *****************************/
+
+body {
+    font-family: 'EB Garamond', serif;  
+    color: var(--c_black);
+    background-color: var(--c_white);
+    margin: 5px;
+    margin-top: 150px;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Seagram', serif;
+    margin: 10px;
+    margin-top: 20px;
+}
+
+p {
+    margin: 10px;
+}
+
+form {
+    margin: 20px;
+}
+
+textarea {
+    height: 200px;
+    width: 500px;
+}
+
+a {  
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/*************************
+ * CLASES CSS INVENTADAS *
+ *************************/
+
+
+/* BARRA DE NAVEGACIÓN */
+
+.navbar {
+    background-color: var(--c_base);
+    color: var(--c_contraste);
+    padding: 5px;
+    padding-bottom: 10px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.navbar img{
+    height: 72px;
+    width: auto;
+}
+
+
+.navbar h1 {
+    margin: 5px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: lighter;
+}
+
+.subnavbar {
+    width: 93%;
+    
+}
+
+.subsubnavbar {
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    width: 100%;
+}
+
+.subsubnavbar a {
+    padding: 10px;
+}
+
+.subsubnavbar a.nblink {
+    text-align: center;
+    color: var(--c_contraste); 
+    font-size: larger;
+}
+
+.subsubnavbar a:hover {
+    background-color: var(--c_base_alt);
+}
+
+.subsubnavbar a:visited {
+    color: var(--c_contraste); 
+}
+
+.submenu:hover .submenu-content {
+    display: block;
+}
+
+/* SUBMENÚ */
+
+.submenu-content {
+    display: none;
+    position: absolute;
+    max-height: 400px; /* Tamaño fijo pequeño del submenú */
+    overflow-y: auto;
+    overflow-x:hidden;
+    border: 3px solid var(--c_base);
+    margin-top: 8px;
+}
+
+.submenu-content div {
+    width: 100%;
+}
+
+.submenu-content a {
+    color: var(--c_white);
+    background-color: var(--c_detalle);
+    display: block;
+    width: 100%;
+}
+
+.submenu-content a.mainLink {
+    border-bottom: 3px solid var(--c_base);
+    font-weight: bold;
+}
+
+.submenu-content a:hover {
+    background-color: var(--c_detalle_alt);
+}
+.submenu-content a:visited{
+    color: var(--c_white);
+}
+
+
+
+
+/* REGLAS */
+
+.mods-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 0px;
+    border: 2px solid var(--c_base);
+}
+
+.mods-table p{
+    border: 2px solid var(--c_base);
+    padding: 4px;
+    margin: 0px;
+    text-align: center;
+}
+
+.recursos {
+    font-size:2rem;
+}
+
+
+/* CARTAS */
+
+:root {
+    --ancho_carta:400px;
+    --ancho_carta_clase:540px;
+    --alto_carta_clase:340px;
+}
+
+.grid-container {
+    margin: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--ancho_carta), 1fr)); /*400 es el tamaño del item de dentro*/
+    grid-gap: 10px;
+}
+
+.grid-container_clase {
+    grid-template-columns: repeat(auto-fit, minmax(var(--ancho_carta_clase), 1fr));
+}
+
+
+.carta {
+    width: var(--ancho_carta);
+    height: 500px;
+    background-color: var(--c_contraste);
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+
+.carta_extendida {
+    width:auto;
+    height:auto;
+}
+
+.carta_clase {
+    width: var(--ancho_carta_clase);
+    height: var(--alto_carta_clase);
+    border: 4px solid var(--c_base);
+}
+
+.carta-header {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    font-size: 20px;
+    min-height: 8%;
+}
+.carta-number {
+    padding: 5px;
+    margin: 10px;
+    color: var(--c_base);
+    margin-right: 0;
+
+}
+.carta-level {
+    background-color: var(--c_alternativo);
+    border: 4px solid var(--c_base);
+    border-radius: 10px;
+}
+
+.carta-coste {
+    background-image: url('coin.png');
+    background-size:cover;
+    background-position: center;
+}
+
+.carta-peso {
+    padding-bottom: 0px;
+    padding-top: 10px;
+    background-image: url('Weight_icon.png');
+    background-size:cover;
+    background-position: center;
+    color: var(--c_white);
+}
+
+.carta-title {
+    font-family: 'Seagram', serif;
+    background-color: var(--c_base);
+    color: var(--c_white);
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: 5px;
+    align-self: center;
+    border-radius: 5px;
+}
+.carta-title:hover {
+    background-color: var(--c_base_alt);
+}
+
+.carta-title_clase {
+    font-size: larger;
+}
+
+.carta-subtitles {
+    background-color: var(--c_detalle);
+    margin: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.carta-subtitles a {
+    margin: 5px;
+    padding: 5px;
+    display: inline-block;
+    border-radius: 5px;
+    border: 1px solid var(--c_white);
+    color: var(--c_white);
+}
+.carta-subtitles a:hover {
+    background-color: var(--c_detalle_alt);
+}
+
+.carta-subtitles a.clase:hover {
+    background-color: var(--c_alternativo);
+}
+
+.carta-contents {
+    display: flex;
+    flex-direction: row;
+}
+
+.carta-details {
+    flex:auto;
+    width: calc(var(--ancho_carta_clase)*0.6);
+    max-height: calc(var(--alto_carta_clase)*0.9);
+    display: flex;
+    flex-direction: column;
+}
+
+.carta-description {
+    overflow-y: auto;
+    margin: 20px;
+    margin-top: 5px;
+    color: var(--c_base);
+}
+
+.carta-description_clase {
+    min-height: calc(var(--alto_carta_clase)*0.2);
+    flex:auto;
+}
+
+.carta-image {
+    max-width: calc(var(--ancho_carta_clase)*0.4);
+    max-height: calc(var(--alto_carta_clase)*0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.carta-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.carta-subtitles a.clase {
+    background-color: var(--c_alternativo);
+    color: var();
+    border-color: var(--c_base);
+}
+
+
+
+/* CLASE y shows */
+
+.clase-main {
+    margin: 10px;
+}
+
+.clase-contents {
+    height: 90%;
+    display: flex;
+    flex-direction: row;
+}
+
+.clase-details {
+    width: 60%;
+}
+
+.clase-herencia {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.miniListadoClases {
+    background-color: var(--c_alternativo);
+    color: var(--c_base);
+    margin: 10px;
+    padding: 5px;
+    border-radius: 5px;
+}
+.miniListadoClases h4 {
+    margin: 5px;
+}
+.miniListadoClases .carta-title {
+    margin: 5px;
+    display: inline-block;
+}
+
+.clase-description {
+    background-color: var(--c_contraste);
+    padding: 10px;
+}
+
+.clase-image {
+    height: 400px;
+    width: 40%;
+    align-items: center;
+    text-align: center;
+}
+
+.clase-image img {
+    max-height: 100%;
+}
+
+
+
+
+/* CUADROS */
+.body-blackBackground {
+    background-color: var(--c_black);
+}
+
+.clase-picture {
+    margin: 0px;
+    margin-bottom: 40px;
+    width: 400px;
+    height: 400px;
+    text-align: center;
+}
+.clase-picture img {
+    max-width:100%;
+    max-height:100%;
+}
+  
+.clase-picture-desc{
+    text-align: center;
+    background-color: var(--c_detalle);
+    color: var(--c_white);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+
+
+/* CARTA MOB */
+
+.mob-item {
+    background-color: #94d2bd;
+    width: 400px;
+}
+.mob-subGrid {
+    display: grid;
+    grid-template-areas:
+      'estabilidad  sangre      oro'
+      'armMag       penFis      penMag'
+      'cuerpo       cuerpo      cuerpo'
+      'descripcion   descripcion descripcion';
+    gap: 5px;
+    margin: 10px;
+    padding: 0;
+    height: 74%;
+}
+.mob-estabilidad { grid-area: estabilidad; }
+.mob-sangre { grid-area: sangre; }
+.mob-oro { grid-area: oro; }
+.mob-armMag { grid-area: armMag; }
+.mob-penFis { grid-area: penFis; }
+.mob-penMag { grid-area: penMag; }
+.mob-cuerpo { grid-area: cuerpo; }
+.mob-descripcion { grid-area: descripcion; }
+.mob-cuerpo, .mob-descripcion {
+    padding: 10px;
+    margin: 0;
+    border: 2px solid var(--c_detalle);
+    border-radius: 5px;
+    overflow-y: scroll;
+}
+
+.mob-listado {
+    margin-bottom: 10px;
+}
+
+.mob-image {
+    margin-left: 10px;
+    height: 100%;
+    text-align: center;
+}
+.mob-image img {
+    max-height: 100%;
+}
+
+
+/* FORMULARIOS Y PARECIDOS*/
+
+.form-select {
+    height: 200px;
+    width: 200px;
+}
+.picture-show img {
+    max-height: 400px;
+}
+
+  

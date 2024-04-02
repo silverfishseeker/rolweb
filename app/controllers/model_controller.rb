@@ -29,6 +29,7 @@ class ModelController < ApplicationController
     end
   
     def update
+      p(@x)
       @x = @tipo.find(params[:id])
   
       if @x.update(model_params)

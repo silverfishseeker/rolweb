@@ -6,41 +6,80 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", media: 'all', "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
     <%= favicon_link_tag "icono.png"%>
   </head>
 
-  <body>
+  <body <%= content_for?(:body_class) ? "class=#{yield(:body_class)}" : '' %>>
     <div class="navbar">
-      <a href="/lore"><%= image_tag "icono.png" %></a>
+      <a href="/"><%= image_tag "icono.png" %></a>
       
       <div class="subnavbar">
         <h1> Doors Maze</h1>
-        <ul>
-          <li><a href="/reglas">Información</a></li>
-          <li class="submenu">
-            <%= link_to "Clases", clases_path %>
-            <ul class="submenu-content clase-clases bodeOscuro">
-              <b> <%= link_to "Página principal de clases", clases_path %> </b>
-              <% Clase.all.sort_by(&:nombre).each do |clase| %>
-                  <li><%= link_to clase.nombre, clase %></li>
+        <div class="subsubnavbar">
+
+          <div class="submenu">
+            <a href="/reglas" class="nblink">Información</a>
+            <div class="submenu-content">
+                <a href="/lore">Historia</a>
+                <a href="/reglas">Reglas</a>
+                <a href="/estadosAlterados">Estados Alterados</a>
+            </div>
+          </div>
+
+          <div class="submenu">
+            <%= link_to "Clases", clases_path, class:"nblink" %>
+            <div class="submenu-content">
+              <%= link_to "Todas las clases", clases_path, class:"mainLink" %>
+              <%= link_to "Todas las habilidades", habilidads_path, class:"mainLink" %>
+              <%= link_to "Árbol de clases", "https://drive.google.com/file/d/1HBR8AoPRvbim8WksjS18dCjR_5bYLR18/view?usp=sharing", class:"mainLink" %>
+              <% Clase.where(oculto:true).sort_by(&:nombre).each do |clase| %>
+                  <%= link_to clase.nombre, clase, class:"mainLink"  %>
               <% end %>
-            </ul>
-          </li>
-          <li><%= link_to "Items", items_path %></li>
-          <li><%= link_to "Galería", pictures_path %></li>
-          <a href="/control">Admin</a>
-        </ul>
+              <% Clase.where(oculto:false).sort_by(&:nombre).each do |clase| %>
+                  <%= link_to clase.nombre, clase %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="submenu">
+            <%= link_to "Items", items_path, class:"nblink" %>
+            <div class="submenu-content">
+              <%= link_to "Todos los items", items_path, class:"mainLink" %>
+              <% Categ.all.sort_by(&:nombre).each do |ct| %>
+                  <%= link_to ct.nombre, ct %>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="submenu">
+            <%= link_to "Galería", pictures_path, class:"nblink" %>
+          </div>
+
+          <div class="submenu">
+            <a href="/control" class="nblink">Admin</a>
+            <div class="submenu-content">
+              <%= link_to "Habilidades ocultas", "/habilidads_ocultas"%>
+              <%= link_to "Habilidades sueltas", "/habilidads_sueltas"%>
+              <%= link_to "Ítems sin categoría", "/items_no_categ"%>
+              <%= link_to "Mobs", mobs_path %>
+              <%= link_to "Crear mob", new_mob_path %>
+              <%= link_to "Crear clase", new_clase_path %>
+              <%= link_to "Crear habilidad", new_habilidad_path %>
+              <%= link_to "Crear item", new_item_path %>
+              <%= link_to "Crear categoría", new_categ_path %>
+              <%= link_to "Añadir cuadro", new_picture_path %>
+            </div>
+          </div>
+
+        </div>
       </div>
       
     </div>
-    
-    <div class="inBody">
-      <%= yield %>
-    </div>
-    
+  
+    <%= yield %>
 
   </body>
 </html>

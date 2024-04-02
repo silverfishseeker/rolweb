@@ -1,21 +1,20 @@
 
-<div class="clase-clases bodeOscuro">
+<div class="miniListadoClases">
     <% @x.categs.each do |ct| %>
-        <%= link_to ct.nombre, ct, class: "neutral" %>
+        <%= link_to ct.nombre, ct, class: "carta-title" %>
     <% end %>
 </div>
 
-<div class="clase-show">
-    <%= render "item", item: @x %>
+<div class="clase-main">
+    <div class="carta carta_extendida">
+        <%= render "item_inner", item: @x %>
+    </div>
 <div>
+
 <br>
 
 <h1>Lista de Hablidades relacionadas:</h1>
-<div class="grid-container">
-    <% @x.habilidads.each do |habil| %>
-        <%= render "habilidads/habilidad", habil: habil %>
-    <% end %>
-</div>
+<%= render "habilidads/lista", habilidades: @x.habilidads%>
 
 <%= link_to "Edit", edit_item_path(@x) %>
 <%= link_to "Destroy", item_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>

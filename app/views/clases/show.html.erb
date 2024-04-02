@@ -1,26 +1,28 @@
-<div class="clase-show">
-    <h3 class="clase-show-header"><%= link_to @x.nombre, @x %></h3>
+<div class="clase-main">
+    <h1>
+        <%= link_to @x.nombre, @x %>
+    </h1>
 
     <div class="clase-contents">
         <div class="clase-details">
             <div class="clase-herencia">
-                <div class="clase-clases bodeOscuro">
+                <div class="miniListadoClases">
                     <h4>Madres</h4>
                     <% @x.parents.each do |cl| %>
-                        <%= link_to cl.nombre, cl %>
+                        <%= link_to cl.nombre, cl, class:"carta-title" %>
                     <% end %>
                 </div>
-                <div class="clase-clases bodeOscuro">
+                <div class="miniListadoClases">
                     <h4>Hijas</h4>
                     <% @x.childs.each do |cl| %>
-                        <%= link_to cl.nombre, cl %>
+                        <%= link_to cl.nombre, cl, class:"carta-title" %>
                     <% end %>
                 </div>
             </div>
-            <p class="clase-effect"><%= @x.efecto %></p>
+            <p class="clase-description"><%= @x.efecto %></p>
             <p class="clase-description"><%= @x.descripcion %></p>
         </div>
-        <div class="clase-image clase-imageFixed">
+        <div class="clase-image">
             <%= render "shared/image", image: @x.image %>
         </div>
     </div>

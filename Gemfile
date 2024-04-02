@@ -76,3 +76,6 @@ gem 'carrierwave', '~> 1.0'
 
 # para hacer peticiones GET y tal
 gem 'httparty'
+
+# para tener un css más chulo
+gem 'sass-rails', '~> 6.0'

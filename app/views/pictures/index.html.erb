@@ -1,7 +1,6 @@
-<h2>Galería</h2>
+<% content_for :body_class, 'body-blackBackground' %>
 
-
-<div class="grid-container">
+<div class="grid-container blackBackground">
     <% @xs.sort_by(&:nombre).each do |x| %>
         <%= render "picture", x: x%>
     <% end %>
