@@ -2,6 +2,14 @@
 
 docker exec -it rolweb-web-1 bash
 
+CUANDO SE JODE LA INTEGRIDAD DE LA BD:
+    1º en el compose:
+        command: ["sleep", "infinity"]
+    2º nos metemos como usuario root:
+        docker exec -it -u postgres rolweb-db-1 /bin/bash
+    3º le metemos la limpieza:
+        pg_resetwal /var/lib/postgresql/data
+
 rails server
     start server
 
