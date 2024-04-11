@@ -7,6 +7,7 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", media: 'all', "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "actiontext", media: 'all', "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
     <%= favicon_link_tag "icono.png"%>
@@ -71,6 +72,7 @@
               <%= link_to "Crear item", new_item_path %>
               <%= link_to "Crear categoría", new_categ_path %>
               <%= link_to "Añadir cuadro", new_picture_path %>
+              <%= link_to "Estados alterados", estadoalterados_path %>
             </div>
           </div>
 

@@ -29,3 +29,13 @@
   padding: 0 !important;
   max-width: 100% !important;
 }
+
+.trix-content {
+  display: inline;
+  line-height:inherit;
+}
+
+.trix-content div {
+  display: inline;
+  line-height:inherit;
+}

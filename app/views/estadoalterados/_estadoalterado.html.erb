@@ -1,0 +1,12 @@
+<div class="estadoALterado">
+    <b><%=x.nombre%>: </b>
+    <%=x.descripcion%>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('div.trix-content').each(function() {
+        $(this).replaceWith($('<span>').addClass($(this).attr('class')).html($(this).html()));
+    });
+    });
+</script>

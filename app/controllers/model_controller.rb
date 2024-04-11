@@ -18,7 +18,7 @@ class ModelController < ApplicationController
       @x = @tipo.new(model_params)
   
       if @x.save
-        redirect_to @x  
+        redirect_to @tipo  
       else
         redirect_to "/control" , notice: 'La jodiste.'
       end
@@ -43,6 +43,6 @@ class ModelController < ApplicationController
       @x = @tipo.find(params[:id])
       @x.destroy
   
-      redirect_to "/control"
+      redirect_to @tipo
     end
 end

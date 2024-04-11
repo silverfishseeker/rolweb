@@ -3,6 +3,7 @@ class InfoController < ApplicationController
     end
 
     def estadosAlterados
+        @xs = Estadoalterado.all
     end
     
     def lore

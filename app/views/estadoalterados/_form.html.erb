@@ -1,0 +1,17 @@
+<%= form_with model: @x do |form| %>
+  <div>
+    <%= form.label :nombre %><br>
+    <%= form.text_field :nombre %>
+  </div>
+  <br>
+  
+  <div>
+    <%= form.label :descripcion %><br>
+    <%= form.rich_text_area :descripcion %>
+  </div>
+  <br>
+    
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
