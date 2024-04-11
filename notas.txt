@@ -2,6 +2,7 @@
 
 docker exec -it rolweb-web-1 bash
 
+Para evitar romper la bd hacer commit de la bd con el contenedor apagado, si no:
 CUANDO SE JODE LA INTEGRIDAD DE LA BD:
     1º en el compose:
         command: ["sleep", "infinity"]
