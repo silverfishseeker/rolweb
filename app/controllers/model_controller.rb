@@ -18,7 +18,7 @@ class ModelController < ApplicationController
       @x = @tipo.new(model_params)
   
       if @x.save
-        redirect_to @tipo  
+        redirect_to @x
       else
         redirect_to "/control" , notice: 'La jodiste.'
       end
