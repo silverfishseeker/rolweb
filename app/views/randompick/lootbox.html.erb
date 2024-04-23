@@ -1,0 +1,38 @@
+<div class="lootbox-main">
+  <h1>Cofre aleatorio</h1>
+
+  <h1>Contenido cofre</h1>
+  
+  <div class="carta carta_clase lootbox-form">
+    <%= form_with url: "/lootboxing", method: :post do |f| %>
+
+      <%= f.collection_select :categ_ids, Categ.order(:nombre), :id, :nombre, {}, multiple: true, class:"lootbox-select" %>
+      
+      <h3>
+        <%= f.label :oromin, "Oro   mínimo:" %>
+        <%= f.number_field :oromin, value: 5, class:"lootbox-number" %>
+      </h3>
+      
+      <h3>
+        <%= f.label :copia, "Número copias:" %>
+        <%= f.text_field :copia, value: 4, class:"lootbox-number" %>
+      </h3>
+      
+      <%= f.submit "Abrir", class:"carta-title carta-title_clase"%>
+    <% end %>
+  </div>
+
+  <div class="carta-subtitles lootbox-chest">
+    <% if session[:lootbox] == nil %>
+      <p> No se pudo generar el cofre </p>
+    <% else %>
+      <% for itId, num in session[:lootbox] do %>
+          <% item = Item.find(itId) %>
+          <p class="carta-number carta-level carta-number_lootbox"> <%=num%> </p>
+          <%= link_to item.nombre, item %>
+          <br>
+      <% end %>
+    <% end %>
+  </div>
+
+</div>

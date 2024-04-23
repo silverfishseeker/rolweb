@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
-  root "info#lore"
+  root "clases#index"
   resources :clases
   resources :habilidads
   resources :items
@@ -17,4 +17,6 @@ Rails.application.routes.draw do
   get '/items_no_categ', to: 'admin#items_no_categ'
   get '/habilidads_ocultas', to: 'admin#habilidads_ocultas'
   get '/habilidads_sueltas', to: 'admin#habilidads_sueltas'
+  get '/lootbox', to: 'randompick#lootbox'
+  post '/lootboxing', to: 'randompick#lootboxing'
 end

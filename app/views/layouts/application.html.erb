@@ -24,14 +24,14 @@
           <div class="submenu">
             <a href="/reglas" class="nblink">Información</a>
             <div class="submenu-content">
-                <a href="/lore">Historia</a>
                 <a href="/reglas">Reglas</a>
+                <a href="/lore">Historia</a>
                 <a href="/estadosAlterados">Estados Alterados</a>
             </div>
           </div>
 
           <div class="submenu">
-            <%= link_to "Clases", clases_path, class:"nblink" %>
+            <%= link_to "Clases y habilidades", clases_path, class:"nblink" %>
             <div class="submenu-content">
               <%= link_to "Todas las clases", clases_path, class:"mainLink" %>
               <%= link_to "Todas las habilidades", habilidads_path, class:"mainLink" %>
@@ -49,6 +49,7 @@
             <%= link_to "Items", items_path, class:"nblink" %>
             <div class="submenu-content">
               <%= link_to "Todos los items", items_path, class:"mainLink" %>
+              <%= link_to "Cofre aleatorio", "/lootbox", class:"mainLink" %>
               <% Categ.all.sort_by(&:nombre).each do |ct| %>
                   <%= link_to ct.nombre, ct %>
               <% end %>
