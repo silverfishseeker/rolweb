@@ -132,7 +132,7 @@ a {
 .submenu-content {
     display: none;
     position: absolute;
-    max-height: 400px; /* Tamaño fijo pequeño del submenú */
+    max-height: 450px; /* Tamaño fijo pequeño del submenú */
     overflow-y: auto;
     overflow-x:hidden;
     border: 3px solid var(--c_base);
