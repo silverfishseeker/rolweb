@@ -525,4 +525,14 @@ a {
     max-height: 500px; 
 }
 
+.lootbox-item {
+    text-overflow: ellipsis;
+    height: 45px;
+    overflow: hidden;
+}
+
+.lootbox-item .carta-description{
+    color: var(--c_white);
+}
+
   

@@ -27,10 +27,18 @@
       <p> No se pudo generar el cofre </p>
     <% else %>
       <% for itId, num in session[:lootbox] do %>
-          <% item = Item.find(itId) %>
-          <p class="carta-number carta-level carta-number_lootbox"> <%=num%> </p>
-          <%= link_to item.nombre, item %>
-          <br>
+          <div class="lootbox-item">
+            <% item = Item.find(itId) %>
+            <span class="carta-number carta-level carta-number_lootbox"> <%=num%> </span>
+            <%= link_to item.nombre, item %>
+            <span class="carta-number carta-coste">
+                <%= item.coste %>
+            </span>
+            <span class="carta-number carta-peso">
+                <%= item.peso %>
+            </span>
+            <span class="carta-description"><%= item.efecto %></span>
+          </div>
       <% end %>
     <% end %>
   </div>
