@@ -1,7 +1,7 @@
 databases:
   - name: doorsmazedb
-    databaseName: postgres
-    user: postgres
+    databaseName: doorsmazedb
+    user: doorsmazedb
     plan: free
 
 services:
