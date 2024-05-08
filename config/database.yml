@@ -11,3 +11,5 @@ development:
 
 production:
   <<: *default
+  user: doorsmazedb
+  database: doorsmazedb
