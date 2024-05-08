@@ -11,6 +11,15 @@ CUANDO SE JODE LA INTEGRIDAD DE LA BD:
     3º le metemos la limpieza:
         pg_resetwal /var/lib/postgresql/data
 
+Hacer dump de la base de datos, primero meterse en el server y luego:
+    pg_dump --create -U postgres > dump.sql
+
+postgres://mysite:hWaJAI0FGTmoJw3YEoOGgypg7lvKDRd9@dpg-cotp852cn0vc73c9ikqg-a.oregon-postgres.render.com/mysite_9it9
+
+Reestablecer credenciales de rails:
+$env:EDITOR="code --wait"
+rails credentials:edit
+
 rails server
     start server
 
