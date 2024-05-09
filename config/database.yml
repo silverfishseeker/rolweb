@@ -3,8 +3,13 @@ default: &default
   encoding: unicode
   host: db
   user: postgres
+  database: postgres
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
-  database: postgres
+
+production:
+  <<: *default
+  user: doorsmazedb
+  database: doorsmazedb_vj9h
