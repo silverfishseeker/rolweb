@@ -20,3 +20,4 @@ EXPOSE 3000
 # Puto tmp (hay que borrarlo para evitar errores, ni idea de porqué)
 # iniciar rails
 CMD rm -rf /app/tmp/* && bin/rails server -b 0.0.0.0
+# CMD rm -rf /app/tmp/* && bin/rails server -b 0.0.0.0 -e production
