@@ -9,8 +9,8 @@ services:
     volumes:
       - ./db_data:/var/lib/postgresql/data
     restart: always
-    ports:
-      - 5555:5432
+    # ports:
+    #   - 5555:5432
   web:
     build: .
     ports:
