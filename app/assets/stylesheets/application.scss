@@ -29,7 +29,7 @@ body {
     font-family: 'EB Garamond', serif;  
     color: var(--c_black);
     background-color: var(--c_white);
-    margin: 5px;
+    margin: 0;
     margin-top: 150px;
 }
 
@@ -64,6 +64,18 @@ a {
 
 
 /* BARRA DE NAVEGACIÓN */
+
+
+.footbar {
+    background-color: var(--c_base);
+    color: var(--c_contraste);
+    margin: 0;
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+}
+
 
 .navbar {
     background-color: var(--c_base);

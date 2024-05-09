@@ -8,4 +8,7 @@ class InfoController < ApplicationController
     
     def lore
     end
+
+    def avisolegal
+    end
 end
