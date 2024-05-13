@@ -71,7 +71,9 @@ a {
     color: var(--c_contraste);
     margin: 0;
     margin-top: 20px;
-    padding: 10px;
+    padding: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
     width: 100%;
     text-align: center;
 }
@@ -547,4 +549,9 @@ a {
     color: var(--c_white);
 }
 
-  
+/* ARBOL*/
+
+img.arbol {
+    margin: 1%;
+    max-width:98%;
+}

@@ -11,4 +11,7 @@ class InfoController < ApplicationController
 
     def avisolegal
     end
+
+    def arbol
+    end
 end

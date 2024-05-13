@@ -20,4 +20,5 @@ Rails.application.routes.draw do
   get '/habilidads_sueltas', to: 'admin#habilidads_sueltas'
   get '/lootbox', to: 'randompick#lootbox'
   post '/lootboxing', to: 'randompick#lootboxing'
+  get '/clases-arbol', to: 'info#arbol'
 end
