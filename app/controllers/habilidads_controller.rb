@@ -6,8 +6,9 @@ class HabilidadsController < ModelController
   end
 
   # Realmente estos accesos no están protegidos, cualquiera con la url se puede meter, pero sólo puedes conseguir la url autentifícándote en admin_controller
+  # Sobrescribe.
   def index
-    if params[:mode] == "indep"
+    if params[:mode] == "sueltas"
       @xs = Habilidad.hide.left_outer_joins(:items, :clases).where(items: { id: nil }, clases: { id: nil })
     else
       if params[:mode] == "hidden"

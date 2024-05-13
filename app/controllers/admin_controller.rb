@@ -8,7 +8,7 @@ class AdminController < ApplicationController
     end
 
     def habilidads_sueltas
-        redirect_to habilidads_path(mode: "indep")
+        redirect_to habilidads_path(mode: "sueltas")
     end
 
     def items_no_categ

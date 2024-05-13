@@ -36,6 +36,8 @@
               <%= link_to "Todas las clases", clases_path, class:"mainLink" %>
               <%= link_to "Todas las habilidades", habilidads_path, class:"mainLink" %>
               <%= link_to "Árbol de clases", "/clases-arbol", class:"mainLink" %>
+              <%= link_to "Clases radicales", clases_path(mode:"radical"), class:"mainLink" %>
+              <%= link_to "Razas", clases_path(mode:"raza"), class:"mainLink" %>
               <% Clase.where(oculto:true).sort_by(&:nombre).each do |clase| %>
                   <%= link_to clase.nombre, clase, class:"mainLink"  %>
               <% end %>
