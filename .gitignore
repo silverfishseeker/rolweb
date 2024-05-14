@@ -31,5 +31,6 @@
 /config/master.key
 
 .backups
+db_data2
 
 2
