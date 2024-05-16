@@ -422,18 +422,18 @@ a {
     max-height: 100%;
 }
 
-.clase-raza{
+.clase-subtitulo {
     font-size: medium;
-    color: var(--c_detalle);
     margin: 5px;
     padding-left: 20px;
 }
 
-.clase-radical{
-    font-size: medium;
+.clase-subtitulo_raza{
+    color: var(--c_detalle);
+}
+
+.clase-subtitulo_radical{
     color: var(--c_base_alt);
-    margin: 5px;
-    padding-left: 20px;
 }
 
 
