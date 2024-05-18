@@ -2,13 +2,7 @@
     <div class="carta-header carta-header_clase">
         <%= link_to clase.nombre, clase, class:"carta-title carta-title_clase" %>
     </div>
-    <% if clase.radical && clase.raza%>
-        <h3 class="clase-subtitulo clase-subtitulo_radical">Clase de raza y radical</h3>
-    <% elsif clase.radical == true %>
-        <h3 class="clase-subtitulo clase-subtitulo_radical"> Clase radical</h3>
-    <% elsif clase.raza == true %>
-        <h3 class="clase-subtitulo .clase-subtitulo_raza">Clase de raza</h3> 
-    <% end %>
+    <%= clase_subtitulo(clase) %>
     <div class="carta-contents">
         <div class="carta-details">
             <p class="carta-description carta-description_clase"><%= clase.efecto %></p>
