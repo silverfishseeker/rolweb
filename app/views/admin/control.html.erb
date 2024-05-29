@@ -1,40 +1,59 @@
 <h2>Estas funciones son solo de administrador</h2>
 
-<p>
-    <%= link_to "Habilidades ocultas", "/habilidads_ocultas"%>
-    <br>
-    <%= link_to "Habilidades sueltas", "/habilidads_sueltas"%>
-    <br>
-    <%= link_to "Ítems sin categoría", "/items_no_categ"%>
-    <br>
-    <%= link_to "Mobs", mobs_path %>
-    <br>
-    <%= link_to "Crear mob", new_mob_path %>
-    <br>
-    <%= link_to "Crear clase", new_clase_path %>
-    <br>
-    <%= link_to "Crear habilidad", new_habilidad_path %>
-    <br>
-    <%= link_to "Crear item", new_item_path %>
-    <br>
-    <%= link_to "Crear categoría", new_categ_path %>
-    <br>
-    <%= link_to "Añadir cuadro", new_picture_path %>
-    <br>
-    <%= link_to "Estados alterados", estadoalterados_path %>
-    <br>
-    <br>
-    <%=Clase.count%> clases <br>
-    <%=Habilidad.count%> habilidades <br>
-    <%=Item.count%> ítems <br>
-    <%=Mob.count%> mobs<br>
+<div class="admin-cuerpo">
+    <p class="column">
+        <%= link_to "Habilidades ocultas", "/habilidads_ocultas"%>
+        <br>
+        <%= link_to "Habilidades sueltas", "/habilidads_sueltas"%>
+        <br>
+        <%= link_to "Ítems sin categoría", "/items_no_categ"%>
+        <br>
+        <%= link_to "Mobs", mobs_path %>
+        <br>
+        <%= link_to "Crear mob", new_mob_path %>
+        <br>
+        <%= link_to "Crear clase", new_clase_path %>
+        <br>
+        <%= link_to "Crear habilidad", new_habilidad_path %>
+        <br>
+        <%= link_to "Crear item", new_item_path %>
+        <br>
+        <%= link_to "Crear categoría", new_categ_path %>
+        <br>
+        <%= link_to "Añadir cuadro", new_picture_path %>
+        <br>
+        <%= link_to "Estados alterados", estadoalterados_path %>
+        <br>
+        <br>
+        <%=Clase.count%> clases <br>
+        <%=Habilidad.count%> habilidades <br>
+        <%=Item.count%> ítems <br>
+        <%=Mob.count%> mobs <br>
 
-    <% begin
-        urlCompleta = "http://"+HTTParty.get('http://whatismyip.akamai.com')
-        # si este servidor falla, mirar algún otro de aquí: https://stackoverflow.com/questions/13270042/get-public-remote-ip-address
-        %>
-        <p>Dirección actual: <a href="<%=urlCompleta%>"><%=urlCompleta%><a></p>
-    <% rescue SocketError%>
-        <p>No se puedo establecer la conexión con el servidor para comprobar la ip actual.</p>
-    <% end %>
-</p>
+        <% begin
+            urlCompleta = "http://"+HTTParty.get('http://whatismyip.akamai.com')
+            # si este servidor falla, mirar algún otro de aquí: https://stackoverflow.com/questions/13270042/get-public-remote-ip-address
+            %>
+            Dirección actual: <a href="<%=urlCompleta%>"><%=urlCompleta%></a> <br>
+        <% rescue SocketError%>
+            No se puedo establecer la conexión con el servidor para comprobar la ip actual. <br>
+        <% end %>
+    </p>
+
+    <% clases = Clase
+        .left_joins(:habilidads)
+        .group('clases.id')
+        .select('clases.*, COUNT(habilidads.id) AS habilidads_count')
+        .order('habilidads_count ASC') %>
+
+    <div class="column">
+        <% clases.each_with_index do |clase, index| %>
+                <%= clase.habilidads_count %> <%= link_to clase.nombre, clase%> <br>
+            <% if index == clases.size / 2-1 %>
+                </div>
+                <div class="column">
+            <% end %>
+        <% end %>
+    </div>
+
+</div>

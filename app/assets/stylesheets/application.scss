@@ -575,3 +575,17 @@ img.arbol {
 .reglas {
     margin: 100px
 }
+
+/* ADMIN */
+.admin-cuerpo {
+    display: flex;
+}
+
+.admin-cuerpo .column {
+    flex: 1;
+    padding: 10px;
+    border-right: 1px solid #ddd;
+}
+.admin-cuerpo .column:last-child {
+    border-right: none;
+}
