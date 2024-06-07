@@ -63,6 +63,8 @@ rails console
 
 rails generate model
 
+rails generate scaffold     LITERALMENTE LO HACE TODO
+
 
 
 
