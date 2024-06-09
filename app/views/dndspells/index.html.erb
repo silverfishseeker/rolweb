@@ -1,0 +1,7 @@
+<h2>hechizos de D&D</h2>
+
+<ul>
+    <% @xs.each do |x| %>
+        <li><%= link_to x["name"], "dndspells/"+x["id"] %></li>
+    <% end %>
+</ul>
