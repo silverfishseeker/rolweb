@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :mobs
   resources :categs
   resources :estadoalterados
-  resources :dndspells, param: :index
+  resources :dndspells
   get '/reglas', to: 'info#reglas'
   get '/estadosAlterados', to: 'info#estadosAlterados'
   get '/lore', to: 'info#lore'

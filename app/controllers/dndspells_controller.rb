@@ -1,7 +1,7 @@
 class DndspellsController < ApplicationController
-  layout "application" 
   
   def initialize
+    super
     @as = MydndapiService.new
   end
 
@@ -17,7 +17,7 @@ class DndspellsController < ApplicationController
   end
 
   def show
-    @x = @as.get("spells/#{params[:index]}")
+    @x = @as.get("spells/#{params[:id]}")
   end
 
   def new
