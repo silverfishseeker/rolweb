@@ -6,6 +6,7 @@ class MydndapiService
     end
 
     def get (url)
+        Rails.logger.info url
         HTTParty.get(@base_url + url).parsed_response
     end
 

@@ -1,55 +1,58 @@
 class DndspellsController < ApplicationController
+  layout "application" 
+  
+  def initialize
+    @as = MydndapiService.new
+  end
 
-    def initialize
-        @as = MydndapiService.new
+  def index
+    @xs = @as.get('spells').map do |spell| 
+      @as.get("spells/#{spell["id"]}") 
     end
+  end
 
-    def index
-        @xs = @as.get('spells')
-    end
+  def reset
+    @as.get('reset')
+    index
+  end
 
-    def reset
-        @as.get('reset')
-        index
-    end
+  def show
+    @x = @as.get("spells/#{params[:index]}")
+  end
 
-    def show
-        @x = @as.get('spell/')
+  def new
+    @x = @tipo.new
+  end
+
+  def create
+    @x = @tipo.new(model_params)
+
+    if @x.save
+      redirect_to @x
+    else
+      redirect_to "/control" , notice: 'La jodiste.'
     end
-  
-    def new
-      @x = @tipo.new
+  end
+
+  def edit
+    @x = @tipo.find(params[:id])
+  end
+
+  def update
+    p(@x)
+    @x = @tipo.find(params[:id])
+
+    if @x.update(model_params)
+      redirect_to @x
+    else
+      render :edit
     end
-  
-    def create
-      @x = @tipo.new(model_params)
-  
-      if @x.save
-        redirect_to @x
-      else
-        redirect_to "/control" , notice: 'La jodiste.'
-      end
-    end
-  
-    def edit
-      @x = @tipo.find(params[:id])
-    end
-  
-    def update
-      p(@x)
-      @x = @tipo.find(params[:id])
-  
-      if @x.update(model_params)
-        redirect_to @x
-      else
-        render :edit
-      end
-    end
-  
-    def destroy
-      @x = @tipo.find(params[:id])
-      @x.destroy
-  
-      redirect_to @tipo
-    end
+  end
+
+  def destroy
+    @x = @tipo.find(params[:id])
+    @x.destroy
+
+    redirect_to @tipo
+  end
 end

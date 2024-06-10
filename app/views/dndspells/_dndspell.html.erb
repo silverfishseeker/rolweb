@@ -1,0 +1,17 @@
+
+<div class="carta">
+    <div class="carta-header">
+        <p class="carta-number carta-level">
+            <%= x["level"] %> 
+        </p>
+        <%= link_to x["name"], "https://www.dnd5eapi.co#{x["url"]}", class:"carta-title" %>
+    </div>
+
+    <div class="carta-subtitles">
+        <%= x["clases"] %>
+    </div>
+
+    <p class="carta-description">
+        <%= x["desc"] %>
+    </p>
+</div>

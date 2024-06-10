@@ -1,7 +1,7 @@
 <h2>hechizos de D&D</h2>
 
-<ul>
+<div class="grid-container">
     <% @xs.each do |x| %>
-        <li><%= link_to x["name"], "dndspells/"+x["id"] %></li>
+        <%= render "dndspell", x: x%>
     <% end %>
-</ul>
+</div>
