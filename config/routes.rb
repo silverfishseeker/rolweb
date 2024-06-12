@@ -22,4 +22,5 @@ Rails.application.routes.draw do
   get '/lootbox', to: 'randompick#lootbox'
   post '/lootboxing', to: 'randompick#lootboxing'
   get '/clases-arbol', to: 'info#arbol'
+  get '/resetdndspells', to: 'dndspells#reset'
 end

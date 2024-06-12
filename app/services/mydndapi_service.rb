@@ -1,28 +1,20 @@
 require 'net/http'
 
 class MydndapiService
-    def initialize
-        @base_url = "http://api:3000/"
+    def getUrl(url)
+        "http://api:3000/#{url}"
     end
 
-    def get (url)
-        HTTParty.get(@base_url + url).parsed_response
+    def get (url, timeout: 60)
+        HTTParty.get(getUrl(url), timeout: timeout).parsed_response
     end
 
-    def post(url, params)
-        # @param params debde de ser un mapa
-        uri = URI(@base_url + '/' + url)
-        Net::HTTP.post_form(uri, *params)
-    end
-
-    def patch(url, params)
-        # @param params debde de ser un mapa
-        uri = URI(@base_url + '/' + url)
-        Net::HTTP.patch(uri, *params)
+    def put(url, params)
+        HTTParty.put(getUrl(url), body: params.as_json).parsed_response
     end
 
     def delete(url)
-        Net::HTTP.delete URI(@base_url + '/' + url)
+        HTTParty.delete(getUrl(url)).parsed_response
     end
 
 

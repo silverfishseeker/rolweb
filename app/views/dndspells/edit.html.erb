@@ -1,0 +1,23 @@
+<%= form_with url: dndspell_path(@x["id"]), method: :patch do |form| %>
+  <div>
+    <%= form.label :name %><br>
+    <%= form.text_field :name, value: @x["name"] %>
+  </div>
+  <br>
+  <div>
+    <%= form.label :level %><br>
+    <%= form.number_field :level, value: @x["level"] %>
+  </div>
+  <br>
+  <div>
+    <%= form.label :desc %><br>
+    <%= form.text_area :desc, value: @x["desc"] %>
+  </div>
+  <br>
+  <div>
+    <%= form.label :clases %><br>
+    <%= form.text_field :clases, value: @x["clases"] %>
+  </div>
+  <br>
+  <%= form.submit "Update Spell" %>
+<% end %>

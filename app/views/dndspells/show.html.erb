@@ -1,1 +1,4 @@
+<h2><%= tittle %></h2>
 <%= render "dndspell", x: @x%>
+<%= link_to "Edit", edit_dndspell_path(@x) %>
+<%= link_to "Destroy", dndspell_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
