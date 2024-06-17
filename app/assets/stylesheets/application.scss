@@ -172,6 +172,7 @@ a {
 .submenu-content a:hover {
     background-color: var(--c_detalle_alt);
 }
+
 .submenu-content a:visited{
     color: var(--c_white);
 }
@@ -198,6 +199,11 @@ a {
 .recursos {
     font-size:2rem;
 }
+
+.reglas-font_color:hover{
+    color: var(--c_detalle);
+}
+
 
 
 /* CARTAS */

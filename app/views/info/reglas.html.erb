@@ -14,6 +14,9 @@
     y revisitarlos cuando lo necesites.</p>
 <br>
 
+<!-- pues no estaria mal meter una seccion de estados alterados que me he dao cuenta que no hay ninguna, pero vamos, eso
+ ademas es cosa tuya si quieres meter el desangrado en estados alterados o no-->
+
 <%# <h2> Indice</h2>
 <p>(Puedes pinchar para ir a esa sección.)</p>
 
@@ -55,7 +58,7 @@ que ganes ventaja pero otro te da 3 de desventaja, en total aplicas 2 de desvent
 </ul>
 
 <h3>Modificadores</h3>
-<p>Cuando se usan las siglas de una habilidad, no se refiere a la habilidad en sí si 
+<p>Cuando se usan las siglas de una estadística, no se refiere a la estadística en sí si 
     no a su modificador. Éste número se calcula según la siguiente tabla y se usa en 
     numerosos efectos. Simplemente mira el valor actual de la estadística y usa el número 
     correspondiente para la suma.</p>
@@ -202,7 +205,7 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
     que está determinando, entonces esa cosa toma su mínimo como valor.</p>
 
 
-<h3>Clases y habilidades</h3>
+<h3><%= link_to "Clases", clases_path, class: "reglas-font_color" %> y <%= link_to "habilidades", habilidads_path, class: "reglas-font_color" %></h3>
 <h4>Clase</h4>
 <p>Cada clase tiene un título, nível, descripción, efectos, clases madres y clases hijas 
     (imagen si eso también). Representan cosas como oficios o razas.</p>
@@ -267,7 +270,7 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
 <p>Además, por norma general, los efectos de las habilidades no son acumulables, a no ser que se indique lo contrario.</p>
 
 
-<h3>Item</h3>
+<h3><%= link_to "Item", items_path, class: "reglas-font_color" %></h3>
 <p>Cada item tiene:</p>
 <ul>
     <li>Nombre: sin más.</li>
@@ -288,7 +291,7 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
     cuenta a dos manos). Esta regla es importante tenerla en cuenta por si te hieren algún brazo. Si 
     pierdes un brazo, te vuelves dominante en el que te queda automáticamente.</p>
 
-<h4>Armadura y ropa</h4>
+<h4><%= link_to "Armadura y ropa", "/categs/6", class: "reglas-font_color" %></h4>
 <p>No hay una regla estrica para definir que ropa o armaduras puedes tener equipados a la vez 
     (a parte del peso), hay que ser razonable. Además, para simplificar la lectura, las estadísticas 
     de armadura se indican de la forma: "Armadura: M1[F1,F2,F3,F4,,F5,F6,F7,F8]" dónde M1 es la 
@@ -311,7 +314,7 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
     la tirada es mala, antes de hacer nada más, tienes la oportunidad de repetirla entera; te 
     quedas con el resultado sin poder cambiarlo; pero si el resultado total es menor que 20, puedes 
     repetirno idefinidamente hasta que sea mayor que 20.</p>
-<h3>Clases y habilidades</h3>
+<h3><%= link_to "Clases", clases_path, class: "reglas-font_color" %> y <%= link_to "habilidades", habilidads_path, class: "reglas-font_color" %></h3>
 <p>Tienes <b>5</b> niveles disponibles para aprender clases y habilidades. </p>
 <h4>Clases</h4>
 <p>Para aprender una clase gasta un nivel, pero hay que tener en cuenta ciertas condiciones. Es 
@@ -329,12 +332,12 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
     niveles para aprender las habilidades de nivel 1 de las clases que tengas; las habilidades de 
     nivel 0 nunca cuesta niveles aprenderlas. Algunas habilidades pertenecen a más de una clase, 
     con que tengas al menos una de las clases listadas es suficiente para aprender esa habilidad.</p>
-<h4>Hablidades independientes</h4>
+<h4><%= link_to "Hablidades independientes", "/clases/102" , class: "reglas-font_color" %></h4>
 <p>Algunas habilidades no pertenecen a ninguna clase. Para poder aprenderlas necesita gastar 
     niveles igual a su nivel. Nótese que hay algunas habilidades independientes de nivel 0; es 
     decir, no cuestan niveles aprenderalas, cualquier persona puede aprender estas habilidades 
     sin importar el resto de su ficha, pero no siempre es útil tenerlas apuntadas.</p>
-<h3>Items</h3>
+<h3><%= link_to "Items", items_path, class: "reglas-font_color" %></h3>
 <p>Puedes comprar items iniciales con tu oro inicial. (No tienes porqué gastarlo todo.) Además de 
     gastar el oro, aseguráte de que tienes peso para llevarlos encima.</p>
 <br>

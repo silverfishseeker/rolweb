@@ -10,7 +10,7 @@
 </div>
 <% clases=@x.clases
    if clases.any? %>
-    <h1>Clases relocionadas</h1>
+    <h1>Clases relacionadas</h1>
     <div class="miniListadoClases">
         <% clases.each do |cl| %>
             <%= link_to cl.nombre, cl, class:"carta-title" %>
