@@ -1,5 +1,8 @@
 <h2><%=@titulo%></h2>
 
+<%= link_to "Resetear", "/resetdndspells" %>
+<br>
+
 <div class="grid-container grid-container_clase">
     <% @xs.each do |clase| %>
         <%= render "clase", clase: clase %>

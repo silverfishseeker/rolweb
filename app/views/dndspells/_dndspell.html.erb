@@ -7,7 +7,11 @@
     </div>
 
     <div class="carta-subtitles">
-        <%= x["clases"] %>
+        <% x["clases"].each do |x2|%>
+            <%= x2 %>
+        <% end %>
+        |
+        <%= x["magic_school"] %>
     </div>
 
     <p class="carta-description">

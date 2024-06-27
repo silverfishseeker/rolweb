@@ -22,6 +22,8 @@ class DndspellsController < ApplicationController
 
   def edit
     show
+    @clases = @as.get("clases") 
+    @magicschools = @as.get("magicschools") 
   end
 
   def error

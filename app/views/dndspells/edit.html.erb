@@ -1,4 +1,4 @@
-<%= form_with url: dndspell_path(@x["id"]), method: :patch do |form| %>
+<%= form_with url: dndspell_path(@x["id"]), method: :put do |form| %>
   <div>
     <%= form.label :name %><br>
     <%= form.text_field :name, value: @x["name"] %>
@@ -15,8 +15,12 @@
   </div>
   <br>
   <div>
-    <%= form.label :clases %><br>
-    <%= form.text_field :clases, value: @x["clases"] %>
+  <%= form.label :clase_ids %><br>
+  <%= form.collection_select :clase_ids, @clases, -> (x) {x["id"]}, -> (x) {x["name"]}, {}, multiple: true,  class: "form-select" %>
+  </div>
+  <div>
+  <%= form.label :magicschool_ids %><br>
+  <%= form.collection_select :magicschool_ids, @magicschools, -> (x) {x["id"]}, -> (x) {x["name"]}, {}, multiple: false, class: "form-select" %>
   </div>
   <br>
   <%= form.submit "Update Spell" %>
