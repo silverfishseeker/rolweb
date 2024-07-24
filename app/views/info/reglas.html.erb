@@ -14,6 +14,9 @@
     y revisitarlos cuando lo necesites.</p>
 <br>
 
+<!-- pues no estaria mal meter una seccion de estados alterados que me he dao cuenta que no hay ninguna, pero vamos, eso
+ ademas es cosa tuya si quieres meter el desangrado en estados alterados o no-->
+
 <%# <h2> Indice</h2>
 <p>(Puedes pinchar para ir a esa sección.)</p>
 
@@ -32,7 +35,8 @@ un número que es un valor objetivo; este tipo de tiradas se llaman pruebas, se 
 la superas si el resultado de los dados (más cosas que les sumes) es mayor que X. Tamién 
 es posible que durante la aventura se te pide que hagas una prueba de alguna estadística, 
 para ver si consigues hacer algo o no, simplemente tiras 1d20 y le sumas el modificador 
-de la estadística nombrada (ver modificadores más adelante).</p>
+de la estadística nombrada (ver modificadores más adelante). Si se te pide una prueba de 
+una estadística que no tienes, le aplicas -5.</p>
 <h3>Ventaja/desventaja</h3>
 <p>Cuando lanzas un dado con <b>ventaja</b> lanzas un dado extra y luego te quedas con el 
 resultado que sea más favorable. <b>Desventaja</b> es exactamente los mismo pero te quedas 
@@ -43,14 +47,20 @@ que ganes ventaja pero otro te da 3 de desventaja, en total aplicas 2 de desvent
 
 <h3>Estadísticas</h3>
 <p>Tu personaje y otros seres tienen una serie de estadísticas. No vamos a explicarlas 
-    ahora, pero vamos a enumerar las <b>estadísticas básicas</b> junto a sus iniciales que 
-    usaremos para referirnos a ellas de aquí en adelante:</p>
+    ahora en detalle, pero vamos a enumerar las <b>estadísticas básicas</b> junto a sus
+    iniciales que usaremos para referirnos a ellas de aquí en adelante:</p>
 <ul>
-    <li>(FU) Fuerza</li>
-    <li>(IN) Inteligencia</li>
-    <li>(DE) Destreza</li>
-    <li>(CO) Constitución</li>
-    <li>(RE) Resistencia</li>
+    <li>(FU) Fuerza: representa la fuerza física de tu personaje.</li>
+    <li>(IN) Inteligencia: representa la inteligencia y conocimentos que tiene tu personajes
+        sobre el mundo; sabiduría y compresnsión de la naturaleza. </li>
+    <li>(DE) Destreza: representa la agilidad física, mobilidad, velocidad de carrera y 
+        capacidad para realizar acciones física complejas o delicadas. </li>
+    <li>(CO) Constitución: representa el aguante físico y químico del cuerpo, la cantidad
+        de masa corporal y capacidad de regneración. </li>
+    <li>(RE) Resistencia: representa el aguante de cargas y realizar esfuerzos sostenidos
+        a lo largo del tiempo </li>
+    <li>(PE) Percepción: representa la agudez de tus sentidos, tu capacidad para reconocer
+        el entorno, tu capacidad para encontrar cosas y tu agilidad mental de reacción. </li>
 </ul>
 
 <h3>Modificadores</h3>
@@ -67,8 +77,20 @@ que ganes ventaja pero otro te da 3 de desventaja, en total aplicas 2 de desvent
     <p> 8/ 9</p> <p>-1</p> <p>20/21</p> <p>+5</p>
     <p>10/11</p> <p> 0</p> <p>22/23</p> <p>+6</p>
 </div>
-<p>(La tabla se puede extender si es necesario.)</p>
+<p>(La tabla se puede extender en ambos sentidos si es necesario.)</p>
 
+<h3>Pruebas de estadística</h3>
+<p> A lo largo de la avntura, durante la exploración y fuera de combate, tu GM puede pedirte
+    que realices una prueba de, por ejemplo, fuerza, para ver si consigues o no una acción.
+    Una prueba se realiza de una de las 6 estadísticas disponibles según la más adecuada según
+    la acción que tratas de realizar y a discreción del GM. La prueba consiste en tirar 1d20
+    y aumentar el valor resultante por el modificador de la estadística correspondiente, entonces
+    se debe de intentar superar un valor impuesto por el GM acorde a la dificuldad de la acción.
+</p>
+<p> Esta tirada aplica crítico, explicado un poco mejor más adelante en el combate; pero básicamente
+    si en la cara del dado hay un 20, la acción se supera de forma segura (es un crítico) pero si es
+    un 1 la acción se falla inmediatamente (es una pifia)
+</p>
 
 <h2>Tu estado</h2>
 <p>A diferencia de otros sistemas, en este no tienes puntos de salud, si no que tienes 
@@ -142,12 +164,12 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
 <p>Ahora vamos a echar un vistazo cómo funciona el sistema de combate.</p>
 <p>Es por turnos. En cada turno cada jugador o enemigo puede realizar una acción; que normalmente 
     será usar una de sus habilidades activas o bien intentar hacer otra cosa razonable. El orden 
-    de turnos se decide con una tirada inicial de todos los participantes de 1d10+DE (veremos 
-    esta estadística luego).</p>
+    de turnos se decide con una tirada inicial de todos los participantes de 1d10+PE (siendo
+    PE el modificador de precisión).</p>
 <p>Entonces, cuando intentas atacar a alguien (o te atacan) haces una <b>tirada de precisión 
-    </b>(que normalmente nos referirnos como precisión a secas), que consiste en 1d20, luego 
-    comparas este valor con la <b>estabilidad</b> del objetivo. Si el valor es mayor entonces se 
-    da un impacto y ahora hay que mirar la armadura.</p>
+    </b>(que normalmente nos referirnos como precisión a secas), que consiste en 1d20+PE , luego 
+    comparas este valor con la <b>estabilidad</b> del 
+    objetivo. Si el valor es mayor entonces se da un impacto y ahora hay que mirar la armadura.</p>
 <p>En la segunda parte, tras un impacto efectivo, primero vemos si el ataque era de naturaleza 
     <b>física</b> o <b>mágica</b>. Si era físico entonces tu <b>penetración física</b> debe de 
     ser estríctamente mayor que la <b>armadura física</b> de la zona del ataque, para poder 
@@ -196,12 +218,13 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
     <li>(DE) Destreza: establece tu estabilidad máxima. (Mínimo 1.)</li>
     <li>(CO) Constitución: determina tu sangre máxima. (Mínimo 2).</li>
     <li>(RE) Resistencia: determina tu peso máximo. (Mínimo 0).</li>
+    <li>(PE) Percepción: no determina otro valor, pero afecta a la precisión y orden de turnos.</li>
 </ul>
 <p>Cualquiera puede ser negativa. Pero la estadística es menor que el valor mínimo de aquello 
     que está determinando, entonces esa cosa toma su mínimo como valor.</p>
 
 
-<h3>Clases y habilidades</h3>
+<h3><%= link_to "Clases", clases_path, class: "reglas-font_color" %> y <%= link_to "habilidades", habilidads_path, class: "reglas-font_color" %></h3>
 <h4>Clase</h4>
 <p>Cada clase tiene un título, nível, descripción, efectos, clases madres y clases hijas 
     (imagen si eso también). Representan cosas como oficios o razas.</p>
@@ -232,8 +255,9 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
         una vez en su estado de salud.</li>
     <li><b>Mágico:</b> las habilidades ofensivas de carater mágico tienen esta palabra clave. Es decir, 
         te fijas en la armadura y penetración mágicas en vez de físicas.</li>
-    <li><b>[Instanténeo]:</b> una habilidad instantánea puede usarse en cualquier turno; pero sólo 
-        puedes unar una habilidad instantánea por turno. Si se usa en el turno de un enemigo, debe de 
+    <li><b>[Instanténeo] :</b> una habilidad instantánea puede usarse en cualquier turno; pero sólo 
+        puedes unar una habilidad instantánea por ronda (se restablece al principio de tu turno). 
+        Si se usa en el turno de un enemigo, debe de 
         ser una vez se haya declarado el objetivo, pero antes de que haga su tirada de precisión. Si 
         se utiliza más de un instantáneo por turno, estos se realizan a través de la pila. Después de 
         que alguien declare qué instantáneo va usar, antes de resolverlo, todos tienen la oportunidad 
@@ -242,6 +266,12 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
         entonces los instantáneos suceden de arriba abajo, es decir, primero los últimos declarados; 
         inmediatamente después sucede la acción normal del turno y luego el turno termina sin que haya 
         oportunidad de usar más intantáneos.</li>
+    <li><b>[Complemento] :</b> una habilidad complemento no gasta acción y siempre se realiza a la vez
+        que otra habilidad. Cualquier efecto de una habilidad complemento se adosa y se aplica directamente
+        a través de la habilidad relacionada. Algunos complementos sólo permiten ciertos tipos de
+        habilidades como principal, esto se indica de la forma: "[Complemento:Tipo_habilidad]" Puedes
+        usar cualquier catidad de habilidades complementos junto a la misma habilidad principal siempre
+        que sean diferentes entre sí.</li>
     <li><b>Golpe al alma:</b> algunas habilidades mágicas no hacen objetivo a una parte del cuerpo 
         concreta, si no al "alma" del objetivo, por lo que ignoras efectos ligados a una parte del 
         cuerpo concreta.</li>
@@ -251,8 +281,7 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
         para poder aplicar el efecto (normalmente a cambio de hacer tirada de precisión). Se indica 
         de la forma: "coste {prueba} > efecto".</li>
     <li><b>NV:</b> Algunas habilidades o efctos de clases se aprovechan de el nivel de tu clase para 
-        aplicar su efecto, esto se indica con <b>NV</b>. Si una habilidad que use NV pertenece a dos 
-        clases, suma ambos niveles.</li>
+        aplicar su efecto, esto se indica con <b>NV</b>.</li>
     <li><b>Escamavida:</b> Las escamavidas se asocian a una parte concreta del cuerpo, se pueden 
         acumular y duran indefinidamente. Cuando esa parte del cuerpo fuera a ser dañada, en vez de 
         eso destruye una escamavida.</li>
@@ -260,7 +289,7 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
 <p>Además, por norma general, los efectos de las habilidades no son acumulables, a no ser que se indique lo contrario.</p>
 
 
-<h3>Item</h3>
+<h3><%= link_to "Item", items_path, class: "reglas-font_color" %></h3>
 <p>Cada item tiene:</p>
 <ul>
     <li>Nombre: sin más.</li>
@@ -281,7 +310,7 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
     cuenta a dos manos). Esta regla es importante tenerla en cuenta por si te hieren algún brazo. Si 
     pierdes un brazo, te vuelves dominante en el que te queda automáticamente.</p>
 
-<h4>Armadura y ropa</h4>
+<h4><%= link_to "Armadura y ropa", "/categs/6", class: "reglas-font_color" %></h4>
 <p>No hay una regla estrica para definir que ropa o armaduras puedes tener equipados a la vez 
     (a parte del peso), hay que ser razonable. Además, para simplificar la lectura, las estadísticas 
     de armadura se indican de la forma: "Armadura: M1[F1,F2,F3,F4,,F5,F6,F7,F8]" dónde M1 es la 
@@ -304,7 +333,7 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
     la tirada es mala, antes de hacer nada más, tienes la oportunidad de repetirla entera; te 
     quedas con el resultado sin poder cambiarlo; pero si el resultado total es menor que 20, puedes 
     repetirno idefinidamente hasta que sea mayor que 20.</p>
-<h3>Clases y habilidades</h3>
+<h3><%= link_to "Clases", clases_path, class: "reglas-font_color" %> y <%= link_to "habilidades", habilidads_path, class: "reglas-font_color" %></h3>
 <p>Tienes <b>5</b> niveles disponibles para aprender clases y habilidades. </p>
 <h4>Clases</h4>
 <p>Para aprender una clase gasta un nivel, pero hay que tener en cuenta ciertas condiciones. Es 
@@ -322,12 +351,12 @@ por turno en combate o cada 10 minutos fuera de combate, hasta que se pare el sa
     niveles para aprender las habilidades de nivel 1 de las clases que tengas; las habilidades de 
     nivel 0 nunca cuesta niveles aprenderlas. Algunas habilidades pertenecen a más de una clase, 
     con que tengas al menos una de las clases listadas es suficiente para aprender esa habilidad.</p>
-<h4>Hablidades independientes</h4>
+<h4><%= link_to "Hablidades independientes", "/clases/102" , class: "reglas-font_color" %></h4>
 <p>Algunas habilidades no pertenecen a ninguna clase. Para poder aprenderlas necesita gastar 
     niveles igual a su nivel. Nótese que hay algunas habilidades independientes de nivel 0; es 
     decir, no cuestan niveles aprenderalas, cualquier persona puede aprender estas habilidades 
     sin importar el resto de su ficha, pero no siempre es útil tenerlas apuntadas.</p>
-<h3>Items</h3>
+<h3><%= link_to "Items", items_path, class: "reglas-font_color" %></h3>
 <p>Puedes comprar items iniciales con tu oro inicial. (No tienes porqué gastarlo todo.) Además de 
     gastar el oro, aseguráte de que tienes peso para llevarlos encima.</p>
 <br>
