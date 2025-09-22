@@ -11,13 +11,12 @@ COPY app/ app/
 COPY bin/ bin/
 COPY config/ config/
 COPY lib/ lib/
-# Should be overwritten in production by precompile
 COPY public/ public/
 COPY Rakefile .
 COPY config.ru .
 
 RUN if [ "$RAILS_ENV" = "production" ]; then \
-  true; \
+    rm -rf /app/public/assets && \
     rails assets:precompile; \
   fi
 
