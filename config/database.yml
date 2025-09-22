@@ -1,10 +1,10 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  host: db
-  user: postgres
-  database: postgres
-  password: postgres
+  # host: db
+  # user: postgres
+  # database: postgres
+  # password: postgres
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
@@ -15,5 +15,6 @@ production:
   host: dpg-d38joqjuibrs739su3bg-a
   user: doorsmazedb_a3pb_user
   database: doorsmazedb_a3pb
+  passwordd: q7C7qZSc1hTV3YIV2ElQHJWYbDYTSFMg
 
 
