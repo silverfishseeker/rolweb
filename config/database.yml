@@ -12,6 +12,7 @@ development:
 
 production:
   <<: *default
+  host: dpg-d38joqjuibrs739su3bg-a
   user: doorsmazedb_a3pb_user
   database: doorsmazedb_a3pb
 
