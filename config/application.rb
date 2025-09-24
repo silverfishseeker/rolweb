@@ -24,7 +24,7 @@ module Rolweb
 
     # Custom configuration for image storage backend
     # Options are :database or :minio
-    config.image_storage_backend = :minio
+    config.image_storage_backend = :database
 
     # Select which kind of cache to use for image uploads
     # Options are :disk, :hybrid, or :none
