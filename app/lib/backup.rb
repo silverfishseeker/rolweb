@@ -192,7 +192,7 @@ module Backup
       Rails.logger.error "❌ Error during restoration: #{e.message}"
       Rails.logger.error "🔁 Reverting to previous state..."
       silence_sql do
-        Backup.brave_restore(snapshot_path, false)
+        Backup.brave_restore(snapshot_path)
       end
       Rails.logger.info "✅ Successfully reverted."
       raise BackupRestoreRecoveredError, "Restoration failed but it was reverted to previous state: #{e.message}"
