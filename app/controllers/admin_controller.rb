@@ -78,6 +78,20 @@ class AdminController < ApplicationController
         end
     end
 
+    def download_logs
+        log_file = Rails.root.join("log", "#{Rails.env}.log")
+
+        if File.exist?(log_file)
+            send_file log_file,
+                    type: "text/plain",
+                    disposition: "attachment",
+                    filename: "#{Rails.env}_logs.txt"
+        else
+            redirect_to "/control", alert: "El archivo de logs no existe."
+        end
+    end
+
+
     private
 
     def inner_delete_navbar_cache

@@ -39,6 +39,7 @@ Rails.application.routes.draw do
   get '/prepare_backup', to: 'admin#prepare_backup'
   get '/create_backup', to: 'admin#create_backup'
   post '/restore_backup', to: 'admin#restore_backup'
+  get '/download_logs', to: 'admin#download_logs'
 
   get '/lootbox', to: 'randompick#lootbox'
   post '/lootboxing', to: 'randompick#lootboxing'
