@@ -9,13 +9,23 @@ class InfoController < ApplicationController
     end
 
     def get_random_element
-        model = [Clase, Habilidad, Item].sample
-        element = model.order("RANDOM()").first
-        render partial: element, locals: {
-            Clase    => { clase: element },
-            Habilidad => { habil: element },
-            Item     => { item: element }
-        }[model]
+        models = [Clase, Habilidad, Item]
+
+        while models.any?
+            model = models.delete(models.sample)
+            element = model.order("RANDOM()").first
+            break unless element.nil?
+        end
+
+        if element.nil?
+            render plain: "No se encontró ningún elemento", status: :not_found
+        else
+            render partial: element, locals: {
+                Clase    => { clase: element },
+                Habilidad => { habil: element },
+                Item     => { item: element }
+            }[model]
+        end
     end
 
     def reglas
