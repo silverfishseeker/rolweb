@@ -37,7 +37,7 @@ class MinioImageUploader
       return nil
     end
 
-    MinioImage.new(
+    SilverImage.new(
       id: obj.key,
       data: obj.get.body.read,
       nombre: obj.metadata['nombre'] || obj.key,
@@ -49,27 +49,17 @@ class MinioImageUploader
     file_data = file.read
     obj = @bucket.object(SecureRandom.uuid)
     content_type = file.respond_to?(:content_type) ? file.content_type : "application/octet-stream"
-    store(
-      id: obj.key,
-      data: file_data,
+    obj.put(
+      body: file_data,
       content_type: content_type,
-      original_filename: file.original_filename
+      metadata: { 'nombre' => file.original_filename }
     )
 
-    MinioImage.new(
+    SilverImage.new(
       id: obj.key,
       data: file_data,
       nombre: file.original_filename,
       content_type: content_type
-    )
-  end
-
-  def store(id:, data:, content_type:, original_filename:)
-    obj = @bucket.object(id)
-    obj.put(
-      body: data,
-      content_type: content_type,
-      metadata: { 'nombre' => original_filename }
     )
   end
 
