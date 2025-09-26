@@ -14,4 +14,8 @@ class DatabaseImageUploader
   def remove!(record)
     record.destroy
   end
+
+  def clear_all!
+    Image.delete_all
+  end
 end

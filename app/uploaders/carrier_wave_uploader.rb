@@ -28,4 +28,8 @@ class CarrierWaveImageUploader
   def remove!(record)
     CarrierwaveImage.find_by(id: record.id)&.destroy
   end
+
+  def clear_all!
+    CarrierwaveImage.delete_all
+  end
 end

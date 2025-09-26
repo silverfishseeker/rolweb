@@ -46,6 +46,11 @@ class SilverImageUploader
     end
   end
 
+  def clear_all!
+    @cache.clear_all!
+    ImageUploaderConfig.uploader.clear_all!
+  end
+
   class BadImageFileError < StandardError; end
 
   private

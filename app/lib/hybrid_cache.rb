@@ -35,4 +35,9 @@ class HybridCache < InterfaceCache
     @memory_cache.remove(id)
     @disk_cache.remove(id)
   end
+
+  def clear_all!
+    @memory_cache.clear_all!
+    @disk_cache.clear_all!
+  end
 end

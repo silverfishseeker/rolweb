@@ -49,6 +49,11 @@ class DiskCache < InterfaceCache
     FileUtils.rm_f(disk_cache_file(id))
   end
 
+  def clear_all!
+    FileUtils.rm_rf(@disk_cache_path)
+    FileUtils.mkdir_p(@disk_cache_path) unless Dir.exist?(@disk_cache_path)
+  end
+
   def self.clear_disk_cache!
     Dir.glob("#{CACHE_DIR}/*/*").each do |file|
       FileUtils.rm_f(file)

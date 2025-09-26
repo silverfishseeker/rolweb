@@ -30,7 +30,7 @@ class MemoryCache < InterfaceCache
     @memory_cache.delete(id)
   end
 
-  def clear
+  def clear_all!
     @memory_cache.clear
   end
 end

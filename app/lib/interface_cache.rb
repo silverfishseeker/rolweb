@@ -11,4 +11,7 @@ class InterfaceCache
   def remove(id)
     raise NotImplementedError
   end
+  def clear_all!
+    raise NotImplementedError
+  end
 end
