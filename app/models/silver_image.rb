@@ -1,6 +1,6 @@
-# Uso exclusivo para MinioImageUploader
+# Uso exclusivo para MinioImageUploader y para CarrierWaveImageUploader
 
-class MinioImage
+class SilverImage
   include ImageUrlable
 
   attr_accessor :id, :data, :nombre, :content_type
