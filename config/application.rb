@@ -22,14 +22,6 @@ module Rolweb
 
     config.assets.precompile += %w( *.scss *.sass )
 
-    # Custom configuration for image storage backend
-    # Options are :database or :minio
-    config.image_storage_backend = :minio
-
-    # Select which kind of cache to use for image uploads
-    # Options are :disk, :hybrid, or :none
-    config.image_upload_cache = :disk
-
     # Configure the quality of WebP images
     # max is 100 but it doesn't guarantee no loss on quality
     config.webp_quality = 80

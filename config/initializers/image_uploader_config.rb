@@ -1,0 +1,1 @@
+ImageUploaderConfig.configure
