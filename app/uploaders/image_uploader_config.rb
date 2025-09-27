@@ -1,5 +1,8 @@
 # lib/image_uploader_config.rb
 module ImageUploaderConfig
+  
+  @is_configured = false
+
   def self.configure
     @uploader = case ENV["IMAGE_STORAGE_BACKEND"] || "minio"
     when "database"
@@ -34,13 +37,22 @@ module ImageUploaderConfig
     Rails.logger.info "ImageUploaderConfig set: backend=#{@uploader}, cache=#{@cache_type}, memory_size=#{@memory_size}MB"
   end
 
+  def self.check
+    configure if !@is_configured
+  end
+
   def self.uploader
-    raise "ImageUploaderConfig: Uploader not configured. Call configure first." unless @uploader
+    check
     @uploader
   end
 
   def self.cache_type
-    raise "ImageUploaderConfig: Cache type not configured. Call configure first." unless @cache_type
+    check
     @cache_type
+  end
+
+  def self.memory_size
+    check
+    @memory_size
   end
 end
