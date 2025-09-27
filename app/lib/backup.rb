@@ -60,7 +60,7 @@ module Backup
       model.find_each do |record|
         img = record.image
         next unless img
-        File.binwrite(model_imgdir.join(record.id), img.data)
+        File.binwrite(model_imgdir.join(record.id.to_s), img.data)
         metadata << {
           id: record.id,
           original_filename: img.nombre,
