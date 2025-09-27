@@ -10,6 +10,8 @@ module SilverImageUploaderMounter
   class_methods do
     def mount_image_uploader(mode: :none)
 
+      class_attribute :has_image_uploader, instance_writer: false, default: true
+
       # Por ahora esto sólo lo utiliza el img_uploader.rake en reupload_trim para identificar las clases que usan :cut_to_fit
       class_attribute :image_uploader_mode, instance_writer: false
       self.image_uploader_mode = mode

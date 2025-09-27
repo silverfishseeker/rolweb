@@ -46,6 +46,10 @@ class SilverImageUploader
     end
   end
 
+  # This method is only used in backup restore for now.
+  # This method does not reset the image field in the record. If it does not point to a image, it should be nil.
+  # Thus, you need to take care of it after you run that model. If your record does not point to a valid image,
+  # it wonn't break the application, but "imageLoadFail.png" will be shown instead.
   def clear_all!
     @cache.clear_all!
     ImageUploaderConfig.uploader.clear_all!
