@@ -35,6 +35,7 @@ module ImageUploaderConfig
     end
 
     Rails.logger.info "ImageUploaderConfig set: backend=#{@uploader}, cache=#{@cache_type}, memory_size=#{@memory_size}MB"
+    @is_configured = true
   end
 
   def self.check

@@ -51,7 +51,9 @@ module Backup
     
     Rails.logger.info "🖼️ Dumping images from models..."
     imgdir = Backup.images_dir(temp_dir)
-    
+
+    # It is necessary to ensure the models are loaded to get all descendants of ActiveRecord::Base
+    Rails.application.eager_load! unless Rails.configuration.eager_load
     ActiveRecord::Base.descendants.each do |model|
       next unless model.respond_to?(:has_image_uploader)
       model_imgdir = imgdir.join(model.name)
@@ -67,7 +69,7 @@ module Backup
           content_type: img.content_type || "application/octet-stream"
         }
       end
-      File.write(model_imgdir.join("images_meta.json"), JSON.generate(metadata))
+      File.write(model_imgdir.join("images_meta.json"), JSON.pretty_generate(metadata))
     end
 
     Rails.logger.info "✅ Images downloaded."
