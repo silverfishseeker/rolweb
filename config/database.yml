@@ -11,10 +11,9 @@ development:
   <<: *default
 
 production:
-  <<: *default
-  host: dpg-d38joqjuibrs739su3bg-a
-  user: doorsmazedb_a3pb_user
-  database: doorsmazedb_a3pb
-  password: q7C7qZSc1hTV3YIV2ElQHJWYbDYTSFMg
+  host:     <%= Rails.application.credentials.dig(:db, :host) %>
+  database: <%= Rails.application.credentials.dig(:db, :database) %>
+  username: <%= Rails.application.credentials.dig(:db, :username) %>
+  password: <%= Rails.application.credentials.dig(:db, :password) %>
 
 
