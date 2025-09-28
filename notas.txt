@@ -26,8 +26,8 @@ Hacer dump de la base de datos, primero meterse en el server y luego:
 
 
 Restablecer credenciales de rails:
-$env:EDITOR="code --wait"
-rails credentials:edit
+    $env:EDITOR="code --wait"
+    rails credentials:edit
 
 rails server
     start server
