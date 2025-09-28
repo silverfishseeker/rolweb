@@ -1,4 +1,4 @@
-# Uso exclusivo para el SilverImageUploader
+# Modelo con los datos binario de la imágenes para DatabaseImageUploader
 
 class Image < ApplicationRecord
   # atributes: nombre, data

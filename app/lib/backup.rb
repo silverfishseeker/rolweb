@@ -5,7 +5,8 @@ require 'minitar'
 
 module Backup
 
-  DATA_TABLES = ActiveRecord::Base.connection.tables - ["schema_migrations", "ar_internal_metadata"]
+  # Excluimos images también. No queremos descargarlas por duplicado en el caso de que se use DatabaseimageUploader
+  DATA_TABLES = ActiveRecord::Base.connection.tables - ["schema_migrations", "ar_internal_metadata", "images"]
   BACKUPS_DIR = Rails.root.join("tmp", "backups")
   FileUtils.mkdir_p(BACKUPS_DIR) unless Dir.exist?(BACKUPS_DIR)
   
