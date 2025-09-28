@@ -11,6 +11,7 @@ development:
   <<: *default
 
 production:
+  <<: *default
   host:     <%= Rails.application.credentials.dig(:db, :host) %>
   database: <%= Rails.application.credentials.dig(:db, :database) %>
   username: <%= Rails.application.credentials.dig(:db, :username) %>
