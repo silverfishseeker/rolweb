@@ -1,5 +1,8 @@
 class SilverImageUploader
   MODES = [:none, :cut_to_fit]
+
+  class_attribute :warn_on_remove_missing, default: true
+
   def initialize (mode = :none)
     # default mode is :none
     raise "SilverImageUploader: Modo no soportado: #{mode}" if !MODES.include?(mode)
@@ -42,7 +45,7 @@ class SilverImageUploader
       @cache.remove(id)
       ImageUploaderConfig.uploader.remove!(record)
     else
-      Rails.logger.warn "DatabaseImageUploader#remove: Se ha intentado eliminar la imagen no existente, id: #{id}"
+      Rails.logger.warn "DatabaseImageUploader#remove: Se ha intentado eliminar la imagen no existente, id: #{id}" if warn_on_remove_missing
     end
   end
 

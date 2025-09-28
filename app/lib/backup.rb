@@ -101,7 +101,7 @@ module Backup
   end
 
 
-
+  require "active_record/fixtures"
   def self.brave_restore(restore_dir)
 
     Rails.logger.info "🧹 Deleting database..."
@@ -132,6 +132,7 @@ module Backup
       next unless model_dir.directory?
       model = model_dir.basename.to_s.safe_constantize
       metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
+      SilverImageUploader.warn_on_remove_missing = false
       metadata.each do |entry|
         id = entry["id"]
         
@@ -147,6 +148,7 @@ module Backup
         )
         record.save!
       end
+      SilverImageUploader.warn_on_remove_missing = true
     end
 
     Rails.logger.info "🔢 Resetting ID sequences..."
