@@ -164,9 +164,7 @@ module Backup
 
 
 
-  class BackupRestoreRecoveredError < StandardError; end
   class BackupRestoreSchemaMissmatchError < StandardError; end
-
 
   def self.restore(file_path, flexible)
     Rails.logger.info "📦 Restoring backup from #{file_path} (flexible: #{flexible})"
@@ -207,7 +205,7 @@ module Backup
         Backup.brave_restore(snapshot_path)
       end
       Rails.logger.info "✅ Successfully reverted."
-      raise BackupRestoreRecoveredError, "Restoration failed but it was reverted to previous state: #{e.message}"
+      raise e
     ensure
       FileUtils.rm_rf(restore_dir)
       FileUtils.rm_rf(snapshot_path)

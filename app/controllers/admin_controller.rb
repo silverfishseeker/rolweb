@@ -66,7 +66,7 @@ class AdminController < ApplicationController
                 Backup.restore(params[:backup_file].tempfile.path, params[:mode]=="1")
                 inner_delete_navbar_cache
                 redirect_to "/backup", notice: "Backup restored successfully."
-            rescue Backup::BackupRestoreRecoveredError, Backup::BackupRestoreSchemaMissmatchError => e
+            rescue => e
                 Rails.logger.error "❌ Restore (#{params[:mode]=="1" ? "flexible" : "strict"}) failed: #{e.message}"
                 redirect_to "/backup", alert: "Restore failed: #{e.message}"
             end
