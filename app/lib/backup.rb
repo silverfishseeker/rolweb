@@ -133,12 +133,16 @@ module Backup
       metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
       metadata.each do |entry|
         id = entry["id"]
+        
         file_path = model_dir.join(id.to_s)
+        temp_path = imgdir.join("uploading_image")
+        system("convert #{file_path} -strip #{temp_path}")
+
         record = model.find(id)
         record.image = ActionDispatch::Http::UploadedFile.new(
           filename: entry["original_filename"],
           type: entry["content_type"],
-          tempfile: File.new(file_path)
+          tempfile: File.new(temp_path)
         )
         record.save!
       end

@@ -55,18 +55,13 @@ class SilverImageUploader
     ImageUploaderConfig.uploader.clear_all!
   end
 
-  class BadImageFileError < StandardError; end
 
   private
 
   require "mini_magick"
   def self.to_webp(file, mode)
-    begin
-      image = MiniMagick::Image.new(file.tempfile.path)
-      image.validate!
-    rescue
-      raise BadImageFileError, "El archivo no es una imagen válida"
-    end
+    image = MiniMagick::Image.new(file.tempfile.path)
+    image.validate!
     
     return file if image.mime_type == "image/gif"
     
