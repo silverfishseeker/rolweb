@@ -41,3 +41,6 @@ minio_data
 
 # Configuración de workspace de VSCode
 .vscode
+
+# Archivos subidos al servidor, no queremos guardar nada de esto en git
+public/uploads

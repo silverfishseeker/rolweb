@@ -2,13 +2,18 @@ require "carrierwave"
 
 class CarrierWaveImageUploader
   def get(id)
-    cw_image = CarrierwaveImage.find(id: id)
-    SilverImage.new(
-      id: cw_image.id,
-      data: File.binread(cw_image.file.path),
-      nombre: cw_image.nombre,
-      content_type: cw_image.content_type
-    )
+    begin
+      cw_image = CarrierwaveImage.find(id: id)
+      SilverImage.new(
+        id: cw_image.id,
+        data: File.binread(cw_image.file.path),
+        nombre: cw_image.nombre,
+        content_type: cw_image.content_type
+      )
+    rescue ActiveRecord::RecordNotFound
+      Rails.logger.error "CarrierWaveImageUploader.get: RecordNotFound id: #{id}"
+      nil
+    end
   end
 
   def add(file)
