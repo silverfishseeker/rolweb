@@ -1,5 +1,8 @@
 class SilverImageUploader
   MODES = [:none, :cut_to_fit]
+
+  class_attribute :warn_on_remove_missing, default: true
+
   def initialize (mode = :none)
     # default mode is :none
     raise "SilverImageUploader: Modo no soportado: #{mode}" if !MODES.include?(mode)
@@ -42,22 +45,26 @@ class SilverImageUploader
       @cache.remove(id)
       ImageUploaderConfig.uploader.remove!(record)
     else
-      Rails.logger.warn "DatabaseImageUploader#remove: Se ha intentado eliminar la imagen no existente, id: #{id}"
+      Rails.logger.warn "DatabaseImageUploader#remove: Se ha intentado eliminar la imagen no existente, id: #{id}" if warn_on_remove_missing
     end
   end
 
-  class BadImageFileError < StandardError; end
+  # This method is only used in backup restore for now.
+  # This method does not reset the image field in the record. If it does not point to a image, it should be nil.
+  # Thus, you need to take care of it after you run that model. If your record does not point to a valid image,
+  # it wonn't break the application, but "imageLoadFail.png" will be shown instead.
+  def clear_all!
+    @cache.clear_all!
+    ImageUploaderConfig.uploader.clear_all!
+  end
+
 
   private
 
   require "mini_magick"
   def self.to_webp(file, mode)
-    begin
-      image = MiniMagick::Image.new(file.tempfile.path)
-      image.validate!
-    rescue
-      raise BadImageFileError, "El archivo no es una imagen válida"
-    end
+    image = MiniMagick::Image.new(file.tempfile.path)
+    image.validate!
     
     return file if image.mime_type == "image/gif"
     

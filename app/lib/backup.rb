@@ -5,7 +5,8 @@ require 'minitar'
 
 module Backup
 
-  DATA_TABLES = ActiveRecord::Base.connection.tables - ["schema_migrations", "ar_internal_metadata"]
+  # Excluimos images también. No queremos descargarlas por duplicado en el caso de que se use DatabaseimageUploader
+  DATA_TABLES = ActiveRecord::Base.connection.tables - ["schema_migrations", "ar_internal_metadata", "images"]
   BACKUPS_DIR = Rails.root.join("tmp", "backups")
   FileUtils.mkdir_p(BACKUPS_DIR) unless Dir.exist?(BACKUPS_DIR)
   
@@ -49,25 +50,30 @@ module Backup
     end
     File.write(temp_dir.join("schema.json"), JSON.pretty_generate(schema))
     
-    Rails.logger.info "🌐 Trying to download from Minio..."
-    begin
-      uper = MinioImageUploader.new
-      imgdir = Backup.images_dir(temp_dir)
+    Rails.logger.info "🖼️ Dumping images from models..."
+    imgdir = Backup.images_dir(temp_dir)
+
+    # It is necessary to ensure the models are loaded to get all descendants of ActiveRecord::Base
+    Rails.application.eager_load! unless Rails.configuration.eager_load
+    ActiveRecord::Base.descendants.each do |model|
+      next unless model.respond_to?(:has_image_uploader)
+      model_imgdir = imgdir.join(model.name)
+      FileUtils.mkdir_p(model_imgdir)
       metadata = []
-      uper.all_ids.each do |id|
-        img = uper.get(id)
-        File.binwrite(imgdir.join(id), img.data)
+      model.find_each do |record|
+        img = record.image
+        next unless img
+        File.binwrite(model_imgdir.join(record.id.to_s), img.data)
         metadata << {
-          id: id,
+          id: record.id,
           original_filename: img.nombre,
           content_type: img.content_type || "application/octet-stream"
         }
       end
-      File.write(temp_dir.join("images_meta.json"), JSON.generate(metadata))
-      Rails.logger.info "✅ Minio images download completed."
-      rescue MinioConnectionError => e
-        Rails.logger.warn "⚠️ Skipping Minio image backup: #{e.message}"
+      File.write(model_imgdir.join("images_meta.json"), JSON.pretty_generate(metadata))
     end
+
+    Rails.logger.info "✅ Images downloaded."
   end
 
 
@@ -95,7 +101,7 @@ module Backup
   end
 
 
-
+  require "active_record/fixtures"
   def self.brave_restore(restore_dir)
 
     Rails.logger.info "🧹 Deleting database..."
@@ -103,29 +109,6 @@ module Backup
       DATA_TABLES.each do |table|
         ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
       end
-    end
-
-    begin
-      Rails.logger.info "📡 Connecting to Minio..."
-      uper = MinioImageUploader.new
-      Rails.logger.info "🗑️ Deleting Minio images..."
-      uper.clear_all!
-
-      Rails.logger.info "📷 Restoring Minio images..."
-      metadata = JSON.parse(File.read(restore_dir.join("images_meta.json")))
-      imgdir = images_dir(restore_dir)
-      metadata.each do |entry|
-        id = entry["id"]
-        file_path = imgdir.join(id)
-        uper.store(
-          id: id,
-          data: File.binread(file_path),
-          content_type: entry["content_type"],
-          original_filename: entry["original_filename"]
-        )
-      end
-    rescue MinioConnectionError => e
-      Rails.logger.warn "⚠️ Skipping Minio image restore: #{e.message}"
     end
 
     Rails.logger.info "💽 Restoring database data..."
@@ -137,6 +120,35 @@ module Backup
         filtered_record = record.slice(*expected_columns)
         ActiveRecord::Base.connection.insert_fixture(filtered_record, table)
       end
+    end
+
+    Rails.logger.info "🗑️ Deleting images..."
+    uploader = ImageUploaderConfig.uploader
+    uploader.clear_all!
+
+    Rails.logger.info "📷 Restoring images..."
+    imgdir = images_dir(restore_dir)
+    imgdir.children.each do |model_dir|
+      next unless model_dir.directory?
+      model = model_dir.basename.to_s.safe_constantize
+      metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
+      SilverImageUploader.warn_on_remove_missing = false
+      metadata.each do |entry|
+        id = entry["id"]
+        
+        file_path = model_dir.join(id.to_s)
+        temp_path = imgdir.join("uploading_image")
+        system("convert #{file_path} -strip #{temp_path}")
+
+        record = model.find(id)
+        record.image = ActionDispatch::Http::UploadedFile.new(
+          filename: entry["original_filename"],
+          type: entry["content_type"],
+          tempfile: File.new(temp_path)
+        )
+        record.save!
+      end
+      SilverImageUploader.warn_on_remove_missing = true
     end
 
     Rails.logger.info "🔢 Resetting ID sequences..."

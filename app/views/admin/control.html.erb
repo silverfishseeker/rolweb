@@ -24,12 +24,12 @@
         <%= link_to "Hechizos D&D", dndspells_path %>
         <br>
         <br>
-        <br>
-        <br>
         <%=Clase.count%> clases <br>
         <%=Habilidad.count%> habilidades <br>
         <%=Item.count%> ítems <br>
         <%=Mob.count%> mobs <br>
+        <br>
+        <br>
 
         <% begin
             urlCompleta = "http://"+HTTParty.get('http://whatismyip.akamai.com')
@@ -40,6 +40,11 @@
             No se puedo establecer la conexión con el servidor para comprobar la ip actual. <br>
         <% end %>
         <br>
+        <br>
+        <b> Configuación de SilverImageUploader: </b> <br>  
+        uploader: <%= ImageUploaderConfig.uploader.class%> <br>
+        cache_type: <%= ImageUploaderConfig.cache_type%> <br>
+        uploamemory_sizeder: <%= ImageUploaderConfig.memory_size%> <br>
         <br>
         <br>
         <%= link_to "Cerrar sesión", "/adminsession/close" %>

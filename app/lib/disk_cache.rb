@@ -30,7 +30,7 @@ class DiskCache < InterfaceCache
       Marshal.load(StringIO.new(File.read(cache_path)).read)
     else
       # Si se pasa un bloque, se usa para buscar el valor del registro,
-      record = block_given? ? yield : @model_class.find_by(id: id)
+      record = yield if block_given?
       return nil unless record
       store(record)
       record
@@ -47,6 +47,11 @@ class DiskCache < InterfaceCache
 
   def remove(id)
     FileUtils.rm_f(disk_cache_file(id))
+  end
+
+  def clear_all!
+    FileUtils.rm_rf(@disk_cache_path)
+    FileUtils.mkdir_p(@disk_cache_path) unless Dir.exist?(@disk_cache_path)
   end
 
   def self.clear_disk_cache!
