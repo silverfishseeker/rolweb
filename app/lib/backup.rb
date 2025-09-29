@@ -130,11 +130,13 @@ module Backup
     imgdir = images_dir(restore_dir)
     temp_path = imgdir.join("uploading_image")
     imgdir.children.each do |model_dir|
+      GC.start # recolector de basura
       Rails.logger.info "  Model_dir: #{model_dir}"
       model = model_dir.basename.to_s.safe_constantize
       metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
       SilverImageUploader.warn_on_remove_missing = false
-      metadata.each do |entry|
+      metadata.each_with_index do |entry, i|
+        GC.start if i % 10 == 0 # i sólo se usa aquí
         Rails.logger.info "    Entry: id(#{entry["id"]}) filename(#{entry["original_filename"]})"
         id = entry["id"]
         
