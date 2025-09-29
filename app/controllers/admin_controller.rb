@@ -67,7 +67,8 @@ class AdminController < ApplicationController
                     params[:backup_file].tempfile.path,
                     params[:tolerante] == "1",
                     params[:no_rollback] != "1",
-                    params[:allow_missing_imgs] == "1")
+                    params[:allow_missing_imgs] == "1",
+                    params[:skip_gifs] == "1")
                 inner_delete_navbar_cache
                 redirect_to "/backup", notice: "Backup restored successfully."
             rescue => e
