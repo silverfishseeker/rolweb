@@ -102,7 +102,7 @@ module Backup
 
 
   require "active_record/fixtures"
-  def self.brave_restore(restore_dir)
+  def self.brave_restore(restore_dir, allow_missing_imgs)
 
     Rails.logger.info "🧹 Deleting database..."
     ActiveRecord::Base.transaction do
@@ -138,21 +138,27 @@ module Backup
         Rails.logger.info "    Entry: id(#{entry["id"]}) filename(#{entry["original_filename"]})"
         id = entry["id"]
         
-        file_path = model_dir.join(id.to_s)
-        if entry["content_type"] == "image/gif"
-          FileUtils.cp(file_path, temp_path)
-        else
-          system("convert #{file_path} -strip #{temp_path}")
-        end
+        begin
+          file_path = model_dir.join(id.to_s)
+          if entry["content_type"] == "image/gif"
+            FileUtils.cp(file_path, temp_path)
+          else
+            system("convert #{file_path} -strip #{temp_path}")
+          end
 
-        record = model.find(id)
-        File.open(temp_path) do |f|
-          record.image = ActionDispatch::Http::UploadedFile.new(
-            filename: entry["original_filename"],
-            type: entry["content_type"],
-            tempfile: f
-          )
-          record.save!
+          record = model.find(id)
+          File.open(temp_path) do |f|
+            record.image = ActionDispatch::Http::UploadedFile.new(
+              filename: entry["original_filename"],
+              type: entry["content_type"],
+              tempfile: f
+            )
+            record.save!
+          end
+        rescue => e
+          backtrace = allow_missing_imgs ? "\n#{e.backtrace.join("\n")}" : ""
+          Rails.logger.error "    Error uploading. Sikipping. id(#{entry["id"]}) filename(#{entry["original_filename"]})+#{backtrace}"
+          raise e unless allow_missing_imgs
         end
       end
       SilverImageUploader.warn_on_remove_missing = true
@@ -173,7 +179,7 @@ module Backup
 
   class BackupRestoreSchemaMissmatchError < StandardError; end
 
-  def self.restore(file_path, flexible=false, rollback=true)
+  def self.restore(file_path, flexible=false, rollback=true, allow_missing_imgs=false)
     Rails.logger.info "📦 Restoring backup from #{file_path} (flexible: #{flexible}) (rollback=#{rollback})"
     restore_id = time_now
     restore_dir = BACKUPS_DIR.join("restore_#{restore_id}")
@@ -207,7 +213,7 @@ module Backup
 
     begin
       silence_sql do
-        Backup.brave_restore(restore_dir)
+        Backup.brave_restore(restore_dir, allow_missing_imgs)
       end
     rescue => e
       Rails.logger.error "❌ Error during restoration: #{e.message}"

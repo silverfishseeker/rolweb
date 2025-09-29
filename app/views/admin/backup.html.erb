@@ -20,4 +20,9 @@
     <%= check_box_tag :no_rollback, "1", false %>
     <%= label_tag :no_rollback, "NO HACER ROLLBACK" %>
   </div>
+  <br>
+  <div class="checkbox-danger">
+    <%= check_box_tag :allow_missing_imgs, "1", false %>
+    <%= label_tag :allow_missing_imgs, "PERMITIR IMÁGENES FALTANTES POR ERROR" %>
+  </div>
 <% end %>
