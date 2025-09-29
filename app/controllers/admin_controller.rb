@@ -63,7 +63,7 @@ class AdminController < ApplicationController
     def restore_backup
         if params[:backup_file].present?
             begin
-                Backup.restore(params[:backup_file].tempfile.path, params[:mode]=="1")
+                Backup.restore(params[:backup_file].tempfile.path, params[:tolerante] == "1", params[:no_rollback] != "1")
                 inner_delete_navbar_cache
                 redirect_to "/backup", notice: "Backup restored successfully."
             rescue => e
