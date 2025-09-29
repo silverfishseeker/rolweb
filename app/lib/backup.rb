@@ -129,7 +129,6 @@ module Backup
     Rails.logger.info "📷 Restoring images..."
     imgdir = images_dir(restore_dir)
     imgdir.children.each do |model_dir|
-      next unless model_dir.directory?
       model = model_dir.basename.to_s.safe_constantize
       metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
       SilverImageUploader.warn_on_remove_missing = false
@@ -164,9 +163,7 @@ module Backup
 
 
 
-  class BackupRestoreRecoveredError < StandardError; end
   class BackupRestoreSchemaMissmatchError < StandardError; end
-
 
   def self.restore(file_path, flexible)
     Rails.logger.info "📦 Restoring backup from #{file_path} (flexible: #{flexible})"
@@ -207,7 +204,7 @@ module Backup
         Backup.brave_restore(snapshot_path)
       end
       Rails.logger.info "✅ Successfully reverted."
-      raise BackupRestoreRecoveredError, "Restoration failed but it was reverted to previous state: #{e.message}"
+      raise e
     ensure
       FileUtils.rm_rf(restore_dir)
       FileUtils.rm_rf(snapshot_path)
