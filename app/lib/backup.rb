@@ -141,7 +141,10 @@ module Backup
         begin
           file_path = model_dir.join(id.to_s)
           if entry["content_type"] == "image/gif"
-            next if skip_gifs
+            if skip_gifs
+              Rails.logger.info "    Entry: id(#{entry["id"]}) is a gif, skipping because skip_gifs=#{skip_gifs}"
+              next
+            end
             FileUtils.cp(file_path, temp_path)
           else
             system("convert #{file_path} -strip #{temp_path}")
