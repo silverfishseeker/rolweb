@@ -103,8 +103,8 @@ module Backup
 
   require "active_record/fixtures"
   def self.brave_restore(restore_dir, allow_missing_imgs, skip_gifs)
-    Rails.logger.debug "Memoria total: #{SystemMemory.info[:total_mb]}"
-    Rails.logger.debug SystemMemory.to_s
+    Rails.logger.info "Memoria total: #{SystemMemory.info[:total_mb]}"
+    Rails.logger.info SystemMemory.to_s
 
     Rails.logger.info "🧹 Deleting database..."
     ActiveRecord::Base.transaction do
@@ -113,7 +113,7 @@ module Backup
       end
     end
 
-    Rails.logger.debug SystemMemory.to_s
+    Rails.logger.info SystemMemory.to_s
     Rails.logger.info "💽 Restoring database data..."
     data = JSON.parse(File.read(restore_dir.join("database.json")))
     data.each do |table, records|
@@ -125,27 +125,27 @@ module Backup
       end
     end
 
-    Rails.logger.debug SystemMemory.to_s
+    Rails.logger.info SystemMemory.to_s
     Rails.logger.info "🗑️ Deleting images..."
     uploader = ImageUploaderConfig.uploader
     uploader.clear_all!
 
-    Rails.logger.debug SystemMemory.to_s
+    Rails.logger.info SystemMemory.to_s
     Rails.logger.info "📷 Restoring images..."
     imgdir = images_dir(restore_dir)
     temp_path = imgdir.join("uploading_image")
     imgdir.children.each do |model_dir|
-      Rails.logger.debug "Pre model GC  | " + SystemMemory.to_s
+      Rails.logger.info "Pre model GC  | " + SystemMemory.to_s
       GC.start
-      Rails.logger.debug  "Post model GC | " + SystemMemory.to_s  
+      Rails.logger.info  "Post model GC | " + SystemMemory.to_s  
       Rails.logger.info "  Model_dir: #{model_dir}"
       model = model_dir.basename.to_s.safe_constantize
       metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
       SilverImageUploader.warn_on_remove_missing = false
       metadata.each_with_index do |entry, i|
-        Rails.logger.debug "Pre entry GC  | " + SystemMemory.to_s
+        Rails.logger.info "Pre entry GC  | " + SystemMemory.to_s
         GC.start if i % 10 == 0 # i sólo se usa aquí
-        Rails.logger.debug "Post entry GC | " + SystemMemory.to_s
+        Rails.logger.info "Post entry GC | " + SystemMemory.to_s
         Rails.logger.info "    Entry: id(#{entry["id"]}) filename(#{entry["original_filename"]})"
         id = entry["id"]
         
