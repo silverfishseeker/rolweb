@@ -128,6 +128,7 @@ module Backup
 
     Rails.logger.info "📷 Restoring images..."
     imgdir = images_dir(restore_dir)
+    temp_path = imgdir.join("uploading_image")
     imgdir.children.each do |model_dir|
       model = model_dir.basename.to_s.safe_constantize
       metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
@@ -136,7 +137,6 @@ module Backup
         id = entry["id"]
         
         file_path = model_dir.join(id.to_s)
-        temp_path = imgdir.join("uploading_image")
         system("convert #{file_path} -strip #{temp_path}")
 
         record = model.find(id)
@@ -165,8 +165,8 @@ module Backup
 
   class BackupRestoreSchemaMissmatchError < StandardError; end
 
-  def self.restore(file_path, flexible)
-    Rails.logger.info "📦 Restoring backup from #{file_path} (flexible: #{flexible})"
+  def self.restore(file_path, flexible=false, rollback=true)
+    Rails.logger.info "📦 Restoring backup from #{file_path} (flexible: #{flexible}) (rollback=#{rollback})"
     restore_id = time_now
     restore_dir = BACKUPS_DIR.join("restore_#{restore_id}")
     FileUtils.mkdir_p(restore_dir)
@@ -187,11 +187,15 @@ module Backup
       Rails.logger.info "✅ Schema matches."
     end
 
-    Rails.logger.info "📋 Preparing snapshot for rollback..."
-    snapshot_path = BACKUPS_DIR.join("snapshot_#{restore_id}")
-    silence_sql do
-      prepare_backup_files(snapshot_path)
-    end 
+    if rollback
+      Rails.logger.info "📋 Preparing snapshot for rollback..."
+      snapshot_path = BACKUPS_DIR.join("snapshot_#{restore_id}")
+      silence_sql do
+        prepare_backup_files(snapshot_path)
+      end
+    else
+      Rails.logger.info "⚠️ skipping snapshot for rollback."
+    end
 
     begin
       silence_sql do
@@ -199,11 +203,13 @@ module Backup
       end
     rescue => e
       Rails.logger.error "❌ Error during restoration: #{e.message}"
-      Rails.logger.error "🔁 Reverting to previous state..."
-      silence_sql do
-        Backup.brave_restore(snapshot_path)
+      if rollback
+        Rails.logger.error "🔁 Reverting to previous state..."
+        silence_sql do
+          Backup.brave_restore(snapshot_path)
+        end
+        Rails.logger.info "✅ Successfully reverted."
       end
-      Rails.logger.info "✅ Successfully reverted."
       raise e
     ensure
       FileUtils.rm_rf(restore_dir)
