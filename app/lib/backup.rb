@@ -129,7 +129,6 @@ module Backup
     Rails.logger.info "📷 Restoring images..."
     imgdir = images_dir(restore_dir)
     imgdir.children.each do |model_dir|
-      next unless model_dir.directory?
       model = model_dir.basename.to_s.safe_constantize
       metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
       SilverImageUploader.warn_on_remove_missing = false
