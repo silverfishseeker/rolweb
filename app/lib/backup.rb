@@ -139,15 +139,21 @@ module Backup
         id = entry["id"]
         
         file_path = model_dir.join(id.to_s)
-        system("convert #{file_path} -strip #{temp_path}")
+        if entry["content_type"] == "image/gif"
+          FileUtils.cp(file_path, temp_path)
+        else
+          system("convert #{file_path} -strip #{temp_path}")
+        end
 
         record = model.find(id)
-        record.image = ActionDispatch::Http::UploadedFile.new(
-          filename: entry["original_filename"],
-          type: entry["content_type"],
-          tempfile: File.new(temp_path)
-        )
-        record.save!
+        File.open(temp_path) do |f|
+          record.image = ActionDispatch::Http::UploadedFile.new(
+            filename: entry["original_filename"],
+            type: entry["content_type"],
+            tempfile: f
+          )
+          record.save!
+        end
       end
       SilverImageUploader.warn_on_remove_missing = true
     end
