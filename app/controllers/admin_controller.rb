@@ -67,7 +67,7 @@ class AdminController < ApplicationController
                 inner_delete_navbar_cache
                 redirect_to "/backup", notice: "Backup restored successfully."
             rescue => e
-                Rails.logger.error "❌ Restore (#{params[:mode]=="1" ? "flexible" : "strict"}) failed: #{e.message}"
+                Rails.logger.error "❌ Restore (#{params[:mode]=="1" ? "flexible" : "strict"}) failed: #{e.message}\n#{e.backtrace.join("\n")}"
                 redirect_to "/backup", alert: "Restore failed: #{e.message}"
             end
         else
