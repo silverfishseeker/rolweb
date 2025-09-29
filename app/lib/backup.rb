@@ -219,7 +219,7 @@ module Backup
       raise e
     ensure
       FileUtils.rm_rf(restore_dir)
-      FileUtils.rm_rf(snapshot_path)
+      FileUtils.rm_rf(snapshot_path) if rollback
     end
   end
 
