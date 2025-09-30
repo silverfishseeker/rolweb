@@ -9,7 +9,13 @@ module Backup
   DATA_TABLES = ActiveRecord::Base.connection.tables - ["schema_migrations", "ar_internal_metadata", "images"]
   BACKUPS_DIR = Rails.root.join("tmp", "backups")
   FileUtils.mkdir_p(BACKUPS_DIR) unless Dir.exist?(BACKUPS_DIR)
-  
+
+
+
+  def self.eager_load
+    # It is necessary to ensure the models are loaded to get all descendants of ActiveRecord::Base
+    Rails.application.eager_load! unless Rails.configuration.eager_load
+  end
 
   def self.time_now
     Time.current.strftime("%Y-%m-%d_%H-%M-%S")
@@ -20,8 +26,6 @@ module Backup
     FileUtils.mkdir_p(images_path) unless Dir.exist?(images_path)
     images_path
   end
-  
-
 
   def self.silence_sql
     original_logger = ActiveRecord::Base.logger
@@ -36,6 +40,7 @@ module Backup
   # Create a backup of the database and Minio images
   def self.prepare_backup_files(temp_dir)
     Rails.logger.info "🔧 Preparing backup files in #{temp_dir}"
+    FileUtils.rm_rf(temp_dir) if Dir.exist?(temp_dir)
     FileUtils.mkdir_p(temp_dir)
 
     Rails.logger.info "💾 Dumping database..."
@@ -53,8 +58,7 @@ module Backup
     Rails.logger.info "🖼️ Dumping images from models..."
     imgdir = Backup.images_dir(temp_dir)
 
-    # It is necessary to ensure the models are loaded to get all descendants of ActiveRecord::Base
-    Rails.application.eager_load! unless Rails.configuration.eager_load
+    eager_load
     ActiveRecord::Base.descendants.each do |model|
       next unless model.respond_to?(:has_image_uploader)
       model_imgdir = imgdir.join(model.name)
@@ -101,51 +105,109 @@ module Backup
   end
 
 
+  
+  class RestoreState
+    FILE = BACKUPS_DIR.join("restore_state.json")
+
+    def self.save(index: nil, resume_dir: nil, is_rollback_dir: nil)
+      state = load || {}
+      state["index"] = index unless index.nil?
+      state["resume_dir"] = resume_dir.to_s unless resume_dir.nil?
+      state["is_rollback_dir"] = is_rollback_dir unless is_rollback_dir.nil?
+      File.write(FILE, JSON.pretty_generate(state))
+    end
+
+    def self.new
+      state = {"index": nil, "resume_dir": nil, "is_rollback_dir": nil }
+      File.write(FILE, JSON.pretty_generate(state))
+    end
+
+    def self.load
+      new if ! File.exist?(FILE)
+      JSON.parse(File.read(FILE))
+    end
+
+    def self.clear
+      File.delete(FILE) if File.exist?(FILE)
+    end
+
+    def self.index
+      load["index"]
+    end
+
+    def self.resume_dir
+      dir = load["resume_dir"]
+      dir && Pathname.new(dir)
+    end
+
+    def self.is_rollback_dir
+      load["is_rollback_dir"]
+    end
+  end
+
+  def self.can_resume
+    RestoreState.resume_dir != nil
+  end
+
   require "active_record/fixtures"
-  def self.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb)
-    Rails.logger.info "Memoria total: #{SystemMemory.info[:total_mb]}"
-    Rails.logger.info SystemMemory.to_s
-
-    Rails.logger.info "🧹 Deleting database..."
-    ActiveRecord::Base.transaction do
-      DATA_TABLES.each do |table|
-        ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
+  def self.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb, is_rollback: false)
+    if !is_rollback && RestoreState.index
+      Rails.logger.info "⏭️ Restore state file detected, skipping DB deletion, BD restoring and images deletion..."
+    else
+      Rails.logger.info "🧹 Deleting database..."
+      ActiveRecord::Base.transaction do
+        DATA_TABLES.each do |table|
+          ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
+        end
       end
+
+      Rails.logger.info "💽 Restoring database data..."
+      eager_load
+      data = JSON.parse(File.read(restore_dir.join("database.json")))
+      data.each do |table, records|
+        next unless DATA_TABLES.include?(table)
+        expected_columns = ActiveRecord::Base.connection.columns(table).map(&:name)
+        records.each do |record|
+          filtered_record = record.slice(*expected_columns)
+          ActiveRecord::Base.connection.insert_fixture(filtered_record, table)
+        end
+      end
+
+      Rails.logger.info "🗑️ Deleting images..."
+      uploader = ImageUploaderConfig.uploader
+      uploader.clear_all!
     end
 
-    Rails.logger.info SystemMemory.to_s
-    Rails.logger.info "💽 Restoring database data..."
-    data = JSON.parse(File.read(restore_dir.join("database.json")))
-    data.each do |table, records|
-      next unless DATA_TABLES.include?(table)
-      expected_columns = ActiveRecord::Base.connection.columns(table).map(&:name)
-      records.each do |record|
-        filtered_record = record.slice(*expected_columns)
-        ActiveRecord::Base.connection.insert_fixture(filtered_record, table)
-      end
-    end
 
-    Rails.logger.info SystemMemory.to_s
-    Rails.logger.info "🗑️ Deleting images..."
-    uploader = ImageUploaderConfig.uploader
-    uploader.clear_all!
-
-    Rails.logger.info SystemMemory.to_s
     Rails.logger.info "📷 Restoring images..."
+
+    resume_state_index = RestoreState.index || 0
+    restore_index = 0
+
     if max_file_size_mb
       max_file_size_mb = max_file_size_mb.to_f
       Rails.logger.info "Using max size: #{max_file_size_mb}MB"
     end
+
     imgdir = images_dir(restore_dir)
     temp_path = imgdir.join("uploading_image")
+
     imgdir.children.each do |model_dir|
+      next unless model_dir.directory?
       Rails.logger.info "  Model_dir: #{model_dir}"
       model = model_dir.basename.to_s.safe_constantize
       metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
       SilverImageUploader.warn_on_remove_missing = false
-      metadata.each_with_index do |entry, i|
-        Rails.logger.info "    Entry: id(#{entry["id"]}) filename(#{entry["original_filename"]})"
+      metadata.each do |entry|
+        restore_index+=1
         
+        if restore_index <= resume_state_index
+          Rails.logger.info "    Already restored, skipping"
+          next
+        end
+        
+        Rails.logger.info "    Entry: index(#{restore_index}) id(#{entry["id"]}) filename(#{entry["original_filename"]})"
+
         begin
           id = entry["id"]
           file_path = model_dir.join(id.to_s)
@@ -179,13 +241,20 @@ module Backup
             )
             record.save!
           end
+
+          RestoreState.save index: restore_index
         rescue => e
           backtrace = allow_missing_imgs ? "\n#{e.backtrace.join("\n")}" : ""
           Rails.logger.error "    Error uploading. Sikipping. id(#{entry["id"]}) filename(#{entry["original_filename"]}) Error: #{e.message} #{backtrace}"
-          raise e unless allow_missing_imgs
+          unless allow_missing_imgs
+            SilverImageUploader.warn_on_remove_missing = true
+            raise e
+          end
+          restore_index+=1
         end
       end
       SilverImageUploader.warn_on_remove_missing = true
+      RestoreState.save index: nil
     end
 
     Rails.logger.info "🔢 Resetting ID sequences..."
@@ -202,37 +271,49 @@ module Backup
 
 
   class BackupRestoreSchemaMissmatchError < StandardError; end
+  class NotResumeDirError < StandardError; end
 
-  def self.restore(file_path, flexible=false, rollback=true, allow_missing_imgs=false, skip_gifs=false, max_file_size_mb=false)
-    Rails.logger.info "📦 Restoring backup from #{file_path} (flexible: #{flexible}) (rollback=#{rollback}) (allow_missing_imgs=#{allow_missing_imgs}) (skip_gifs=#{skip_gifs})"
-    restore_id = time_now
-    restore_dir = BACKUPS_DIR.join("restore_#{restore_id}")
-    FileUtils.mkdir_p(restore_dir)
+  def self.restore(file_path, resume=false, flexible=false, rollback=true, allow_missing_imgs=false, skip_gifs=false, max_file_size_mb=false)
+    resume_dir = RestoreState.resume_dir
 
-    Rails.logger.info "📥 Unpacking files"
-    Zlib::GzipReader.open(file_path) do |gz|
-      Minitar.unpack(gz, restore_dir.to_s)
-    end
-
-    Rails.logger.info "🔍 Validating schema (strict mode)..."
-    backup_schema = JSON.parse(File.read(restore_dir.join("schema.json")))
-    missmatch = check_schema_matches(backup_schema)
-    if missmatch and flexible 
-      Rails.logger.warn "⚠️ Schema mismatch detected in flexible mode: \n#{missmatch}"
-    elsif missmatch and !flexible
-      raise BackupRestoreSchemaMissmatchError, "Schema mismatch detected in strict mode: \n#{missmatch}"
+    if resume
+      rollback=false
+      raise NotResumeDirError("No existe directorio para resumir el restore") unless resume_dir
+      Rails.logger.info "♻️ Resume backup from #{file_path} (flexible: #{flexible})[unused] (rollback=#{rollback})[unused] (allow_missing_imgs=#{allow_missing_imgs}) (skip_gifs=#{skip_gifs}) (max_file_size_mb=#{max_file_size_mb})"
+      restore_dir = resume_dir
     else
-      Rails.logger.info "✅ Schema matches."
-    end
+      reset_backup_dir
+      Rails.logger.info "📦 Restoring backup from #{file_path} (flexible: #{flexible}) (rollback=#{rollback}) (allow_missing_imgs=#{allow_missing_imgs}) (skip_gifs=#{skip_gifs}) (max_file_size_mb=#{max_file_size_mb})"
+      restore_id = time_now
+      restore_dir = BACKUPS_DIR.join("restore_#{restore_id}")
+      FileUtils.mkdir_p(restore_dir)
+      RestoreState.save resume_dir: restore_dir
 
-    if rollback
-      Rails.logger.info "📋 Preparing snapshot for rollback..."
-      snapshot_path = BACKUPS_DIR.join("snapshot_#{restore_id}")
-      silence_sql do
-        prepare_backup_files(snapshot_path)
+      Rails.logger.info "📥 Unpacking files"
+      Zlib::GzipReader.open(file_path) do |gz|
+        Minitar.unpack(gz, restore_dir.to_s)
       end
-    else
-      Rails.logger.info "⚠️ skipping snapshot for rollback."
+
+      Rails.logger.info "🔍 Validating schema (strict mode)..."
+      backup_schema = JSON.parse(File.read(restore_dir.join("schema.json")))
+      missmatch = check_schema_matches(backup_schema)
+      if missmatch and flexible 
+        Rails.logger.warn "⚠️ Schema mismatch detected in flexible mode: \n#{missmatch}"
+      elsif missmatch and !flexible
+        raise BackupRestoreSchemaMissmatchError, "Schema mismatch detected in strict mode: \n#{missmatch}"
+      else
+        Rails.logger.info "✅ Schema matches."
+      end
+
+      if rollback
+        Rails.logger.info "📋 Preparing snapshot for rollback..."
+        snapshot_path = BACKUPS_DIR.join("snapshot")
+        silence_sql do
+          prepare_backup_files(snapshot_path)
+        end
+      else
+        Rails.logger.info "⚠️ skipping snapshot for rollback."
+      end
     end
 
     begin
@@ -244,17 +325,22 @@ module Backup
       if rollback
         Rails.logger.error "🔁 Reverting to previous state..."
         silence_sql do
-          Backup.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb)
+          Backup.brave_restore(snapshot_path, false, false, false, is_rollback: true)
         end
+        RestoreState.resume_dir
         Rails.logger.info "✅ Successfully reverted."
+        reset_backup_dir
       end
       raise e
-    ensure
-      FileUtils.rm_rf(restore_dir)
-      FileUtils.rm_rf(snapshot_path) if rollback
     end
+    reset_backup_dir
   end
 
+  def self.reset_backup_dir
+    Rails.logger.info "🧹 Cleaning all backup files..."
+    FileUtils.rm_rf(BACKUPS_DIR)
+    FileUtils.mkdir_p(BACKUPS_DIR)
+  end
 
 
   def self.check_schema_matches(backup_schema)
