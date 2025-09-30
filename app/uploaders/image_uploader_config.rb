@@ -34,6 +34,12 @@ module ImageUploaderConfig
       @memory_size = 50
     end
 
+    @backup_upload_max_file_size_mb = ENV["BACKUP_UPLOAD_MAX_FILE_SIZE_MB"]&.to_i || 10
+    if @backup_upload_max_file_size_mb <= 0
+      Rails.logger.warn "ImageUploaderConfig: Invalid BACKUP_UPLOAD_MAX_FILE_SIZE_MB value #{@backup_upload_max_file_size_mb}, using default 10 MB"
+      @backup_upload_max_file_size_mb = 10
+    end
+
     Rails.logger.info "ImageUploaderConfig set: backend=#{@uploader}, cache=#{@cache_type}, memory_size=#{@memory_size}MB"
     @is_configured = true
   end
@@ -55,5 +61,10 @@ module ImageUploaderConfig
   def self.memory_size
     check
     @memory_size
+  end
+
+  def self.backup_upload_max_file_size_mb
+    check
+    @backup_upload_max_file_size_mb
   end
 end

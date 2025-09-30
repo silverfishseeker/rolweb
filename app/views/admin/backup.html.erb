@@ -13,7 +13,7 @@
   </p>
   <div class="checkbox-danger">
     <%= check_box_tag :tolerante, "1", false %>
-    <%= label_tag :tolerante, "Activar Modo Tolerante A Diferencias De Esquemas" %>
+    <%= label_tag :tolerante, "Permitir discrepancias en esquemas" %>
   </div>
   <br>
   <div class="checkbox-danger">
@@ -23,11 +23,17 @@
   <br>
   <div class="checkbox-danger">
     <%= check_box_tag :allow_missing_imgs, "1", false %>
-    <%= label_tag :allow_missing_imgs, "Permitir Imágenes Faltantes Por Error" %>
+    <%= label_tag :allow_missing_imgs, "Permitir imágenes faltantes por error" %>
   </div>
   <br>
   <div class="checkbox-danger">
     <%= check_box_tag :skip_gifs, "1", false %>
-    <%= label_tag :skip_gifs, "Saltarse Los Gifs" %>
+    <%= label_tag :skip_gifs, "Saltarse los gifs" %>
+  </div>
+  <br>
+  <div class="checkbox-danger">
+    <%= check_box_tag :use_max_file_size, "1", false, id: "use_max_file_size" %>
+    <%= number_field_tag :max_file_size_mb, ImageUploaderConfig.backup_upload_max_file_size_mb, min: 1, class: "input-danger" %>
+    <%= label_tag :use_max_file_size, "Activar límite de tamaño de archivo (MB)" %>
   </div>
 <% end %>

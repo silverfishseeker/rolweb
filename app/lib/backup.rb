@@ -102,7 +102,7 @@ module Backup
 
 
   require "active_record/fixtures"
-  def self.brave_restore(restore_dir, allow_missing_imgs, skip_gifs)
+  def self.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb)
     Rails.logger.info "Memoria total: #{SystemMemory.info[:total_mb]}"
     Rails.logger.info SystemMemory.to_s
 
@@ -132,25 +132,34 @@ module Backup
 
     Rails.logger.info SystemMemory.to_s
     Rails.logger.info "📷 Restoring images..."
+    if max_file_size_mb
+      max_file_size_mb = max_file_size_mb.to_f
+      Rails.logger.info "Using max size: #{max_file_size_mb}MB"
+    end
     imgdir = images_dir(restore_dir)
     temp_path = imgdir.join("uploading_image")
     imgdir.children.each do |model_dir|
-      Rails.logger.info "Pre model GC  | " + SystemMemory.to_s
-      GC.start
-      Rails.logger.info  "Post model GC | " + SystemMemory.to_s  
       Rails.logger.info "  Model_dir: #{model_dir}"
       model = model_dir.basename.to_s.safe_constantize
       metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
       SilverImageUploader.warn_on_remove_missing = false
       metadata.each_with_index do |entry, i|
-        Rails.logger.info "Pre entry GC  | " + SystemMemory.to_s
-        GC.start if i % 10 == 0 # i sólo se usa aquí
-        Rails.logger.info "Post entry GC | " + SystemMemory.to_s
         Rails.logger.info "    Entry: id(#{entry["id"]}) filename(#{entry["original_filename"]})"
-        id = entry["id"]
         
         begin
+          id = entry["id"]
           file_path = model_dir.join(id.to_s)
+
+          if max_file_size_mb 
+            file_size_mb = File.size(file_path).to_f / (1024 * 1024)
+            if file_size_mb > max_file_size_mb
+              Rails.logger.warn "    Skipping, size #{file_size_mb.round(2)}MB"
+              next
+            else
+              Rails.logger.info "    Passed  , size #{file_size_mb.round(2)}MB"
+            end
+          end
+
           if entry["content_type"] == "image/gif"
             if skip_gifs
               Rails.logger.info "    Entry: id(#{entry["id"]}) is a gif, skipping because skip_gifs=#{skip_gifs}"
@@ -194,7 +203,7 @@ module Backup
 
   class BackupRestoreSchemaMissmatchError < StandardError; end
 
-  def self.restore(file_path, flexible=false, rollback=true, allow_missing_imgs=false, skip_gifs=false)
+  def self.restore(file_path, flexible=false, rollback=true, allow_missing_imgs=false, skip_gifs=false, max_file_size_mb=false)
     Rails.logger.info "📦 Restoring backup from #{file_path} (flexible: #{flexible}) (rollback=#{rollback}) (allow_missing_imgs=#{allow_missing_imgs}) (skip_gifs=#{skip_gifs})"
     restore_id = time_now
     restore_dir = BACKUPS_DIR.join("restore_#{restore_id}")
@@ -228,14 +237,14 @@ module Backup
 
     begin
       silence_sql do
-        Backup.brave_restore(restore_dir, allow_missing_imgs, skip_gifs)
+        Backup.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb)
       end
     rescue => e
-      Rails.logger.error "❌ Error during restoration: #{e.message}"
+      Rails.logger.error "❌ Error during restoration: #{e.message}\n#{e.backtrace.join("\n")}"
       if rollback
         Rails.logger.error "🔁 Reverting to previous state..."
         silence_sql do
-          Backup.brave_restore(snapshot_path)
+          Backup.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb)
         end
         Rails.logger.info "✅ Successfully reverted."
       end
