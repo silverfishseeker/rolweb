@@ -61,15 +61,17 @@ class AdminController < ApplicationController
     end
 
     def restore_backup
-        if params[:backup_file].present?
+        resume = params[:resume] == "1"
+        if params[:backup_file].present? || resume
             begin
                 Backup.restore(
-                    params[:backup_file].tempfile.path,
+                    resume ? nil : params[:backup_file].tempfile.path,
+                    resume,
                     params[:tolerante] == "1",
                     params[:no_rollback] != "1",
                     params[:allow_missing_imgs] == "1",
                     params[:skip_gifs] == "1",
-                    max_file_size_mb = params[:use_max_file_size] == "1" ? params[:max_file_size_mb] : false)
+                    params[:use_max_file_size] == "1" ? params[:max_file_size_mb] : false)
                 inner_delete_navbar_cache
                 redirect_to "/backup", notice: "Backup restored successfully."
             rescue => e

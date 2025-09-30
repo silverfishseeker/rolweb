@@ -1,3 +1,5 @@
+<%= importJS "checkAllBoxes" %>
+
 <h1>Backup y Restauración del Sistema</h1>
 <p style="margin: 30px;">
   <%= link_to "Descargar backup", create_backup_path, class: "btn btn-primary", download: true %>
@@ -10,7 +12,14 @@
   </p>
   <p>
     <%= button_tag "Restaurar", type: "submit", class: "btn btn-warning" %>
+    <%= button_tag "Resumir backup", type: "submit", name:"resume", value:"1", class: "btn btn-warning" if Backup.can_resume %>
   </p>
+
+  <div class="checkbox-danger">
+    <%= check_box_tag :check_all, "1", false, id: "check_all" %>
+    <%= label_tag :check_all, "Marcar / Desmarcar todos" %>
+  </div>
+  <br>
   <div class="checkbox-danger">
     <%= check_box_tag :tolerante, "1", false %>
     <%= label_tag :tolerante, "Permitir discrepancias en esquemas" %>
