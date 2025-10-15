@@ -1,9 +1,6 @@
 class HabilidadsController < ModelController
 
-  def initialize
-    super 
-    @tipo = Habilidad
-  end
+  def tipo; Habilidad end
 
   # Realmente estos accesos no están protegidos, cualquiera con la url se puede meter, pero sólo puedes conseguir la url autentifícándote en admin_controller
   # Sobrescribe.
