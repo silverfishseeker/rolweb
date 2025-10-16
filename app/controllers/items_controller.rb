@@ -10,6 +10,7 @@ class ItemsController < ModelController
       :efecto, 
       :remove_image, 
       :image, 
+      :es_ritual,
       categ_ids: [], 
       clase_ids: [], 
       habilidad_ids: [],
@@ -21,15 +22,21 @@ class ItemsController < ModelController
         ritual_nivel_rel_rituals_attributes: [:id, :ritual_nivel_id, :cantidad, :_destroy]
       ]
     ).tap do |ps|
-      [
-        [:ritual_clase_rel_rituals_attributes, :ritual_clase_id],
-        [:ritual_coste_rel_rituals_attributes, :ritual_coste_id],
-        [:ritual_nivel_rel_rituals_attributes, :ritual_nivel_id]
-      ].each do |array_id, element_id|
-        ps[:ritual_attributes][array_id].each do |_, attr|
-          attr[:_destroy] = "1" if attr[element_id].blank?
+      Rails.logger.debug "HHHH es_ritual: #{ps[:es_ritual].present?} - #{ps[:es_ritual]}"
+      if ps[:es_ritual] == "0"
+        ps[:ritual_attributes] = { _destroy: "1", id: @x.ritual.id, }
+      else
+        [
+          [:ritual_clase_rel_rituals_attributes, :ritual_clase_id],
+          [:ritual_coste_rel_rituals_attributes, :ritual_coste_id],
+          [:ritual_nivel_rel_rituals_attributes, :ritual_nivel_id]
+        ].each do |array_id, element_id|
+          ps[:ritual_attributes][array_id].each do |_, attr|
+            attr[:_destroy] = "1" if attr[element_id].blank?
+          end
         end
       end
     end
+
   end
 end

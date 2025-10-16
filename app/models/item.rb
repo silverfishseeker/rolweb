@@ -13,4 +13,6 @@ class Item < ApplicationRecord
 
     has_one :ritual, class_name: 'Ritual::Ritual', foreign_key: 'item_id', dependent: :destroy
     accepts_nested_attributes_for :ritual, allow_destroy: true
+    def es_ritual; ritual.present? end # virtual attribute
+    def es_ritual=(_value) end # we do nothing on set
 end

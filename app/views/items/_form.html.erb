@@ -1,4 +1,4 @@
-<% importJS "itemRitual" %>">
+<% importJS "itemRitual" %>
 
 <%= form_with model: item do |form| %>
   <div>
@@ -31,7 +31,7 @@
 
   <div>
     <%= form.label :es_ritual, "ritual" %>
-    <%= check_box_tag :es_ritual, "1", item.ritual.present?, id: "ritual_checkbox" %>
+    <%= form.check_box :es_ritual, { id: "ritual_checkbox" }, "1", "0" %>
   </div>
   <br>
 
