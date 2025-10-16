@@ -1,0 +1,2 @@
+module Ritual::RitualCosteRelRitualsHelper
+end

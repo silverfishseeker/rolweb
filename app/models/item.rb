@@ -10,4 +10,7 @@ class Item < ApplicationRecord
     has_and_belongs_to_many :habilidads
     has_and_belongs_to_many :mobs
     has_and_belongs_to_many :categs
+
+    has_one :ritual, class_name: 'Ritual::Ritual', foreign_key: 'item_id', dependent: :destroy
+    accepts_nested_attributes_for :ritual, allow_destroy: true
 end

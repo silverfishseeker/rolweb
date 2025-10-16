@@ -16,7 +16,7 @@ class HabilidadsController < ModelController
   end
 
   def new
-    @x = @tipo.new
+    @x = Habilidad.new
     if params.key?(:newdndspell)
       @x.nombre = params[:name]
       @x.nivel = params[:level]
@@ -36,7 +36,7 @@ class HabilidadsController < ModelController
   end
 
   def update
-    @x = @tipo.find(params[:id])
+    @x = Habilidad.find(params[:id])
     
     if @x.update(model_params)
       if params[:from_clasificar]

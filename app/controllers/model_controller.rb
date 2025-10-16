@@ -41,8 +41,8 @@ class ModelController < ApplicationController
       if @x.save
         redirect_to @x
       else
-        Rails.logger.error "Error al crear el modelo #{@tipo.name}: #{@x.errors.full_messages.join(', ')}"
-        redirect_to "/control" , alert: "Error al crear el modelo #{@tipo.name}."
+        Rails.logger.error "Error al crear el modelo #{tipo.name}: #{@x.errors.full_messages.join(', ')}"
+        redirect_to "/control" , alert: "Error al crear el modelo #{tipo.name}."
       end
     end
   end
@@ -78,7 +78,7 @@ class ModelController < ApplicationController
     rescue SilverImageUploader::BadImageFileError => e
       Rails.logger.warn "BadImageFileError: #{e.message}"
       flash[:alert] = e.message
-      flash[:form_data] = params[@tipo.model_name.param_key].except(:image)
+      flash[:form_data] = params[tipo.model_name.param_key].except(:image)
       redirect_to  action: action_to_redirect, id: params[:id]
     end
   end

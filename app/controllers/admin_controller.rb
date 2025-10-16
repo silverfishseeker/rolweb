@@ -105,6 +105,9 @@ class AdminController < ApplicationController
         end
     end
 
+    def ritual
+    end
+
 
 
     private
