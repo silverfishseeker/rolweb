@@ -11,6 +11,12 @@
 <h2>Resumen de uso de propiedades</h2>
 
 <div class="admin-cuerpo">
+  <%
+    total_clases = Ritual::RitualClase.includes(:ritual_clase_rel_rituals).map { |c| c.ritual_clase_rel_rituals.sum(:cantidad) }.sum
+    total_costes = Ritual::RitualCoste.includes(:ritual_coste_rel_rituals).map { |c| c.ritual_coste_rel_rituals.sum(:cantidad) }.sum
+    total_niveles = Ritual::RitualNivel.includes(:ritual_nivel_rel_rituals).map { |c| c.ritual_nivel_rel_rituals.sum(:cantidad) }.sum
+    total_total = total_clases + total_costes + total_niveles
+  %>
   <div class="column">
     <h3>Clases</h3>
     <table>
@@ -22,20 +28,19 @@
         </tr>
       </thead>
       <tbody>
-        <% total_clases = Ritual::RitualClase.includes(:ritual_clase_rel_rituals).map { |c| c.ritual_clase_rel_rituals.sum(:cantidad) }.sum %>
         <% Ritual::RitualClase.all.each do |clase| %>
           <% total = clase.ritual_clase_rel_rituals.sum(:cantidad) %>
           <% porcentaje = total_clases > 0 ? ((total.to_f / total_clases) * 100).round(1) : 0 %>
           <tr>
             <td><%= clase.valor %></td>
             <td><%= total %></td>
-            <td><%= "#{porcentaje}%" %></td>
+            <td><%= porcentaje %>%</td>
           </tr>
         <% end %>
         <tr>
           <td>TOTAL</td>
           <td><%= total_clases %></td>
-          <td>100%</td>
+          <td><%= (total_clases.to_f / total_total * 100).round(1) %>%</td>
         </tr>
       </tbody>
     </table>
@@ -52,20 +57,19 @@
         </tr>
       </thead>
       <tbody>
-        <% total_costes = Ritual::RitualCoste.includes(:ritual_coste_rel_rituals).map { |c| c.ritual_coste_rel_rituals.sum(:cantidad) }.sum %>
         <% Ritual::RitualCoste.all.each do |coste| %>
           <% total = coste.ritual_coste_rel_rituals.sum(:cantidad) %>
           <% porcentaje = total_costes > 0 ? ((total.to_f / total_costes) * 100).round(1) : 0 %>
           <tr>
             <td><%= coste.valor %></td>
             <td><%= total %></td>
-            <td><%= "#{porcentaje}%" %></td>
+            <td><%= porcentaje %>%</td>
           </tr>
         <% end %>
         <tr>
           <td>TOTAL</td>
           <td><%= total_costes %></td>
-          <td>100%</td>
+          <td><%= (total_costes.to_f / total_total * 100).round(1) %>%</td>
         </tr>
       </tbody>
     </table>
@@ -82,20 +86,19 @@
         </tr>
       </thead>
       <tbody>
-        <% total_niveles = Ritual::RitualNivel.includes(:ritual_nivel_rel_rituals).map { |c| c.ritual_nivel_rel_rituals.sum(:cantidad) }.sum %>
         <% Ritual::RitualNivel.all.each do |nivel| %>
           <% total = nivel.ritual_nivel_rel_rituals.sum(:cantidad) %>
           <% porcentaje = total_niveles > 0 ? ((total.to_f / total_niveles) * 100).round(1) : 0 %>
           <tr>
             <td><%= nivel.valor %></td>
             <td><%= total %></td>
-            <td><%= "#{porcentaje}%" %></td>
+            <td><%= porcentaje %>%</td>
           </tr>
         <% end %>
         <tr>
           <td>TOTAL</td>
           <td><%= total_niveles %></td>
-          <td>100%</td>
+          <td><%= (total_niveles.to_f / total_total * 100).round(1) %>%</td>
         </tr>
       </tbody>
     </table>
