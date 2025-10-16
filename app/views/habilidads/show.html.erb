@@ -12,14 +12,19 @@
 </div>
 
 <div class="clase-main">
-    <div class="carta carta_extendida texto_info-margins">
-        <%= render "habilidads/habilidad_inner", habil:  @x%>
+    <div class="carta carta_extendida texto_info-margins carta_fixInnerImage">
+        <%= render("shared/image_with_link", image: @x.image, cssclass: "carta-image") if @x.image%>
+        <div>
+            <%= render "habilidads/habilidad_inner", habil:  @x%>
+        </div>
     </div>
 </div>
-    
-<h1>Items relacionados:</h1>
-<div class="grid-container">
-    <% @x.items.order(:nombre).each do |it| %>
-        <%= render "items/item", item: it %>
-    <% end %>
-</div>
+
+<% if @x.items.any? %>
+    <h1>Items relacionados:</h1>
+    <div class="grid-container">
+        <% @x.items.order(:nombre).each do |it| %>
+            <%= render "items/item", item: it %>
+        <% end %>
+    </div>
+<% end %>
