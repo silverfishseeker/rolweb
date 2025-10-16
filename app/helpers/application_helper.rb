@@ -8,9 +8,7 @@ module ApplicationHelper
   end
   
   def importJS (module_name)
-    content_for :head do
-      javascript_import_module_tag(module_name)
-    end
+    concat(content_tag(:div, "", data: { js: module_name }))
   end
 
   def only_admin_content

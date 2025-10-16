@@ -1,4 +1,4 @@
-document.addEventListener("turbo:load", () => {
+export function onTurboLoad() {
   const btn = document.querySelector("#random-generator-btn");
   const resultDiv = document.querySelector("#random-result");
 
@@ -12,4 +12,4 @@ document.addEventListener("turbo:load", () => {
         console.error("Error obteniendo elemento aleatorio:", err);
       });
   });
-});
+}

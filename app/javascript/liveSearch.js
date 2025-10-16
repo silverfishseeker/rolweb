@@ -1,4 +1,4 @@
-document.addEventListener("turbo:load", () => {
+export function onTurboLoad() {
   const input = document.getElementById("buscador-input");
   
   input.addEventListener("input", () => {
@@ -16,4 +16,4 @@ document.addEventListener("turbo:load", () => {
       categ.style.display = cartasVisibles.length > 0 ? "block" : "none";
     });
   });
-});
+}
