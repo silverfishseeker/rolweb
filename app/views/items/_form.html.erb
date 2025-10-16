@@ -42,7 +42,7 @@
 
       <fieldset>
         <legend>Clases</legend>
-        <% Ritual::RitualClase.all.each_with_index do |clase, i| %>
+        <% Ritual::RitualClase.order(:valor).each_with_index do |clase, i| %>
           <%= ritual_form.fields_for :ritual_clase_rel_rituals, item.ritual&.ritual_clase_rel_rituals&.find { |r| r.ritual_clase_id == clase.id } || Ritual::RitualClaseRelRitual.new do |rcr_form| %>
             <div>
               <%= rcr_form.check_box :ritual_clase_id, { multiple: false }, clase.id, nil %>
@@ -55,7 +55,7 @@
 
       <fieldset>
         <legend>Costes</legend>
-        <% Ritual::RitualCoste.all.each do |coste| %>
+        <% Ritual::RitualCoste.order(:valor).each do |coste| %>
           <%= ritual_form.fields_for :ritual_coste_rel_rituals, item.ritual&.ritual_coste_rel_rituals&.find { |r| r.ritual_coste_id == coste.id } || Ritual::RitualCosteRelRitual.new do |rcr_form| %>
             <div>
               <%= rcr_form.check_box :ritual_coste_id, { multiple: false }, coste.id, nil %>
@@ -68,7 +68,7 @@
 
       <fieldset>
         <legend>Niveles</legend>
-        <% Ritual::RitualNivel.all.each do |nivel| %>
+        <% Ritual::RitualNivel.order(:valor).each do |nivel| %>
           <%= ritual_form.fields_for :ritual_nivel_rel_rituals, item.ritual&.ritual_nivel_rel_rituals&.find { |r| r.ritual_nivel_id == nivel.id } || Ritual::RitualNivelRelRitual.new do |rcr_form| %>
             <div>
               <%= rcr_form.check_box :ritual_nivel_id, { multiple: false }, nivel.id, nil %>
