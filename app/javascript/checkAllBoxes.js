@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("turbo:load", function() {
   const checkAll = document.getElementById("check_all");
   const toggleables = document.querySelectorAll(".toggleable");
 

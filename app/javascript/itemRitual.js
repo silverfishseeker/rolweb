@@ -1,4 +1,4 @@
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("turbo:load", () => {
     const ritualCheckbox = document.getElementById("ritual_checkbox");
     const ritualSection = document.getElementById("ritual_section");
 

@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("turbo:load", () => {
   const btn = document.querySelector("#random-generator-btn");
   const resultDiv = document.querySelector("#random-result");
 

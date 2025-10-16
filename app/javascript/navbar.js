@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("turbo:load", () => {
   const subnavbar = document.querySelector(".subnavbar");
   const scrollIndicator = document.querySelector(".subnavbar-scroll_indicator");
 
