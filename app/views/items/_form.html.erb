@@ -33,8 +33,7 @@
     <%= form.label :es_ritual, "ritual" %>
     <%= form.check_box :es_ritual, { id: "ritual_checkbox" }, "1", "0" %>
   </div>
-  <br>
-
+  
   <div id="ritual_section" style="<%= 'display:none;' unless item.ritual.present? %>">
     <%= form.fields_for :ritual, item.ritual || Ritual::Ritual.new do |ritual_form| %>
 
