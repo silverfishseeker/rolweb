@@ -13,7 +13,7 @@ gem "sprockets-rails"
 gem "pg", "~> 1.1"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 5.0"
+gem "puma", "~> 5.6"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
@@ -72,7 +72,7 @@ group :test do
 end
 
 # para las imágenes
-gem 'carrierwave', '~> 1.0'
+gem 'carrierwave', '~> 2.2'
 
 # para hacer peticiones GET y tal
 gem 'httparty'
