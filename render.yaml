@@ -1,7 +1,7 @@
 databases:
   - name: doorsmazedb
-    databaseName: doorsmazedb
-    user: doorsmazedb
+    databaseName: doorsmazedb_ar62
+    user: doorsmazedb_ar62_user
     plan: free
 
 services:

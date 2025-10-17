@@ -1,0 +1,10 @@
+<%= form_with(model: ritual_ritual_nivel) do |form| %>
+  <div>
+    <%= form.label :valor, style: "display: block" %>
+    <%= form.number_field :valor %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

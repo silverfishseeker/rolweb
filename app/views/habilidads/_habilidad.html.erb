@@ -1,3 +1,4 @@
 <div class="carta">
     <%= render "habilidads/habilidad_inner", habil: habil%>
+    <%= render("shared/image_with_link", image: habil.image, cssclass: "carta-image") if habil.image%>
 </div>

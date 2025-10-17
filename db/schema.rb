@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_09_25_111815) do
+ActiveRecord::Schema[7.0].define(version: 2025_10_16_162538) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -176,6 +176,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_25_111815) do
     t.datetime "updated_at", null: false
     t.boolean "oculto", default: false
     t.integer "tipo"
+    t.string "image"
   end
 
   create_table "habilidads_items", id: false, force: :cascade do |t|
@@ -242,6 +243,91 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_25_111815) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "ritual_ritual_clase_rel_rituals", force: :cascade do |t|
+    t.integer "cantidad"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "ritual_id", null: false
+    t.bigint "ritual_clase_id", null: false
+    t.index ["ritual_clase_id"], name: "index_ritual_ritual_clase_rel_rituals_on_ritual_clase_id"
+    t.index ["ritual_id"], name: "index_ritual_ritual_clase_rel_rituals_on_ritual_id"
+  end
+
+  create_table "ritual_ritual_clases", force: :cascade do |t|
+    t.string "valor"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ritual_ritual_coste_rel_rituals", force: :cascade do |t|
+    t.integer "cantidad"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "ritual_id", null: false
+    t.bigint "ritual_coste_id", null: false
+    t.index ["ritual_coste_id"], name: "index_ritual_ritual_coste_rel_rituals_on_ritual_coste_id"
+    t.index ["ritual_id"], name: "index_ritual_ritual_coste_rel_rituals_on_ritual_id"
+  end
+
+  create_table "ritual_ritual_costes", force: :cascade do |t|
+    t.string "valor"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ritual_ritual_nivel_rel_rituals", force: :cascade do |t|
+    t.integer "cantidad"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "ritual_id", null: false
+    t.bigint "ritual_nivel_id", null: false
+    t.index ["ritual_id"], name: "index_ritual_ritual_nivel_rel_rituals_on_ritual_id"
+    t.index ["ritual_nivel_id"], name: "index_ritual_ritual_nivel_rel_rituals_on_ritual_nivel_id"
+  end
+
+  create_table "ritual_ritual_nivels", force: :cascade do |t|
+    t.integer "valor"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ritual_rituals", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "item_id"
+    t.index ["item_id"], name: "index_ritual_rituals_on_item_id"
+  end
+
+  create_table "ritualclases", force: :cascade do |t|
+    t.string "valor"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ritualcostes", force: :cascade do |t|
+    t.string "valor"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ritualnivels", force: :cascade do |t|
+    t.integer "valor"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "rituals", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "ritual_ritual_clase_rel_rituals", "ritual_ritual_clases", column: "ritual_clase_id"
+  add_foreign_key "ritual_ritual_clase_rel_rituals", "ritual_rituals", column: "ritual_id"
+  add_foreign_key "ritual_ritual_coste_rel_rituals", "ritual_ritual_costes", column: "ritual_coste_id"
+  add_foreign_key "ritual_ritual_coste_rel_rituals", "ritual_rituals", column: "ritual_id"
+  add_foreign_key "ritual_ritual_nivel_rel_rituals", "ritual_ritual_nivels", column: "ritual_nivel_id"
+  add_foreign_key "ritual_ritual_nivel_rel_rituals", "ritual_rituals", column: "ritual_id"
+  add_foreign_key "ritual_rituals", "items"
 end

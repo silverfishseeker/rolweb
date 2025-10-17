@@ -1,9 +1,6 @@
 class HabilidadsController < ModelController
 
-  def initialize
-    super 
-    @tipo = Habilidad
-  end
+  def tipo; Habilidad end
 
   # Realmente estos accesos no están protegidos, cualquiera con la url se puede meter, pero sólo puedes conseguir la url autentifícándote en admin_controller
   # Sobrescribe.
@@ -19,7 +16,7 @@ class HabilidadsController < ModelController
   end
 
   def new
-    @x = @tipo.new
+    @x = Habilidad.new
     if params.key?(:newdndspell)
       @x.nombre = params[:name]
       @x.nivel = params[:level]
@@ -39,7 +36,7 @@ class HabilidadsController < ModelController
   end
 
   def update
-    @x = @tipo.find(params[:id])
+    @x = Habilidad.find(params[:id])
     
     if @x.update(model_params)
       if params[:from_clasificar]
@@ -53,6 +50,6 @@ class HabilidadsController < ModelController
   end
 
   def model_params
-    params.require(:habilidad).permit(:nombre, :nivel, :efecto, :oculto, :tipo, clase_ids: [], item_ids: [], categ_ids: [], mob_ids: [])
+    params.require(:habilidad).permit(:nombre, :nivel, :efecto, :oculto, :tipo, :image, :remove_image, clase_ids: [], item_ids: [], categ_ids: [], mob_ids: [])
   end
 end

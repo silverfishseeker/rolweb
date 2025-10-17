@@ -1,0 +1,110 @@
+<h1>Rituales</h1>
+
+<div class="panel-links">
+  <%= link_to "Clases de ritual", ritual_ritual_clases_path, class: "btn" %>
+  <%= link_to "Costes de ritual", ritual_ritual_costes_path, class: "btn" %>
+  <%= link_to "Niveles de ritual", ritual_ritual_nivels_path, class: "btn" %>
+</div>
+
+<hr>
+
+<h2>Resumen de uso de propiedades</h2>
+
+<div class="admin-cuerpo">
+  <%
+    total_clases = Ritual::RitualClase.includes(:ritual_clase_rel_rituals).map { |c| c.ritual_clase_rel_rituals.sum(:cantidad) }.sum
+    total_costes = Ritual::RitualCoste.includes(:ritual_coste_rel_rituals).map { |c| c.ritual_coste_rel_rituals.sum(:cantidad) }.sum
+    total_niveles = Ritual::RitualNivel.includes(:ritual_nivel_rel_rituals).map { |c| c.ritual_nivel_rel_rituals.sum(:cantidad) }.sum
+    total_total = total_clases + total_costes + total_niveles
+  %>
+  <div class="column">
+    <h3>Clases</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Clase</th>
+          <th>Uso</th>
+          <th>Porcentaje</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Ritual::RitualClase.all.each do |clase| %>
+          <% total = clase.ritual_clase_rel_rituals.sum(:cantidad) %>
+          <% porcentaje = total_clases > 0 ? ((total.to_f / total_clases) * 100).round(1) : 0 %>
+          <tr>
+            <td><%= clase.valor %></td>
+            <td><%= total %></td>
+            <td><%= porcentaje %>%</td>
+          </tr>
+        <% end %>
+        <tr>
+          <td>TOTAL</td>
+          <td><%= total_clases %></td>
+          <td><%= (total_clases.to_f / total_total * 100).round(1) %>%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="column">
+    <h3>Costes</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Coste</th>
+          <th>Uso</th>
+          <th>Porcentaje</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Ritual::RitualCoste.all.each do |coste| %>
+          <% total = coste.ritual_coste_rel_rituals.sum(:cantidad) %>
+          <% porcentaje = total_costes > 0 ? ((total.to_f / total_costes) * 100).round(1) : 0 %>
+          <tr>
+            <td><%= coste.valor %></td>
+            <td><%= total %></td>
+            <td><%= porcentaje %>%</td>
+          </tr>
+        <% end %>
+        <tr>
+          <td>TOTAL</td>
+          <td><%= total_costes %></td>
+          <td><%= (total_costes.to_f / total_total * 100).round(1) %>%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="column">
+    <h3>Niveles</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nivel</th>
+          <th>Uso</th>
+          <th>Porcentaje</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Ritual::RitualNivel.all.each do |nivel| %>
+          <% total = nivel.ritual_nivel_rel_rituals.sum(:cantidad) %>
+          <% porcentaje = total_niveles > 0 ? ((total.to_f / total_niveles) * 100).round(1) : 0 %>
+          <tr>
+            <td><%= nivel.valor %></td>
+            <td><%= total %></td>
+            <td><%= porcentaje %>%</td>
+          </tr>
+        <% end %>
+        <tr>
+          <td>TOTAL</td>
+          <td><%= total_niveles %></td>
+          <td><%= (total_niveles.to_f / total_total * 100).round(1) %>%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="column clase-image" style="flex: 3">
+    <%= image_tag "chaman.webp" %>
+  </div>
+</div>

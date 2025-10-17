@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  namespace :ritual do
+    resources :ritual_nivels
+    resources :ritual_costes
+    resources :ritual_clases
+  end
   resources :cuentos
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -41,6 +46,7 @@ Rails.application.routes.draw do
   post '/restore_backup', to: 'admin#restore_backup'
   get '/download_logs', to: 'admin#download_logs'
   get '/check_minio_connection', to: 'admin#check_minio_connection'
+  get '/ritual', to: 'admin#ritual'
 
   get '/lootbox', to: 'randompick#lootbox'
   post '/lootboxing', to: 'randompick#lootboxing'

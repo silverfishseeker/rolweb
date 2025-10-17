@@ -1,3 +1,5 @@
+<% importJS "itemRitual" %>
+
 <%= form_with model: item do |form| %>
   <div>
     <%= form.label :nombre %><br>
@@ -28,18 +30,66 @@
   <br>
 
   <div>
+    <%= form.label :es_ritual, "ritual" %>
+    <%= form.check_box :es_ritual, { id: "ritual_checkbox" }, "1", "0" %>
+  </div>
+  
+  <div id="ritual_section" style="<%= 'display:none;' unless item.ritual.present? %>">
+    <%= form.fields_for :ritual, item.ritual || Ritual::Ritual.new do |ritual_form| %>
+
+      <h3>Propiedades de Ritual</h3>
+
+      <fieldset>
+        <legend>Clases</legend>
+        <% Ritual::RitualClase.order(:valor).each_with_index do |clase, i| %>
+          <%= ritual_form.fields_for :ritual_clase_rel_rituals, item.ritual&.ritual_clase_rel_rituals&.find { |r| r.ritual_clase_id == clase.id } || Ritual::RitualClaseRelRitual.new do |rcr_form| %>
+            <div>
+              <%= rcr_form.check_box :ritual_clase_id, { multiple: false }, clase.id, nil %>
+              <%= clase.valor %>
+              <%= rcr_form.number_field :cantidad, value: (rcr_form.object.cantidad || 1), min: 1, step: 1 %>
+            </div>
+          <% end %>
+        <% end %>
+      </fieldset>
+
+      <fieldset>
+        <legend>Costes</legend>
+        <% Ritual::RitualCoste.order(:valor).each do |coste| %>
+          <%= ritual_form.fields_for :ritual_coste_rel_rituals, item.ritual&.ritual_coste_rel_rituals&.find { |r| r.ritual_coste_id == coste.id } || Ritual::RitualCosteRelRitual.new do |rcr_form| %>
+            <div>
+              <%= rcr_form.check_box :ritual_coste_id, { multiple: false }, coste.id, nil %>
+              <%= coste.valor %>
+              <%= rcr_form.number_field :cantidad, value: (rcr_form.object.cantidad || 1), min: 1, step: 1 %>
+            </div>
+          <% end %>
+        <% end %>
+      </fieldset>
+
+      <fieldset>
+        <legend>Niveles</legend>
+        <% Ritual::RitualNivel.order(:valor).each do |nivel| %>
+          <%= ritual_form.fields_for :ritual_nivel_rel_rituals, item.ritual&.ritual_nivel_rel_rituals&.find { |r| r.ritual_nivel_id == nivel.id } || Ritual::RitualNivelRelRitual.new do |rcr_form| %>
+            <div>
+              <%= rcr_form.check_box :ritual_nivel_id, { multiple: false }, nivel.id, nil %>
+              Nivel <%= nivel.valor %>
+              <%= rcr_form.number_field :cantidad, value: (rcr_form.object.cantidad || 1), min: 1, step: 1 %>
+            </div>
+          <% end %>
+        <% end %>
+      </fieldset>
+    <% end %>
+  </div>
+  <br>
+  
+  <%= render "shared/fcs", p:"habilidad", form: form %>
+  
+  <div>
     <%= form.label :image %>
     <%= form.file_field :image %>
   </div>
   <% if form.object.image %>
-    <div>
-      <div class="form-image">
-        <%= render "shared/image", image: form.object.image %>
-      </div>
-      <label>
-        <%= form.check_box :remove_image %> Eliminar imagen
-      </label>
-    </div>
+    <%= form.check_box :remove_image %> Eliminar imagen
+    <br>
   <% end %>
   <br>
 

@@ -1,9 +1,6 @@
 class PicturesController < ModelController
 
-  def initialize
-    super 
-    @tipo = Picture
-  end
+  def tipo; Picture end
 
   def index
     @xs = Picture.all

@@ -3,5 +3,13 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "trix"
 import "@rails/actiontext"
-import "isTouchScreen"
-import "navbar"
+import "./navbar.js"
+
+document.addEventListener("turbo:load", () => {
+  document.querySelectorAll("[data-js]").forEach(el => {
+    const jsName = el.dataset.js
+    import(`./${jsName}.js`)
+      .then(module => module.onTurboLoad())
+      .catch(err => console.error(`Error cargando ${jsName}.js`, err))
+  })
+})

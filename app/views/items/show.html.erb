@@ -22,5 +22,7 @@
 
 <br>
 
-<h1>Lista de Hablidades relacionadas:</h1>
-<%= render "habilidads/lista", habilidades: @x.habilidads%>
+<% if @x.habilidads.any? %>
+    <h1>Lista de Hablidades relacionadas:</h1>
+    <%= render "habilidads/lista", habilidades: @x.habilidads%>
+<% end %>
