@@ -24,7 +24,7 @@ class ItemsController < ModelController
     ).tap do |ps|
       Rails.logger.debug "HHHH es_ritual: #{ps[:es_ritual].present?} - #{ps[:es_ritual]}"
       if ps[:es_ritual] == "0"
-        ps[:ritual_attributes] = { _destroy: "1", id: @x.ritual.id, }
+        ps[:ritual_attributes] = { _destroy: "1", id: error_coalesce{@x.ritual.id}, }
       else
         [
           [:ritual_clase_rel_rituals_attributes, :ritual_clase_id],

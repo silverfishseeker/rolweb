@@ -1,10 +1,8 @@
-module Utilities
-  extend ActiveSupport::Concern
-
+module Kernel
   def error_coalesce 
     begin
       yield || nil
-    rescue
+    rescue NoMethodError 
       nil
     end
   end
