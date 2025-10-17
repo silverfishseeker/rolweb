@@ -72,23 +72,23 @@ group :test do
 end
 
 # para las imágenes
-gem 'carrierwave', '~> 1.0'
+gem 'carrierwave'
 
 # para hacer peticiones GET y tal
 gem 'httparty'
 
 # para tener un css más chulo
 # gem "dartsass-rails", "~> 0.5.1"
-gem "sassc", "~> 2.4"
+gem "sassc"
 
 # paginación de modelos
 gem 'kaminari'
 
 # para el minio
-gem 'aws-sdk-s3', '~> 1.0'
+gem 'aws-sdk-s3'
 
 # para el backup
-gem "minitar", "~> 0.12.1"
+gem "minitar"
 
 # manejo de imágenes
-gem "mini_magick", "~> 4.12"
+gem "mini_magick"

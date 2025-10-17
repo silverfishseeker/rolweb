@@ -9,6 +9,8 @@ gemas:
     gem install "gema"
     bundle add "gema"
     bundle install
+    bundle outdated
+    bundle update
 
 
 Para evitar romper la bd hacer commit de la bd con el contenedor apagado, si no:
