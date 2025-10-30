@@ -70,8 +70,10 @@ class SilverImageUploader
     rescue
       raise BadImageFileError, "El archivo subido no es una imagen válida."
     end
+
+    formato = image["%m"].downcase
     
-    return file if image.mime_type == "image/gif"
+    return file if formato == "gif"
     
     # Recortar imagen a contenido
     was_trimmed = false
@@ -84,7 +86,7 @@ class SilverImageUploader
       was_trimmed = old_width != image.width or old_height != image.height
     end
 
-    return file if image.mime_type == "image/webp" and !was_trimmed
+    return file if formato == "webp" and !was_trimmed
 
     # Convertir a webp
 

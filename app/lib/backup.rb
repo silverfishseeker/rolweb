@@ -47,7 +47,7 @@ module Backup
     data = (DATA_TABLES).map do |table|
       [table, ActiveRecord::Base.connection.select_all("SELECT * FROM #{table}").to_a]
     end.to_h
-    File.write(temp_dir.join("database.json"), JSON.generate(data))
+    File.write(temp_dir.join("database.json"), JSON.pretty_generate(data))
 
     Rails.logger.info "📋 Dumping database schema..."
     schema = DATA_TABLES.to_h do |table|
@@ -145,8 +145,16 @@ module Backup
     end
   end
 
+
   def self.can_resume
     RestoreState.resume_dir != nil
+  end
+
+  def self.sql_in_replication_role
+    ActiveRecord::Base.connection.execute("SET session_replication_role = 'replica';")
+    yield
+  ensure
+    ActiveRecord::Base.connection.execute("SET session_replication_role = 'origin';")
   end
 
   require "active_record/fixtures"
@@ -157,19 +165,21 @@ module Backup
       Rails.logger.info "🧹 Deleting database..."
       ActiveRecord::Base.transaction do
         DATA_TABLES.each do |table|
-          ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
+          ActiveRecord::Base.connection.execute("TRUNCATE #{DATA_TABLES.join(', ')} RESTART IDENTITY CASCADE")
         end
       end
 
       Rails.logger.info "💽 Restoring database data..."
       eager_load
       data = JSON.parse(File.read(restore_dir.join("database.json")))
-      data.each do |table, records|
-        next unless DATA_TABLES.include?(table)
-        expected_columns = ActiveRecord::Base.connection.columns(table).map(&:name)
-        records.each do |record|
-          filtered_record = record.slice(*expected_columns)
-          ActiveRecord::Base.connection.insert_fixture(filtered_record, table)
+      sql_in_replication_role do
+        data.each do |table, records|
+          next unless DATA_TABLES.include?(table)
+          expected_columns = ActiveRecord::Base.connection.columns(table).map(&:name)
+          records.each do |record|
+            filtered_record = record.slice(*expected_columns)
+            ActiveRecord::Base.connection.insert_fixture(filtered_record, table)
+          end
         end
       end
 
