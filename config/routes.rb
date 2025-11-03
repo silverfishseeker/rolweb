@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   resources :estadoalterados
   resources :dndspells
   resources :etiquets
+  resources :contextoloots
   resources :cuentos
   get '/recalcular_childs', to: 'cuentos#recalcular_childs'
 

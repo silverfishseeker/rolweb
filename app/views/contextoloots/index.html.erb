@@ -1,0 +1,10 @@
+<h1>Contexto Loots</h1>
+
+<ul>
+  <% @xs.each do |x| %>
+    <%= render x, x: x %>
+    <br> <br> <br>
+  <% end %>
+  <li><%= link_to "Añadir contextoloot", new_contextoloot_path, class: "btn btn-primary" %></li>
+</ul>
+

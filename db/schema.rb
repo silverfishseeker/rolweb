@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_10_16_162538) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_03_174316) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -71,6 +71,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_16_162538) do
     t.bigint "categ_id", null: false
   end
 
+  create_table "categs_contextoloots", id: false, force: :cascade do |t|
+    t.bigint "contextoloot_id", null: false
+    t.bigint "categ_id", null: false
+  end
+
   create_table "categs_habilidads", id: false, force: :cascade do |t|
     t.bigint "categ_id", null: false
     t.bigint "habilidad_id", null: false
@@ -114,6 +119,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_16_162538) do
     t.integer "child_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "contextoloots", force: :cascade do |t|
+    t.string "nombre"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "contextoloots_items", id: false, force: :cascade do |t|
+    t.bigint "contextoloot_id", null: false
+    t.bigint "item_id", null: false
   end
 
   create_table "cuento_relations", force: :cascade do |t|

@@ -20,6 +20,15 @@
     </div>
 <div>
 
+<% only_admin_content do %>
+    <h3> Contextloots relacionados:</h3>
+    <div class="miniListadoClases">
+        <% @x.contextoloots.each do |cl| %>
+            <%= link_to cl.nombre, cl, class: "carta-title" %>
+        <% end %>
+    </div>
+<% end %>
+
 <br>
 
 <% if @x.habilidads.any? %>

@@ -29,6 +29,9 @@
   </div>
   <br>
 
+  <%= render "shared/fcs", p:"contextoloot", form: form %>
+  <br>
+
   <div>
     <%= form.label :es_ritual, "ritual" %>
     <%= form.check_box :es_ritual, { id: "ritual_checkbox" }, "1", "0" %>
