@@ -40,7 +40,7 @@ class SilverImageUploader
   end
   
   def remove!(id)
-    record = @cache.fetch(id)
+    record = error_coalesce(ArgumentError) {@cache.fetch(id)}
     if record
       @cache.remove(id)
       ImageUploaderConfig.uploader.remove!(record)
