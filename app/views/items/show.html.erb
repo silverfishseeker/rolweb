@@ -21,12 +21,23 @@
 <div>
 
 <% only_admin_content do %>
-    <h3> Contextloots relacionados:</h3>
-    <div class="miniListadoClases">
-        <% @x.contextoloots.each do |cl| %>
-            <%= link_to cl.nombre, cl, class: "carta-title" %>
-        <% end %>
-    </div>
+    <%  contextoloots = @x.contextoloots.to_a 
+        if @x.usecategloot
+            contextoloots = (contextoloots + @x.categs.flat_map { |categ| categ.contextoloots.to_a }).uniq
+        end %>
+    <% if contextoloots.any? %>
+        <h3> Contextloots relacionados:</h3>
+        <div class="miniListadoClases">
+            <% contextoloots.each do |cl| %>
+                <%= link_to cl.nombre, cl, class: "carta-title" %>
+            <% end %>
+        </div>
+    <% end %>
+    <% if @x.usecategloot %>
+        <h4> Se usan contextloots de categorías. </h4>
+    <% else %>
+        <h4> No se usan contextloots de categorías. </h4>
+    <% end %>
 <% end %>
 
 <br>

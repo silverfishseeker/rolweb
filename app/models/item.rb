@@ -1,5 +1,5 @@
 class Item < ApplicationRecord
-    # atributes: nombre, coste, peso, efecto, image
+    # atributes: nombre, coste, peso, efecto, image, usecategloot
     has_rich_text :efecto
 
     mount_image_uploader
