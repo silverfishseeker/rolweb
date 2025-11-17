@@ -1,9 +1,11 @@
+@import "respondMax";
+
 :root {
     --ancho_carta:400px;
     --ancho_carta_clase:540px;
     --alto_carta_clase:340px;
     
-    @media (max-width: $max-margin-media) {
+    @include respond-max {
         --ancho_carta: 90vw;
         --ancho_carta_clase: 90vw;
         --alto_carta_clase: auto;
@@ -39,7 +41,7 @@
 
     display: flex;
     flex-direction: row;
-    @media (max-width: $max-margin-media) {  flex-direction: column; }
+    @include respond-max {  flex-direction: column; }
 }
 
 .carta_extendida {
@@ -139,7 +141,7 @@
 .carta-details {
     flex:auto;
     width: calc(var(--ancho_carta_clase)*0.6);
-    @media (max-width: $max-margin-media) { width: 100%;}
+    @include respond-max { width: 100%;}
     max-height: calc(var(--alto_carta_clase)*0.72);
     display: flex;
     flex-direction: column;
@@ -181,7 +183,7 @@
 .carta_fixInnerImage {
     display: flex;
     flex-direction: row;
-    @media (max-width: $max-margin-media) {  flex-direction: column; }
+    @include respond-max {  flex-direction: column; }
 }
 
 .carta_fixInnerImage .carta-image {

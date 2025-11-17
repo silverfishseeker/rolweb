@@ -1,3 +1,5 @@
+@import "respondMax";
+
 .cuento-main {
   margin-left: 20vw;
   margin-right: 20vw;
@@ -8,7 +10,7 @@
 }
 
 .cuento-main_phone {
-  @media (max-width: $max-margin-media) {
+  @include respond-max {
     margin: 10px;
   }
 }
@@ -40,7 +42,7 @@
 .cuento-content_text_and_imgs {
   display: flex;
   gap: 40px;
-  @media (max-width: $max-margin-media) {
+  @include respond-max {
     flex-direction: column;
   }
 }
