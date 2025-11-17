@@ -4,7 +4,7 @@ export function onTurboLoad() {
   input.addEventListener("input", () => {
     const query = input.value.toLowerCase().trim();
 
-    document.querySelectorAll(".grid-container").forEach(grid => {
+    document.querySelectorAll(".carta-grid_container").forEach(grid => {
       grid.querySelectorAll(".carta").forEach(carta => {
         const texto = carta.innerText.toLowerCase();
         carta.style.display = texto.includes(query) ? "flex" : "none";

@@ -62,7 +62,7 @@
     </div>
     
     <% if @x.etiquets.any? %>
-      <div class="grid-container cuento-gallery">
+      <div class="carta-grid_container cuento-gallery">
         <% @x.etiquets.each do |etiquet| %>
           <% etiquet.pictures.each do |picture| %>
             <%= render "pictures/picture", x: picture %>
