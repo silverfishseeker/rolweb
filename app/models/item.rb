@@ -16,4 +16,12 @@ class Item < ApplicationRecord
     accepts_nested_attributes_for :ritual, allow_destroy: true
     def es_ritual; ritual.present? end # virtual attribute
     def es_ritual=(_value) end # we do nothing on set
+
+    def all_contextoloots
+        if @usecategloot
+            (contextoloots.to_a + categs.flat_map { |categ| categ.contextoloots.to_a }).uniq
+        else
+            contextoloots.to_a
+        end
+    end
 end

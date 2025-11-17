@@ -21,10 +21,7 @@
 <div>
 
 <% only_admin_content do %>
-    <%  contextoloots = @x.contextoloots.to_a 
-        if @x.usecategloot
-            contextoloots = (contextoloots + @x.categs.flat_map { |categ| categ.contextoloots.to_a }).uniq
-        end %>
+    <%  contextoloots = @x.all_contextoloots %>
     <% if contextoloots.any? %>
         <h3> Contextloots relacionados:</h3>
         <div class="miniListadoClases">
