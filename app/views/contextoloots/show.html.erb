@@ -13,7 +13,7 @@
     <% end %>
 </div>
 
-<div class="grid-container">
+<div class="carta-grid_container">
     <% @x.items.order(coste: :asc, nombre: :asc).each do |item| %>
         <%= render "items/item", item: item %>
     <% end %>

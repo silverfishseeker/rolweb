@@ -1,26 +1,61 @@
+<%= importJS "checkAllBoxes" %>
+
 <div class="lootbox-main">
   <h1>Cofre aleatorio</h1>
 
   <h1>Contenido cofre</h1>
-  
-  <div class="carta carta_clase lootbox-form">
-    <%= form_with url: "/lootboxing", method: :post do |f| %>
 
-      <%= f.collection_select :categ_ids, Categ.order(:nombre), :id, :nombre, {}, multiple: true, class:"lootbox-select" %>
-      
-      <h3>
-        <%= f.label :oromin, "Oro   mínimo:" %>
-        <%= f.number_field :oromin, value: 5, class:"lootbox-number" %>
-      </h3>
-      
-      <h3>
-        <%= f.label :copia, "Número copias:" %>
-        <%= f.text_field :copia, value: 4, class:"lootbox-number" %>
-      </h3>
+  <%= form_with url: "/lootboxing", method: :post do |f| %>
+    <div class="carta carta_clase lootbox-form">
+      <div class="lootbox-form-inner">
+        <div class="lootbox-form-column">
+
+          <h3> Categorías a incluir: </h3>
+          <div class="lootbox-select checks_container">
+            <div class="lootbox-option">
+              <input type="checkbox" class="check_all" id="check_all1">
+              <label for="check_all1">Seleccionar todo / Ninguno</label>
+            </div>
+            <% Categ.order(:nombre).each do |ct| %>
+              <div class="lootbox-option">
+                <input type="checkbox" name="categ_ids[]" value="<%= ct.id %>" class="toggleable" id="categ_<%= ct.id %>">
+                <label for="categ_<%= ct.id %>"><%= ct.nombre %></label>
+              </div>
+            <% end %>
+          </div>
+          
+          <h3>
+            <%= f.label :oromin, "Oro   mínimo:" %>
+            <%= f.number_field :oromin, value: 5, class:"lootbox-number" %>
+          </h3>
+          
+          <h3>
+            <%= f.label :copia, "Número copias:" %>
+            <%= f.text_field :copia, value: 4, class:"lootbox-number" %>
+          </h3>
+
+        </div>
+
+        <div class="lootbox-form-column">
+          <h3> Contexto donde se busca </h3>
+          <div class="lootbox-select checks_container">
+            <div class="lootbox-option">
+              <input type="checkbox" class="check_all" id="check_all2">
+              <label for="check_all2">Seleccionar todo / Ninguno</label>
+            </div>
+            <% Contextoloot.order(:nombre).each do |ct| %>
+              <div class="lootbox-option">
+                <input type="checkbox" name="contextoloot_ids[]" value="<%= ct.id %>" class="toggleable" id="contextoloot_<%= ct.id %>">
+                <label for="contextoloot_<%= ct.id %>"><%= ct.nombre %></label>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
       
       <%= f.submit "Abrir", class:"carta-title carta-title_clase"%>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 
   <div class="carta-subtitles lootbox-chest">
     <% if session[:lootbox] == nil %>
