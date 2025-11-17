@@ -26,12 +26,12 @@
           
           <h3>
             <%= f.label :oromin, "Oro   mínimo:" %>
-            <%= f.number_field :oromin, value: 5, class:"lootbox-number" %>
+            <%= f.number_field :oromin, value: session[:lootbox_oromin] || 5, class:"lootbox-number" %>
           </h3>
           
           <h3>
             <%= f.label :copia, "Número copias:" %>
-            <%= f.text_field :copia, value: 4, class:"lootbox-number" %>
+            <%= f.text_field :copia, value: session[:lootbox_copia] || 4, class:"lootbox-number" %>
           </h3>
 
         </div>
@@ -59,7 +59,7 @@
 
   <div class="carta-subtitles lootbox-chest">
     <% if session[:lootbox] == nil %>
-      <p> No se pudo generar el cofre </p>
+      <p> No hubo ninguna coincidencia </p>
     <% else %>
       <% for itId, num in session[:lootbox] do %>
           <div class="lootbox-item">

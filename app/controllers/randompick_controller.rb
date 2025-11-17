@@ -9,9 +9,7 @@ class RandompickController < ApplicationController
     baseCoef = baseCoef.to_f
 
     # la base no puede ser menor que 0
-    if baseCoef < MIN_COEF
-      baseCoef = MIN_COEF
-    end
+    baseCoef = MIN_COEF if baseCoef < MIN_COEF
     a = BASE*baseCoef
 
     # Desplazamiendo para que f(0) = 0 , f(1) = n donde las abscisas son rand()
@@ -23,12 +21,30 @@ class RandompickController < ApplicationController
   end
   
   def lootboxing
-    session[:params] = params
+    session[:lootbox_oromin] = params[:oromin]
+    session[:lootbox_copia] = params[:copia]
+
     oro = 0
     oromin = params[:oromin].to_i
     objetos = []
-    disponibles = Item.joins(:categs).where(categs: { id: params[:categ_ids] })
-        .select(:id, :coste).order(:coste).to_a
+    disponibles = Item.joins(:categs)
+            .where(categs: { id: params[:categ_ids] })
+            .where(
+              "EXISTS (
+                 SELECT 1
+                 FROM contextoloots_items cti
+                 WHERE cti.item_id = items.id
+                   AND cti.contextoloot_id IN (?)
+               )
+               OR
+               (items.usecategloot = true AND EXISTS (
+                 SELECT 1
+                 FROM categs_contextoloots cci
+                 WHERE cci.categ_id = categs_items.categ_id
+                   AND cci.contextoloot_id IN (?)
+               ))",
+               params[:contextoloot_ids], params[:contextoloot_ids]
+            ).distinct.order(:coste).to_a
 
     if disponibles.empty?
       session[:lootbox] = nil
@@ -37,8 +53,7 @@ class RandompickController < ApplicationController
       while oro < oromin && !disponibles.empty? do
         objetoRandom = disponibles.delete_at exponentialDistribution(disponibles.length)
         cantidad = exponentialDistribution(copia, objetoRandom.coste) + 1
-        # Rails.logger.info disponibles.length.to_s() +" "+ index.to_s() +" "+ cantidad.to_s() +" "+ objetoRandom.to_s
-        oro += objetoRandom.coste * cantidad
+        oro += (objetoRandom.coste || 0) * cantidad
         objetos << [objetoRandom.id, cantidad]
       end
       
