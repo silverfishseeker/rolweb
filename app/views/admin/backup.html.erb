@@ -15,34 +15,36 @@
     <%= button_tag "Resumir backup", type: "submit", name:"resume", value:"1", class: "btn btn-warning" if Backup.can_resume %>
   </p>
 
-  <div class="checkbox-danger">
-    <%= check_box_tag :check_all, "1", false, id: "check_all" %>
-    <%= label_tag :check_all, "Marcar / Desmarcar todos" %>
-  </div>
-  <br>
-  <div class="checkbox-danger">
-    <%= check_box_tag :tolerante, "1", false, class: "toggleable" %>
-    <%= label_tag :tolerante, "Permitir discrepancias en esquemas" %>
-  </div>
-  <br>
-  <div class="checkbox-danger">
-    <%= check_box_tag :no_rollback, "1", false, class: "toggleable" %>
-    <%= label_tag :no_rollback, "No Hacer Rollback" %>
-  </div>
-  <br>
-  <div class="checkbox-danger">
-    <%= check_box_tag :allow_missing_imgs, "1", false, class: "toggleable" %>
-    <%= label_tag :allow_missing_imgs, "Permitir imágenes faltantes por error" %>
-  </div>
-  <br>
-  <div class="checkbox-danger">
-    <%= check_box_tag :skip_gifs, "1", false, class: "toggleable" %>
-    <%= label_tag :skip_gifs, "Saltarse los gifs" %>
-  </div>
-  <br>
-  <div class="checkbox-danger">
-    <%= check_box_tag :use_max_file_size, "1", false, id: "use_max_file_size", class: "toggleable" %>
-    <%= number_field_tag :max_file_size_mb, ImageUploaderConfig.backup_upload_max_file_size_mb, min: 1, class: "input-danger" %>
-    <%= label_tag :use_max_file_size, "Activar límite de tamaño de archivo (MB)" %>
+  <div class="checks_container">
+    <div class="checkbox-danger">
+      <%= check_box_tag :check_all, "1", false, class: "check_all" %>
+      <%= label_tag :check_all, "Marcar / Desmarcar todos" %>
+    </div>
+    <br>
+    <div class="checkbox-danger">
+      <%= check_box_tag :tolerante, "1", false, class: "toggleable" %>
+      <%= label_tag :tolerante, "Permitir discrepancias en esquemas" %>
+    </div>
+    <br>
+    <div class="checkbox-danger">
+      <%= check_box_tag :no_rollback, "1", false, class: "toggleable" %>
+      <%= label_tag :no_rollback, "No Hacer Rollback" %>
+    </div>
+    <br>
+    <div class="checkbox-danger">
+      <%= check_box_tag :allow_missing_imgs, "1", false, class: "toggleable" %>
+      <%= label_tag :allow_missing_imgs, "Permitir imágenes faltantes por error" %>
+    </div>
+    <br>
+    <div class="checkbox-danger">
+      <%= check_box_tag :skip_gifs, "1", false, class: "toggleable" %>
+      <%= label_tag :skip_gifs, "Saltarse los gifs" %>
+    </div>
+    <br>
+    <div class="checkbox-danger">
+      <%= check_box_tag :use_max_file_size, "1", false, id: "use_max_file_size", class: "toggleable" %>
+      <%= number_field_tag :max_file_size_mb, ImageUploaderConfig.backup_upload_max_file_size_mb, min: 1, class: "input-danger" %>
+      <%= label_tag :use_max_file_size, "Activar límite de tamaño de archivo (MB)" %>
+    </div>
   </div>
 <% end %>
