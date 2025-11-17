@@ -1,0 +1,207 @@
+:root {
+    --ancho_carta:400px;
+    --ancho_carta_clase:540px;
+    --alto_carta_clase:340px;
+    
+    @media (max-width: $max-margin-media) {
+        --ancho_carta: 90vw;
+        --ancho_carta_clase: 90vw;
+        --alto_carta_clase: auto;
+    }
+}
+
+.carta-grid_container {
+    margin: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--ancho_carta), 1fr)); /*400 es el tamaño del item de dentro*/
+    grid-gap: 10px;
+}
+
+.carta-grid_container_clase {
+    grid-template-columns: repeat(auto-fit, minmax(var(--ancho_carta_clase), 1fr));
+}
+
+
+.carta {
+    width: var(--ancho_carta);
+    height: 500px;
+    background-color: var(--c_contraste);
+    display: flex; // Si se modifica esto, hay que modificarlo también en liveSearch.js
+    flex-direction: column;
+    border-radius: 10px;
+}
+
+.carta_clase{
+    border: 4px solid var(--c_base);
+
+    width: var(--ancho_carta_clase);
+    height: var(--alto_carta_clase);
+
+    display: flex;
+    flex-direction: row;
+    @media (max-width: $max-margin-media) {  flex-direction: column; }
+}
+
+.carta_extendida {
+    width:auto;
+    height:auto;
+}
+
+.carta-header {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    font-size: 20px;
+    min-height: 8%;
+}
+.carta-number {
+    padding: 5px;
+    margin: 10px;
+    color: var(--c_base);
+    margin-right: 0;
+
+}
+.carta-level {
+    background-color: var(--c_alternativo);
+    border: 4px solid var(--c_base);
+    border-radius: 10px;
+}
+.carta-number_lootbox {
+    color: var(--c_white);
+    font-weight: bolder;
+    font-size: larger;
+    display: inline-block;
+    margin: 5px;
+}
+
+.carta-isactive {
+    margin-left: 10px;
+    height: 35px;
+}
+
+.carta-coste {
+    background-image: url('coin.png');
+    background-size:cover;
+    background-position: center;
+}
+
+.carta-peso {
+    padding-bottom: 0px;
+    padding-top: 10px;
+    background-image: url('Weight_icon.png');
+    background-size:cover;
+    background-position: center;
+    color: var(--c_white);
+}
+
+.carta-title {
+    font-family: 'Seagram', serif;
+    background-color: var(--c_base);
+    color: var(--c_white);
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: 5px;
+    align-self: center;
+    border-radius: 5px;
+}
+.carta-title:hover {
+    background-color: var(--c_base_alt);
+}
+
+.carta-title_clase {
+    font-size: larger;
+}
+
+.carta-subtitles {
+    background-color: var(--c_detalle);
+    margin: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    color: var(--c_white);
+}
+
+.carta-subtitles a {
+    margin: 5px;
+    padding: 5px;
+    display: inline-block;
+    border-radius: 5px;
+    border: 1px solid var(--c_white);
+}
+.carta-subtitles a:hover {
+    background-color: var(--c_detalle_alt);
+}
+
+.carta-subtitles a.clase:hover {
+    background-color: var(--c_alternativo);
+}
+
+.carta-details {
+    flex:auto;
+    width: calc(var(--ancho_carta_clase)*0.6);
+    @media (max-width: $max-margin-media) { width: 100%;}
+    max-height: calc(var(--alto_carta_clase)*0.72);
+    display: flex;
+    flex-direction: column;
+}
+
+.carta-description {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 20px;
+    margin-top: 5px;
+    color: var(--c_base);
+}
+
+.carta-description_clase {
+    min-height: calc(var(--alto_carta_clase)*0.2);
+    flex:auto;
+}
+
+.carta-image {
+    max-width: calc(var(--ancho_carta)*0.75);
+    max-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.carta-image_clase {
+    max-width: calc(var(--ancho_carta_clase)*0.4);
+    max-height: var(--alto_carta_clase);
+    padding: 10px;
+}
+
+.carta-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.carta_fixInnerImage {
+    display: flex;
+    flex-direction: row;
+    @media (max-width: $max-margin-media) {  flex-direction: column; }
+}
+
+.carta_fixInnerImage .carta-image {
+    max-width: fit-content;
+    min-width: 300px;
+    height: fit-content;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+}
+
+.carta_fixInnerImage .carta-image img {
+    width: 300px;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 10px;
+}
+
+.carta-subtitles a.clase {
+    background-color: var(--c_alternativo);
+    color: var();
+    border-color: var(--c_base);
+}

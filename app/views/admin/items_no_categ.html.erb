@@ -1,5 +1,5 @@
 <h2> Ítems sin categoría </h2>
-<div class="grid-container">
+<div class="carta-grid_container">
     <% Item.all.includes(:categs).where(categs: { id: nil }).sort_by(&:nombre).each do |item| %>
         <%= render "items/item", item: item %>
     <% end %>

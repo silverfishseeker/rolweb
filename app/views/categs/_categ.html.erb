@@ -1,7 +1,7 @@
 <div class="categ"> <%# categ no tiene estilos definidos, es para el liveSearch.js%>
     <h2><%=link_to x.nombre, x%></h2>
 
-    <div class="grid-container">
+    <div class="carta-grid_container">
         <% x.items.order(coste: :asc, nombre: :asc).each do |item| %>
             <%= render "items/item", item: item %>
         <% end %>

@@ -1,0 +1,100 @@
+.body-blackBackground {
+    background-color: var(--c_black);
+    color: var(--c_white)
+}
+
+.clase-picture {
+    margin: 0px;
+    margin-bottom: 40px;
+    width: 400px;
+    max-width:100%;
+    height: 400px;
+    text-align: center;
+}
+.clase-picture img {
+    max-width:100%;
+    max-height:100%;
+}
+  
+.clase-picture-desc{
+    text-align: center;
+    background-color: var(--c_detalle);
+    color: var(--c_white);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.picture-show img {
+    max-height: 400px;
+}
+
+.etiqueta {
+    border: 2px solid;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    display: inline-block;
+}
+
+.etiqueta-filtro{
+    background-color: var(--c_contraste);
+    padding: 5px;
+    margin: 5px;
+    border: 2px solid var(--c_white);
+    border-radius: 5px;
+}
+
+.etiqueta-filtro_titulo {
+    color: var(--c_base);
+    margin: 7px;
+}
+
+
+.etiqueta-item {
+    display: inline-block;
+    margin: 2px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.etiqueta-item:hover {
+    transform: translateY(-3px);
+}
+
+.etiqueta-item .etiqueta {
+    // margin: 0;
+    transition: all 0.1s ease-in-out;
+    box-shadow: 
+        inset -2px -2px 4px rgba(0, 0, 0, 0.8),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.9)
+}
+
+.etiqueta-item.active {
+    background-color: var(--c_alternativo);
+}
+
+.etiqueta-item.active .etiqueta {
+    transform: translateY(1px);
+    box-shadow: 
+        inset 4px 4px 10px rgba(0, 0, 0, 0.9),
+        inset -1px -1px 6px rgba(0, 0, 0, 0.9);
+}
+
+.etiqueta-item input {
+    display: none; /* Oculta el checkbox */
+}
+
+.etiqueta-boton {
+    /* font-family: 'EB Garamond', serif; */
+    color: var(--c_black);
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: var(--c_alternativo);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.etiqueta-boton:hover {
+    background-color: var(--c_alternativo_alt);
+}

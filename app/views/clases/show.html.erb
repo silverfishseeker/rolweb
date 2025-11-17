@@ -54,7 +54,7 @@
     
     <% if !@x.items.empty?%>
         <h1>Items:</h1>
-        <div class="grid-container">
+        <div class="carta-grid_container">
             <% @x.items.order(:nombre).each do |it| %>
                 <%= render "items/item", item: it %>
             <% end %>

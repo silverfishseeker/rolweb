@@ -1,0 +1,45 @@
+body {
+    font-family: 'EB Garamond', serif;  
+    color: var(--c_black);
+    background-color: var(--c_white);
+    margin: 0;
+    
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Seagram', serif;
+    margin: 10px;
+    margin-top: 20px;
+}
+
+h5 {
+    font-family: 'Seagram', serif;
+    margin: 10px;
+    color: var(--c_base);
+}
+
+p {
+    margin: 10px;
+}
+
+form {
+    margin: 20px;
+}
+
+textarea {
+    height: 200px;
+    width: 500px;
+}
+
+a {  
+    text-decoration: none;
+    color: inherit;
+}
+
+input {
+    font-family: inherit;
+    font-size: inherit;
+}
