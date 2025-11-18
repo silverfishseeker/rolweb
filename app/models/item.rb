@@ -18,7 +18,7 @@ class Item < ApplicationRecord
     def es_ritual=(_value) end # we do nothing on set
 
     def all_contextoloots
-        if @usecategloot
+        if usecategloot
             (contextoloots.to_a + categs.flat_map { |categ| categ.contextoloots.to_a }).uniq
         else
             contextoloots.to_a

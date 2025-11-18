@@ -1,20 +1,24 @@
+<h3> <%= link_to "volver", contextoloots_path %> </h3>
+
 <h1><%= @x.nombre %></h1>
 
 <br>
-<%= link_to "Edit", edit_contextoloot_path(@x), class: "btn btn-primary" %>
-<%= link_to "Destroy", contextoloot_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
-<br>
-<br>
-<br>
+<div class="estadoalterado-edit">
+    <%= link_to "Edit", edit_contextoloot_path(@x), class: "btn btn-primary" %>
+    <%= link_to "Destroy", contextoloot_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
+    <br>
+    <br>
+    <br>
 
-<div class="miniListadoClases">
-    <% @x.categs.each do |ct| %>
-        <%= link_to ct.nombre, ct, class: "carta-title" %>
-    <% end %>
-</div>
+    <div class="miniListadoClases">
+        <% @x.categs.each do |ct| %>
+            <%= link_to ct.nombre, ct, class: "carta-title" %>
+        <% end %>
+    </div>
 
-<div class="carta-grid_container">
-    <% @x.items.order(coste: :asc, nombre: :asc).each do |item| %>
-        <%= render "items/item", item: item %>
-    <% end %>
+    <div class="carta-grid_container">
+        <% @x.items.order(coste: :asc, nombre: :asc).each do |item| %>
+            <%= render "items/item", item: item %>
+        <% end %>
+    </div>
 </div>
