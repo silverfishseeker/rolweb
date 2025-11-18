@@ -32,6 +32,11 @@ class AdminController < ApplicationController
         cache_clear
         redirect_to "/control", notice: "Caché de memoria eliminada"
     end
+
+    def delete_session_data
+        session.clear
+        redirect_to "/control", notice: "Datos de sesión eliminados"
+    end
     
     def backup
     end

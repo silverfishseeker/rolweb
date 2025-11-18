@@ -11,9 +11,11 @@ class ItemsController < ModelController
       :remove_image, 
       :image, 
       :es_ritual,
+      :usecategloot,
       categ_ids: [], 
       clase_ids: [], 
       habilidad_ids: [],
+      contextoloot_ids: [],
       ritual_attributes: [
         :id, 
         :_destroy,

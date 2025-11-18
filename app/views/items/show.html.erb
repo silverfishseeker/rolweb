@@ -20,6 +20,23 @@
     </div>
 <div>
 
+<% only_admin_content do %>
+    <%  contextoloots = @x.all_contextoloots %>
+    <% if contextoloots.any? %>
+        <h3> Contextloots relacionados:</h3>
+        <div class="miniListadoClases">
+            <% contextoloots.each do |cl| %>
+                <%= link_to cl.nombre, cl, class: "carta-title" %>
+            <% end %>
+        </div>
+    <% end %>
+    <% if @x.usecategloot %>
+        <h4> Se usan contextloots de categorías. </h4>
+    <% else %>
+        <h4> No se usan contextloots de categorías. </h4>
+    <% end %>
+<% end %>
+
 <br>
 
 <% if @x.habilidads.any? %>

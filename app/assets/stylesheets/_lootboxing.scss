@@ -4,19 +4,53 @@
     margin: 10px;
 }
 
-.lootbox-select {
-    overflow: hidden;
-    width: 200px;
-    height: 270px;
-}
-
-.lootbox-number {
-    width: 40px;
+.lootbox-main h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 0;
 }
 
 .lootbox-form {
     width: auto;
     height: auto;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.lootbox-form-inner {
+    display: flex;
+}
+
+.lootbox-form-column {
+    flex: 1;
+}
+
+.lootbox-select {
+    overflow: hidden;
+    width: 200px;
+}
+
+.lootbox-option {
+    background-color: var(--c_white);
+    border-radius: 5px;
+    margin: 1px;
+    display: flex;
+    cursor: pointer; 
+}
+
+.lootbox-option label {
+    flex: 1;
+    user-select: none;
+}
+
+.lootbox-option input {
+    accent-color: var(--c_contraste);
+    transform: scale(1.2);
+}
+
+.lootbox-number {
+    width: 40px;
+    border-radius: 10px;
 }
 
 .lootbox-chest {

@@ -1,8 +1,10 @@
+@import "respondMax";
+
 .texto_info-margins {
     margin-left: 20vw;
     margin-right: 20vw;
     
-    @media (max-width: $max-margin-media) {
+    @include respond-max {
         margin-left: 10px;
         margin-right: 10px;
     }
@@ -73,7 +75,7 @@
   display: block;
 }
 
-@media (max-width: $max-margin-media) {
+@include respond-max {
   .reglas-indice {
     position: static;
     max-width: none;
@@ -96,13 +98,13 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 0px;
     border: 2px solid var(--c_base);
-    @media (max-width: $max-margin-media) {
+    @include respond-max {
         grid-template-columns: 1fr 1fr;
     }
 }
 
 .mods-table .hide {
-    @media (max-width: $max-margin-media) {
+    @include respond-max {
         display: none;
     }
 }

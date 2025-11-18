@@ -1,3 +1,5 @@
+@import "respondMax";
+
 .clase-main {
     margin: 10px;
 }
@@ -7,7 +9,7 @@
     flex-direction: row;
 }
 
-@media (max-width: $max-margin-media) {
+@include respond-max {
     .clase-contents {
         display: flex;
         flex-direction: column;
@@ -18,7 +20,7 @@
 .clase-details {
     width: 60%;
     margin-right: 10px;
-    @media (max-width: $max-margin-media) {
+    @include respond-max {
             width: 100%;
         }
 }
@@ -58,7 +60,7 @@
     text-align: center;
 }
 
-@media (max-width: $max-margin-media) {
+@include respond-max {
     .clase-image {
         width: 100%;
         margin-bottom: 15px;
