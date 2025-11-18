@@ -23,6 +23,8 @@ class RandompickController < ApplicationController
   def lootboxing
     session[:lootbox_oromin] = params[:oromin]
     session[:lootbox_copia] = params[:copia]
+    session[:lootbox_categ_ids] = params[:categ_ids]
+    session[:lootbox_contextoloot_ids] = params[:contextoloot_ids]
 
     oro = 0
     oromin = params[:oromin].to_i

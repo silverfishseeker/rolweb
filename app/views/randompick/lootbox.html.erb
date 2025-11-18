@@ -18,7 +18,8 @@
             </div>
             <% Categ.order(:nombre).each do |ct| %>
               <div class="lootbox-option">
-                <input type="checkbox" name="categ_ids[]" value="<%= ct.id %>" class="toggleable" id="categ_<%= ct.id %>">
+                <input type="checkbox" name="categ_ids[]" value="<%= ct.id %>" class="toggleable" id="categ_<%= ct.id %>"
+                    <%="checked" if session[:lootbox_categ_ids]&.include? ct.id.to_s %>>
                 <label for="categ_<%= ct.id %>"><%= ct.nombre %></label>
               </div>
             <% end %>
@@ -45,7 +46,8 @@
             </div>
             <% Contextoloot.order(:nombre).each do |ct| %>
               <div class="lootbox-option">
-                <input type="checkbox" name="contextoloot_ids[]" value="<%= ct.id %>" class="toggleable" id="contextoloot_<%= ct.id %>">
+                <input type="checkbox" name="contextoloot_ids[]" value="<%= ct.id %>" class="toggleable" id="contextoloot_<%= ct.id %>"
+                    <%="checked" if session[:lootbox_contextoloot_ids]&.include? ct.id.to_s %>>
                 <label for="contextoloot_<%= ct.id %>"><%= ct.nombre %></label>
               </div>
             <% end %>
