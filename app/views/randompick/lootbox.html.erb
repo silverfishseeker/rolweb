@@ -8,8 +8,8 @@
   <%= form_with url: "/lootboxing", method: :post do |f| %>
     <div class="carta carta_clase lootbox-form">
       <div class="lootbox-form-inner">
-        <div class="lootbox-form-column">
 
+        <div class="lootbox-form-column">
           <h3> Categorías a incluir: </h3>
           <div class="lootbox-select checks_container">
             <div class="lootbox-option">
@@ -24,17 +24,6 @@
               </div>
             <% end %>
           </div>
-          
-          <h3>
-            <%= f.label :oromin, "Oro   mínimo:" %>
-            <%= f.number_field :oromin, value: session[:lootbox_oromin] || 5, class:"lootbox-number" %>
-          </h3>
-          
-          <h3>
-            <%= f.label :copia, "Número copias:" %>
-            <%= f.text_field :copia, value: session[:lootbox_copia] || 4, class:"lootbox-number" %>
-          </h3>
-
         </div>
 
         <div class="lootbox-form-column">
@@ -52,7 +41,16 @@
               </div>
             <% end %>
           </div>
+          <h3 style="padding-left: 10px">
+            <%= f.label :oromin, "Oro   mínimo:" %>
+            <%= f.number_field :oromin, value: session[:lootbox_oromin] || 5, class:"lootbox-number" %>
+          </h3>
+          <h3 style="padding-left: 10px">
+            <%= f.label :copia, "Número copias:" %>
+            <%= f.text_field :copia, value: session[:lootbox_copia] || 4, class:"lootbox-number" %>
+          </h3>
         </div>
+
       </div>
       
       <%= f.submit "Abrir", class:"carta-title carta-title_clase"%>
