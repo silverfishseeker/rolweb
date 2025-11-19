@@ -2,13 +2,18 @@
     display: flex;
 }
 
-.admin-cuerpo .column {
-    flex: 1;
+.admin-cuerpo .admin-column {
+    flex: 2;
     padding: 10px;
     border-right: 1px solid #ddd;
 }
 
-.admin-cuerpo .column:last-child {
+.admin-cuerpo .admin-column-small {
+    flex: 1;
+    font-size: small;
+}
+
+.admin-cuerpo .admin-column:last-child {
     border-right: none;
 }
 

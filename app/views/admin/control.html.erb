@@ -1,7 +1,7 @@
 <h2>Estas funciones son solo de administrador</h2>
 
 <div class="admin-cuerpo">
-    <p class="column">
+    <p class="admin-column">
         <%= link_to "Estados alterados", estadoalterados_path %>
         <br>
         <%= link_to "Etiquetas", etiquets_path%>
@@ -54,11 +54,6 @@
             No se puedo establecer la conexión con el servidor para comprobar la ip actual. <br>
         <% end %>
         <br>
-        <b> Configuación de SilverImageUploader: </b> <br>  
-        uploader: <%= ImageUploaderConfig.uploader.class%> <br>
-        cache_type: <%= ImageUploaderConfig.cache_type%> <br>
-        memory_size: <%= ImageUploaderConfig.memory_size%> <br>
-        backup_upload_max_file_size_mb: <%= ImageUploaderConfig.backup_upload_max_file_size_mb%> <br>
     </p>
 
     <% clases = Clase
@@ -67,14 +62,27 @@
         .select('clases.*, COUNT(habilidads.id) AS habilidads_count')
         .order('habilidads_count ASC') %>
 
-    <div class="column">
+    <div class="admin-column">
         <% clases.each_with_index do |clase, index| %>
                 <%= clase.habilidads_count %> <%= link_to clase.nombre, clase%> <br>
             <% if index == clases.size / 2-1 %>
                 </div>
-                <div class="column">
+                <div class="admin-column">
             <% end %>
         <% end %>
     </div>
 
+    <div class="admin-column admin-column-small">
+        <p>
+            <b> Configuación de SilverImageUploader: </b> <br>  
+            uploader: <%= ImageUploaderConfig.uploader.class%> <br>
+            cache_type: <%= ImageUploaderConfig.cache_type%> <br>
+            memory_size: <%= ImageUploaderConfig.memory_size%> <br>
+            backup_upload_max_file_size_mb: <%= ImageUploaderConfig.backup_upload_max_file_size_mb%> <br>
+            <br>
+            <b>Variables de entorno:</b> <br>
+            <% EnvVars.all.each do |key, value| %>
+                <%= key %>: <%= value %> <br>
+            <% end %>
+        </p>
 </div>
