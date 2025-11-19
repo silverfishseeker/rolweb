@@ -1,2 +1,0 @@
-module Ritual::RitualsHelper
-end

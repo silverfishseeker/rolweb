@@ -1,2 +1,0 @@
-module Ritual::RitualNivelsHelper
-end
