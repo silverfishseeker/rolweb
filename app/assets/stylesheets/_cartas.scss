@@ -15,7 +15,7 @@
 .carta-grid_container {
     margin: 10px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(var(--ancho_carta), 1fr)); /*400 es el tamaño del item de dentro*/
+    grid-template-columns: repeat(auto-fit, minmax(var(--ancho_carta), 1fr));
     grid-gap: 10px;
 }
 

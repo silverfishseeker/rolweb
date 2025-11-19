@@ -67,8 +67,19 @@
 }
 
 .cuento-gallery {
-  background-color: var(--c_black);
+  margin: 10px;
   margin-top: 40px;
-  border-radius: 20px;
   padding: 20px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--ancho_carta), 1fr));
+  grid-gap: 10px;
+
+  background-color: var(--c_black);
+  border-radius: 20px;
+
+  @include respond-max {
+    border-radius: 0;
+    margin: 0;
+  }
 }
