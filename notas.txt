@@ -2,6 +2,7 @@ docker exec -it rolweb-web-1 bash
 
 Importante sobre la versión de ruby. Es deseable que la versión de ruby siempre coincida en:
     - archivo .ruby-version
+    - archivo Gemfile
     - archivo Dockerfile
     - entorno de desarrollo
 
