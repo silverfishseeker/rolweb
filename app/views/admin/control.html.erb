@@ -80,8 +80,13 @@
             memory_size: <%= ImageUploaderConfig.memory_size%> <br>
             backup_upload_max_file_size_mb: <%= ImageUploaderConfig.backup_upload_max_file_size_mb%> <br>
             <br>
-            <b>Variables de entorno:</b> <br>
+            <b>Valores de variables de entorno usados:</b> <br>
             <% EnvVars.all.each do |key, value| %>
+                <%= key %>: <%= value %> <br>
+            <% end %>
+            <br>
+            <b>Variables de entorno configuradas:</b> <br>
+            <% EnvVars.all_raw.each do |key, value| %>
                 <%= key %>: <%= value %> <br>
             <% end %>
         </p>

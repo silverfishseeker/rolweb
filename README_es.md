@@ -19,7 +19,12 @@ Existe un sistema de admin dentro de la página web para modificar los datos. De
 Puedes ejecutar esta aplicación en modo de producción simplemente usando `docker-compose.production.yml` en vez de `docker-compose.yml`. Puedes usar el comando `docker compose -f docker-compose.production.yml up` para ello. Recuerda añadir `--build` si cambies de un modo a otro para reconstruir la imagen del servidor web correspondientemente.
 
 ## Modo Producción de Verdad  
-No tengo ni idea de por qué alguien querría poner esto en producción. Pero no se necesitan pasos especiales para ello. Tan sólo asegúrate de seguir los pasos del proveedor de hosting que estés utilizando y no olvides configurar la conexión a la base de datos en `config/database.yml` y la configuración de Minio en las credenciales de Rails.
+Para ejecutar esta aplicación correctamente en tu entorno personalizado, es necesario configurarla adecuadamente a través de variables de entorno. Debes revisar **VARS** y **PRODUCTION_REQUIRED_VARS** en *app/lib/env_vars*.
+
+
+
+
+
 
 
 

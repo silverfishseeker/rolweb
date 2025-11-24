@@ -92,3 +92,5 @@ gem "minitar"
 
 # manejo de imágenes
 gem "mini_magick"
+
+gem "devise", "~> 4.9"
