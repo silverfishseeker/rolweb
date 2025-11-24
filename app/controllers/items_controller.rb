@@ -2,6 +2,11 @@ class ItemsController < ModelController
 
   def tipo; Item end
 
+  def new
+    super
+    @x.usecategloot = true if @x.usecategloot.nil?
+  end
+
   def model_params
     params.require(:item).permit(
       :nombre, 
