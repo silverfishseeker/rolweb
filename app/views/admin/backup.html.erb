@@ -1,10 +1,18 @@
-<%= importJS "checkAllBoxes" %>
+<%= importJS("checkAllBoxes", "backupDownloadNotice") %>
 
 <h1>Backup y Restauración del Sistema</h1>
 <p style="margin: 30px;">
-  <%= link_to "Descargar backup", create_backup_path, class: "btn btn-primary", download: true %>
+  <%= link_to "Descargar backup", create_backup_path, class: "btn btn-primary", download: true, id: "download-backup-btn" %>
 </p>
+<div class="flash-wrapper">
+  <div class="flash-notice" id="download-status" style="display:none;">
+    <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
+    La descarga ha comenzado.
+  </div>
+</div>
+
 <hr>
+
 <%= form_with url: restore_backup_path, method: :post, multipart: true do %>
   <p>
     <label for="backup_file">Archivo de backup:</label>

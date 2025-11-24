@@ -6,9 +6,11 @@ module ApplicationHelper
       cuento.present? ? cuento_path(cuento) : "#"
     end
   end
-  
-  def importJS (module_name)
-    concat(content_tag(:div, "", data: { js: module_name }))
+
+  def importJS (*module_names)
+    module_names.map do |module_name|
+      concat(content_tag(:div, "", data: { js: module_name }))
+    end.join("\n").html_safe
   end
 
   def only_admin_content
