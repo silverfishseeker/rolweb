@@ -111,6 +111,14 @@
 
 
     <div class="main-content">
+      <% if user_signed_in? %>
+        <p>Hola, <%= current_user.email %></p>
+        <%= link_to 'Editar cuenta', edit_user_registration_path %> |
+        <%= link_to 'Cerrar sesión', destroy_user_session_path %>
+      <% else %>
+        <%= link_to 'Registrarse', new_user_registration_path %> |
+        <%= link_to 'Iniciar sesión', new_user_session_path %>
+      <% end %>
       <%= yield %>
     </div>
 
