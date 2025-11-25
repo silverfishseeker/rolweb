@@ -2,7 +2,6 @@ module EnvVars
 
   VARS = {
     # "key" => [type, default_value]
-    "DATABASE_URL" =>                   [:str,  nil],
     "APP_HOST" =>                       [:str,  "localhost"],
     "IMAGE_STORAGE_BACKEND" =>          [:str,  "minio"], # Options: database, minio, carrierwave
     "CACHE_IS_DISK" =>                  [:bool, true],
@@ -18,7 +17,7 @@ module EnvVars
 
   # You MUST set these variables in production
   PRODUCTION_REQUIRED_VARS = [
-    "DATABASE_URL",
+    "DATABASE_URL", # Esta variables se usa en database.yml. No podemos gestionarla aquí pero podemos comprobarla aunque sea posteriomente a su uso.
     "APP_HOST",
     "MINIO_ENDPOINT",
     "MINIO_ACCESS_KEY_ID",
