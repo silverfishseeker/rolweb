@@ -2,7 +2,7 @@
 
 <h2>Mobs</h2>
 
-<div class="grid-container">
+<div class="carta-grid_container">
     <% @xs.sort_by(&:nombre).each do |i| %>
         <%= render "mob", mob: i %>
     <% end %>

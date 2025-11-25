@@ -5,35 +5,32 @@ class DndspellsController < ApplicationController
 
   around_action :wrap_with_socket_error
 
-  def initialize
-    super
-    @as = MydndapiService.new
-  end
+  @@as = MydndapiService.new
 
   def index
-    @xs = @as.get('spells').map do |spell| 
-      @as.get("spells/#{spell["id"]}") 
+    @xs = @@as.get('spells').map do |spell| 
+      @@as.get("spells/#{spell["id"]}") 
     end
   end
 
   def reset
-    @as.get('reset', timeout: 600)
+    @@as.get('reset', timeout: 600)
     flash[:notice] = "Spells reset successfully."
     redirect_to action: :index
   end
 
   def show
-    @x = @as.get("spells/#{params[:id]}")
+    @x = @@as.get("spells/#{params[:id]}")
   end
 
   def edit
     show
-    @clases = @as.get("clases") 
-    @magicschools = @as.get("magicschools") 
+    @clases = @@as.get("clases") 
+    @magicschools = @@as.get("magicschools") 
   end
 
   def update
-    @x = @as.put("spells/#{params[:id]}", params)
+    @x = @@as.put("spells/#{params[:id]}", params)
     if @x
       redirect_to @x
     else
@@ -43,7 +40,7 @@ class DndspellsController < ApplicationController
   end
 
   def destroy
-    @x = @as.delete("spells/#{params[:id]}")
+    @x = @@as.delete("spells/#{params[:id]}")
     flash[:notice] = "Spell deleted successfully"
     redirect_to action: :index
   end

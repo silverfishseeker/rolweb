@@ -9,6 +9,9 @@
     <%= form.collection_select :item_ids, Item.order(:nombre), :id, :nombre, {}, multiple: true, class: "form-select" %>
   </div>
   <br>
+  
+  <%= render "shared/fcs", p:"contextoloot", form: form %>
+  <br>
 
   <div>
     <%= form.submit %>

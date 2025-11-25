@@ -1,4 +1,4 @@
-FROM ruby:3.2.8-bookworm
+FROM ruby:3.4.7-bookworm
 WORKDIR /app
 
 ARG RAILS_ENV
@@ -22,6 +22,7 @@ RUN if [ "$RAILS_ENV" = "production" ]; then \
 
 EXPOSE 3000
 
-# Puto tmp (hay que borrarlo para evitar errores, ni idea de porqué)
+# Hay que borrar tmp para evitar errores, ni idea de porqué
 # iniciar rails
-CMD rm -rf /app/tmp/* && bin/rails server -b 0.0.0.0 -e ${RAILS_ENV}
+CMD ["sh", "-c", "rm -rf /app/tmp/* && bin/rails server -b 0.0.0.0 -e ${RAILS_ENV}"]
+

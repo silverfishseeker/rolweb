@@ -1,0 +1,12 @@
+<h1> Categorías </h1>
+
+<div class="estadoalterado-edit">
+  <%= link_to "New Categ", new_categ_path, class: "btn btn-primary" %>
+  <br>
+  <% @xs.each do |x| %>
+      <%= link_to x.nombre, x %>
+      <%= link_to "Edit", edit_categ_path(x), class: "btn btn-primary" %>
+      <%= link_to "Destroy", categ_path(x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
+      <br>
+  <% end %>
+</div>

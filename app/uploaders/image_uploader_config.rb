@@ -4,7 +4,7 @@ module ImageUploaderConfig
   @is_configured = false
 
   def self.configure
-    @uploader = case ENV["IMAGE_STORAGE_BACKEND"] || "minio"
+    @uploader = case EnvVars["IMAGE_STORAGE_BACKEND"] || "minio"
     when "database"
       DatabaseImageUploader.new
     when "minio"
@@ -15,8 +15,8 @@ module ImageUploaderConfig
       raise "Unsupported storage backend"
     end
     
-    cacheIsDisk   = (ENV["CACHE_IS_DISK"]   || "true") == "true"
-    cacheIsMemory = (ENV["CACHE_IS_MEMORY"] || "true") == "true"
+    cacheIsDisk   = (EnvVars["CACHE_IS_DISK"]   || "true") == "true"
+    cacheIsMemory = (EnvVars["CACHE_IS_MEMORY"] || "true") == "true"
     @cache_type = case [cacheIsDisk, cacheIsMemory]
     when [true, true]
       HybridCache
@@ -28,13 +28,13 @@ module ImageUploaderConfig
       NoneCache
     end
 
-    @memory_size = ENV["IMAGE_CACHE_MEMORY_SIZE_MB"]&.to_i || 50
+    @memory_size = EnvVars["IMAGE_CACHE_MEMORY_SIZE_MB"]&.to_i || 50
     if @memory_size <= 0
       Rails.logger.warn "ImageUploaderConfig: Invalid IMAGE_CACHE_MEMORY_SIZE_MB value #{memory_size}, using default 50 MB"
       @memory_size = 50
     end
 
-    @backup_upload_max_file_size_mb = ENV["BACKUP_UPLOAD_MAX_FILE_SIZE_MB"]&.to_i || 10
+    @backup_upload_max_file_size_mb = EnvVars["BACKUP_UPLOAD_MAX_FILE_SIZE_MB"]&.to_i || 10
     if @backup_upload_max_file_size_mb <= 0
       Rails.logger.warn "ImageUploaderConfig: Invalid BACKUP_UPLOAD_MAX_FILE_SIZE_MB value #{@backup_upload_max_file_size_mb}, using default 10 MB"
       @backup_upload_max_file_size_mb = 10

@@ -1,0 +1,139 @@
+@import "respondMax";
+
+.texto_info-margins {
+    margin-left: 20vw;
+    margin-right: 20vw;
+    
+    @include respond-max {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+}
+.texto_info a {
+    color: var(--c_link);
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+.texto_info a:hover {
+    color: var(--c_link_alt);
+}
+.texto_info a:focus {
+    outline: 2px solid var(--c_detalle);
+}
+  
+.texto_info h2,
+.texto_info h3,
+.texto_info h4 {
+  scroll-margin-top: var(--margin-top);
+}
+
+.reglas-indice {
+  z-index: 1;
+  position: fixed;
+  top: var(--margin-top);
+  left: 3vw;
+  max-width: 17vw;
+  // overflow-x:auto;
+}
+
+.reglas-indice h2 {
+  margin-left: 0;
+}
+
+.reglas-indice ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.reglas-indice li {
+  position: relative;
+  padding-right: 5px;
+}
+
+.reglas-indice a {
+  text-decoration: none;
+  opacity: 0.65;
+  transition: opacity 0.2s, text-decoration 0.2s;
+}
+
+.reglas-indice a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.reglas-indice li ul {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top:0;
+  padding: 3px;
+  background-color: var(--c_white);
+  border: 1px solid var(--c_base);
+}
+
+.reglas-indice li:hover > ul, .reglas-indice li ul:hover {
+  display: block;
+}
+
+@include respond-max {
+  .reglas-indice {
+    position: static;
+    max-width: none;
+    margin-bottom: 20px;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--c_base_alt);
+    top: 0;
+    margin: 0;
+    padding: 20px;
+  }
+
+  .reglas-indice li ul, .reglas-indice li:hover > ul, .reglas-indice li ul:hover {
+    display: none;
+  }
+}
+
+
+.mods-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 0px;
+    border: 2px solid var(--c_base);
+    @include respond-max {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.mods-table .hide {
+    @include respond-max {
+        display: none;
+    }
+}
+
+.mods-table p{
+    border: 2px solid var(--c_base);
+    padding: 4px;
+    margin: 0px;
+    text-align: center;
+}
+
+.recursos {
+    font-size:2rem;
+}
+
+.reglas-font_color:hover{
+    color: var(--c_detalle);
+}
+
+.estadoalterado-edit {
+    margin: 10px;
+    padding: 10px;
+    gap: 10px;
+    border: 2px solid var(--c_base);
+    border-radius: 10px;
+}
+.estadoalterado-edit .btn {
+    display: inline-block;
+    padding: 5px 10px;
+    border: 2px solid var(--c_base);
+    margin-top: 5px;
+}

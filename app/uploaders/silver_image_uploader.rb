@@ -40,7 +40,7 @@ class SilverImageUploader
   end
   
   def remove!(id)
-    record = @cache.fetch(id)
+    record = error_coalesce(ArgumentError) {@cache.fetch(id)}
     if record
       @cache.remove(id)
       ImageUploaderConfig.uploader.remove!(record)
@@ -58,15 +58,22 @@ class SilverImageUploader
     ImageUploaderConfig.uploader.clear_all!
   end
 
+  class BadImageFileError < StandardError; end
 
   private
 
   require "mini_magick"
   def self.to_webp(file, mode)
-    image = MiniMagick::Image.new(file.tempfile.path)
-    image.validate!
+    begin
+      image = MiniMagick::Image.new(file.tempfile.path)
+      image.validate!
+    rescue
+      raise BadImageFileError, "El archivo subido no es una imagen válida."
+    end
+
+    formato = image["%m"].downcase
     
-    return file if image.mime_type == "image/gif"
+    return file if formato == "gif"
     
     # Recortar imagen a contenido
     was_trimmed = false
@@ -79,7 +86,7 @@ class SilverImageUploader
       was_trimmed = old_width != image.width or old_height != image.height
     end
 
-    return file if image.mime_type == "image/webp" and !was_trimmed
+    return file if formato == "webp" and !was_trimmed
 
     # Convertir a webp
 

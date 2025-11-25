@@ -11,8 +11,17 @@
     <%= render "categ", x: @x %>
 <div>
     
+<% only_admin_content do %>
+    <h3> Contextloots relacionados:</h3>
+    <div class="miniListadoClases">
+        <% @x.contextoloots.each do |cl| %>
+            <%= link_to cl.nombre, cl, class: "carta-title" %>
+        <% end %>
+    </div>
+<% end %>
+    
 <h1>Habilidades relacionadas:</h1>
-<div class="grid-container">
+<div class="carta-grid_container">
     <% @x.habilidads.each do |habil| %>
         <%= render "habilidads/habilidad", habil: habil %>
     <% end %>

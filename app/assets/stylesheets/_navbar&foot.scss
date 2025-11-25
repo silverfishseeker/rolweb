@@ -1,0 +1,162 @@
+.footbar {
+    background-color: var(--c_base);
+    color: var(--c_contraste);
+    margin: 0;
+    margin-top: 20px;
+    padding: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+
+.main-content {
+    margin-top: var(--margin-top);
+    flex: 1;
+}
+
+
+.navbar {
+    background-color: var(--c_base);
+    color: var(--c_contraste);
+    padding: 5px;
+    padding-bottom: 0px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+.navbar h1 {
+    margin: 5px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: lighter;
+}
+
+.navbar h1 a:hover {
+    color: var(--c_contraste_alt);
+}
+
+.subnavbar {
+    padding: 0;
+    padding-bottom: 10px;
+    margin: 0;
+    width: 100%;
+    display: flex;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+}
+
+.subnavbar a {
+    padding: 10px;
+}
+
+.subnavbar .nblink {
+    text-align: center;
+    color: var(--c_contraste); 
+    font-size: larger;
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+}
+
+.subnavbar button.nblink {
+    background: none;
+    border: none;
+    font-family: inherit;
+}
+
+.subnavbar button.nblink::after {
+  content: " ►"; /* Cerrado */
+}
+
+.subnavbar button.nblink.open::after {
+  content: " ▼"; /* Abierto */
+}
+
+.subnavbar .nblink_notSubMenu {
+  text-decoration: underline;
+}
+
+.subnavbar a:hover, .subnavbar button:hover {
+    background-color: var(--c_base_alt);
+}
+
+.subnavbar a:visited {
+    color: var(--c_contraste); 
+}
+
+/* SUBMENÚ */
+
+.subnavbar-scroll_indicator {
+    display: none; /* Oculto por defecto */
+    position: absolute;
+    right: 18px;
+    height: 18px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.submenu:hover .submenu-content {
+    display: block;
+}
+
+.submenu-content {
+    display: none;
+    position: absolute;
+    max-height: 450px; /* Tamaño fijo pequeño del submenú */
+    max-width: 100vw;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 3px solid var(--c_base);
+    margin-top: 8px;
+}
+
+.submenu-content div {
+    width: 100%;
+}
+
+.submenu-content a {
+    color: var(--c_white);
+    background-color: var(--c_detalle);
+    display: block;
+    width: 100%;
+}
+
+.submenu-content a.mainLink {
+    border-bottom: 3px solid var(--c_base);
+    font-weight: bold;
+}
+
+.submenu-content a:hover {
+    background-color: var(--c_detalle_alt);
+}
+
+.submenu-content a:visited{
+    color: var(--c_white);
+}
+
+.submenu-admin_button {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    padding-right: 20px;
+    padding-left: 10px;
+}
+
+.submenu-admin_button a {
+    font-size:smaller;
+    opacity: 0.6;
+    padding: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+}
+
+.submenu-admin_button a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}

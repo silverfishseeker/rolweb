@@ -1,0 +1,89 @@
+@import "respondMax";
+
+.clase-main {
+    margin: 10px;
+}
+
+.clase-contents {
+    display: flex;
+    flex-direction: row;
+}
+
+@include respond-max {
+    .clase-contents {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.clase-details {
+    width: 60%;
+    margin-right: 10px;
+    @include respond-max {
+            width: 100%;
+        }
+}
+.clase-herencia {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.miniListadoClases {
+    flex: 1;
+    background-color: var(--c_alternativo);
+    color: var(--c_base);
+    padding: 5px;
+    border-radius: 5px;
+}
+.clase-herencia:has(.miniListadoClases:first-child:last-child) .miniListadoClases {
+    flex: 100%;
+}
+.miniListadoClases h4 {
+    margin: 5px;
+}
+.miniListadoClases .carta-title {
+    margin: 5px;
+    display: inline-block;
+}
+
+.clase-description {
+    background-color: var(--c_contraste);
+    padding: 10px;
+}
+
+.clase-image {
+    height: 400px;
+    width: 40%;
+    align-items: center;
+    text-align: center;
+}
+
+@include respond-max {
+    .clase-image {
+        width: 100%;
+        margin-bottom: 15px;
+        order: -1;
+    }
+}
+
+
+.clase-image img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.clase-subtitulo {
+    font-size: medium;
+    margin: 5px;
+    margin-left: 20px;
+}
+
+.clase-subtitulo_raza{
+    color: var(--c_detalle);
+}
+
+.clase-subtitulo_radical{
+    color: var(--c_base_alt);
+}

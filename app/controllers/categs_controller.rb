@@ -1,11 +1,7 @@
 class CategsController < ModelController
-
-    def initialize
-      super 
-      @tipo = Categ
-    end
+    def tipo; Categ end
   
     def model_params
-      params.require(:categ).permit(:nombre, item_ids: [])
+      params.require(:categ).permit(:nombre, item_ids: [], contextoloot_ids: [])
     end
 end

@@ -1,9 +1,8 @@
 class InfoController < ApplicationController
-    include Utilities
 
     def home
         @clase_image = error_coalesce{ Clase.where("oculto IS FALSE AND image IS NOT NULL").order("RANDOM()").first.image }
-        @habilidad_image = nil #Habilidad.where("image IS NOT NULL").order("RANDOM()").first.image || nil
+        @habilidad_image = error_coalesce{Habilidad.where("image IS NOT NULL").order("RANDOM()").first.image}
         @item_image = error_coalesce{ Item.where("image IS NOT NULL").order("RANDOM()").first.image }
         @carousel_images = Picture.order("RANDOM()").limit(10).map(&:image)
     end

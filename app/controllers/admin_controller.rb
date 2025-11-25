@@ -32,6 +32,11 @@ class AdminController < ApplicationController
         cache_clear
         redirect_to "/control", notice: "Caché de memoria eliminada"
     end
+
+    def delete_session_data
+        session.clear
+        redirect_to "/control", notice: "Datos de sesión eliminados"
+    end
     
     def backup
     end
@@ -103,6 +108,9 @@ class AdminController < ApplicationController
         rescue MinioConnectionError => e
             redirect_to "/control", alert: "El minion está enfadado o no está presente: #{e.message}"
         end
+    end
+
+    def ritual
     end
 
 

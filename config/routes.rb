@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  namespace :ritual do
+    resources :ritual_nivels
+    resources :ritual_costes
+    resources :ritual_clases
+  end
   resources :cuentos
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -13,6 +18,7 @@ Rails.application.routes.draw do
   resources :estadoalterados
   resources :dndspells
   resources :etiquets
+  resources :contextoloots
   resources :cuentos
   get '/recalcular_childs', to: 'cuentos#recalcular_childs'
 
@@ -35,12 +41,14 @@ Rails.application.routes.draw do
   get '/delete_disk_cache', to: 'admin#delete_disk_cache'
   get '/delete_navbar_cache', to: 'admin#delete_navbar_cache'
   get '/delete_all_cache', to: 'admin#delete_all_cache'
+  get '/delete_session_data', to: 'admin#delete_session_data'
   get '/backup', to: 'admin#backup'
   get '/prepare_backup', to: 'admin#prepare_backup'
   get '/create_backup', to: 'admin#create_backup'
   post '/restore_backup', to: 'admin#restore_backup'
   get '/download_logs', to: 'admin#download_logs'
   get '/check_minio_connection', to: 'admin#check_minio_connection'
+  get '/ritual', to: 'admin#ritual'
 
   get '/lootbox', to: 'randompick#lootbox'
   post '/lootboxing', to: 'randompick#lootboxing'

@@ -1,0 +1,11 @@
+<h1>Ritual clases</h1>
+<h2> <%= link_to "Volver a rituales", "/ritual" %> </h2>
+<p>
+  <br>
+  <%= link_to "New ritual clase", new_ritual_ritual_clase_path, class: "btn btn-primary" %>
+  <br><br><br>
+  <% @xs.each do |ritual_ritual_clase| %>
+    <%= render ritual_ritual_clase %>
+    <br><br><br>
+  <% end %>
+</p>

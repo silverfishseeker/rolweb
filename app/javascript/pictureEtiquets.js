@@ -1,4 +1,4 @@
-document.addEventListener("turbo:load", () => {
+export function onTurboLoad() {
     document.querySelectorAll(".etiqueta-item").forEach(item => {
         item.addEventListener("click", () => {
             const checkbox = item.querySelector("input");
@@ -6,4 +6,4 @@ document.addEventListener("turbo:load", () => {
             item.classList.toggle("active", checkbox.checked);
         });
     });
-});
+}

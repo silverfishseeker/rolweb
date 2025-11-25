@@ -1,0 +1,14 @@
+<h1>Ritual niveles</h1>
+<h2> <%= link_to "Volver a rituales", "/ritual" %> </h2>
+<p>
+  <br>
+  <%= link_to "New ritual nivel", new_ritual_ritual_nivel_path, class: "btn btn-primary" %>
+  <br><br><br>
+  <% @xs.each do |ritual_ritual_nivel| %>
+    <%= render ritual_ritual_nivel %>
+    <br><br><br>
+  <% end %>
+</p>
+
+<br>
+

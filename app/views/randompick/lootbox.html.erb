@@ -1,44 +1,81 @@
+<%= importJS "checkAllBoxes" %>
+
 <div class="lootbox-main">
   <h1>Cofre aleatorio</h1>
 
   <h1>Contenido cofre</h1>
-  
-  <div class="carta carta_clase lootbox-form">
-    <%= form_with url: "/lootboxing", method: :post do |f| %>
 
-      <%= f.collection_select :categ_ids, Categ.order(:nombre), :id, :nombre, {}, multiple: true, class:"lootbox-select" %>
-      
-      <h3>
-        <%= f.label :oromin, "Oro   mínimo:" %>
-        <%= f.number_field :oromin, value: 5, class:"lootbox-number" %>
-      </h3>
-      
-      <h3>
-        <%= f.label :copia, "Número copias:" %>
-        <%= f.text_field :copia, value: 4, class:"lootbox-number" %>
-      </h3>
+  <%= form_with url: "/lootboxing", method: :post do |f| %>
+    <div class="carta carta_clase lootbox-form">
+      <div class="lootbox-form-inner">
+
+        <div class="lootbox-form-column">
+          <h3> Categorías a incluir: </h3>
+          <div class="lootbox-select checks_container">
+            <div class="lootbox-option">
+              <input type="checkbox" class="check_all" id="check_all1">
+              <label for="check_all1">Seleccionar todo / Ninguno</label>
+            </div>
+            <% Categ.order(:nombre).each do |ct| %>
+              <div class="lootbox-option">
+                <input type="checkbox" name="categ_ids[]" value="<%= ct.id %>" class="toggleable" id="categ_<%= ct.id %>"
+                    <%="checked" if session[:lootbox_categ_ids]&.include? ct.id.to_s %>>
+                <label for="categ_<%= ct.id %>"><%= ct.nombre %></label>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="lootbox-form-column">
+          <h3> Contexto donde se busca </h3>
+          <div class="lootbox-select checks_container">
+            <div class="lootbox-option">
+              <input type="checkbox" class="check_all" id="check_all2">
+              <label for="check_all2">Seleccionar todo / Ninguno</label>
+            </div>
+            <% Contextoloot.order(:nombre).each do |ct| %>
+              <div class="lootbox-option">
+                <input type="checkbox" name="contextoloot_ids[]" value="<%= ct.id %>" class="toggleable" id="contextoloot_<%= ct.id %>"
+                    <%="checked" if session[:lootbox_contextoloot_ids]&.include? ct.id.to_s %>>
+                <label for="contextoloot_<%= ct.id %>"><%= ct.nombre %></label>
+              </div>
+            <% end %>
+          </div>
+          <h3 style="padding-left: 10px">
+            <%= f.label :oromin, "Oro   mínimo:" %>
+            <%= f.number_field :oromin, value: session[:lootbox_oromin] || 5, class:"lootbox-number" %>
+          </h3>
+          <h3 style="padding-left: 10px">
+            <%= f.label :copia, "Número copias:" %>
+            <%= f.text_field :copia, value: session[:lootbox_copia] || 4, class:"lootbox-number" %>
+          </h3>
+        </div>
+
+      </div>
       
       <%= f.submit "Abrir", class:"carta-title carta-title_clase"%>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 
   <div class="carta-subtitles lootbox-chest">
     <% if session[:lootbox] == nil %>
-      <p> No se pudo generar el cofre </p>
+      <p> No hubo ninguna coincidencia </p>
     <% else %>
       <% for itId, num in session[:lootbox] do %>
-          <div class="lootbox-item">
-            <% item = Item.find(itId) %>
-            <span class="carta-number carta-level carta-number_lootbox"> <%=num%> </span>
-            <%= link_to item.nombre, item %>
-            <span class="carta-number carta-coste">
-                <%= item.coste %>
-            </span>
-            <span class="carta-number carta-peso">
-                <%= item.peso %>
-            </span>
-            <span class="carta-description"><%= item.efecto %></span>
-          </div>
+          <% item = error_coalesce(ActiveRecord::RecordNotFound){Item.find(itId)} %>
+          <% if item %>
+            <div class="lootbox-item">
+              <span class="carta-number carta-level carta-number_lootbox"> <%=num%> </span>
+              <%= link_to item.nombre, item %>
+              <span class="carta-number carta-coste">
+                  <%= item.coste %>
+              </span>
+              <span class="carta-number carta-peso">
+                  <%= item.peso %>
+              </span>
+              <span class="carta-description"><%= item.efecto %></span>
+            </div>
+          <% end %>
       <% end %>
     <% end %>
   </div>

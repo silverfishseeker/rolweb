@@ -4,10 +4,7 @@ class CuentosController < ModelController
 
   include UnlimitedCache
 
-  def initialize
-    super 
-    @tipo = Cuento
-  end
+  def tipo; Cuento end
 
   def create
     super {set_cuentos_childs}

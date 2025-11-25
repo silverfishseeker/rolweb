@@ -1,0 +1,25 @@
+.admin-cuerpo {
+    display: flex;
+}
+
+.admin-cuerpo .admin-column {
+    flex: 2;
+    padding: 10px;
+    border-right: 1px solid #ddd;
+}
+
+.admin-cuerpo .admin-column-small {
+    flex: 1;
+    font-size: small;
+}
+
+.admin-cuerpo .admin-column:last-child {
+    border-right: none;
+}
+
+.admin-actions {
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}

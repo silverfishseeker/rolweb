@@ -1,6 +1,4 @@
-import { isTouchScreen } from "isTouchScreen";
-
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("turbo:load", () => {
   const subnavbar = document.querySelector(".subnavbar");
   const scrollIndicator = document.querySelector(".subnavbar-scroll_indicator");
 
@@ -21,7 +19,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   function setupMobileSubmenus() {
-    if (!isTouchScreen()) return;
+    if (!( // Detect touch screen
+        (window.PointerEvent && ('maxTouchPoints' in navigator)) ?
+          navigator.maxTouchPoints > 0
+        :
+          ((window.matchMedia && window.matchMedia("(any-pointer:coarse)").matches) ||
+          (window.TouchEvent || ('ontouchstart' in window)))
+    ))
+      return;
 
     const all_submenus = subnavbar.querySelectorAll(".submenu");
     const all_submenu_contents = subnavbar.querySelectorAll(".submenu-content");

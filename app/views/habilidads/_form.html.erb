@@ -39,6 +39,16 @@
   <br>
 
   <div>
+    <%= form.label :image %>
+    <%= form.file_field :image %>
+  </div>
+  <% if form.object.image %>
+    <%= form.check_box :remove_image %> Eliminar imagen
+    <br>
+  <% end %>
+  <br>
+
+  <div>
     <%= form.submit %>
   </div>
 <% end %>

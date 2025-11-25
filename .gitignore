@@ -44,3 +44,6 @@ minio_data
 
 # Archivos subidos al servidor, no queremos guardar nada de esto en git
 public/uploads
+
+# Ignorar las dependencias instaladas por bundler
+vendor/bundle

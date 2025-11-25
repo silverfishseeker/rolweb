@@ -1,14 +1,30 @@
 <h2>Estas funciones son solo de administrador</h2>
 
 <div class="admin-cuerpo">
-    <p class="column">
+    <p class="admin-column">
         <%= link_to "Estados alterados", estadoalterados_path %>
         <br>
         <%= link_to "Etiquetas", etiquets_path%>
         <br>
         <%= link_to "Cuentos", cuentos_path%>
         <br>
+        <%= link_to "Context Loot", contextoloots_path%>
+        <br>
+        <%= link_to "Rituales", "/ritual" %>
+        <br>
+        <%= link_to "Categorías", categs_path %>
+        <br>
+        <%= link_to "Hechizos D&D", dndspells_path %>
+        <br>
+        <br>
+        <%= link_to "Habilidades ocultas", "/habilidads_ocultas"%>
+        <br>
+        <%= link_to "Habilidades sueltas", "/habilidads_sueltas"%>
+        <br>
         <%= link_to "Habilidades sin tipo", "clasificar_habilidad" %>
+        <br>
+        <%= link_to "Ítems sin categoría", "/items_no_categ"%>
+        <br>
         <br>
         <%= link_to "Borrar caché de disco", "/delete_disk_cache" %>
         <br>
@@ -16,19 +32,17 @@
         <br>
         <%= link_to "Borrar toda la cahé de memoria", "/delete_all_cache" %>
         <br>
+        <%= link_to "Borrar datos de sesión", "/delete_session_data" %>
+        <br>
         <%= link_to "Descargar logs actuales", "/download_logs" %>
         <br>
         <%= link_to "Comprobar conexión con MinIO", "/check_minio_connection" %>
-        <br>
-        <br>
-        <%= link_to "Hechizos D&D", dndspells_path %>
         <br>
         <br>
         <%=Clase.count%> clases <br>
         <%=Habilidad.count%> habilidades <br>
         <%=Item.count%> ítems <br>
         <%=Mob.count%> mobs <br>
-        <br>
         <br>
 
         <% begin
@@ -40,15 +54,6 @@
             No se puedo establecer la conexión con el servidor para comprobar la ip actual. <br>
         <% end %>
         <br>
-        <br>
-        <b> Configuación de SilverImageUploader: </b> <br>  
-        uploader: <%= ImageUploaderConfig.uploader.class%> <br>
-        cache_type: <%= ImageUploaderConfig.cache_type%> <br>
-        uploamemory_sizeder: <%= ImageUploaderConfig.memory_size%> <br>
-        backup_upload_max_file_size_mb: <%= ImageUploaderConfig.backup_upload_max_file_size_mb%> <br>
-        <br>
-        <br>
-        <%= link_to "Cerrar sesión", "/adminsession/close" %>
     </p>
 
     <% clases = Clase
@@ -57,14 +62,27 @@
         .select('clases.*, COUNT(habilidads.id) AS habilidads_count')
         .order('habilidads_count ASC') %>
 
-    <div class="column">
+    <div class="admin-column">
         <% clases.each_with_index do |clase, index| %>
                 <%= clase.habilidads_count %> <%= link_to clase.nombre, clase%> <br>
             <% if index == clases.size / 2-1 %>
                 </div>
-                <div class="column">
+                <div class="admin-column">
             <% end %>
         <% end %>
     </div>
 
+    <div class="admin-column admin-column-small">
+        <p>
+            <b> Configuación de SilverImageUploader: </b> <br>  
+            uploader: <%= ImageUploaderConfig.uploader.class%> <br>
+            cache_type: <%= ImageUploaderConfig.cache_type%> <br>
+            memory_size: <%= ImageUploaderConfig.memory_size%> <br>
+            backup_upload_max_file_size_mb: <%= ImageUploaderConfig.backup_upload_max_file_size_mb%> <br>
+            <br>
+            <b>Variables de entorno:</b> <br>
+            <% EnvVars.all.each do |key, value| %>
+                <%= key %>: <%= value %> <br>
+            <% end %>
+        </p>
 </div>

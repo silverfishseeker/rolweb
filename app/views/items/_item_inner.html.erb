@@ -14,4 +14,7 @@
     <% end %>
 </div>
 
-<div class="carta-description"><%= item.efecto %></div>
+<div class="carta-description">
+    <%= ritual_description(item) %>
+    <%= item.efecto %>
+</div>

@@ -5,7 +5,7 @@
 
 <h3> <%= link_to "Resetear D&D", "/resetdndspells" %> </h3>
 
-<div class="grid-container">
+<div class="carta-grid_container">
     <% @xs.each do |x| %>
         <%= render "dndspell", x: x%>
     <% end %>
