@@ -1,0 +1,17 @@
+<h1>Mi Cuenta</h1>
+
+<div class="profile-box">
+  <p><strong>Email:</strong> <%= @x.email %></p>
+  <p><strong>Nombre:</strong> <%= @x.nombre %></p>
+  <p><strong>Rango:</strong> <%= @x.rango %></p>
+</div>
+
+<hr>
+
+<h2>Opciones</h2>
+
+<ul>
+  <li><%= link_to "Editar mi información", edit_user_registration_path %></li>
+  <li><%= link_to "Cambiar contraseña", edit_user_registration_path(anchor: 'password') %></li>
+  <li><%= link_to "Cerrar sesión", destroy_user_session_path, data: { turbo_method: :delete } %></li>
+</ul>

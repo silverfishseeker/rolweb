@@ -1,10 +1,4 @@
 Rails.application.routes.draw do
-  namespace :ritual do
-    resources :ritual_nivels
-    resources :ritual_costes
-    resources :ritual_clases
-  end
-  resources :cuentos
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
@@ -28,6 +22,16 @@ Rails.application.routes.draw do
   
   resource :adminsession, only: [:new, :create]
   get '/adminsession/close', to: 'adminsessions#close'
+  
+  namespace :ritual do
+    resources :ritual_nivels
+    resources :ritual_costes
+    resources :ritual_clases
+  end
+  resources :cuentos
+
+  resources :users
+  get 'users_dashboard', to: 'users#dashboard'
 
   get '/reglas', to: 'info#reglas'
   get '/estadosAlterados', to: 'info#estadosAlterados'

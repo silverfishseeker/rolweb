@@ -21,7 +21,7 @@ class ModelController < ApplicationController
   end
   
   def index
-      @xs = tipo.all
+    @xs = tipo.all
   end
 
   def show

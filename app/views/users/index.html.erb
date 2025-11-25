@@ -1,0 +1,26 @@
+<h1>Usuarios</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Nombre</th>
+      <th>Rango</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @xs.each do |user| %>
+      <tr>
+        <td><%= user.email %></td>
+        <td><%= user.nombre %></td>
+        <td><%= user.rango %></td>
+        <td>
+          <%= link_to "Editar", edit_user_path(user) %> |
+          <%= link_to "Eliminar", user_path(user), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

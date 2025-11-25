@@ -1,0 +1,23 @@
+<h1>Editar usuario</h1>
+
+<%= form_with model: @x, local: true do |f| %>
+
+  <div>
+    <%= f.label :email %><br>
+    <%= f.email_field :email %>
+  </div>
+
+  <div>
+    <%= f.label :nombre %><br>
+    <%= f.text_field :nombre %>
+  </div>
+
+  <div>
+    <%= f.label :rango %><br>
+    <%= f.text_field :rango %>
+  </div>
+
+  <br>
+
+  <%= f.submit "Guardar cambios" %>
+<% end %>

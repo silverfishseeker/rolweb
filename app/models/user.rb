@@ -10,4 +10,12 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   
   has_many :personajes, dependent: :destroy
+
+  def self.rangos
+    ["Expectador", "Jugador", "Game Master", "Administrador"]
+  end
+
+  def rango_nombre
+    self.rangos[rango] || "Inválido"
+  end
 end
