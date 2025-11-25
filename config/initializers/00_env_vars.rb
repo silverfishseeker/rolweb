@@ -1,3 +1,5 @@
+# This file is named with a leading 00 to ensure it is loaded before other initializers
+
 require 'dotenv/load'
 
 module EnvVars
@@ -18,6 +20,7 @@ module EnvVars
     "MINIO_BUCKET" =>                   [:str,  "cubo"],
     "MAILGUN_API_KEY" =>                [:str,  nil], # Required for mail sending
     "MAILGUN_DOMAIN" =>                 [:str,  nil], # Required for mail sending
+    "MAILGUN_USER" =>                   [:str,  nil]  # Required for mail sending
   }.freeze
 
   # You MUST set these variables in production
@@ -27,8 +30,9 @@ module EnvVars
     "MINIO_ENDPOINT",
     "MINIO_ACCESS_KEY_ID",
     "MINIO_SECRET_ACCESS_KEY",
-    "MaILGUN_API_KEY",
-    "MAILGUN_DOMAIN"
+    "MAILGUN_API_KEY",
+    "MAILGUN_DOMAIN",
+    "MAILGUN_USER"
   ]
 
   class EnvVarError < StandardError; end

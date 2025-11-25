@@ -17,7 +17,7 @@
         <td><%= user.nombre %></td>
         <td><%= user.rango %></td>
         <td>
-          <%= link_to "Editar", edit_user_path(user) %> |
+          <%= link_to "Editar", edit_user_path(user), class: "btn btn-primary" %> |
           <%= link_to "Eliminar", user_path(user), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
         </td>
       </tr>

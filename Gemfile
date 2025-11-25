@@ -96,8 +96,5 @@ gem "mini_magick"
 # autenticación de usuarios
 gem "devise", "~> 4.9"
 
-# envío de emails con mailgun
-gem 'mailgun-ruby', '~>1.4'
-gem "rest-client", "~> 2.1"
-
+# carga de variables de entorno desde un fichero .env
 gem "dotenv", "~> 3.1"
