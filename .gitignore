@@ -47,3 +47,6 @@ public/uploads
 
 # Ignorar las dependencias instaladas por bundler
 vendor/bundle
+
+# Ignorar archivo de variables de entorno
+.env

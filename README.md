@@ -18,4 +18,4 @@ There is an admin system within the webpage for changing the data. You must set 
 You can run this app as it is in production mode just by using `docker-compose.production.yml` insted of `docker-compose.yml`. For that you cun run `docker compose -f docker-compose.production.yml up`. Remember to add `--build` if you change from one mode to the other to properly rebuild the corresponding web server image. 
 
 ## Actual Production mode
-To run this application correctly in your custom environment it is required you configure it properly via environment variables. You must check **VARS** and **PRODUCTION_REQUIRED_VARS** in *app/lib/env_vars*.
+To run this application correctly in your custom environment it is required you configure it properly via environment variables. You must check **VARS** and **PRODUCTION_REQUIRED_VARS** in *app/lib/env_vars*. Dotenv is used so you can configure them in `.env`.
