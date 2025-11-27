@@ -25,5 +25,7 @@ module Rolweb
     # Configure the quality of WebP images
     # max is 100 but it doesn't guarantee no loss on quality
     config.webp_quality = 80
+
+    config.i18n.default_locale = :es
   end
 end
