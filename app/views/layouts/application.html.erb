@@ -76,6 +76,44 @@
           </div>
         <% end %>
 
+        <div class="submenu auth-submenu">
+          <% if user_signed_in? %>
+            <a href="/users_dashboard" class="nblink">
+              <%= render "users/icon", user: current_user %>
+              <%= current_user.nombre%>
+            </a>
+            <div class="submenu-content auth-submenu-content" style="padding: 0;">
+              <%= link_to 'Mi cuenta', '/users_dashboard' %>
+              <%= link_to 'Cerrar sesión', destroy_user_session_path %>
+            </div>
+          <% else %>
+            <a class="nblink">Cuenta</a>
+            <div class="submenu-content auth-submenu-content">
+              <div class="auth-section">
+                <h3>Iniciar sesión</h3>
+                <%= form_with url: user_session_path, method: :post, local: true, scope: :user, class: "auth-form" do |f| %>
+                  <div>
+                    <%= f.label :email %>
+                    <%= f.email_field :email, required: true, class: "text" %>
+                  </div>
+                  <div>
+                    <%= f.label :password, "Contraseña" %>
+                    <%= f.password_field :password, required: true, class: "text" %>
+                  </div>
+                  <div class="remember-me">
+                    <%= f.check_box :remember_me %>
+                    <%= f.label :remember_me, "Recuérdame" %>
+                  </div>
+                  <%= f.submit "Entrar", class: "auth-btn" %>
+                <% end %>
+              </div>
+              <div class="auth-section">
+                <%= link_to "Crear cuenta", new_user_registration_path, class: "auth-btn" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
         <%= image_tag "scroll.png", class:"subnavbar-scroll_indicator"%>
       </div>
     </nav>
@@ -100,21 +138,12 @@
 
 
     <div class="main-content">
-      <% if user_signed_in? %>
-        <p>Hola, <%= current_user.email %></p>
-        <%= link_to 'Editar cuenta', edit_user_registration_path %> |
-        <%= link_to 'Cerrar sesión', destroy_user_session_path %>
-        <%= link_to 'User dashboard', '/users_dashboard' %>
-      <% else %>
-        <%= link_to 'Registrarse', new_user_registration_path %> |
-        <%= link_to 'Iniciar sesión', new_user_session_path %>
-      <% end %>
       <%= yield %>
     </div>
 
     
     <footer class="footbar">
-      <div> </div>
+      <div> <%# Este div no sobra.%> </div>
       <div>
         <%= link_to "Aviso legal", "/avisolegal"%>
       </div>

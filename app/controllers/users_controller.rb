@@ -10,6 +10,9 @@ class UsersController < ModelController
   end
 
   def dashboard
+    if !user_signed_in?
+      redirect_to new_user_session_path, notice: "No se ha iniciado sesión."
+    end
     @x = current_user
   end
 end

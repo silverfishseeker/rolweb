@@ -7,8 +7,7 @@
 .navbar {
     background-color: var(--c_base);
     color: var(--c_contraste);
-    padding: 5px;
-    padding-bottom: 0px;
+    padding: 0px;
 
     position: fixed;
     top: 0;
@@ -29,9 +28,6 @@
 }
 
 .subnavbar {
-    padding: 0;
-    padding-bottom: 10px;
-    margin: 0;
     width: 100%;
     display: flex;
 
@@ -88,6 +84,10 @@
     transition: transform 0.3s ease-in-out;
 }
 
+.submenu {
+    padding-bottom: 10px;
+}
+
 .submenu:hover .submenu-content {
     display: block;
 }
@@ -125,4 +125,58 @@
 
 .submenu-content a:visited{
     color: var(--c_white);
+}
+
+
+// ########## AUTH ##########
+
+.auth-submenu {
+    margin-left:auto;
+}
+.auth-submenu-content {
+    right: 0;
+    background-color: var(--c_detalle);
+    padding: 10px;
+}
+.auth-section {
+    color: var(--c_base);
+    background-color: var(--c_contraste);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+.auth-section:last-child {
+    margin-bottom: 0;
+}
+.auth-section h3 {
+    margin: 0;
+}
+.auth-form {
+    margin: 10px 10px 0;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+.auth-form div {
+    display: flex;
+    flex-direction: row;
+}
+.auth-form label {
+    margin-right: 10px;
+}
+.auth-form input.text {
+    margin-left: auto;
+}
+.submenu-content .auth-btn {
+    background: var(--c_base);
+    color: var(--c_white);
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+.submenu-content .auth-btn:hover {
+    background: var(--c_base_alt);
 }

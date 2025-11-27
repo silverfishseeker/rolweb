@@ -24,6 +24,11 @@
     src: url('Seagram_tfb.ttf') format('truetype');
 }
 
+/* z-index layers */
+// 1 -> cosas dentro de main-content
+// 2 -> barra de navegación
+// 3 -> flash notices;
+
 @import "base_html.scss";
 @import "navbar.scss";
 @import "foot.scss";
@@ -40,3 +45,4 @@
 @import "botones.scss";
 @import "home.scss";
 @import "otros.scss";
+@import "user.scss";

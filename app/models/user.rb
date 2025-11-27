@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   # atributes:
-  #   email, nombre,
+  #   email, nombre, image
   #   encrypted_password, reset_password_token, reset_password_sent_at
   #   remember_created_at, rango
   
@@ -11,6 +11,8 @@ class User < ApplicationRecord
          :confirmable
   
   has_many :personajes, dependent: :destroy
+
+  mount_image_uploader
 
   def self.rangos
     ["Expectador", "Jugador", "Game Master", "Administrador"]
