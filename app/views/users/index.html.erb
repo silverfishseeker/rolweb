@@ -1,26 +1,28 @@
-<h1>Usuarios</h1>
+<div class="texto_info texto_info-margins">
+  <h1>Usuarios</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Email</th>
-      <th>Nombre</th>
-      <th>Rango</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @xs.each do |user| %>
-      <tr style="display: padding:20px;">
-        <td><%= user.email %></td>
-        <td><%= user.nombre %></td>
-        <td><%= user.rango %></td>
-        <td>
-          <%= link_to "Editar", edit_user_path(user), class: "btn btn-primary" %> |
-          <%= link_to "Eliminar", user_path(user), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
-        </td>
+  <table class="users-table">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Nombre</th>
+        <th>Rango</th>
+        <th>Acciones</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <% @xs.each do |user| %>
+        <tr>
+          <td><%= user.email %></td>
+          <td><%= user.nombre %></td>
+          <td><%= user.rango %></td>
+          <td>
+            <%= link_to "Editar", edit_user_path(user), class: "btn btn-primary" %> |
+            <%= link_to "Eliminar", user_path(user), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

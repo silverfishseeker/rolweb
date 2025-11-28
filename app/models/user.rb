@@ -9,13 +9,26 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :confirmable
+
+  validates :nombre,
+    presence:   { message: "no puede estar vacío." },
+    uniqueness: { message: "ya está registrado, elige otro." }
+
+  validate :email_is_immutable, on: :update
+  def email_is_immutable
+    if email_changed? && self.persisted?
+      errors.add(:email, "no se puede cambiar una vez registrado.")
+    end
+  end
+
+  validates :rango, inclusion: { in: 0..3, message: "no es un rango válido." }
+
+  mount_image_uploader
   
   has_many :personajes, dependent: :destroy
 
-  mount_image_uploader
-
   def self.rangos
-    ["Expectador", "Jugador", "Game Master", "Administrador"]
+    ["Espectador", "Jugador", "Game Master", "Administrador"]
   end
 
   def rango_nombre

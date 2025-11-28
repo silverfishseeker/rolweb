@@ -3,6 +3,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "info#home"
+
+  devise_for :users, controllers: {
+    registrations: 'users/registrations'
+  }
+  
   resources :clases
   resources :habilidads
   resources :items
@@ -14,11 +19,8 @@ Rails.application.routes.draw do
   resources :etiquets
   resources :contextoloots
   resources :cuentos
-  resources :personajes
-  devise_for :users
   get '/recalcular_childs', to: 'cuentos#recalcular_childs'
-
-  get 'images/:id/download', to: 'images#download', as: 'download_image'
+  resources :personajes
   
   resource :adminsession, only: [:new, :create]
   get '/adminsession/close', to: 'adminsessions#close'
@@ -28,10 +30,11 @@ Rails.application.routes.draw do
     resources :ritual_costes
     resources :ritual_clases
   end
-  resources :cuentos
 
   resources :users
-  get 'users_dashboard', to: 'users#dashboard'
+  get '/users_dashboard', to: 'users#dashboard'
+
+  get 'images/:id/download', to: 'images#download', as: 'download_image'
 
   get '/reglas', to: 'info#reglas'
   get '/estadosAlterados', to: 'info#estadosAlterados'

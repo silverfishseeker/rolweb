@@ -17,6 +17,7 @@ es:
         locked_at: Fecha de bloqueo
         password: Contraseña
         password_confirmation: Confirmación de la contraseña
+        image: Imagen de avatar
         remember_created_at: Fecha de 'Recordarme'
         remember_me: Recordarme
         reset_password_sent_at: Fecha de envío de código para contraseña
@@ -138,6 +139,7 @@ es:
   errors:
     messages:
       already_confirmed: ya ha sido confirmado, por favor intenta iniciar sesión
+      confirmation: "no coincide con la contraseña"
       confirmation_period_expired: necesita confirmarse dentro de %{period}, por favor solicita una nueva
       expired: ha expirado, por favor solicita una nueva
       not_found: no se ha encontrado
