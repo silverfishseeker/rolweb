@@ -32,6 +32,6 @@ class User < ApplicationRecord
   end
 
   def rango_nombre
-    self.rangos[rango] || "Inválido"
+    User.rangos[rango] || "Inválido"
   end
 end

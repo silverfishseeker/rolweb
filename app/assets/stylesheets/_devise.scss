@@ -25,7 +25,7 @@
 }
 .devise .actions input[type="submit"] {
   background-color: var(--c_base);
-  color: var(--c_contraste);
+  color: var(--c_white);
   border: none;
   border-radius: 10px;
   padding: 10px 20px;
@@ -33,6 +33,5 @@
 
 .devise .actions:hover input[type="submit"] {
   background-color: var(--c_base_alt);
-  color: var(--c_white);
   cursor: pointer;
 }

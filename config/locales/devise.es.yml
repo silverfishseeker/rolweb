@@ -30,6 +30,13 @@ es:
       user:
         one: Usuario
         other: Usuarios
+
+    errors:
+      models:
+        user:
+          attributes:
+            current_password:
+              blank: "no puede estar vacía."
   devise:
     confirmations:
       confirmed: Tu cuenta ha sido confirmada satisfactoriamente.

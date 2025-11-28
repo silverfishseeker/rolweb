@@ -78,12 +78,12 @@
 
         <div class="submenu auth-submenu">
           <% if user_signed_in? %>
-            <a href="/users_dashboard" class="nblink">
-              <%= render "users/icon", user: current_user %>
+            <a href="<%=dashboard_profile_path%>" class="nblink">
+              <%= render "shared/icon", user: current_user %>
               <%= current_user.nombre%>
             </a>
             <div class="submenu-content auth-submenu-content" style="padding: 0;">
-              <%= link_to 'Mi cuenta', '/users_dashboard' %>
+              <%= link_to 'Mi cuenta', dashboard_profile_path %>
               <%= link_to 'Cerrar sesión', destroy_user_session_path %>
             </div>
           <% else %>
@@ -101,7 +101,7 @@
                     <%= f.password_field :password, required: true, class: "text" %>
                   </div>
                   <div class="remember-me">
-                    <%= f.check_box :remember_me %>
+                    <%= f.check_box :remember_me, { checked: true } %>
                     <%= f.label :remember_me, "Recuérdame" %>
                   </div>
                   <%= f.submit "Entrar", class: "auth-btn" %>

@@ -4,6 +4,7 @@
   <table class="users-table">
     <thead>
       <tr>
+        <th></th>
         <th>Email</th>
         <th>Nombre</th>
         <th>Rango</th>
@@ -14,9 +15,10 @@
     <tbody>
       <% @xs.each do |user| %>
         <tr>
+          <td><%= render "shared/icon", user: user %></td>
           <td><%= user.email %></td>
           <td><%= user.nombre %></td>
-          <td><%= user.rango %></td>
+          <td><%= user.rango_nombre %></td>
           <td>
             <%= link_to "Editar", edit_user_path(user), class: "btn btn-primary" %> |
             <%= link_to "Eliminar", user_path(user), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>

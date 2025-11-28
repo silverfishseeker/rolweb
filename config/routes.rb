@@ -32,7 +32,13 @@ Rails.application.routes.draw do
   end
 
   resources :users
-  get '/users_dashboard', to: 'users#dashboard'
+
+  resource :profile, only: [:edit, :update, :destroy] do
+    collection do
+      get 'dashboard'
+      get 'confirm_destroy'
+    end
+  end
 
   get 'images/:id/download', to: 'images#download', as: 'download_image'
 
@@ -42,6 +48,7 @@ Rails.application.routes.draw do
   get '/clases-arbol', to: 'info#arbol'
   get '/get_random_element', to: 'info#get_random_element'
   get '/newPlayersHelp', to: 'info#newPlayersHelp'
+  get '/rangosInfo', to: 'info#rangosInfo'
 
   get '/control', to: 'admin#control'
   get '/items_no_categ', to: 'admin#items_no_categ'

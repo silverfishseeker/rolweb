@@ -1,0 +1,12 @@
+<div class="texto_info texto_info-margins">
+  <h2>Eliminar cuenta</h2>
+  <p> Estás a punto de eliminar tu cuenta. Esta acción es <strong>irreversible</strong> y se perderán todos tus datos y personajes. </p>
+
+  <div class="actions">
+    <%= link_to "Cancelar", edit_profile_path, class: "btn btn-primary" %>
+    
+    <%= button_to "Eliminar mi cuenta", destroy_profile_path, method: :delete, 
+          data: { turbo_confirm: "¿Estás completamente seguro? Esta acción NO puede deshacerse." },
+          class: "btn btn-danger" %>
+  </div>
+</div>

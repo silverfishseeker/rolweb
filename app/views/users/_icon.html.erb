@@ -1,9 +1,0 @@
-<div class="user-icon-wrapper">
-  <%=
-    if user.image
-      render "shared/image", image: user.image, css_class: "user-icon"
-    else
-      image_tag "default-user.png", class: "user-icon"
-    end
-  %>
-</div>
