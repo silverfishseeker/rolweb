@@ -3,7 +3,11 @@
 require 'dotenv/load'
 
 module EnvVars
-  Dotenv.load
+  LOADED = Dotenv.load.any?
+
+  def self.isLoaded
+    LOADED
+  end
 
   VARS = {
     # "key" => [type, default_value]
