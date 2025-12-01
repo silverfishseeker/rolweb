@@ -24,18 +24,26 @@
     src: url('Seagram_tfb.ttf') format('truetype');
 }
 
+/* z-index layers */
+// 1 -> cosas dentro de main-content
+// 2 -> barra de navegación
+// 3 -> flash notices;
+
 @import "base_html.scss";
-@import "navbar&foot.scss";
+@import "navbar.scss";
+@import "foot.scss";
 @import "info&rules.scss";
 @import "cuentos.scss";
 @import "cartas.scss";
 @import "clase&shows.scss";
 @import "cuadros.scss";
 @import "paginacion.scss";
-@import "carta_mobs.scss";
+@import "mob.scss";
 @import "lootboxing.scss";
 @import "admin.scss";
 @import "flash_notices.scss";
 @import "botones.scss";
 @import "home.scss";
 @import "otros.scss";
+@import "user.scss";
+@import "devise.scss";

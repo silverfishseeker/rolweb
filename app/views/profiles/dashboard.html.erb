@@ -1,0 +1,24 @@
+<div class="texto_info texto_info-margins">
+  <h1><%= @x.nombre %></h1>
+  <br>
+  <div class="dashboard">
+    <div class="dashboard-left">
+      <% if @x.image %>
+          <%= render "shared/image", image: @x.image, css_class: "user-avatar" %>
+      <% else %>
+          <i> Aún no tienes imagen de avatar. </i>
+      <% end %>
+    </div>
+
+    <div class="dashboard-right">
+      <p><strong>Email:</strong> <%= @x.email %></p>
+      <p><a href="/rangosInfo"><strong>Rango de cuenta:</strong></a> <%= @x.rango_nombre %></p>
+      <hr>
+      <p>
+        <%= link_to "Configurar cuenta", edit_profile_path %>
+        <br>
+        <%= link_to 'Cerrar sesión', destroy_user_session_path %>
+      </p>
+    </div>
+  </div>
+</div>

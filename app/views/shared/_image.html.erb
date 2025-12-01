@@ -1,7 +1,10 @@
-<% if image.respond_to?(:not_found?) && image.not_found? %>
-  <%= image_tag "imageLoadFail.png" %>
-<% elsif image.present? %>
-  <%= image_tag image.url %>
-<% else %>
-  <%= image_tag "FotoPorDefecto.png" %>
-<% end %>
+<%=
+  css_class = local_assigns[:css_class] || ""
+  if image.respond_to?(:not_found?) && image.not_found?
+    image_tag "imageLoadFail.png", class: css_class
+  elsif image.present?
+    image_tag image.url, class: css_class
+  else
+    image_tag "FotoPorDefecto.png", class: css_class
+  end
+%>

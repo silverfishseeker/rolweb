@@ -92,3 +92,9 @@ gem "minitar"
 
 # manejo de imágenes
 gem "mini_magick"
+
+# autenticación de usuarios
+gem "devise", "~> 4.9"
+
+# carga de variables de entorno desde un fichero .env
+gem "dotenv", "~> 3.1"

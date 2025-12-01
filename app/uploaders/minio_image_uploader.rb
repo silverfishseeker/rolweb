@@ -6,23 +6,23 @@ class MinioConnectionError < StandardError; end
 class MinioImageUploader
 
   def initialize
-    cfxm = Rails.configuration.x.minio
     s3_resource = Aws::S3::Resource.new(
-      endpoint: cfxm.endpoint,
-      access_key_id: cfxm.access_key_id,
-      secret_access_key: cfxm.secret_access_key,
-      region: cfxm.region,
+      endpoint: EnvVars["MINIO_ENDPOINT"],
+      access_key_id: EnvVars["MINIO_ACCESS_KEY_ID"],
+      secret_access_key: EnvVars["MINIO_SECRET_ACCESS_KEY"],
+      region: EnvVars["MINIO_REGION"],
       force_path_style: true
     )
-    @bucket = s3_resource.bucket(cfxm.bucket)
+    bucket_name = EnvVars["MINIO_BUCKET"]
+    @bucket = s3_resource.bucket(bucket_name)
 
     unless @bucket.exists?
       begin
-        s3_resource.create_bucket(bucket: cfxm.bucket)
+        s3_resource.create_bucket(bucket: bucket_name)
       rescue => e
-        raise MinioConnectionError, "No se pudo crear el bucket '#{cfxm.bucket}': #{e.message}"
+        raise MinioConnectionError, "No se pudo crear el bucket '#{bucket_name}': #{e.message}"
       end
-      Rails.logger.warn "⚠️ Se ha creado el bucket '#{cfxm.bucket}' porque no existía."
+      Rails.logger.warn "Se ha creado el bucket '#{bucket_name}' porque no existía."
     end
   rescue => e
     raise MinioConnectionError, "No se pudo conectar a Minio: #{e.message}"

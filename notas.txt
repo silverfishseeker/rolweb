@@ -118,3 +118,5 @@ migraciones de imágenes:
 
 borrar caché
     rails tmp:cache:clear
+    
+<%= link_to "voler", :back %>

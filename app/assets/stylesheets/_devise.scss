@@ -1,0 +1,40 @@
+@import "respondMax";
+
+.devise {
+  @extend .texto_info, .texto_info-margins;
+}
+
+.devise form{
+  border: 2px solid var(--c_contraste);
+  border-radius: 10px;
+  max-width: 500px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.devise .field{
+  display: flex;
+  @include respond-max {  flex-direction: column; }
+}
+.devise .field input:not([type="checkbox"]),
+.devise .field input:not([type="checkbox"]).field_with_errors  {
+  margin-left: auto;
+}
+
+.devise .actions {
+  text-align: center;
+}
+.devise .actions input[type="submit"] {
+  background-color: var(--c_base);
+  color: var(--c_white);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+
+.devise .actions:hover input[type="submit"] {
+  background-color: var(--c_base_alt);
+  cursor: pointer;
+}

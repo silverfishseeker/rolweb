@@ -3,14 +3,13 @@
 }
 
 .admin-cuerpo .admin-column {
-    flex: 2;
+    flex: 1;
     padding: 10px;
     border-right: 1px solid #ddd;
 }
 
 .admin-cuerpo .admin-column-small {
-    flex: 1;
-    font-size: small;
+    font-size: smaller;
 }
 
 .admin-cuerpo .admin-column:last-child {

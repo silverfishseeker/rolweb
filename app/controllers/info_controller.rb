@@ -45,4 +45,7 @@ class InfoController < ApplicationController
 
     def newPlayersHelp
     end
+
+    def rangosInfo
+    end
 end

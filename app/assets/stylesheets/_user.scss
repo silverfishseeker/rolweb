@@ -1,0 +1,41 @@
+@import "respondMax";
+
+.user-icon-wrapper {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.user-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+table.users-table {
+  background-color: var(--c_base);
+  border-radius: 10px;
+  border-collapse: separate;
+  border-spacing: 5px 10px;
+}
+table.users-table thead {
+  color: var(--c_white);
+}
+table.users-table td {
+  padding: 20px 5px;
+  background-color: var(--c_white);
+  border-radius: 10px;
+}
+
+.dashboard {
+  display: flex;
+  @include respond-max { flex-direction: column }
+}
+
+.dashboard-left, .dashboard-right {
+  flex: 1;
+}
+
+.dashboard-left .user-avatar {
+  max-height: 300px;
+}

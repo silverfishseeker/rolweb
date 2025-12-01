@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require "env_vars"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -67,6 +68,9 @@ Rails.application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
+  
+  # This is for generting URLs within mailers. Needed for devise
+  config.action_mailer.default_url_options = { host: EnvVars["APP_HOST"] }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
@@ -90,11 +94,4 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-
-  # Configuration for minio
-  config.x.minio.endpoint = Rails.application.credentials.dig(:minio, :endpoint)
-  config.x.minio.access_key_id = Rails.application.credentials.dig(:minio, :access_key_id)
-  config.x.minio.secret_access_key = Rails.application.credentials.dig(:minio, :secret_access_key)
-  config.x.minio.region = Rails.application.credentials.dig(:minio, :region)
-  config.x.minio.bucket = Rails.application.credentials.dig(:minio, :bucket)
 end

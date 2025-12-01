@@ -76,14 +76,41 @@
           </div>
         <% end %>
 
-          
-        <div class="submenu-admin_button">
-          <% not_admin_content do %>
-            <%= link_to "Admin access", "/control" %>
-          <% end %>
-
-          <% only_admin_content do %>
-            <%= link_to "Cerrar sesión", "/adminsession/close" %>
+        <div class="submenu auth-submenu">
+          <% if user_signed_in? %>
+            <a href="<%=dashboard_profile_path%>" class="nblink">
+              <%= render "shared/icon", user: current_user %>
+              <%= current_user.nombre%>
+            </a>
+            <div class="submenu-content auth-submenu-content" style="padding: 0;">
+              <%= link_to 'Mi cuenta', dashboard_profile_path %>
+              <%= link_to 'Cerrar sesión', destroy_user_session_path %>
+            </div>
+          <% else %>
+            <a class="nblink">Cuenta</a>
+            <div class="submenu-content auth-submenu-content">
+              <div class="auth-section">
+                <h3>Iniciar sesión</h3>
+                <%= form_with url: user_session_path, method: :post, local: true, scope: :user, class: "auth-form" do |f| %>
+                  <div>
+                    <%= f.label :email %>
+                    <%= f.email_field :email, required: true, class: "text" %>
+                  </div>
+                  <div>
+                    <%= f.label :password, "Contraseña" %>
+                    <%= f.password_field :password, required: true, class: "text" %>
+                  </div>
+                  <div class="remember-me">
+                    <%= f.check_box :remember_me, { checked: true } %>
+                    <%= f.label :remember_me, "Recuérdame" %>
+                  </div>
+                  <%= f.submit "Entrar", class: "auth-btn" %>
+                <% end %>
+              </div>
+              <div class="auth-section">
+                <%= link_to "Crear cuenta", new_user_registration_path, class: "auth-btn" %>
+              </div>
+            </div>
           <% end %>
         </div>
 
@@ -116,7 +143,21 @@
 
     
     <footer class="footbar">
-      <%= link_to "Aviso legal", "/avisolegal"%>
+      <div> <%# Este div no sobra.%> </div>
+      <div>
+        <%= link_to "Aviso legal", "/avisolegal"%>
+      </div>
+      <div>
+        <div class="footbar-admin_button">
+          <% not_admin_content do %>
+            <%= link_to "Admin access", "/control" %>
+          <% end %>
+
+          <% only_admin_content do %>
+            <%= link_to "Cerrar sesión", "/adminsession/close" %>
+          <% end %>
+        </div>
+      </div>
     </footer>
 
   </body>

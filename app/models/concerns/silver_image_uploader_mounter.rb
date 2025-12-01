@@ -8,6 +8,7 @@ module SilverImageUploaderMounter
   end
 
   class_methods do
+    # For this to work, the model must have an 'image' string attribute.
     def mount_image_uploader(mode: :none)
 
       class_attribute :has_image_uploader, instance_writer: false, default: true

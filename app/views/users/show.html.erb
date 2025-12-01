@@ -1,0 +1,9 @@
+<div class="texto_info texto_info-margins">
+  <p> Mostrando usuario </p>
+  <h2> <%= @x.nombre%> </h2>
+  <p> Email: <%= @x.email %> </p>
+  <p> Rango: <%= @x.rango %> </p> <br> <br>
+  <%= link_to "Editar usuario", edit_user_path(@x), class: "btn btn-primary"%> <br> <br> <br>
+  <%= link_to "Eliminar", user_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %> <br> <br> <br>
+  <%= link_to "Volver a la lista de usuarios", users_path %>
+</div>

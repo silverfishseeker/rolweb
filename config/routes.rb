@@ -1,14 +1,13 @@
 Rails.application.routes.draw do
-  namespace :ritual do
-    resources :ritual_nivels
-    resources :ritual_costes
-    resources :ritual_clases
-  end
-  resources :cuentos
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
   root "info#home"
+
+  devise_for :users, controllers: {
+    registrations: 'users/registrations'
+  }
+  
   resources :clases
   resources :habilidads
   resources :items
@@ -21,11 +20,27 @@ Rails.application.routes.draw do
   resources :contextoloots
   resources :cuentos
   get '/recalcular_childs', to: 'cuentos#recalcular_childs'
-
-  get 'images/:id/download', to: 'images#download', as: 'download_image'
+  resources :personajes
   
   resource :adminsession, only: [:new, :create]
   get '/adminsession/close', to: 'adminsessions#close'
+  
+  namespace :ritual do
+    resources :ritual_nivels
+    resources :ritual_costes
+    resources :ritual_clases
+  end
+
+  resources :users
+
+  resource :profile, only: [:edit, :update, :destroy] do
+    collection do
+      get 'dashboard'
+      get 'confirm_destroy'
+    end
+  end
+
+  get 'images/:id/download', to: 'images#download', as: 'download_image'
 
   get '/reglas', to: 'info#reglas'
   get '/estadosAlterados', to: 'info#estadosAlterados'
@@ -33,6 +48,7 @@ Rails.application.routes.draw do
   get '/clases-arbol', to: 'info#arbol'
   get '/get_random_element', to: 'info#get_random_element'
   get '/newPlayersHelp', to: 'info#newPlayersHelp'
+  get '/rangosInfo', to: 'info#rangosInfo'
 
   get '/control', to: 'admin#control'
   get '/items_no_categ', to: 'admin#items_no_categ'

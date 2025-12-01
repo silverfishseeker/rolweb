@@ -1,0 +1,27 @@
+<div class="devise">
+  <h2>Editar cuenta</h2>
+
+  <%= form_for(current_user, url: profile_path, html: { method: :put }) do |f|  %>
+    <%= render "devise/shared/error_messages", resource: current_user %>
+    
+    <div class="field">
+      <%= f.label :nombre %><br />
+      <%= f.text_field :nombre, autocomplete: "username" %>
+    </div>
+
+    <div class="field">
+      <%= render "shared/icon", user: current_user %>
+      <%= f.label :image %>
+      <%= f.file_field :image %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Update" %>
+    </div>
+  <% end %>
+
+  <h3>Otras opciones</h3>
+  <%= link_to "Cambiar contraseña", main_app.edit_user_registration_path(anchor: 'password') %>
+  <br>
+  <%= link_to "Eliminar cuenta", confirm_destroy_profile_path %>
+</div>

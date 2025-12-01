@@ -4,8 +4,6 @@ services:
       context: .
       args:
         RAILS_ENV: development
-    env_file:
-      - .env
     environment:
       DATABASE_HOST: db
     ports:

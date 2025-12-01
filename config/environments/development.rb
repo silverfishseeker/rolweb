@@ -41,6 +41,9 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  # This is for generting URLs within mailers. Needed for devise
+  config.action_mailer.default_url_options = { host: "localhost", port: 80 }
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
@@ -69,11 +72,4 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
 
   config.hosts << "doorsmaze.com"
-
-  # Configuration for minio
-  config.x.minio.endpoint = "http://minio:9000"
-  config.x.minio.access_key_id = "minioaccess"
-  config.x.minio.secret_access_key = "miniosecret"
-  config.x.minio.region = "us-east-1"
-  config.x.minio.bucket = "cubo"
 end
