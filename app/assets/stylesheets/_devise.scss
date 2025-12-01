@@ -1,3 +1,5 @@
+@import "respondMax";
+
 .devise {
   @extend .texto_info, .texto_info-margins;
 }
@@ -14,6 +16,7 @@
 
 .devise .field{
   display: flex;
+  @include respond-max {  flex-direction: column; }
 }
 .devise .field input:not([type="checkbox"]),
 .devise .field input:not([type="checkbox"]).field_with_errors  {
