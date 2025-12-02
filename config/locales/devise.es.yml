@@ -38,6 +38,8 @@ es:
             current_password:
               blank: "no puede estar vacía."
               invalid: "es incorrecta."
+            email:
+              taken: "Este correo electrónico ya está registrado"
   devise:
     confirmations:
       confirmed: Tu cuenta ha sido confirmada satisfactoriamente.

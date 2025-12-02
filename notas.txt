@@ -59,6 +59,8 @@ GENERAR COSAS y ejemplos
             :time
             :timestamp
 
+            :references -> clave foránea
+
     rails generate controller {controlador1s} {controlador2s} {...} {--skip-routes}
         generar controladores para los modelos o rutas, no sé ej:
             rails generate controller Articles index --skip-routes

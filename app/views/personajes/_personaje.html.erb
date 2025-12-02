@@ -1,12 +1,31 @@
-<div id="<%= dom_id personaje %>">
+<div id="<%= dom_id x %>">
   <p>
     <strong>User:</strong>
-    <%= personaje.user_id %>
+    <%= x.user_id %>
   </p>
 
   <p>
     <strong>Nombre:</strong>
-    <%= personaje.nombre %>
+    <%= x.nombre %>
   </p>
-
+  <p>
+    <strong>nivel_clases:</strong>
+    <%= x.nivel_clases %>
+  </p>
+  <p>
+    <strong>nivel_habilidades:</strong>
+    <%= x.nivel_habilidades %>
+  </p>
+  <p>
+    <strong>nivel_estadisticas:</strong>
+    <%= x.nivel_estadisticas %>
+  </p>
+  <p>
+    <strong>nivel_otro:</strong>
+    <%= x.nivel_otro %>
+  </p>
+  <p>
+    <strong>picture:</strong>
+    <%= render "shared/image_with_link", image: x.picture.image %>
+  </p>
 </div>
