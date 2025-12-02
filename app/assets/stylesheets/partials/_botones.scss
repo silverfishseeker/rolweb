@@ -15,48 +15,48 @@
 }
 
 .btn-danger {
-  background-color: crimson;
+  background-color: var(--c_danger);
   color: var(--c_white);
-  border: 4px solid black;
+  border: 4px solid var(--c_black);
 }
 .btn-danger:hover {
-  background-color: darkred;
+  background-color: var(--c_danger_alt);
   transform: scale(1.02);
 }
 
 .btn-warning {
-  background-color: #ffc107;
+  background-color: var(--c_warning);
   color: var(--c_black);
-  border: 4px solid black;
+  border: 4px solid var(--c_black);
 }
 
 .btn-warning:hover {
-  background-color: #e0a800;
+  background-color: var(--c_warning_alt);
   transform: scale(1.02);
 }
 
 .checkbox-danger {
     display: inline-block;
-    background-color: black;
+    background-color: var(--c_black);
     border-radius: 10px;
     padding: 5px;
     margin: 5px;
     margin-left: 10px;
 }
 .checkbox-danger input{
-  accent-color: #FF1D8D;
+  accent-color: var(--c_danger_alternativo);
   transform: scale(1.3);
 }
 
 .checkbox-danger label {
   font-weight: bold;
-  color: #FF1D8D;
+  color: var(--c_danger_alternativo);;
   text-transform: uppercase;
 }
 
 .checkbox-danger .input-danger {
     display: inline-block;
-    color: darkred;
+    color: var(--c_danger_alternativo);
     border-radius: 5px;
     width: 40px;
     margin-left: 5px;
