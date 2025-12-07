@@ -1,0 +1,9 @@
+<div class="texto_info texto_info-margins">
+  <h1><%= params[:tipo].humanize %></h1>
+
+  <% @xs.each do |x| %>
+    <%= render "meta_tipo", meta_tipo: x %>
+  <% end %>
+  <br>
+  <%= link_to "New", new_pj_meta_tipo_path_for(params[:tipo]), class: "btn btn-primary btn-small" %>
+</div>

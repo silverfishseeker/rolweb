@@ -1,0 +1,18 @@
+.meta-tipo-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; // para que se adapte a pantallas pequeñas
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid var(--c_base);
+  border-radius: 10px;
+  background-color: var(--c_contraste_alt);
+
+  .btn {
+    padding: 5px 10px;
+    color: var(--c_black);
+  }
+}
+
+

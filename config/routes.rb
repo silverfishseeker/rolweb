@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
     registrations: 'users/registrations'
   }
+  resources :users
   
   resources :clases
   resources :habilidads
@@ -31,7 +32,11 @@ Rails.application.routes.draw do
     resources :ritual_clases
   end
 
-  resources :users
+  namespace :pj do
+    resources :meta_tipos, controller: 'meta_tipos', path: 'calculado', as: 'tipo_calculados', defaults: { tipo: 'calculado' }
+    resources :meta_tipos, controller: 'meta_tipos', path: 'estadistic', as: 'tipo_estadistics', defaults: { tipo: 'estadistic' }
+    resources :meta_tipos, controller: 'meta_tipos', path: 'rango', as: 'tipo_rangos', defaults: { tipo: 'rango' }
+  end
 
   resource :profile, only: [:edit, :update, :destroy] do
     collection do

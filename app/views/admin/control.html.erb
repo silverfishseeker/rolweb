@@ -1,6 +1,6 @@
 <h2>Estas funciones son solo de administrador</h2>
 
-<div class="admin-cuerpo">
+<div class="texto_info admin-cuerpo">
     <p class="admin-column">
         <%= link_to "Usuarios", users_path %>
         <br>
@@ -15,6 +15,10 @@
         <%= link_to "Rituales", "/ritual" %>
         <br>
         <%= link_to "Categorías", categs_path %>
+        <br>
+            <%= link_to "Estadísticas", pj_tipo_estadistics_path %>,
+            <%= link_to "vars estado", pj_tipo_calculados_path %>,
+            <%= link_to "vars rango", pj_tipo_rangos_path %>
         <br>
         <%= link_to "Hechizos D&D", dndspells_path %>
         <br>

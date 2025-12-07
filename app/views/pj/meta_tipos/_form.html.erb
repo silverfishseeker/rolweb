@@ -1,0 +1,26 @@
+<%= form_with model: meta_tipo do |f| %>
+
+  <div class="field">
+    <%= f.label :nombre %>
+    <%= f.text_field :nombre, class: "form-control" %>
+  </div>
+  <br>
+  <div class="field">
+    <%= f.label :clave %>
+    <%= f.text_field :clave, class: "form-control" %>
+  </div>
+  <br>
+  <div class="field">
+    <%= f.label :siglas %>
+    <%= f.text_field :siglas, class: "form-control" %>
+  </div>
+  <br>
+  <div class="field">
+    <%= f.label :orden %>
+    <%= f.number_field :orden, class: "form-control" %>
+  </div>
+  <br>
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

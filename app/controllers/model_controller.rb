@@ -36,7 +36,7 @@ class ModelController < ApplicationController
     rescue_my_errors :new do
       @x = tipo.new(model_params)
       
-      yield if block_given? # For now only used by CuentosController
+      yield if block_given? # Used only by a few controllers for special actions.
 
       if @x.save
         redirect_to @x
@@ -54,7 +54,7 @@ class ModelController < ApplicationController
     rescue_my_errors :edit do
       @x = tipo.find(params[:id])
       
-      yield if block_given? # For now only used by CuentosController and HabilidadsController
+      yield if block_given? # Used only by a few controllers for special actions.
   
       if @x.update(model_params)
         redirect_to @x
