@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_01_164911) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_07_103533) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -159,6 +159,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_164911) do
     t.bigint "mob_id", null: false
   end
 
+  create_table "cuentos_personajes", id: false, force: :cascade do |t|
+    t.bigint "personaje_id", null: false
+    t.bigint "cuento_id", null: false
+  end
+
   create_table "cuentos_pictures", id: false, force: :cascade do |t|
     t.bigint "cuento_id", null: false
     t.bigint "picture_id", null: false
@@ -169,6 +174,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_164911) do
     t.string "nombre"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "isNumeric"
   end
 
   create_table "etiquets", force: :cascade do |t|
@@ -176,6 +182,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_164911) do
     t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "etiquets_personajes", id: false, force: :cascade do |t|
+    t.bigint "personaje_id", null: false
+    t.bigint "etiquet_id", null: false
   end
 
   create_table "etiquets_pictures", id: false, force: :cascade do |t|
@@ -267,11 +278,126 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_164911) do
     t.index ["user_id"], name: "index_personajes_on_user_id"
   end
 
+  create_table "personajes_users", id: false, force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "personaje_id", null: false
+  end
+
   create_table "pictures", force: :cascade do |t|
     t.string "nombre"
     t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "pj_calculados", force: :cascade do |t|
+    t.bigint "personaje_id", null: false
+    t.bigint "tipoCalculado_id", null: false
+    t.bigint "pj_modificable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["personaje_id"], name: "index_pj_calculados_on_personaje_id"
+    t.index ["pj_modificable_id"], name: "index_pj_calculados_on_pj_modificable_id"
+    t.index ["tipoCalculado_id"], name: "index_pj_calculados_on_tipoCalculado_id"
+  end
+
+  create_table "pj_estadistics", force: :cascade do |t|
+    t.integer "base"
+    t.integer "lv_mod"
+    t.bigint "personaje_id", null: false
+    t.bigint "tipoEstadistic_id", null: false
+    t.bigint "pj_modificable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["personaje_id"], name: "index_pj_estadistics_on_personaje_id"
+    t.index ["pj_modificable_id"], name: "index_pj_estadistics_on_pj_modificable_id"
+    t.index ["tipoEstadistic_id"], name: "index_pj_estadistics_on_tipoEstadistic_id"
+  end
+
+  create_table "pj_has_estadoalterados", force: :cascade do |t|
+    t.integer "valor"
+    t.bigint "personaje_id", null: false
+    t.bigint "estadoalterado_id", null: false
+    t.bigint "pj_parte_cuerpo_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["estadoalterado_id"], name: "index_pj_has_estadoalterados_on_estadoalterado_id"
+    t.index ["personaje_id"], name: "index_pj_has_estadoalterados_on_personaje_id"
+    t.index ["pj_parte_cuerpo_id"], name: "index_pj_has_estadoalterados_on_pj_parte_cuerpo_id"
+  end
+
+  create_table "pj_meta_tipos", force: :cascade do |t|
+    t.string "nombre"
+    t.string "clave"
+    t.string "siglas"
+    t.integer "orden"
+    t.string "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "pj_modificables", force: :cascade do |t|
+    t.integer "passive_mod"
+    t.integer "active_mod"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "pj_parte_cuerpos", force: :cascade do |t|
+    t.string "nombre"
+    t.integer "tipo"
+    t.string "mapeo"
+    t.integer "saludmax"
+    t.integer "saludact"
+    t.bigint "pj_calculado_id", null: false
+    t.bigint "personaje_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["personaje_id"], name: "index_pj_parte_cuerpos_on_personaje_id"
+    t.index ["pj_calculado_id"], name: "index_pj_parte_cuerpos_on_pj_calculado_id"
+  end
+
+  create_table "pj_personaje_has_clases", force: :cascade do |t|
+    t.integer "nivel"
+    t.bigint "personaje_id", null: false
+    t.bigint "clase_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["clase_id"], name: "index_pj_personaje_has_clases_on_clase_id"
+    t.index ["personaje_id"], name: "index_pj_personaje_has_clases_on_personaje_id"
+  end
+
+  create_table "pj_personaje_has_habilidads", force: :cascade do |t|
+    t.bigint "personaje_id", null: false
+    t.bigint "pj_personaje_has_clase_id", null: false
+    t.bigint "habilidad_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["habilidad_id"], name: "index_pj_personaje_has_habilidads_on_habilidad_id"
+    t.index ["personaje_id"], name: "index_pj_personaje_has_habilidads_on_personaje_id"
+    t.index ["pj_personaje_has_clase_id"], name: "index_pj_personaje_has_habilidads_on_pj_personaje_has_clase_id"
+  end
+
+  create_table "pj_personaje_has_items", force: :cascade do |t|
+    t.integer "cantidad"
+    t.bigint "personaje_id", null: false
+    t.bigint "item_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_pj_personaje_has_items_on_item_id"
+    t.index ["personaje_id"], name: "index_pj_personaje_has_items_on_personaje_id"
+  end
+
+  create_table "pj_rangos", force: :cascade do |t|
+    t.integer "valor"
+    t.bigint "personaje_id", null: false
+    t.bigint "tipoRango_id", null: false
+    t.bigint "pj_calculado_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["personaje_id"], name: "index_pj_rangos_on_personaje_id"
+    t.index ["pj_calculado_id"], name: "index_pj_rangos_on_pj_calculado_id"
+    t.index ["tipoRango_id"], name: "index_pj_rangos_on_tipoRango_id"
   end
 
   create_table "ritual_ritual_clase_rel_rituals", force: :cascade do |t|
@@ -376,6 +502,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_164911) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "personajes", "pictures"
   add_foreign_key "personajes", "users"
+  add_foreign_key "pj_calculados", "personajes"
+  add_foreign_key "pj_calculados", "pj_meta_tipos", column: "tipoCalculado_id"
+  add_foreign_key "pj_calculados", "pj_modificables"
+  add_foreign_key "pj_estadistics", "personajes"
+  add_foreign_key "pj_estadistics", "pj_meta_tipos", column: "tipoEstadistic_id"
+  add_foreign_key "pj_estadistics", "pj_modificables"
+  add_foreign_key "pj_has_estadoalterados", "estadoalterados"
+  add_foreign_key "pj_has_estadoalterados", "personajes"
+  add_foreign_key "pj_has_estadoalterados", "pj_parte_cuerpos"
+  add_foreign_key "pj_parte_cuerpos", "personajes"
+  add_foreign_key "pj_parte_cuerpos", "pj_calculados"
+  add_foreign_key "pj_personaje_has_clases", "clases"
+  add_foreign_key "pj_personaje_has_clases", "personajes"
+  add_foreign_key "pj_personaje_has_habilidads", "habilidads"
+  add_foreign_key "pj_personaje_has_habilidads", "personajes"
+  add_foreign_key "pj_personaje_has_habilidads", "pj_personaje_has_clases"
+  add_foreign_key "pj_personaje_has_items", "items"
+  add_foreign_key "pj_personaje_has_items", "personajes"
+  add_foreign_key "pj_rangos", "personajes"
+  add_foreign_key "pj_rangos", "pj_calculados"
+  add_foreign_key "pj_rangos", "pj_meta_tipos", column: "tipoRango_id"
   add_foreign_key "ritual_ritual_clase_rel_rituals", "ritual_ritual_clases", column: "ritual_clase_id"
   add_foreign_key "ritual_ritual_clase_rel_rituals", "ritual_rituals", column: "ritual_id"
   add_foreign_key "ritual_ritual_coste_rel_rituals", "ritual_ritual_costes", column: "ritual_coste_id"

@@ -26,6 +26,7 @@ class User < ApplicationRecord
   mount_image_uploader
   
   has_many :personajes, dependent: :destroy
+  has_and_belongs_to_many :viewPersonajes, class_name: "Personaje", join_table: "personajes_users"
 
   def self.rangos
     ["Espectador", "Jugador", "Game Master", "Administrador"]
