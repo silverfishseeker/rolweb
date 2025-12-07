@@ -1,7 +1,7 @@
 class Pj::MetaTiposController < ModelController
 
   def tipo
-    Pj::MetaTipo::STR_TIPO[params[:tipo]]
+    Pj::MetaTipo.str_tipo(params[:tipo])
   end
 
   def model_params
