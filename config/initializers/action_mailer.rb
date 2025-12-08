@@ -1,15 +1,12 @@
 # Used by Devise mailer
 
-Rails.application.configure do
-  return unless EnvVars.isLoaded
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address: "smtp.mailgun.org",
-    port: 587,
-    domain: EnvVars["MAILGUN_DOMAIN"],
-    user_name: EnvVars["MAILGUN_USER"] + "@" + EnvVars["MAILGUN_DOMAIN"],
-    password: EnvVars["MAILGUN_API_KEY"],
-    authentication: "plain",
-    enable_starttls_auto: true
-  }
-end
+ActionMailer::Base.delivery_method = :smtp
+ActionMailer::Base.smtp_settings = {
+  address: EnvVars["MAIL_ADDRESS"],
+  port: 587,
+  domain: EnvVars["MAIL_DOMAIN"],
+  user_name: EnvVars["MAIL_USER"] + "@" + EnvVars["MAIL_DOMAIN"],
+  password: EnvVars["MAIL_PASSWORD"],
+  authentication: :login,
+  enable_starttls_auto: true
+}

@@ -113,7 +113,12 @@ class AdminController < ApplicationController
     def ritual
     end
 
-
+    def test_mail
+        TestMailer.probe_email.deliver_now
+        redirect_to "/control", notice: "Correo enviado correctamente"
+    rescue => e
+        redirect_to "/control", alert: "Error al enviar correo: #{e.message}"
+    end
 
     private
 

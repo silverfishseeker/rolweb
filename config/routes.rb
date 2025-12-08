@@ -70,6 +70,7 @@ Rails.application.routes.draw do
   get '/download_logs', to: 'admin#download_logs'
   get '/check_minio_connection', to: 'admin#check_minio_connection'
   get '/ritual', to: 'admin#ritual'
+  get '/test_mail', to: 'admin#test_mail'
 
   get '/lootbox', to: 'randompick#lootbox'
   post '/lootboxing', to: 'randompick#lootboxing'

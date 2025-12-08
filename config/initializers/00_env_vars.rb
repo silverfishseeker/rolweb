@@ -22,9 +22,10 @@ module EnvVars
     "MINIO_SECRET_ACCESS_KEY" =>        [:str,  "miniosecret"],
     "MINIO_REGION" =>                   [:str,  "us-east-1"],
     "MINIO_BUCKET" =>                   [:str,  "cubo"],
-    "MAILGUN_API_KEY" =>                [:str,  nil], # Required for mail sending
-    "MAILGUN_DOMAIN" =>                 [:str,  nil], # Required for mail sending
-    "MAILGUN_USER" =>                   [:str,  nil]  # Required for mail sending
+    "MAIL_PASSWORD" =>                  [:str,  nil], # Required for mail sending
+    "MAIL_DOMAIN" =>                    [:str,  nil], # Required for mail sending
+    "MAIL_USER" =>                      [:str,  nil],  # Required for mail sending
+    "MAIL_ADDRESS" =>                   [:str,  nil]  # Required for mail sending
   }.freeze
 
   # You MUST set these variables in production
@@ -34,9 +35,10 @@ module EnvVars
     "MINIO_ENDPOINT",
     "MINIO_ACCESS_KEY_ID",
     "MINIO_SECRET_ACCESS_KEY",
-    "MAILGUN_API_KEY",
-    "MAILGUN_DOMAIN",
-    "MAILGUN_USER"
+    "MAIL_PASSWORD",
+    "MAIL_DOMAIN",
+    "MAIL_USER",
+    "MAIL_ADDRESS"
   ]
 
   class EnvVarError < StandardError; end
