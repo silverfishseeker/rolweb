@@ -10,3 +10,5 @@ ActionMailer::Base.smtp_settings = {
   authentication: :login,
   enable_starttls_auto: true
 }
+  # This is for generting URLs within mailers. Needed for devise
+  ActionMailer::Base.default_url_options = { host: EnvVars["APP_HOST"], port: 80 }
