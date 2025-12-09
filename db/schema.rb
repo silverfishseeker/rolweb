@@ -234,7 +234,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_103533) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "image"
-    t.boolean "usecategloot"
+    t.boolean "usecategloot", default: true
   end
 
   create_table "items_mobs", id: false, force: :cascade do |t|
@@ -453,29 +453,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_103533) do
     t.datetime "updated_at", null: false
     t.bigint "item_id"
     t.index ["item_id"], name: "index_ritual_rituals_on_item_id"
-  end
-
-  create_table "ritualclases", force: :cascade do |t|
-    t.string "valor"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "ritualcostes", force: :cascade do |t|
-    t.string "valor"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "ritualnivels", force: :cascade do |t|
-    t.integer "valor"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "rituals", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
