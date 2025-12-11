@@ -25,8 +25,8 @@
       <!-- GENERAL -->
       <div id="tab-general" class="pj-tab_pane pj-tab_pane-active">
 
-        <div class="pj-header">
-          <div class="pj-header-left">
+        <section class="columns">
+          <div>
             <h1 class="pj-nombre">
               <%= f.text_field :nombre, class: "form-control", placeholder: "Nombre del personaje" %>
             </h1>
@@ -37,25 +37,26 @@
               </label>
             </div>
 
-            <div style="margin-top:0.7rem;">
-              <%= f.label :picture_id, "Imagen" %>
-              <%= f.collection_select :picture_id, Picture.all, :id, :nombre, include_blank: true %>
-            </div>
           </div>
 
-          <div class="pj-header-right">
-            <% if @x.picture&.image&.attached? %>
-              <img src="<%= url_for(@x.picture.image) %>" class="pj-image">
+          <div>
+            <% if @x.picture %>
+              <%= render "shared/image_with_link", image: @x.picture.image, cssclass: "pj-image" %>
             <% else %>
               <div class="pj-image-placeholder">Sin imagen</div>
             <% end %>
+            <div>
+              <%= f.label :picture_id, "Selecciona imagen de la galería:" %>
+              <br>
+              <%= f.collection_select :picture_id, Picture.order(:nombre), :id, :nombre, include_blank: true %>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div style="margin-top:1rem;">
-          <h3 class="section-title">Notas</h3>
-          <%= f.rich_text_area :descripcion %>
-        </div>
+        <section>
+          <h3>Notas</h3>
+          <div class="white_bk"><%= f.rich_text_area :descripcion %></div>
+        </section>
 
       </div>
 
@@ -75,7 +76,7 @@
           </thead>
           <tbody>
           <% Pj::TipoEstadistic.all.each do |tipo| %>
-            <% existing = @x.estadistics.find_by(tipo_estadistic_id: tipo.id) if @x.persisted? %>
+            <% existing = @x.estadistics.find_by(tipoEstadistic_id: tipo.id) if @x.persisted? %>
             <tr>
               <td>
                 <input type="checkbox"

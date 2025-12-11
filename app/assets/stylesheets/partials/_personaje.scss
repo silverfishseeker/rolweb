@@ -1,3 +1,9 @@
+@import "respondMax";
+
+:root {
+  --ancho_pj_imagen:350px;
+}
+
 .pj-meta_tipo_card {
   display: flex;
   align-items: center;
@@ -21,6 +27,7 @@
   margin-top: 40px;
   background-color: var(--c_contraste);
   border: 4px solid var(--c_black);
+  border-radius: 10px;
   padding: 15px;
   position: relative;
 }
@@ -68,7 +75,42 @@
 
 .pj-tab_pane {
   display: none;
+  .columns {  
+    max-width: 100%;
+    display: flex;
+    gap: 20px;
+
+    > div{
+      flex: 1;
+      flex-shrink: 1;
+
+      select {
+        width: var(--ancho_pj_imagen);
+      }
+    }
+    
+    @include respond-max {  flex-direction: column; }
+  }
+  .white_bk{
+    background: var(--c_white);
+    border-radius: 10px;
+    padding: 10px;
+  }
 }
 .pj-tab_pane-active {
   display: block;
+}
+
+.pj-image img {
+  max-width: var(--ancho_pj_imagen);
+  border-radius: 6px;
+}
+.pj-image-placeholder {
+  width: var(--ancho_pj_imagen);
+  height: var(--ancho_pj_imagen);
+  align-items:center;
+  justify-content:center;
+  border-radius: 6px;
+  background: var(--c_white);
+  color: var(--c_grey);
 }
