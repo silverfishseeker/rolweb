@@ -11,7 +11,6 @@
     <div class="pj-tabs">
       <div class="pj-tabs-nav">
         <div data_tab_target="#tab-general" class="pj-tabs-nav-active">General</div>
-        <div data_tab_target="#tab-estadisticas">Estadísticas</div>
         <div data_tab_target="#tab-calculados">Calculados</div>
         <div data_tab_target="#tab-rangos">Rangos</div>
         <div data_tab_target="#tab-clases">Clases & Habilidades</div>
@@ -27,16 +26,80 @@
 
         <section class="columns">
           <div>
-            <h1 class="pj-nombre">
+            <h2>
               <%= f.text_field :nombre, class: "form-control", placeholder: "Nombre del personaje" %>
-            </h1>
+            </h2>
 
-            <div class="pj-meta">
+            <div>
               <label>
-                <%= f.check_box :is_public %> Público
+                <%= f.check_box :is_public %> Publicar para que todos puedan verlo. (No recomendable)
               </label>
             </div>
+            <h3> Estadísticas</h3>
+            <table class="tabla-estadisticas">
+              <thead>
+                <tr>
+                  <th>Aplicar</th>
+                  <th>Nombre</th>
+                  <th>Valor actual</th>
+                  <th>Valor base</th>
+                  <th>Incremento de niveles</th>
+                  <th>Incremento por efectos permanentes</th>
+                  <th>Incremento por efectos temporales</th>
+                </tr>
+              </thead>
+              <tbody>
+              <% Rails.logger.debug "##############################"
+                  Rails.logger.debug @x
+                  @x.estadistics.each do |i|
+                    Rails.logger.debug i
+                    Rails.logger.debug "####{i.tipoEstadistic_id}#"
+                    Rails.logger.debug i.tipoEstadistic_id.class
+                    Rails.logger.debug i.tipoEstadistic_id == 1
 
+                  end
+                  Rails.logger.debug @x.estadistics.find_by(tipoEstadistic_id: 1) %>
+              <% Pj::TipoEstadistic.order(:orden).each do |tipo| %>
+                <% stat = @x.estadistics.find { |s| s.tipoEstadistic_id == tipo.id } %>
+                <% Rails.logger.debug tipo %>
+                <% Rails.logger.debug tipo.id %>
+                <% Rails.logger.debug stat %>
+                <tr>
+                  <td>
+                    <input type="checkbox"
+                          name="estadistics[<%= tipo.id %>][apply]"
+                          value="1"
+                          <%= "checked" if stat %>>
+                  </td>
+                  <td><%= "#{tipo.nombre} (#{tipo.siglas})" %></td>
+                  <td>
+                    <%= stat&.value %>
+                  </td>
+                  <td>
+                    <input class="input-sm" type="number"
+                          name="estadistics[<%= tipo.id %>][base]"
+                          value="<%= stat&.base %>">
+                  </td>
+                  <td>
+                    <input class="input-sm" type="number"
+                          name="estadistics[<%= tipo.id %>][lv_mod]"
+                          value="<%= stat&.lv_mod %>">
+                  </td>
+                  <td>
+                    <input class="input-sm" type="number"
+                          name="estadistics[<%= tipo.id %>][passive_mod]"
+                          value="<%= stat&.modificable&.passive_mod %>">
+                  </td>
+                  <td>
+                    <input class="input-sm" type="number"
+                          name="estadistics[<%= tipo.id %>][active_mod]"
+                          value="<%= stat&.modificable&.active_mod %>">
+                  </td>
+                </tr>
+              <% end %>
+              <% Rails.logger.debug "##############################" %>
+              </tbody>
+            </table>
           </div>
 
           <div>
@@ -58,56 +121,6 @@
           <div class="white_bk"><%= f.rich_text_area :descripcion %></div>
         </section>
 
-      </div>
-
-      <!-- ESTADÍSTICAS -->
-      <div id="tab-estadisticas" class="pj-tab_pane">
-        <h3 class="section-title">Estadísticas</h3>
-
-        <table class="tabla-estadisticas">
-          <thead>
-            <tr>
-              <th>Aplicar</th>
-              <th>Nombre</th>
-              <th>Base</th>
-              <th>Lv mod</th>
-              <th>Sobrescritura</th>
-            </tr>
-          </thead>
-          <tbody>
-          <% Pj::TipoEstadistic.all.each do |tipo| %>
-            <% existing = @x.estadistics.find_by(tipoEstadistic_id: tipo.id) if @x.persisted? %>
-            <tr>
-              <td>
-                <input type="checkbox"
-                      name="estadistics[<%= tipo.id %>][apply]"
-                      value="1"
-                      <%= "checked" if existing %>>
-              </td>
-
-              <td><%= tipo.nombre %></td>
-
-              <td>
-                <input class="input-sm" type="number"
-                      name="estadistics[<%= tipo.id %>][base]"
-                      value="<%= existing&.base %>">
-              </td>
-
-              <td>
-                <input class="input-sm" type="number"
-                      name="estadistics[<%= tipo.id %>][lv_mod]"
-                      value="<%= existing&.lv_mod %>">
-              </td>
-
-              <td>
-                <textarea class="textarea-sm"
-                          name="estadistics[<%= tipo.id %>][sobreescritura]"><%= existing&.modificable&.active_mod %></textarea>
-                <button type="button" class="toggle-edit">Editar/Ver</button>
-              </td>
-            </tr>
-          <% end %>
-          </tbody>
-        </table>
       </div>
 
       <!-- CALCULADOS -->

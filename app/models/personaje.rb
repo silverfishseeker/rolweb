@@ -20,6 +20,6 @@ class Personaje < ApplicationRecord
   has_and_belongs_to_many :viewUsers, class_name: "User", join_table: "personajes_users"
 
   def nivel
-    nivel_clases.to_i + nivel_estadisticas.to_i + nivel_habilidades.to_i + nivel_otro.to_i # to_i transforma los nil en 0
+    sum_nil nivel_clases, nivel_estadisticas, nivel_habilidades, nivel_otro # sum_nil ignora nils
   end
 end

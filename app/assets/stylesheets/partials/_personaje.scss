@@ -28,7 +28,7 @@
   background-color: var(--c_contraste);
   border: 4px solid var(--c_black);
   border-radius: 10px;
-  padding: 15px;
+  padding: 20px;
   position: relative;
 }
 
@@ -108,9 +108,31 @@
 .pj-image-placeholder {
   width: var(--ancho_pj_imagen);
   height: var(--ancho_pj_imagen);
+  display: flex;
   align-items:center;
   justify-content:center;
   border-radius: 6px;
   background: var(--c_white);
   color: var(--c_grey);
+}
+
+/* Estadísticas: tabla */
+.tabla-estadisticas {
+  width: var(--ancho_pj_imagen);
+  th, td{
+    vertical-align: middle;
+    text-align: center;
+  }
+  th {
+    color: var(--c_white);
+    background-color: var(--c_detalle);
+    border-radius: 5px;
+    padding: 2px;
+  }
+  input[type="number"]{
+    width: 40px;
+  }
+  input[type="checkbox"]{
+    transform: scale(2);
+  }
 }

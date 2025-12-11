@@ -7,4 +7,9 @@ module Kernel
     raise e unless allowed_exceptions.include?(e.class)
     default
   end
+
+  def sum_nil(*sums)
+    sums.compact.sum
+  end
+
 end
