@@ -15,4 +15,60 @@
   }
 }
 
+//Tabs in form
 
+.pj-tabs {
+  margin-top: 40px;
+  background-color: var(--c_contraste);
+  border: 4px solid var(--c_black);
+  padding: 15px;
+  position: relative;
+}
+
+.pj-tabs.wrapped{
+  margin-top: 0;
+}
+
+.pj-tabs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  row-gap: 5px;
+  position: absolute;
+  top: -36px; 
+
+  div {
+    background-color: var(--c_alternativo);
+    padding: 5px;
+    border: 4px solid var(--c_black);
+    border-radius: 5px;
+    white-space: nowrap;
+    &:hover {
+      background: var(--c_contraste_alt);
+      cursor: pointer;
+    }
+  }
+
+  .pj-tabs-nav-active {
+    background-color: var(--c_contraste);
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+  }
+
+}
+
+.pj-tabs-nav.wrapped {
+  position: initial;
+  margin: 15px 30px 15px 0;
+  .pj-tabs-nav-active {
+    border: 4px solid var(--c_black);
+    border-radius: 5px;
+  }
+}
+
+.pj-tab_pane {
+  display: none;
+}
+.pj-tab_pane-active {
+  display: block;
+}

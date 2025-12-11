@@ -1,27 +1,383 @@
-<%= form_with(model: x) do |form| %>
-  <% if x.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(x.errors.count, "error") %> prohibited this personaje from being saved:</h2>
+<%= importJS "personajeForm" %>
 
-      <ul>
-        <% x.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+<div>
+  <%= form_with(model: @x, local: true, html: { multipart: true, class: "pj-form"}) do |f| %>
+    <!-- SUBMIT + CANCEL -->
+    <div class="form-actions" style="margin-top:1.5rem;">
+      <%= f.submit "Guardar", class: "btn btn-primary" %>
+      <%= link_to "Cancelar", personajes_path, class: "btn btn-warning" %>
     </div>
+
+    <div class="pj-tabs">
+      <div class="pj-tabs-nav">
+        <div data_tab_target="#tab-general" class="pj-tabs-nav-active">General</div>
+        <div data_tab_target="#tab-estadisticas">Estadísticas</div>
+        <div data_tab_target="#tab-calculados">Calculados</div>
+        <div data_tab_target="#tab-rangos">Rangos</div>
+        <div data_tab_target="#tab-clases">Clases & Habilidades</div>
+        <div data_tab_target="#tab-hab-independientes">Habilidades independientes</div>
+        <div data_tab_target="#tab-items">Items</div>
+        <div data_tab_target="#tab-estados">Estados alterados</div>
+        <div data_tab_target="#tab-partes">Partes del cuerpo</div>
+      </div>
+
+      <div class="pj-tab-container">
+      <!-- GENERAL -->
+      <div id="tab-general" class="pj-tab_pane pj-tab_pane-active">
+
+        <div class="pj-header">
+          <div class="pj-header-left">
+            <h1 class="pj-nombre">
+              <%= f.text_field :nombre, class: "form-control", placeholder: "Nombre del personaje" %>
+            </h1>
+
+            <div class="pj-meta">
+              <label>
+                <%= f.check_box :is_public %> Público
+              </label>
+            </div>
+
+            <div style="margin-top:0.7rem;">
+              <%= f.label :picture_id, "Imagen" %>
+              <%= f.collection_select :picture_id, Picture.all, :id, :nombre, include_blank: true %>
+            </div>
+          </div>
+
+          <div class="pj-header-right">
+            <% if @x.picture&.image&.attached? %>
+              <img src="<%= url_for(@x.picture.image) %>" class="pj-image">
+            <% else %>
+              <div class="pj-image-placeholder">Sin imagen</div>
+            <% end %>
+          </div>
+        </div>
+
+        <div style="margin-top:1rem;">
+          <h3 class="section-title">Notas</h3>
+          <%= f.rich_text_area :descripcion %>
+        </div>
+
+      </div>
+
+      <!-- ESTADÍSTICAS -->
+      <div id="tab-estadisticas" class="pj-tab_pane">
+        <h3 class="section-title">Estadísticas</h3>
+
+        <table class="tabla-estadisticas">
+          <thead>
+            <tr>
+              <th>Aplicar</th>
+              <th>Nombre</th>
+              <th>Base</th>
+              <th>Lv mod</th>
+              <th>Sobrescritura</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% Pj::TipoEstadistic.all.each do |tipo| %>
+            <% existing = @x.estadistics.find_by(tipo_estadistic_id: tipo.id) if @x.persisted? %>
+            <tr>
+              <td>
+                <input type="checkbox"
+                      name="estadistics[<%= tipo.id %>][apply]"
+                      value="1"
+                      <%= "checked" if existing %>>
+              </td>
+
+              <td><%= tipo.nombre %></td>
+
+              <td>
+                <input class="input-sm" type="number"
+                      name="estadistics[<%= tipo.id %>][base]"
+                      value="<%= existing&.base %>">
+              </td>
+
+              <td>
+                <input class="input-sm" type="number"
+                      name="estadistics[<%= tipo.id %>][lv_mod]"
+                      value="<%= existing&.lv_mod %>">
+              </td>
+
+              <td>
+                <textarea class="textarea-sm"
+                          name="estadistics[<%= tipo.id %>][sobreescritura]"><%= existing&.modificable&.active_mod %></textarea>
+                <button type="button" class="toggle-edit">Editar/Ver</button>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- CALCULADOS -->
+      <div id="tab-calculados" class="pj-tab_pane">
+        <h3 class="section-title">Calculados</h3>
+
+        <table class="tabla-estadisticas">
+          <thead>
+            <tr>
+              <th>Aplicar</th>
+              <th>Nombre</th>
+              <th>Valor</th>
+              <th>Sobrescritura</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% Pj::TipoCalculado.all.each do |tipo| %>
+            <% existing = @x.calculados.find_by(tipo_calculado_id: tipo.id) if @x.persisted? %>
+            <tr>
+              <td>
+                <input type="checkbox" name="calculados[<%= tipo.id %>][apply]" value="1" <%= "checked" if existing %>>
+              </td>
+
+              <td><%= tipo.nombre %></td>
+
+              <td>
+                <input class="input-sm" type="text"
+                      name="calculados[<%= tipo.id %>][valor]"
+                      value="<%= existing&.valor %>">
+              </td>
+
+              <td>
+                <textarea class="textarea-sm"
+                          name="calculados[<%= tipo.id %>][sobreescritura]"><%= existing&.modificable&.active_mod %></textarea>
+                <button class="toggle-edit" type="button">Editar/Ver</button>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RANGOS -->
+      <div id="tab-rangos" class="pj-tab_pane">
+        <h3 class="section-title">Rangos</h3>
+
+        <table class="tabla-estadisticas">
+          <thead>
+            <tr>
+              <th>Aplicar</th>
+              <th>Nombre</th>
+              <th>Valor</th>
+              <th>Sobrescritura</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% Pj::TipoRango.all.each do |tipo| %>
+            <% existing = @x.rangos.find_by(tipo_rango_id: tipo.id) if @x.persisted? %>
+            <tr>
+              <td>
+                <input type="checkbox" name="rangos[<%= tipo.id %>][apply]" value="1" <%= "checked" if existing %>>
+              </td>
+
+              <td><%= tipo.nombre %></td>
+
+              <td>
+                <input class="input-sm" type="number"
+                      name="rangos[<%= tipo.id %>][valor]"
+                      value="<%= existing&.valor %>">
+              </td>
+
+              <td>
+                <textarea class="textarea-sm"
+                          name="rangos[<%= tipo.id %>][sobreescritura]"><%= existing&.calculado&.modificable&.active_mod %></textarea>
+                <button type="button" class="toggle-edit">Editar/Ver</button>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- CLASES & HABILIDADES -->
+      <div id="tab-clases" class="pj-tab_pane">
+        <h3 class="section-title">Clases & Habilidades</h3>
+
+        <div style="margin-bottom:1rem;">
+          <label><strong>Clases del personaje:</strong></label><br>
+          <select name="clases_selected[]" multiple size="8" class="input-lg">
+            <% Clase.order(:nombre).each do |cl| %>
+              <option value="<%= cl.id %>" <%= "selected" if @x.personajeHasClases.exists?(clase_id: cl.id) %>>
+                <%= cl.nombre %>
+              </option>
+            <% end %>
+          </select>
+        </div>
+
+        <% Clase.order(:nombre).each do |cl| %>
+          <% phc = @x.personajeHasClases.find_by(clase_id: cl.id) %>
+
+          <div class="clase-item" data-clase-id="<%= cl.id %>">
+            <div class="clase-header">
+              <h4 class="clase-nombre"><%= cl.nombre %></h4>
+              <span class="clase-nivel">Nv <%= phc&.nivel || 0 %></span>
+            </div>
+
+            <div>
+              <label>Nivel:
+                <input type="number"
+                      class="input-sm"
+                      name="clases_data[<%= cl.id %>][nivel]"
+                      value="<%= phc&.nivel || 0 %>">
+              </label>
+            </div>
+
+            <div class="habilidad-list" style="margin-top:0.75rem;">
+              <label><strong>Habilidades de la clase:</strong></label><br>
+
+              <select name="habilidades_for_clase[<%= cl.id %>][]" multiple size="6" class="input-lg">
+                <% cl.habilidads.each do |hab| %>
+                  <% selected = @x.personajeHasHabilidads.where(habilidad_id: hab.id).exists? %>
+                  <option value="<%= hab.id %>" <%= "selected" if selected %>>
+                    <%= hab.nombre %>
+                  </option>
+                <% end %>
+              </select>
+
+              <% cl.habilidads.each do |hab| %>
+                <% phh = @x.personajeHasHabilidads.find_by(habilidad_id: hab.id) %>
+                <div class="habilidad-item" style="margin-top:0.5rem;">
+                  <strong><%= hab.nombre %></strong>
+                  <textarea class="textarea-sm"
+                            name="habilidades_sobrescritura[<%= cl.id %>][<%= hab.id %>]"><%= phh&.sobreescritura&.body&.to_s %></textarea>
+                  <button type="button" class="toggle-edit">Editar/Ver</button>
+                </div>
+              <% end %>
+
+            </div>
+          </div>
+
+        <% end %>
+      </div>
+
+      <!-- HABILIDADES INDEPENDIENTES -->
+      <div id="tab-hab-independientes" class="pj-tab_pane">
+        <h3 class="section-title">Habilidades independientes</h3>
+
+        <% independent_habs = Habilidad.joins(:clases).where(clases: { id: 102 }).distinct %>
+        <% independent_habs.each do |hab| %>
+          <% phh = @x.personajeHasHabilidads.find_by(habilidad_id: hab.id) %>
+
+          <div class="habilidad-item">
+            <label>
+              <input type="checkbox"
+                    name="hab_independent[<%= hab.id %>][apply]"
+                    value="1"
+                    <%= "checked" if phh %>>
+              <strong><%= hab.nombre %></strong>
+            </label>
+
+            <textarea class="textarea-sm"
+                      name="hab_independent[<%= hab.id %>][sobreescritura]"><%= phh&.sobreescritura&.body&.to_s %></textarea>
+            <button type="button" class="toggle-edit">Editar/Ver</button>
+          </div>
+
+        <% end %>
+      </div>
+
+      <!-- ITEMS -->
+      <div id="tab-items" class="pj-tab_pane">
+        <h3 class="section-title">Items</h3>
+
+        <table class="tabla-inventario">
+          <thead>
+            <tr>
+              <th>Aplicar</th>
+              <th>Item</th>
+              <th>Cantidad</th>
+              <th>Sobrescritura</th>
+            </tr>
+          </thead>
+
+          <tbody>
+          <% Item.order(:nombre).each do |it| %>
+            <% phi = @x.PersonajeHasItem.find_by(item_id: it.id) rescue nil %>
+            <tr>
+              <td>
+                <input type="checkbox"
+                      name="items[<%= it.id %>][apply]"
+                      value="1"
+                      <%= "checked" if phi %>>
+              </td>
+
+              <td><%= it.nombre %></td>
+
+              <td>
+                <input class="input-sm" type="number"
+                      name="items[<%= it.id %>][cantidad]"
+                      min="1"
+                      value="<%= phi&.cantidad || 1 %>">
+              </td>
+
+              <td>
+                <textarea class="textarea-sm"
+                          name="items[<%= it.id %>][sobreescritura]"><%= phi&.sobreescritura&.body&.to_s %></textarea>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ESTADOS ALTERADOS -->
+      <div id="tab-estados" class="pj-tab_pane">
+        <h3 class="section-title">Estados alterados</h3>
+
+        <div class="estado-grid">
+        <% Estadoalterado.order(:nombre).each do |est| %>
+          <% has = @x.hasEstadoalterados.find_by(estado_alterado_id: est.id) rescue nil %>
+          <div class="estado-item">
+            <label>
+              <input type="checkbox"
+                    name="estados[<%= est.id %>][apply]"
+                    value="1"
+                    <%= "checked" if has %>>
+              <%= est.nombre %>
+            </label>
+
+            <div class="estado-value">
+              <input class="input-sm" type="text"
+                    name="estados[<%= est.id %>][valor]"
+                    value="<%= has&.valor %>">
+            </div>
+          </div>
+        <% end %>
+        </div>
+      </div>
+
+      <!-- PARTES DEL CUERPO -->
+      <div id="tab-partes" class="pj-tab_pane">
+        <h3 class="section-title">Partes del cuerpo</h3>
+
+        <div class="cuerpo-grid">
+        <% Pj::ParteCuerpo.where(personaje_id: @x.id).each do |parte| %>
+          <div class="parte-item">
+            <div class="parte-nombre"><%= parte.nombre %></div>
+
+            <label>Estado:
+              <select name="partes[<%= parte.id %>][estado]">
+                <% parte.mapeo.split(",").each do |estado| %>
+                  <option value="<%= estado %>" <%= "selected" if parte.saludact == estado %>>
+                    <%= estado %>
+                  </option>
+                <% end %>
+              </select>
+            </label>
+          </div>
+        <% end %>
+        </div>
+
+      </div>
+      
+      </div>
+
+    </div> <!-- /tabs -->
+
+    <!-- SUBMIT + CANCEL -->
+    <div class="form-actions" style="margin-top:1.5rem;">
+      <%= f.submit "Guardar", class: "btn btn-primary" %>
+      <%= link_to "Cancelar", personajes_path, class: "btn btn-warning" %>
+    </div>
+
   <% end %>
-
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
-  </div>
-
-  <div>
-    <%= form.label :nombre, style: "display: block" %>
-    <%= form.text_field :nombre %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
-<% end %>
+</div>
