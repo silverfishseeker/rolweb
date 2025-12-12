@@ -1,31 +1,20 @@
-<div id="<%= dom_id x %>">
-  <p>
-    <strong>User:</strong>
-    <%= x.user_id %>
-  </p>
+<div class="carta carta_personaje">
+  <div class="carta-personaje-header">
+      <h2><%= personaje.nombre %></h2>
+      <b> Nivel <%= personaje.nivel %></b>
+  </div>
 
-  <p>
-    <strong>Nombre:</strong>
-    <%= x.nombre %>
-  </p>
-  <p>
-    <strong>nivel_clases:</strong>
-    <%= x.nivel_clases %>
-  </p>
-  <p>
-    <strong>nivel_habilidades:</strong>
-    <%= x.nivel_habilidades %>
-  </p>
-  <p>
-    <strong>nivel_estadisticas:</strong>
-    <%= x.nivel_estadisticas %>
-  </p>
-  <p>
-    <strong>nivel_otro:</strong>
-    <%= x.nivel_otro %>
-  </p>
-  <p>
-    <strong>picture:</strong>
-    <%= render "shared/image_with_link", image: x.picture.image %>
-  </p>
+  <div class="carta-personaje-body">
+      <div class="miniListadoClases">
+          <% personaje.personajeHasClases.each do | perClase|%>
+            <%= link_to perClase.clase, class:"carta-title" do %>
+              <strong><%=perClase.nivel%></strong> <%=perClase.clase.nombre%>
+            <% end %> <br>
+          <% end %>
+      </div>
+
+      <div class="carta-image">
+          <%= render "shared/image", image: personaje.picture.image %>
+      </div>
+  </div>
 </div>

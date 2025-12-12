@@ -207,3 +207,38 @@
     color: var();
     border-color: var(--c_base);
 }
+
+/* ################################ */
+/* Peronajes*/
+
+.carta_personaje {
+    width: var(--ancho_carta_clase);
+    height: var(--ancho_carta_clase);
+    background: var(--c_contraste);
+    border: 3px solid var(--c_base);
+    border-radius: 12px;
+}
+
+.carta-personaje-header {
+    display: flex;
+    align-items: end;
+    gap: 20px;
+    padding: 20px;
+    background: var(--c_base);
+    border-bottom: 3px solid var(--c_base);
+    color: var(--c_white);
+    h2, h4 {
+        margin: 0;
+    }
+}
+
+.carta-personaje-body {
+    display: flex;
+    padding: 20px;
+    gap: 10px;
+
+    .miniListadoClases {
+        flex-grow: 1;
+    }
+}
+

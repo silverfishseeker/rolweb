@@ -3,8 +3,7 @@
 <%= render @x %>
 
 <div>
-  <%= link_to "Edit this personaje", edit_personaje_path(@x) %> |
-  <%= link_to "Back to personajes", personajes_path %>
-
-  <%= button_to "Destroy this personaje", @x, method: :delete %>
+  <%= link_to "Editar", edit_habilidad_path(@x), class: "btn btn-primary" %>
+  <%= link_to "Eliminar", habilidad_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
+  <%= link_to "Volver", personajes_path, class: "btn btn-primary" %>
 </div>
