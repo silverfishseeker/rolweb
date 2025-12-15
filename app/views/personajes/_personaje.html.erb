@@ -1,20 +1,26 @@
 <div class="carta carta_personaje">
   <div class="carta-personaje-header">
-      <h2><%= personaje.nombre %></h2>
-      <b> Nivel <%= personaje.nivel %></b>
+    <h2><%= personaje.nombre %></h2>
+    <b> Nivel <%= personaje.nivel %></b>
   </div>
 
   <div class="carta-personaje-body">
-      <div class="miniListadoClases">
-          <% personaje.personajeHasClases.each do | perClase|%>
-            <%= link_to perClase.clase, class:"carta-title" do %>
-              <strong><%=perClase.nivel%></strong> <%=perClase.clase.nombre%>
-            <% end %> <br>
-          <% end %>
-      </div>
+    <div class="miniListadoClases">
+      <% personaje.personajeHasClases.each do | perClase|%>
+        <%= link_to perClase.clase, class:"carta-title" do %>
+          <strong><%=perClase.nivel%></strong> <%=perClase.clase.nombre%>
+        <% end %> <br>
+      <% end %>
+    </div>
 
-      <div class="carta-image">
-          <%= render "shared/image", image: personaje.picture.image %>
-      </div>
+    <div class="carta-image">
+      <%= render "shared/image", image: personaje.picture.image %>
+    </div>
+  </div>
+
+  <div class="carta-personaje-stats">
+    <% personaje.estadistics.each do |stat| %>
+      <span class="carta-number"><%=stat.tipoEstadistic.siglas%> <%=stat.value%>(<b><%=stat.mod_str%></b>)</span>
+    <% end %>
   </div>
 </div>

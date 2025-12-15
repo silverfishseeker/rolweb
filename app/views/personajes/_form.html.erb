@@ -11,8 +11,7 @@
     <div class="pj-tabs">
       <div class="pj-tabs-nav">
         <div data_tab_target="#tab-general" class="pj-tabs-nav-active">General</div>
-        <div data_tab_target="#tab-calculados">Calculados</div>
-        <div data_tab_target="#tab-rangos">Rangos</div>
+        <div data_tab_target="#tab-estado">Estado</div>
         <div data_tab_target="#tab-clases">Clases & Habilidades</div>
         <div data_tab_target="#tab-hab-independientes">Habilidades independientes</div>
         <div data_tab_target="#tab-items">Items</div>
@@ -49,21 +48,9 @@
                 </tr>
               </thead>
               <tbody>
-              <% Rails.logger.debug "##############################"
-                  Rails.logger.debug @x
-                  @x.estadistics.each do |i|
-                    Rails.logger.debug i
-                    Rails.logger.debug "####{i.tipoEstadistic_id}#"
-                    Rails.logger.debug i.tipoEstadistic_id.class
-                    Rails.logger.debug i.tipoEstadistic_id == 1
 
-                  end
-                  Rails.logger.debug @x.estadistics.find_by(tipoEstadistic_id: 1) %>
               <% Pj::TipoEstadistic.order(:orden).each do |tipo| %>
                 <% stat = @x.estadistics.find { |s| s.tipoEstadistic_id == tipo.id } %>
-                <% Rails.logger.debug tipo %>
-                <% Rails.logger.debug tipo.id %>
-                <% Rails.logger.debug stat %>
                 <tr>
                   <td>
                     <input type="checkbox"
@@ -97,7 +84,6 @@
                   </td>
                 </tr>
               <% end %>
-              <% Rails.logger.debug "##############################" %>
               </tbody>
             </table>
           </div>
@@ -124,7 +110,7 @@
       </div>
 
       <!-- CALCULADOS -->
-      <div id="tab-calculados" class="pj-tab_pane">
+      <div id="tab-estado" class="pj-tab_pane">
         <h3 class="section-title">Calculados</h3>
 
         <table class="tabla-estadisticas">
@@ -203,7 +189,7 @@
         </table>
       </div>
 
-      <!-- CLASES & HABILIDADES -->
+      <!-- CLASES & HABILIDADES --
       <div id="tab-clases" class="pj-tab_pane">
         <h3 class="section-title">Clases & Habilidades</h3>
 
@@ -264,7 +250,7 @@
         <% end %>
       </div>
 
-      <!-- HABILIDADES INDEPENDIENTES -->
+      <-- HABILIDADES INDEPENDIENTES --
       <div id="tab-hab-independientes" class="pj-tab_pane">
         <h3 class="section-title">Habilidades independientes</h3>
 
@@ -287,7 +273,7 @@
           </div>
 
         <% end %>
-      </div>
+      </div> -->
 
       <!-- ITEMS -->
       <div id="tab-items" class="pj-tab_pane">

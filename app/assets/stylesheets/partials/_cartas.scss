@@ -242,3 +242,13 @@
     }
 }
 
+.carta-personaje-stats {
+    border: 2px solid var(--c_base);
+    border-radius: 5px;
+    margin: 20px;
+    padding: 10px 5px;
+    .carta-number {
+        white-space: nowrap;
+    }
+}
+

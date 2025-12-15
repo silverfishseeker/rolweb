@@ -6,7 +6,10 @@ class Personaje < ApplicationRecord
   belongs_to :user
   belongs_to :picture
 
-  has_many :estadistics, class_name: "Pj::Estadistic", dependent: :destroy
+  has_many :estadistics,
+    -> { joins(:tipoEstadistic).order("pj_meta_tipos.orden ASC") },
+    class_name: "Pj::Estadistic",
+    dependent: :destroy, autosave: true
   has_many :calculados, class_name: "Pj::Calculado", dependent: :destroy
   has_many :rangos, class_name: "Pj::Rangos", dependent: :destroy
   has_many :parteCuerpos, class_name: "Pj::ParteCuerpo", dependent: :destroy
