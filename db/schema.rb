@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_07_213956) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_15_145302) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -291,9 +291,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_213956) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "pj_calculado_libres", force: :cascade do |t|
+    t.string "nombre"
+    t.integer "base"
+    t.bigint "pj_personaje_has_habilidad_id", null: false
+    t.bigint "pj_personaje_has_clase_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pj_personaje_has_clase_id"], name: "index_pj_calculado_libres_on_pj_personaje_has_clase_id"
+    t.index ["pj_personaje_has_habilidad_id"], name: "index_pj_calculado_libres_on_pj_personaje_has_habilidad_id"
+  end
+
   create_table "pj_calculados", force: :cascade do |t|
     t.bigint "personaje_id", null: false
-    t.bigint "tipoCalculado_id", null: false
+    t.bigint "tipoCalculado_id"
     t.bigint "pj_modificable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -335,6 +346,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_213956) do
     t.string "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "pj_tipo_estadistic_id"
+    t.index ["pj_tipo_estadistic_id"], name: "index_pj_meta_tipos_on_pj_tipo_estadistic_id"
   end
 
   create_table "pj_modificables", force: :cascade do |t|
@@ -480,6 +493,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_213956) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "personajes", "pictures"
   add_foreign_key "personajes", "users"
+  add_foreign_key "pj_calculado_libres", "pj_personaje_has_clases"
+  add_foreign_key "pj_calculado_libres", "pj_personaje_has_habilidads"
   add_foreign_key "pj_calculados", "personajes"
   add_foreign_key "pj_calculados", "pj_meta_tipos", column: "tipoCalculado_id"
   add_foreign_key "pj_calculados", "pj_modificables"
@@ -489,6 +504,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_213956) do
   add_foreign_key "pj_has_estadoalterados", "estadoalterados"
   add_foreign_key "pj_has_estadoalterados", "personajes"
   add_foreign_key "pj_has_estadoalterados", "pj_parte_cuerpos"
+  add_foreign_key "pj_meta_tipos", "pj_meta_tipos", column: "pj_tipo_estadistic_id"
   add_foreign_key "pj_parte_cuerpos", "personajes"
   add_foreign_key "pj_parte_cuerpos", "pj_calculados"
   add_foreign_key "pj_personaje_has_clases", "clases"
@@ -498,7 +514,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_213956) do
   add_foreign_key "pj_personaje_has_habilidads", "pj_personaje_has_clases"
   add_foreign_key "pj_personaje_has_items", "items"
   add_foreign_key "pj_personaje_has_items", "personajes"
-  add_foreign_key "pj_rangos", "personajes"
   add_foreign_key "pj_rangos", "pj_calculados"
   add_foreign_key "pj_rangos", "pj_meta_tipos", column: "tipoRango_id"
   add_foreign_key "ritual_ritual_clase_rel_rituals", "ritual_ritual_clases", column: "ritual_clase_id"

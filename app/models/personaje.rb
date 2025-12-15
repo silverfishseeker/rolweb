@@ -11,7 +11,6 @@ class Personaje < ApplicationRecord
     class_name: "Pj::Estadistic",
     dependent: :destroy, autosave: true
   has_many :calculados, class_name: "Pj::Calculado", dependent: :destroy
-  has_many :rangos, class_name: "Pj::Rangos", dependent: :destroy
   has_many :parteCuerpos, class_name: "Pj::ParteCuerpo", dependent: :destroy
   has_many :hasEstadoalterados, class_name: "Pj::HasEstadoalterado", dependent: :destroy
   has_many :personajeHasClases, class_name: "Pj::PersonajeHasClase", dependent: :destroy
