@@ -9,7 +9,9 @@ class PersonajesController < ModelController
     # Recover form data from rescue_my_errors redirect
     @x = tipo.new(flash[:form_data] || {})
 
-    base_stats = ["fuerza", "inteligencia", "destreza", "constitucion", "resistencia", "percepcion"]
+    base_stats =  ["fuerza", "inteligencia", "destreza", "constitucion", "resistencia", "percepcion"]
+    base_calcs =  ["penetracion fisica", "penetracion magica", "precision", "armadura magica"]
+    base_rangos = ["estabilidad", "sangre", "peso"]
     if @x.new_record?
       base_stats.each do |clave|
         tipo_estadistic = Pj::TipoEstadistic.find_by(clave: clave)
@@ -21,6 +23,26 @@ class PersonajesController < ModelController
           modificable: Pj::Modificable.new(passive_mod: 0, active_mod: 0)
         )
       end
+      base_calcs.each do |clave|
+        tipo_calculado = Pj::TipoCalculado.find_by(clave: clave)
+        next unless tipo_calculado
+        @x.calculados.build(
+          tipoCalculado: tipo_calculado,
+          modificable: Pj::Modificable.new(passive_mod: 0, active_mod: 0)
+        )
+      end
+      base_rangos.each do |clave|
+        tipo_rango = Pj::TipoRango.find_by(clave: clave)
+        next unless tipo_rango
+        @x.calculados.build(
+          rango: Pj::Rango.new(
+            tipoRango: tipo_rango,
+            valor: 0
+          ),
+          modificable: Pj::Modificable.new(passive_mod: 0, active_mod: 0)
+        )
+      end
+    
     end
 
     Rails.logger.debug @x

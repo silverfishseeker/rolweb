@@ -5,6 +5,10 @@ class Pj::MetaTiposController < ModelController
   end
 
   def model_params
-    params.require(tipo.model_name.param_key).permit(:nombre, :clave, :siglas, :orden)
+    pars = [:nombre, :clave, :siglas, :orden]
+    if tipo == Pj::TipoRango || tipo == Pj::TipoCalculado
+      pars << :pj_tipo_estadistic_id
+    end
+    params.require(tipo.model_name.param_key).permit(*pars)
   end
 end

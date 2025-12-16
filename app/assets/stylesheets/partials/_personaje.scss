@@ -118,16 +118,19 @@
 
 /* Estadísticas: tabla */
 .tabla-estadisticas {
-  width: var(--ancho_pj_imagen);
   th, td{
     vertical-align: middle;
     text-align: center;
+    max-width: 120px;
   }
   th {
     color: var(--c_white);
     background-color: var(--c_detalle);
     border-radius: 5px;
-    padding: 2px;
+    padding: 3px;
+  }
+  input[type="text"]{
+    max-width: 110px;
   }
   input[type="number"]{
     width: 40px;

@@ -50,7 +50,7 @@
               <tbody>
 
               <% Pj::TipoEstadistic.order(:orden).each do |tipo| %>
-                <% stat = @x.estadistics.find { |s| s.tipoEstadistic_id == tipo.id } %>
+                <% stat = @x.estadistics.find { |s| s.tipoEstadistic == tipo } %>
                 <tr>
                   <td>
                     <input type="checkbox"
@@ -109,82 +109,140 @@
 
       </div>
 
-      <!-- CALCULADOS -->
+      <!-- Estado -->
       <div id="tab-estado" class="pj-tab_pane">
-        <h3 class="section-title">Calculados</h3>
-
+        <h3 class="section-title">Estado</h3>
         <table class="tabla-estadisticas">
           <thead>
             <tr>
-              <th>Aplicar</th>
               <th>Nombre</th>
-              <th>Valor</th>
-              <th>Sobrescritura</th>
+              <th>Estadísca base</th>
+              <th>Valor base</th>
+              <th>Incremento por efectos permanentes</th>
+              <th>Incremento por efectos temporales</th>
+              <th>Valor calculado</th>
+              <th>Valor actual</th> <!-- si es un rango-->
+              <th>Borrar</th>
             </tr>
           </thead>
-          <tbody>
-          <% Pj::TipoCalculado.all.each do |tipo| %>
-            <% existing = @x.calculados.find_by(tipo_calculado_id: tipo.id) if @x.persisted? %>
+          <tbody id="calculados-body">
+            <% index = 0 %>
+            <!-- ================= DEPENDIENTES ================= -->
+            <% (Pj::TipoCalculado.all + Pj::TipoRango.all).each do |tipo| %>
+              <% isR = tipo.is_a?(Pj::TipoRango)
+                calc = @x.calculados.find do |c|
+                  if isR
+                    c.rango ? c.rango.tipoRango_id == tipo.id : false
+                  else
+                    c.tipoCalculado_id == tipo.id
+                  end
+                end
+                estad = @x.estadistics.find do |s|
+                  s.tipoEstadistic == tipo.tipoEstadistic
+                end %>
+
+              <tr data-index="<%= index %>">
+                <td> <!-- NOMBRE -->
+                  <strong><%= tipo.nombre %></strong>
+                </td>
+                <td> <!-- ESTADÍSTICA BASE -->
+                  <%= tipo.tipoEstadistic ? tipo.tipoEstadistic.nombre : "—" %>
+                </td>
+                <td> <!-- VALOR BASE -->
+                  <%= estad&.value || "—" %>
+                </td>
+                <%= render "personajes/form_calculado_row", calc: calc, index: index do %>
+                  <td> <!-- VALOR ACTUAL -->
+                    <% if isR %>
+                      <input type="number"
+                            name="calculados[<%= index %>][rango]"
+                            value="<%= error_coalesce{calc.rango.valor} || 0 %>"
+                            class="input-sm">
+                    <% else %>
+                      —
+                    <% end %>
+                  </td>
+                <% end %>
+              </tr>
+              <% index += 1 %>
+            <% end %>
+
+            <!-- ================= LIBRES ================= -->
+            <% @x.calculados.select(&:calculado_libre).each do |calc| %>
+              <% libre = calc.calculado_libre %>
+              <tr data-index="<%= calc.id %>">
+                <td> <!-- NOMBRE -->
+                  <input type="text"
+                        name="calculados[<%= index %>][nombre]"
+                        value="<%= libre.nombre %>">
+                </td>
+                <td>—</td> <!-- ESTADÍSTICA BASE -->
+                <td> <!-- VALOR BASE -->
+                  <input type="number"
+                        name="calculados[<%= index %>][base]"
+                        value="<%= libre.base %>">
+                </td>
+                <%= render "personajes/form_calculado_row", calc: calc, index: index do %>
+                  <!-- VALOR ACTUAL -->
+                  <td>
+                    <input type="number"
+                          name="calculados[<%= index %>][rango]"
+                          value="<%= calc.rango.valor %>"
+                          class="input-sm rango-input"
+                          <%= "disabled" unless calc.rango %>>
+                    <button type="button" class="toggle-rango">R</button>
+                  </td>
+                <% end %>
+              </tr>
+              <% index += 1 %>
+            <% end %>
+
+            <!-- ================= AÑADIR LIBRE ================= -->
+            <script type="text/template" id="calculado-libre-template">
+              <tr data-index="__INDEX__">
+                <td>
+                  <input type="text"
+                        name="calculados[__INDEX__][nombre]">
+                </td>
+                <td>—</td>
+                <td>
+                  <input type="number"
+                        name="calculados[__INDEX__][base]">
+                </td>
+                <td>
+                  <input type="number"
+                        name="calculados[__INDEX__][passive_mod]"
+                        value="0">
+                </td>
+                <td>
+                  <input type="number"
+                        name="calculados[__INDEX__][active_mod]"
+                        value="0">
+                </td>
+                <td>—</td>
+
+                <td>
+                  <input type="number"
+                        name="calculados[__INDEX__][rango]"
+                        class="input-sm rango-input"
+                        disabled>
+                  <button type="button" class="toggle-rango">R</button>
+                </td>
+                <td>
+                  <input type="checkbox"
+                        name="calculados[__INDEX__][_destroy]"
+                        value="1">
+                </td>
+              </tr>
+            </script>
+            <tr style="display:none;" id="calculado-libre-next"> </tr>
             <tr>
-              <td>
-                <input type="checkbox" name="calculados[<%= tipo.id %>][apply]" value="1" <%= "checked" if existing %>>
-              </td>
-
-              <td><%= tipo.nombre %></td>
-
-              <td>
-                <input class="input-sm" type="text"
-                      name="calculados[<%= tipo.id %>][valor]"
-                      value="<%= existing&.valor %>">
-              </td>
-
-              <td>
-                <textarea class="textarea-sm"
-                          name="calculados[<%= tipo.id %>][sobreescritura]"><%= existing&.modificable&.active_mod %></textarea>
-                <button class="toggle-edit" type="button">Editar/Ver</button>
+              <td colspan="8">
+                <button type="button" id="add-calculado-libre" class="btn btn-primary">
+                  + Añadir calculado libre
+                </button>
               </td>
             </tr>
-          <% end %>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- RANGOS -->
-      <div id="tab-rangos" class="pj-tab_pane">
-        <h3 class="section-title">Rangos</h3>
-
-        <table class="tabla-estadisticas">
-          <thead>
-            <tr>
-              <th>Aplicar</th>
-              <th>Nombre</th>
-              <th>Valor</th>
-              <th>Sobrescritura</th>
-            </tr>
-          </thead>
-          <tbody>
-          <% Pj::TipoRango.all.each do |tipo| %>
-            <% existing = @x.rangos.find_by(tipo_rango_id: tipo.id) if @x.persisted? %>
-            <tr>
-              <td>
-                <input type="checkbox" name="rangos[<%= tipo.id %>][apply]" value="1" <%= "checked" if existing %>>
-              </td>
-
-              <td><%= tipo.nombre %></td>
-
-              <td>
-                <input class="input-sm" type="number"
-                      name="rangos[<%= tipo.id %>][valor]"
-                      value="<%= existing&.valor %>">
-              </td>
-
-              <td>
-                <textarea class="textarea-sm"
-                          name="rangos[<%= tipo.id %>][sobreescritura]"><%= existing&.calculado&.modificable&.active_mod %></textarea>
-                <button type="button" class="toggle-edit">Editar/Ver</button>
-              </td>
-            </tr>
-          <% end %>
           </tbody>
         </table>
       </div>

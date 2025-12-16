@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_15_145302) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_15_161525) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -515,7 +515,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_15_145302) do
   add_foreign_key "pj_personaje_has_items", "items"
   add_foreign_key "pj_personaje_has_items", "personajes"
   add_foreign_key "pj_rangos", "pj_calculados"
-  add_foreign_key "pj_rangos", "pj_meta_tipos", column: "tipoRango_id"
   add_foreign_key "ritual_ritual_clase_rel_rituals", "ritual_ritual_clases", column: "ritual_clase_id"
   add_foreign_key "ritual_ritual_clase_rel_rituals", "ritual_rituals", column: "ritual_id"
   add_foreign_key "ritual_ritual_coste_rel_rituals", "ritual_ritual_costes", column: "ritual_coste_id"

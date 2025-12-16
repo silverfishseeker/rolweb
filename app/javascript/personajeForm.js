@@ -25,4 +25,23 @@ export function onTurboLoad() {
       document.querySelector(this.getAttribute("data_tab_target")).classList.add('pj-tab_pane-active');
     });
   });
+
+  const c_body = document.getElementById("calculados-body");
+  // Toggle rango en calculados libres
+  c_body.addEventListener("click", e => {
+    if (!e.target.classList.contains("toggle-rango")) return;
+
+    const input = e.target.closest("td").querySelector(".rango-input");
+    input.disabled = !input.disabled;
+  });
+  // Añadir calculado libre
+  const addButton = document.getElementById("add-calculado-libre");
+  addButton.replaceWith(addButton.cloneNode(true));
+  document.getElementById("add-calculado-libre").addEventListener("click", () => {
+    const index = c_body.querySelectorAll("tr[data-index]").length;
+    const template = document.getElementById("calculado-libre-template");
+    const html = template.innerHTML.replace(/__INDEX__/g, index);
+    const addRow = document.getElementById("add-calculado-libre").closest("tr");
+    addRow.insertAdjacentHTML("beforebegin", html);
+  });
 }
