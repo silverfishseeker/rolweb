@@ -8,9 +8,11 @@ module ApplicationHelper
   end
 
   def importJS (*module_names)
-    module_names.map do |module_name|
-      concat(content_tag(:div, "", data: { js: module_name }))
-    end.join("\n").html_safe
+    module_names.each do |module_name|
+      content_for :page_js do
+        concat content_tag(:div, "", data: { js: module_name })
+      end
+    end
   end
 
   def only_admin_content

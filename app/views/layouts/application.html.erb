@@ -12,6 +12,8 @@
   </head>
 
   <body <%= content_for?(:body_class) ? "class=#{yield(:body_class)}" : '' %>>
+     <%= yield :page_js %>
+     
     <nav class="navbar">
       <h1><%= link_to "Varacia", root_path %></h1>
       <div class="subnavbar">
