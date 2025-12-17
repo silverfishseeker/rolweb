@@ -27,16 +27,20 @@ export function onTurboLoad() {
   });
 
   const c_body = document.getElementById("calculados-body");
-  // Toggle rango en calculados libres
-  c_body.addEventListener("click", e => {
-    if (!e.target.classList.contains("toggle-rango")) return;
+  // Toggle rango (delegado)
+  function toggleRango(button) {
+    console.log("Toggling rango for button", button);
+    const input = button.closest("tr").querySelector(".rango-input");
+    if (input) input.disabled = !input.disabled;
+  }
 
-    const input = e.target.closest("td").querySelector(".rango-input");
-    input.disabled = !input.disabled;
+  // Delegación de eventos
+  c_body.addEventListener("click", e => {
+    if (e.target.classList.contains("toggle-rango")) {
+      toggleRango(e.target);
+    }
   });
   // Añadir calculado libre
-  const addButton = document.getElementById("add-calculado-libre");
-  addButton.replaceWith(addButton.cloneNode(true));
   document.getElementById("add-calculado-libre").addEventListener("click", () => {
     const index = c_body.querySelectorAll("tr[data-index]").length;
     const template = document.getElementById("calculado-libre-template");

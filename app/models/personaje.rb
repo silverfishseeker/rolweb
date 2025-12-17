@@ -4,13 +4,13 @@ class Personaje < ApplicationRecord
   has_rich_text :descripcion
 
   belongs_to :user
-  belongs_to :picture
+  belongs_to :picture, optional: true
 
   has_many :estadistics,
     -> { joins(:tipoEstadistic).order("pj_meta_tipos.orden ASC") },
     class_name: "Pj::Estadistic",
     dependent: :destroy, autosave: true
-  has_many :calculados, class_name: "Pj::Calculado", dependent: :destroy
+  has_many :calculados, class_name: "Pj::Calculado", dependent: :destroy, autosave: true
   has_many :parteCuerpos, class_name: "Pj::ParteCuerpo", dependent: :destroy
   has_many :hasEstadoalterados, class_name: "Pj::HasEstadoalterado", dependent: :destroy
   has_many :personajeHasClases, class_name: "Pj::PersonajeHasClase", dependent: :destroy

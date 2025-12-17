@@ -11,14 +11,14 @@ class Pj::Calculado < ApplicationRecord
     autosave: true
   has_one :rango,
     class_name: "Pj::Rango",
-    foreign_key: :pj_calculado_id,
+    foreign_key: :calculado_id,
     inverse_of: :calculado,
     dependent: :destroy,
     autosave: true
   
   validate do 
-    if calculado_libre.present? == tipoCalculado.present?
-      errors.add(:base, "Calculado debe ser de un tipo o libre, no ambos ni ninguno")
+    if calculado_libre.present? && tipoCalculado.present?
+      errors.add(:base, "Calculado no puede tener tipoCalculado si es libre")
     end
   end
 

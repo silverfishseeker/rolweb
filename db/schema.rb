@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_15_161525) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_17_114658) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -273,7 +273,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_15_161525) do
     t.integer "nivel_habilidades"
     t.integer "nivel_estadisticas"
     t.integer "nivel_otro"
-    t.bigint "picture_id", null: false
+    t.bigint "picture_id"
     t.boolean "is_public"
     t.index ["picture_id"], name: "index_personajes_on_picture_id"
     t.index ["user_id"], name: "index_personajes_on_user_id"
@@ -294,10 +294,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_15_161525) do
   create_table "pj_calculado_libres", force: :cascade do |t|
     t.string "nombre"
     t.integer "base"
-    t.bigint "pj_personaje_has_habilidad_id", null: false
-    t.bigint "pj_personaje_has_clase_id", null: false
+    t.bigint "pj_personaje_has_habilidad_id"
+    t.bigint "pj_personaje_has_clase_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "pj_calculado_id", null: false
+    t.index ["pj_calculado_id"], name: "index_pj_calculado_libres_on_pj_calculado_id"
     t.index ["pj_personaje_has_clase_id"], name: "index_pj_calculado_libres_on_pj_personaje_has_clase_id"
     t.index ["pj_personaje_has_habilidad_id"], name: "index_pj_calculado_libres_on_pj_personaje_has_habilidad_id"
   end
@@ -404,13 +406,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_15_161525) do
 
   create_table "pj_rangos", force: :cascade do |t|
     t.integer "valor"
-    t.bigint "personaje_id", null: false
-    t.bigint "tipoRango_id", null: false
-    t.bigint "pj_calculado_id", null: false
+    t.bigint "tipoRango_id"
+    t.bigint "calculado_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["personaje_id"], name: "index_pj_rangos_on_personaje_id"
-    t.index ["pj_calculado_id"], name: "index_pj_rangos_on_pj_calculado_id"
+    t.index ["calculado_id"], name: "index_pj_rangos_on_calculado_id"
     t.index ["tipoRango_id"], name: "index_pj_rangos_on_tipoRango_id"
   end
 
@@ -493,6 +493,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_15_161525) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "personajes", "pictures"
   add_foreign_key "personajes", "users"
+  add_foreign_key "pj_calculado_libres", "pj_calculados"
   add_foreign_key "pj_calculado_libres", "pj_personaje_has_clases"
   add_foreign_key "pj_calculado_libres", "pj_personaje_has_habilidads"
   add_foreign_key "pj_calculados", "personajes"
@@ -514,7 +515,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_15_161525) do
   add_foreign_key "pj_personaje_has_habilidads", "pj_personaje_has_clases"
   add_foreign_key "pj_personaje_has_items", "items"
   add_foreign_key "pj_personaje_has_items", "personajes"
-  add_foreign_key "pj_rangos", "pj_calculados"
+  add_foreign_key "pj_rangos", "pj_calculados", column: "calculado_id"
   add_foreign_key "ritual_ritual_clase_rel_rituals", "ritual_ritual_clases", column: "ritual_clase_id"
   add_foreign_key "ritual_ritual_clase_rel_rituals", "ritual_rituals", column: "ritual_id"
   add_foreign_key "ritual_ritual_coste_rel_rituals", "ritual_ritual_costes", column: "ritual_coste_id"

@@ -98,199 +98,58 @@ class PersonajesController < ModelController
       end
     end
 
-    # # calculados
-    # if params[:calculados].present?
-    #   params[:calculados].each do |tipo_id_str, attrs|
-    #     tipo_id = tipo_id_str.to_i
-    #     apply = attrs[:apply].present?
-    #     existing = personaje.calculados.find_by(tipo_calculado_id: tipo_id)
+    if params[:calculados].present?
+      Rails.logger.debug "##################################"
+      params[:calculados].each  do |index, attrs|
+        Rails.logger.debug "#{index}: #{attrs.inspect}"
 
-    #     if apply
-    #       val = attrs[:valor].presence
-    #       if existing
-    #         existing.update(valor: val)
-    #       else
-    #         personaje.calculados.build(tipo_calculado_id: tipo_id, valor: val)
-    #       end
+        destroy = attrs[:_destroy] == "1"
 
-    #       if attrs[:sobreescritura].present?
-    #         m = existing&.modificable || personaje.calculados.find_by(tipo_calculado_id: tipo_id)&.build_modificable
-    #         if m
-    #           m.active_mod = attrs[:sobreescritura]
-    #           m.save
-    #         else
-    #           new_c = personaje.calculados.find_by(tipo_calculado_id: tipo_id)
-    #           if new_c
-    #             new_m = Pj::Modificable.new(active_mod: attrs[:sobreescritura])
-    #             new_c.modificable = new_m
-    #           end
-    #         end
-    #       end
-    #     else
-    #       existing.destroy if existing
-    #     end
-    #   end
-    # end
+        calculado =
+          if attrs[:id].present?
+            personaje.calculados.find_by(id: attrs[:id])
+          else
+            personaje.calculados.build(
+              modificable: Pj::Modificable.new
+            )
+          end
+        raise "Calculado not found" unless calculado
 
-    # # rangos
-    # if params[:rangos].present?
-    #   params[:rangos].each do |tipo_id_str, attrs|
-    #     tipo_id = tipo_id_str.to_i
-    #     apply = attrs[:apply].present?
-    #     existing = personaje.rangos.find_by(tipo_rango_id: tipo_id)
+        if destroy
+          calculado.destroy
+          next
+        end
 
-    #     if apply
-    #       val = attrs[:valor].presence
-    #       if existing
-    #         existing.update(valor: val)
-    #       else
-    #         personaje.rangos.build(tipo_rango_id: tipo_id, valor: val)
-    #       end
-    #       # sobrescritura similar si precisa (omito detalle idéntico)
-    #     else
-    #       existing.destroy if existing
-    #     end
-    #   end
-    # end
+        calculado.modificable.passive_mod = attrs[:passive_mod].to_i
+        calculado.modificable.active_mod  = attrs[:active_mod].to_i
 
-    # # CLASES Y HABILIDADES
-    # # clases_selected[] contiene ids de clases seleccionadas
-    # if params[:clases_selected].present?
-    #   selected_class_ids = params[:clases_selected].map(&:to_i)
+        isRango = attrs[:rango].present? || attrs[:is_rango]&.to_i == 1
 
-    #   # eliminar PersonajeHasClase no seleccionadas
-    #   personaje.personajeHasClases.where.not(clase_id: selected_class_ids).destroy_all
+        if isRango
+          calculado.build_rango if calculado.rango.nil?
+          Rails.logger.debug "Setting rango valor from #{calculado.rango.valor} to #{attrs[:rango]}"
+          calculado.rango.valor = attrs[:rango]&.to_i || 0
+          Rails.logger.debug "Rango set to #{calculado.rango.valor}"
+        else
+          calculado.rango&.destroy
+        end
 
-    #   selected_class_ids.each do |cl_id|
-    #     phc = personaje.personajeHasClases.find_or_initialize_by(clase_id: cl_id)
-    #     # nivel si viene
-    #     if params.dig(:clases_data, cl_id.to_s, :nivel).present?
-    #       phc.nivel = params[:clases_data][cl_id.to_s][:nivel]
-    #     end
-    #     phc.save if phc.changed? || phc.new_record?
+        if attrs[:tipo_id].present?
+          if isRango
+            calculado.rango.tipoRango_id = attrs[:tipo_id].to_i
+          else
+            calculado.tipoCalculado_id = attrs[:tipo_id].to_i
+          end
+        end
 
-    #     # habilidades de esa clase seleccionadas
-    #     hab_ids = (params.dig(:habilidades_for_clase, cl_id.to_s) || []).map(&:to_i)
-    #     # borrar las que no estén
-    #     phh_existing_ids = personaje.personajeHasHabilidads.where(personaje_has_clase_id: phc.id).pluck(:habilidad_id)
-    #     # Remove those not selected
-    #     personaje.personajeHasHabilidads.where(personaje_has_clase_id: phc.id, habilidad_id: phh_existing_ids - hab_ids).destroy_all
-
-    #     hab_ids.each do |hab_id|
-    #       # create personajeHasHabilidad if not exists, link to phc
-    #       phh = personaje.personajeHasHabilidads.find_or_initialize_by(habilidad_id: hab_id, personaje_id: personaje.id)
-    #       phh.personajeHasClase_id = phc.id if phh.respond_to?(:personajeHasClase_id)
-    #       phh.save if phh.new_record? || phh.changed?
-
-    #       # sobrescritura de skill específica (si viene)
-    #       if params.dig(:habilidades_sobrescritura, cl_id.to_s, hab_id.to_s).present?
-    #         # assuming has_rich_text :sobreescritura on Pj::PersonajeHasHabilidad
-    #         content = params[:habilidades_sobrescritura][cl_id.to_s][hab_id.to_s]
-    #         # create/update rich text
-    #         phh.sobreescritura = content
-    #         phh.save
-    #       end
-    #     end
-    #   end
-    # else
-    #   # no se seleccionaron clases -> eliminar todas las PersonajeHasClase y sus PersonajeHasHabilidads
-    #   personaje.personajeHasClases.destroy_all
-    #   personaje.personajeHasHabilidads.destroy_all
-    # end
-
-    # # HABILIDADES INDEPENDIENTES (hab_independent)
-    # if params[:hab_independent].present?
-    #   params[:hab_independent].each do |hab_id_str, attrs|
-    #     hab_id = hab_id_str.to_i
-    #     apply = attrs[:apply].present?
-    #     phh = personaje.personajeHasHabilidads.find_by(habilidad_id: hab_id, personaje_id: personaje.id)
-
-    #     if apply
-    #       unless phh
-    #         phh = personaje.personajeHasHabilidads.build(habilidad_id: hab_id)
-    #       end
-    #       if attrs[:sobreescritura].present?
-    #         phh.sobreescritura = attrs[:sobreescritura]
-    #       end
-    #       phh.save
-    #     else
-    #       phh.destroy if phh
-    #     end
-    #   end
-    # end
-
-    # # ITEMS
-    # if params[:items].present?
-    #   params[:items].each do |item_id_str, attrs|
-    #     item_id = item_id_str.to_i
-    #     apply = attrs[:apply].present?
-    #     phi = personaje.PersonajeHasItem.find_by(item_id: item_id)
-
-    #     if apply
-    #       cantidad = attrs[:cantidad].presence || 1
-    #       if phi
-    #         phi.update(cantidad: cantidad)
-    #       else
-    #         personaje.PersonajeHasItem.build(item_id: item_id, cantidad: cantidad)
-    #       end
-
-    #       if attrs[:sobreescritura].present?
-    #         phi = personaje.PersonajeHasItem.find_by(item_id: item_id) # fetch the one
-    #         if phi
-    #           phi.sobreescritura = attrs[:sobreescritura]
-    #           phi.save
-    #         end
-    #       end
-    #     else
-    #       phi.destroy if phi
-    #     end
-    #   end
-    # end
-
-    # # ESTADOS ALTERADOS
-    # if params[:estados].present?
-    #   params[:estados].each do |est_id_str, attrs|
-    #     est_id = est_id_str.to_i
-    #     apply = attrs[:apply].present?
-    #     record = personaje.hasEstadoalterados.find_by(estado_alterado_id: est_id)
-
-    #     if apply
-    #       valor = attrs[:valor].presence
-    #       if record
-    #         record.update(valor: valor)
-    #       else
-    #         personaje.hasEstadoalterados.build(estado_alterado_id: est_id, valor: valor)
-    #       end
-    #     else
-    #       record.destroy if record
-    #     end
-    #   end
-    # end
-
-    # # PARTES DEL CUERPO (solo editar existentes)
-    # if params[:partes].present?
-    #   params[:partes].each do |parte_id_str, attrs|
-    #     parte_id = parte_id_str.to_i
-    #     parte = personaje.parteCuerpos.find_by(id: parte_id) # assuming relation name parteCuerpos
-    #     if parte
-    #       if attrs[:estado].present?
-    #         parte.update(saludact: attrs[:estado])
-    #       end
-    #     end
-    #   end
-    # end
-
-    # # NOTAS, niveles y otros campos calculados
-    # if params[:personaje].present?
-    #   # permitir que el usuario envíe notas o niveles adicionales en params[:personaje]
-    #   personaje.nivel_clases    = params[:personaje][:nivel_clases] if params[:personaje][:nivel_clases]
-    #   personaje.nivel_habilidades = params[:personaje][:nivel_habilidades] if params[:personaje][:nivel_habilidades]
-    #   personaje.nivel_estadisticas = params[:personaje][:nivel_estadisticas] if params[:personaje][:nivel_estadisticas]
-    #   personaje.nivel_otro = params[:personaje][:nivel_otro] if params[:personaje][:nivel_otro]
-    #   personaje.descripcion = params[:personaje][:descripcion] if params[:personaje][:descripcion]
-    # end
-
-    # RETURN: we do not save aquí, ModelController lo hará al final del flujo
-    true
+        if attrs[:nombre].present?
+          libre = calculado.calculado_libre || calculado.build_calculado_libre
+          libre.nombre = attrs[:nombre]
+          libre.base   = attrs[:base].to_i
+        else
+          calculado.calculado_libre&.destroy
+        end
+      end
+    end
   end
 end

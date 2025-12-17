@@ -1,19 +1,19 @@
-<%# _form_calculado_row.html.erb %>
+<input type="hidden" name="calculados[<%= index %>][id]" value="<%= calc&.id %>">
 <td> <!-- PASSIVE MOD -->
   <input type="number"
         name="calculados[<%= index %>][passive_mod]"
-        value="<%= error_coalesce{calc.modificable.passive_mod} || 0%>">
+        value="<%= calc&.modificable&.passive_mod || 0%>">
 </td>
 <td> <!-- ACTIVE MOD -->
   <input type="number"
         name="calculados[<%= index %>][active_mod]"
-        value="<%= error_coalesce{calc.modificable.active_mod} || 0 %>">
+        value="<%= calc&.modificable&.active_mod || 0 %>">
 </td>
 <td> <!-- VALOR CALCULADO -->
-  <%= error_coalesce{calc.value} || "ninguno" %>
+  <%= calc&.value || "ninguno" %>
 </td>
-<%= yield%>
-<td> <!-- BORRAR -->
+<%= yield %>
+<td class="checkbox-danger"> <!-- BORRAR -->
   <input type="checkbox"
         name="calculados[<%= index %>][_destroy]"
         value="1"

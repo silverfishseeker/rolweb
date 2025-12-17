@@ -13,419 +13,236 @@
         <div data_tab_target="#tab-general" class="pj-tabs-nav-active">General</div>
         <div data_tab_target="#tab-estado">Estado</div>
         <div data_tab_target="#tab-clases">Clases & Habilidades</div>
-        <div data_tab_target="#tab-hab-independientes">Habilidades independientes</div>
-        <div data_tab_target="#tab-items">Items</div>
-        <div data_tab_target="#tab-estados">Estados alterados</div>
-        <div data_tab_target="#tab-partes">Partes del cuerpo</div>
+        <div data_tab_target="#tab-items">Inventario</div>
       </div>
 
       <div class="pj-tab-container">
-      <!-- GENERAL -->
-      <div id="tab-general" class="pj-tab_pane pj-tab_pane-active">
+        <!-- GENERAL -->
+        <div id="tab-general" class="pj-tab_pane pj-tab_pane-active">
 
-        <section class="columns">
-          <div>
-            <h2>
-              <%= f.text_field :nombre, class: "form-control", placeholder: "Nombre del personaje" %>
-            </h2>
+          <section class="columns">
+            <div>
+              <h2>
+                <%= f.text_field :nombre, class: "form-control", placeholder: "Nombre del personaje" %>
+              </h2>
+
+              <div>
+                <label>
+                  <%= f.check_box :is_public %> Publicar para que todos puedan verlo. (No recomendable)
+                </label>
+              </div>
+              <h3> Estadísticas</h3>
+              <table class="tabla-estadisticas">
+                <thead>
+                  <tr>
+                    <th>Aplicar</th>
+                    <th>Nombre</th>
+                    <th>Valor actual</th>
+                    <th>Valor base</th>
+                    <th>Incremento de niveles</th>
+                    <th>Incremento por efectos permanentes</th>
+                    <th>Incremento por efectos temporales</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                <% Pj::TipoEstadistic.order(:orden).each do |tipo| %>
+                  <% stat = @x.estadistics.find { |s| s.tipoEstadistic == tipo } %>
+                  <tr>
+                    <td>
+                      <input type="checkbox"
+                            name="estadistics[<%= tipo.id %>][apply]"
+                            value="1"
+                            <%= "checked" if stat %>>
+                    </td>
+                    <td><%= "#{tipo.nombre} (#{tipo.siglas})" %></td>
+                    <td>
+                      <%= stat&.value %>
+                    </td>
+                    <td>
+                      <input type="number"
+                            name="estadistics[<%= tipo.id %>][base]"
+                            value="<%= stat&.base %>">
+                    </td>
+                    <td>
+                      <input type="number"
+                            name="estadistics[<%= tipo.id %>][lv_mod]"
+                            value="<%= stat&.lv_mod %>">
+                    </td>
+                    <td>
+                      <input type="number"
+                            name="estadistics[<%= tipo.id %>][passive_mod]"
+                            value="<%= stat&.modificable&.passive_mod %>">
+                    </td>
+                    <td>
+                      <input type="number"
+                            name="estadistics[<%= tipo.id %>][active_mod]"
+                            value="<%= stat&.modificable&.active_mod %>">
+                    </td>
+                  </tr>
+                <% end %>
+                </tbody>
+              </table>
+            </div>
 
             <div>
-              <label>
-                <%= f.check_box :is_public %> Publicar para que todos puedan verlo. (No recomendable)
-              </label>
-            </div>
-            <h3> Estadísticas</h3>
-            <table class="tabla-estadisticas">
-              <thead>
-                <tr>
-                  <th>Aplicar</th>
-                  <th>Nombre</th>
-                  <th>Valor actual</th>
-                  <th>Valor base</th>
-                  <th>Incremento de niveles</th>
-                  <th>Incremento por efectos permanentes</th>
-                  <th>Incremento por efectos temporales</th>
-                </tr>
-              </thead>
-              <tbody>
-
-              <% Pj::TipoEstadistic.order(:orden).each do |tipo| %>
-                <% stat = @x.estadistics.find { |s| s.tipoEstadistic == tipo } %>
-                <tr>
-                  <td>
-                    <input type="checkbox"
-                          name="estadistics[<%= tipo.id %>][apply]"
-                          value="1"
-                          <%= "checked" if stat %>>
-                  </td>
-                  <td><%= "#{tipo.nombre} (#{tipo.siglas})" %></td>
-                  <td>
-                    <%= stat&.value %>
-                  </td>
-                  <td>
-                    <input class="input-sm" type="number"
-                          name="estadistics[<%= tipo.id %>][base]"
-                          value="<%= stat&.base %>">
-                  </td>
-                  <td>
-                    <input class="input-sm" type="number"
-                          name="estadistics[<%= tipo.id %>][lv_mod]"
-                          value="<%= stat&.lv_mod %>">
-                  </td>
-                  <td>
-                    <input class="input-sm" type="number"
-                          name="estadistics[<%= tipo.id %>][passive_mod]"
-                          value="<%= stat&.modificable&.passive_mod %>">
-                  </td>
-                  <td>
-                    <input class="input-sm" type="number"
-                          name="estadistics[<%= tipo.id %>][active_mod]"
-                          value="<%= stat&.modificable&.active_mod %>">
-                  </td>
-                </tr>
+              <% if @x.picture %>
+                <%= render "shared/image_with_link", image: @x.picture.image, cssclass: "pj-image" %>
+              <% else %>
+                <div class="pj-image-placeholder">Sin imagen</div>
               <% end %>
-              </tbody>
-            </table>
-          </div>
-
-          <div>
-            <% if @x.picture %>
-              <%= render "shared/image_with_link", image: @x.picture.image, cssclass: "pj-image" %>
-            <% else %>
-              <div class="pj-image-placeholder">Sin imagen</div>
-            <% end %>
-            <div>
-              <%= f.label :picture_id, "Selecciona imagen de la galería:" %>
-              <br>
-              <%= f.collection_select :picture_id, Picture.order(:nombre), :id, :nombre, include_blank: true %>
+              <div>
+                <%= f.label :picture_id, "Selecciona imagen de la galería:" %>
+                <br>
+                <%= f.collection_select :picture_id, Picture.order(:nombre), :id, :nombre, include_blank: true %>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section>
-          <h3>Notas</h3>
-          <div class="white_bk"><%= f.rich_text_area :descripcion %></div>
-        </section>
+          <section>
+            <h3>Notas</h3>
+            <div class="white_bk"><%= f.rich_text_area :descripcion %></div>
+          </section>
 
-      </div>
+        </div>
 
-      <!-- Estado -->
-      <div id="tab-estado" class="pj-tab_pane">
-        <h3 class="section-title">Estado</h3>
-        <table class="tabla-estadisticas">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Estadísca base</th>
-              <th>Valor base</th>
-              <th>Incremento por efectos permanentes</th>
-              <th>Incremento por efectos temporales</th>
-              <th>Valor calculado</th>
-              <th>Valor actual</th> <!-- si es un rango-->
-              <th>Borrar</th>
-            </tr>
-          </thead>
-          <tbody id="calculados-body">
-            <% index = 0 %>
-            <!-- ================= DEPENDIENTES ================= -->
-            <% (Pj::TipoCalculado.all + Pj::TipoRango.all).each do |tipo| %>
-              <% isR = tipo.is_a?(Pj::TipoRango)
-                calc = @x.calculados.find do |c|
-                  if isR
-                    c.rango ? c.rango.tipoRango_id == tipo.id : false
-                  else
-                    c.tipoCalculado_id == tipo.id
+        <!-- ESTADO -->
+        <div id="tab-estado" class="pj-tab_pane">
+          <h3 class="section-title">Estado</h3>
+          <table class="tabla-estadisticas">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Estadísca base</th>
+                <th>Valor base</th>
+                <th>Incremento por efectos permanentes</th>
+                <th>Incremento por efectos temporales</th>
+                <th>Valor calculado</th>
+                <th>Valor actual</th> <!-- si es un rango-->
+                <th>Borrar</th>
+              </tr>
+            </thead>
+            <tbody id="calculados-body">
+              <% index = 0 %>
+              <!-- ================= DEPENDIENTES ================= -->
+              <% (Pj::TipoCalculado.all + Pj::TipoRango.all).each do |tipo| %>
+                <% isR = tipo.is_a?(Pj::TipoRango)
+                  calc = @x.calculados.find do |c|
+                    if isR
+                      c.rango ? c.rango.tipoRango_id == tipo.id : false
+                    else
+                      c.tipoCalculado_id == tipo.id
+                    end
                   end
-                end
-                estad = @x.estadistics.find do |s|
-                  s.tipoEstadistic == tipo.tipoEstadistic
-                end %>
+                  estad = @x.estadistics.find do |s|
+                    s.tipoEstadistic == tipo.tipoEstadistic
+                  end %>
+                <input type="hidden" name="calculados[<%= index %>][tipo_id]" value="<%= tipo.id %>">
+                <input type="hidden" name="calculados[<%= index %>][is_rango]" value="<%= isR ? 1 : 0 %>">
+                <tr data-index="<%= index %>">
+                  <td> <!-- NOMBRE -->
+                    <strong><%= tipo.nombre %></strong>
+                  </td>
+                  <td> <!-- ESTADÍSTICA BASE -->
+                    <%= tipo.tipoEstadistic ? tipo.tipoEstadistic.nombre : "—" %>
+                  </td>
+                  <td> <!-- VALOR BASE -->
+                    <%= estad&.value || "—" %>
+                  </td>
+                  <%= render "personajes/form_calculado_row", calc: calc, index: index do %>
+                      <td> <!-- VALOR ACTUAL -->
+                      <% if isR %>
+                        <input type="number"
+                              name="calculados[<%= index %>][rango]"
+                              value="<%= calc&.rango&.valor || 0 %>"
+                              class="rango-input">
+                      <% else %>
+                        —
+                      <% end %>
+                    </td>
+                  <% end %>
+                </tr>
+                <% index += 1 %>
+              <% end %>
 
-              <tr data-index="<%= index %>">
-                <td> <!-- NOMBRE -->
-                  <strong><%= tipo.nombre %></strong>
-                </td>
-                <td> <!-- ESTADÍSTICA BASE -->
-                  <%= tipo.tipoEstadistic ? tipo.tipoEstadistic.nombre : "—" %>
-                </td>
-                <td> <!-- VALOR BASE -->
-                  <%= estad&.value || "—" %>
-                </td>
-                <%= render "personajes/form_calculado_row", calc: calc, index: index do %>
-                  <td> <!-- VALOR ACTUAL -->
-                    <% if isR %>
+              <!-- ================= LIBRES ================= -->
+              <% @x.calculados.select(&:calculado_libre).each do |calc| %>
+                <% libre = calc.calculado_libre %>
+                <tr data-index="<%= calc.id %>">
+                  <td> <!-- NOMBRE -->
+                    <input type="text"
+                          name="calculados[<%= index %>][nombre]"
+                          value="<%= libre.nombre %>">
+                  </td>
+                  <td>—</td> <!-- ESTADÍSTICA BASE -->
+                  <td> <!-- VALOR BASE -->
+                    <input type="number"
+                          name="calculados[<%= index %>][base]"
+                          value="<%= libre.base %>">
+                  </td>
+                  <%= render "personajes/form_calculado_row", calc: calc, index: index do %>
+                    <td> <!-- VALOR ACTUAL -->
                       <input type="number"
                             name="calculados[<%= index %>][rango]"
-                            value="<%= error_coalesce{calc.rango.valor} || 0 %>"
-                            class="input-sm">
-                    <% else %>
-                      —
-                    <% end %>
-                  </td>
-                <% end %>
-              </tr>
-              <% index += 1 %>
-            <% end %>
-
-            <!-- ================= LIBRES ================= -->
-            <% @x.calculados.select(&:calculado_libre).each do |calc| %>
-              <% libre = calc.calculado_libre %>
-              <tr data-index="<%= calc.id %>">
-                <td> <!-- NOMBRE -->
-                  <input type="text"
-                        name="calculados[<%= index %>][nombre]"
-                        value="<%= libre.nombre %>">
-                </td>
-                <td>—</td> <!-- ESTADÍSTICA BASE -->
-                <td> <!-- VALOR BASE -->
-                  <input type="number"
-                        name="calculados[<%= index %>][base]"
-                        value="<%= libre.base %>">
-                </td>
-                <%= render "personajes/form_calculado_row", calc: calc, index: index do %>
-                  <!-- VALOR ACTUAL -->
-                  <td>
-                    <input type="number"
-                          name="calculados[<%= index %>][rango]"
-                          value="<%= calc.rango.valor %>"
-                          class="input-sm rango-input"
-                          <%= "disabled" unless calc.rango %>>
+                            value="<%= calc&.rango&.valor || 0 %>"
+                            class="rango-input"
+                            <%= "disabled" unless calc&.rango.present? %>>
                     <button type="button" class="toggle-rango">R</button>
-                  </td>
-                <% end %>
-              </tr>
-              <% index += 1 %>
-            <% end %>
-
-            <!-- ================= AÑADIR LIBRE ================= -->
-            <script type="text/template" id="calculado-libre-template">
-              <tr data-index="__INDEX__">
-                <td>
-                  <input type="text"
-                        name="calculados[__INDEX__][nombre]">
-                </td>
-                <td>—</td>
-                <td>
-                  <input type="number"
-                        name="calculados[__INDEX__][base]">
-                </td>
-                <td>
-                  <input type="number"
-                        name="calculados[__INDEX__][passive_mod]"
-                        value="0">
-                </td>
-                <td>
-                  <input type="number"
-                        name="calculados[__INDEX__][active_mod]"
-                        value="0">
-                </td>
-                <td>—</td>
-
-                <td>
-                  <input type="number"
-                        name="calculados[__INDEX__][rango]"
-                        class="input-sm rango-input"
-                        disabled>
-                  <button type="button" class="toggle-rango">R</button>
-                </td>
-                <td>
-                  <input type="checkbox"
-                        name="calculados[__INDEX__][_destroy]"
-                        value="1">
-                </td>
-              </tr>
-            </script>
-            <tr style="display:none;" id="calculado-libre-next"> </tr>
-            <tr>
-              <td colspan="8">
-                <button type="button" id="add-calculado-libre" class="btn btn-primary">
-                  + Añadir calculado libre
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- CLASES & HABILIDADES --
-      <div id="tab-clases" class="pj-tab_pane">
-        <h3 class="section-title">Clases & Habilidades</h3>
-
-        <div style="margin-bottom:1rem;">
-          <label><strong>Clases del personaje:</strong></label><br>
-          <select name="clases_selected[]" multiple size="8" class="input-lg">
-            <% Clase.order(:nombre).each do |cl| %>
-              <option value="<%= cl.id %>" <%= "selected" if @x.personajeHasClases.exists?(clase_id: cl.id) %>>
-                <%= cl.nombre %>
-              </option>
-            <% end %>
-          </select>
-        </div>
-
-        <% Clase.order(:nombre).each do |cl| %>
-          <% phc = @x.personajeHasClases.find_by(clase_id: cl.id) %>
-
-          <div class="clase-item" data-clase-id="<%= cl.id %>">
-            <div class="clase-header">
-              <h4 class="clase-nombre"><%= cl.nombre %></h4>
-              <span class="clase-nivel">Nv <%= phc&.nivel || 0 %></span>
-            </div>
-
-            <div>
-              <label>Nivel:
-                <input type="number"
-                      class="input-sm"
-                      name="clases_data[<%= cl.id %>][nivel]"
-                      value="<%= phc&.nivel || 0 %>">
-              </label>
-            </div>
-
-            <div class="habilidad-list" style="margin-top:0.75rem;">
-              <label><strong>Habilidades de la clase:</strong></label><br>
-
-              <select name="habilidades_for_clase[<%= cl.id %>][]" multiple size="6" class="input-lg">
-                <% cl.habilidads.each do |hab| %>
-                  <% selected = @x.personajeHasHabilidads.where(habilidad_id: hab.id).exists? %>
-                  <option value="<%= hab.id %>" <%= "selected" if selected %>>
-                    <%= hab.nombre %>
-                  </option>
-                <% end %>
-              </select>
-
-              <% cl.habilidads.each do |hab| %>
-                <% phh = @x.personajeHasHabilidads.find_by(habilidad_id: hab.id) %>
-                <div class="habilidad-item" style="margin-top:0.5rem;">
-                  <strong><%= hab.nombre %></strong>
-                  <textarea class="textarea-sm"
-                            name="habilidades_sobrescritura[<%= cl.id %>][<%= hab.id %>]"><%= phh&.sobreescritura&.body&.to_s %></textarea>
-                  <button type="button" class="toggle-edit">Editar/Ver</button>
-                </div>
+                    </td>
+                  <% end %>
+                </tr>
+                <% index += 1 %>
               <% end %>
 
-            </div>
-          </div>
+              <!-- ================= AÑADIR LIBRE ================= -->
+              <script type="text/template" id="calculado-libre-template">
+                <tr data-index="__INDEX__">
+                  <td>
+                    <input type="text"
+                          name="calculados[__INDEX__][nombre]">
+                  </td>
+                  <td>—</td>
+                  <td>
+                    <input type="number"
+                          name="calculados[__INDEX__][base]">
+                  </td>
+                  <td>
+                    <input type="number"
+                          name="calculados[__INDEX__][passive_mod]"
+                          value="0">
+                  </td>
+                  <td>
+                    <input type="number"
+                          name="calculados[__INDEX__][active_mod]"
+                          value="0">
+                  </td>
+                  <td>—</td>
 
-        <% end %>
-      </div>
-
-      <-- HABILIDADES INDEPENDIENTES --
-      <div id="tab-hab-independientes" class="pj-tab_pane">
-        <h3 class="section-title">Habilidades independientes</h3>
-
-        <% independent_habs = Habilidad.joins(:clases).where(clases: { id: 102 }).distinct %>
-        <% independent_habs.each do |hab| %>
-          <% phh = @x.personajeHasHabilidads.find_by(habilidad_id: hab.id) %>
-
-          <div class="habilidad-item">
-            <label>
-              <input type="checkbox"
-                    name="hab_independent[<%= hab.id %>][apply]"
-                    value="1"
-                    <%= "checked" if phh %>>
-              <strong><%= hab.nombre %></strong>
-            </label>
-
-            <textarea class="textarea-sm"
-                      name="hab_independent[<%= hab.id %>][sobreescritura]"><%= phh&.sobreescritura&.body&.to_s %></textarea>
-            <button type="button" class="toggle-edit">Editar/Ver</button>
-          </div>
-
-        <% end %>
-      </div> -->
-
-      <!-- ITEMS -->
-      <div id="tab-items" class="pj-tab_pane">
-        <h3 class="section-title">Items</h3>
-
-        <table class="tabla-inventario">
-          <thead>
-            <tr>
-              <th>Aplicar</th>
-              <th>Item</th>
-              <th>Cantidad</th>
-              <th>Sobrescritura</th>
-            </tr>
-          </thead>
-
-          <tbody>
-          <% Item.order(:nombre).each do |it| %>
-            <% phi = @x.PersonajeHasItem.find_by(item_id: it.id) rescue nil %>
-            <tr>
-              <td>
-                <input type="checkbox"
-                      name="items[<%= it.id %>][apply]"
-                      value="1"
-                      <%= "checked" if phi %>>
-              </td>
-
-              <td><%= it.nombre %></td>
-
-              <td>
-                <input class="input-sm" type="number"
-                      name="items[<%= it.id %>][cantidad]"
-                      min="1"
-                      value="<%= phi&.cantidad || 1 %>">
-              </td>
-
-              <td>
-                <textarea class="textarea-sm"
-                          name="items[<%= it.id %>][sobreescritura]"><%= phi&.sobreescritura&.body&.to_s %></textarea>
-              </td>
-            </tr>
-          <% end %>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- ESTADOS ALTERADOS -->
-      <div id="tab-estados" class="pj-tab_pane">
-        <h3 class="section-title">Estados alterados</h3>
-
-        <div class="estado-grid">
-        <% Estadoalterado.order(:nombre).each do |est| %>
-          <% has = @x.hasEstadoalterados.find_by(estado_alterado_id: est.id) rescue nil %>
-          <div class="estado-item">
-            <label>
-              <input type="checkbox"
-                    name="estados[<%= est.id %>][apply]"
-                    value="1"
-                    <%= "checked" if has %>>
-              <%= est.nombre %>
-            </label>
-
-            <div class="estado-value">
-              <input class="input-sm" type="text"
-                    name="estados[<%= est.id %>][valor]"
-                    value="<%= has&.valor %>">
-            </div>
-          </div>
-        <% end %>
+                  <td>
+                    <input type="number"
+                          name="calculados[__INDEX__][rango]"
+                          class="rango-input"
+                          disabled>
+                    <button type="button" class="toggle-rango">R</button>
+                  </td>
+                  <td>
+                    <input type="checkbox"
+                          name="calculados[__INDEX__][_destroy]"
+                          value="1">
+                  </td>
+                </tr>
+              </script>
+              <tr style="display:none;" id="calculado-libre-next"> </tr>
+              <tr>
+                <td colspan="8">
+                  <button type="button" id="add-calculado-libre" class="btn btn-primary">
+                    + Añadir calculado libre
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </div>
-
-      <!-- PARTES DEL CUERPO -->
-      <div id="tab-partes" class="pj-tab_pane">
-        <h3 class="section-title">Partes del cuerpo</h3>
-
-        <div class="cuerpo-grid">
-        <% Pj::ParteCuerpo.where(personaje_id: @x.id).each do |parte| %>
-          <div class="parte-item">
-            <div class="parte-nombre"><%= parte.nombre %></div>
-
-            <label>Estado:
-              <select name="partes[<%= parte.id %>][estado]">
-                <% parte.mapeo.split(",").each do |estado| %>
-                  <option value="<%= estado %>" <%= "selected" if parte.saludact == estado %>>
-                    <%= estado %>
-                  </option>
-                <% end %>
-              </select>
-            </label>
-          </div>
-        <% end %>
-        </div>
-
-      </div>
       
       </div>
 
