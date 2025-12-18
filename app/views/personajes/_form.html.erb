@@ -133,7 +133,7 @@
                     else
                       c.tipoCalculado_id == tipo.id
                     end
-                  end
+                  end # It is allowed for calc to be nil
                   estad = @x.estadistics.find do |s|
                     s.tipoEstadistic == tipo.tipoEstadistic
                   end %>
@@ -225,7 +225,7 @@
                           disabled>
                     <button type="button" class="toggle-rango">R</button>
                   </td>
-                  <td>
+                  <td class="checkbox-danger">
                     <input type="checkbox"
                           name="calculados[__INDEX__][_destroy]"
                           value="1">

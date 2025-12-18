@@ -53,10 +53,11 @@ class ModelController < ApplicationController
   def update
     rescue_my_errors :edit do
       @x = tipo.find(params[:id])
+      @x.assign_attributes(model_params)
       
       yield if block_given? # Used only by a few controllers for special actions.
   
-      if @x.update(model_params)
+      if @x.save
         redirect_to @x
       else
         render :edit

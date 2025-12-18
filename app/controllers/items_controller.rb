@@ -29,7 +29,6 @@ class ItemsController < ModelController
         ritual_nivel_rel_rituals_attributes: [:id, :ritual_nivel_id, :cantidad, :_destroy]
       ]
     ).tap do |ps|
-      Rails.logger.debug "HHHH es_ritual: #{ps[:es_ritual].present?} - #{ps[:es_ritual]}"
       if ps[:es_ritual] == "0"
         ps[:ritual_attributes] = { _destroy: "1", id: error_coalesce{@x.ritual.id}, }
       else
