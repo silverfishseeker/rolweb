@@ -2,6 +2,9 @@
 
 :root {
   --ancho_pj_imagen:350px;
+  @include respond-max {
+    --ancho_pj_imagen:250px;
+  }
 }
 
 .pj-meta_tipo_card {
@@ -30,6 +33,7 @@
   border-radius: 10px;
   padding: 20px;
   position: relative;
+  min-width: fit-content;
 }
 
 .pj-tabs.wrapped{
@@ -96,6 +100,9 @@
     border-radius: 10px;
     padding: 10px;
   }
+  .max-width{
+    max-width: var(--ancho_pj_imagen);
+  }
 }
 .pj-tab_pane-active {
   display: block;
@@ -137,5 +144,33 @@
   }
   input[type="checkbox"]{
     transform: scale(2);
+  }
+  @include respond-max {
+    thead {
+      display: none;
+    }
+    tr {
+      display: block;
+      border: 1px solid var(--c_grey);
+      margin-bottom: 10px;
+      padding: 5px;
+      width: var(--ancho_pj_imagen);
+    }
+
+    td {
+      display: flex;
+      padding: 2px 0;
+      max-width: none;
+    }
+
+    td.checkbox-danger {
+      background-color: unset;
+    }
+
+    td::before {
+      content: attr(data-label) ": ";
+      font-weight: bold;
+      margin-right: 10px;
+    }
   }
 }
