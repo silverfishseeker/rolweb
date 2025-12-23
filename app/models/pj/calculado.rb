@@ -1,7 +1,7 @@
 class Pj::Calculado < ApplicationRecord
   #attributes: no other attributes
   belongs_to :personaje
-  belongs_to :tipoCalculado, optional: true #if nil, it's a custom calculado or has rango
+  belongs_to :tipoCalculado, optional: true
   belongs_to :modificable, class_name: "Pj::Modificable", foreign_key: "pj_modificable_id", dependent: :destroy, autosave: true
   has_one :calculado_libre,
     class_name: "CalculadoLibre",

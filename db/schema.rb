@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_17_114658) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_21_145555) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -330,9 +330,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_17_114658) do
 
   create_table "pj_has_estadoalterados", force: :cascade do |t|
     t.integer "valor"
-    t.bigint "personaje_id", null: false
+    t.bigint "personaje_id"
     t.bigint "estadoalterado_id", null: false
-    t.bigint "pj_parte_cuerpo_id", null: false
+    t.bigint "pj_parte_cuerpo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["estadoalterado_id"], name: "index_pj_has_estadoalterados_on_estadoalterado_id"
@@ -365,12 +365,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_17_114658) do
     t.string "mapeo"
     t.integer "saludmax"
     t.integer "saludact"
-    t.bigint "pj_calculado_id", null: false
     t.bigint "personaje_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "pj_modificable_id", null: false
     t.index ["personaje_id"], name: "index_pj_parte_cuerpos_on_personaje_id"
-    t.index ["pj_calculado_id"], name: "index_pj_parte_cuerpos_on_pj_calculado_id"
+    t.index ["pj_modificable_id"], name: "index_pj_parte_cuerpos_on_pj_modificable_id"
   end
 
   create_table "pj_personaje_has_clases", force: :cascade do |t|
@@ -507,7 +507,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_17_114658) do
   add_foreign_key "pj_has_estadoalterados", "pj_parte_cuerpos"
   add_foreign_key "pj_meta_tipos", "pj_meta_tipos", column: "pj_tipo_estadistic_id"
   add_foreign_key "pj_parte_cuerpos", "personajes"
-  add_foreign_key "pj_parte_cuerpos", "pj_calculados"
+  add_foreign_key "pj_parte_cuerpos", "pj_modificables"
   add_foreign_key "pj_personaje_has_clases", "clases"
   add_foreign_key "pj_personaje_has_clases", "personajes"
   add_foreign_key "pj_personaje_has_habilidads", "habilidads"

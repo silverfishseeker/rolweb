@@ -1,0 +1,91 @@
+<%# Expected params: index, pc%>
+
+<tr index="<%=index%>">
+  <td data-label="Parte">
+    <input type="text"
+          name="parte_cuerpos[<%=index%>][nombre]"
+          value="<%= pc ? pc.nombre : "" %>">
+  </td>
+
+  <td data-label="Tipo">
+    <select name="parte_cuerpos[<%=index%>][tipo]">
+      <% Pj::ParteCuerpo::TIPOS.each do |key, value| %>
+        <option value="<%= key %>" <%= "selected" if (pc ? pc.tipo : 0) == key %>>
+          <%= value %>
+        </option>
+      <% end %>
+    </select>
+  </td>
+
+  <td data-label="Salud">
+    <div class="salud">
+      <input type="number"
+            name="parte_cuerpos[<%=index%>][saludact]"
+            value="<%= pc ? pc.saludact : 3 %>">
+      /
+      <input type="number"
+            name="parte_cuerpos[<%=index%>][saludmax]"
+            value="<%= pc ? pc.saludmax : 3 %>">
+    </div>
+  </td>
+
+  <td data-label="Mapeo" style="display:flex">
+    <button type="button"
+            class="open-mapeo-parte"
+            index="<%=index%>">
+      Por defecto
+    </button>
+    <input type="text"
+          name="parte_cuerpos[<%=index%>][mapeo]"
+          value="<%= pc ? pc.mapeo : "" %>"
+          id="mapeo-input-<%=index%>"
+          style="display:none"
+          disabled>
+  </td>
+
+  <td data-label="Armadura base">
+    <input type="number"
+          name="parte_cuerpos[<%=index%>][passive_mod]"
+          value="<%= pc ? pc.modificable&.passive_mod || 0 : 0 %>">
+  </td>
+
+  <td data-label="Modificador armadura">
+    <input type="number"
+          name="parte_cuerpos[<%=index%>][active_mod]"
+          value="<%= pc ? pc.modificable&.active_mod || 0 : 0 %>">
+  </td>
+
+  <td data-label="Estados alterados">
+    <div class="estado-resumen"
+        index="<%=index%>">
+      <!-- JS rellena -->
+    </div>
+    <button type="button"
+            class="open-estados-parte"
+            id="btn-estados-<%=index%>"
+            index="<%=index%>">
+      Ver / editar
+    </button>
+    <div id="modal-estadosalterados-parte-<%=index%>"
+          class="pj-modal_estadosalterados_parte">
+      <header>
+        <h4>Estados alterados de <%= pc ? pc.nombre : "nuevo" %></h4>
+        <button type="button" class="btn btn-danger modal-close" index="<%=index%>">X</button>
+      </header>
+      <div class="pj-modal_content">
+        <%= render "personajes/form_estados_alterados",
+                    listaEstadosAlterados: [],
+                    nombre_input_base: "parte_cuerpos[#{index}][has_estadoalterados]",
+                    table_id: index %>
+      </div>
+    </div>
+  </td>
+  <td data-label="Borrar" class="checkbox-danger">
+    <input type="checkbox"
+          name="parte_cuerpos[<%=index%>][_destroy]"
+          value="1">
+  </td>
+</tr>
+<input type="hidden"
+      name="parte_cuerpos[<%= index %>][id]"
+      value="<%= pc ? pc.id : nil %>">

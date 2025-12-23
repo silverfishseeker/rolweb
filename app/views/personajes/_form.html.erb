@@ -3,7 +3,7 @@
 <div>
   <%= form_with(model: @x, local: true, html: { multipart: true, class: "pj-form"}) do |f| %>
     <!-- SUBMIT + CANCEL -->
-    <div class="form-actions" style="margin-top:1.5rem;">
+    <div>
       <%= f.submit "Guardar", class: "btn btn-primary" %>
       <%= link_to "Cancelar", personajes_path, class: "btn btn-warning" %>
     </div>
@@ -101,7 +101,7 @@
 
           <section>
             <h3>Notas</h3>
-            <div class="max-width white_bk"><%= f.rich_text_area :descripcion %></div>
+            <div class="white_bk"><%= f.rich_text_area :descripcion %></div>
           </section>
 
         </div>
@@ -246,20 +246,69 @@
               </table>
             </div>
             <div>
+              <script type="text/template" id="estadoalterado-template">
+                <tr data-id="__id__">
+                  <td data-label="Estado">
+                    <select name="<%= "__nombre_input_base__[__id__][estadoalterado_id]" %>">
+                      <% Estadoalterado.order(:nombre).each do |ea| %>
+                        <option value="<%= ea.id %>"
+                              data-is-numeric="<%= ea.isNumeric %>">
+                          <%= ea.nombre %>
+                        </option>
+                      <% end %>
+                    </select>
+                  </td>
+                  <td data-label="Valor">
+                    <input type="number" name="<%= "__nombre_input_base__[__id__][valor]" %>" value="0">
+                  </td>
+                  <td data-label="Eliminar" class="checkbox-danger">
+                    <input type="checkbox" name="<%= "__nombre_input_base__[__id__][_destroy]" %>" value="1">
+                  </td>
+                </tr>
+              </script>
+              <h3>Estados alterados</h3>
+              <%= render "personajes/form_estados_alterados",
+                         listaEstadosAlterados: @x.hasEstadoalterados,
+                         nombre_input_base: "has_estadoalterados",
+                         table_id: "estadoalterados" %>
+
+
+              <script type="text/template" id="parte-cuerpo-template">
+                <%= render "form_parte_cuerpo_row", index: "__INDEX__", pc: nil %>
+              </script>
               <h3>Cuerpo</h3>
+              <table class="tabla-estadisticas">
+                <thead>
+                  <tr>
+                    <th>Parte</th>
+                    <th>Tipo</th>
+                    <th>Salud</th>
+                    <th>Mapeo</th>
+                    <th>Armadura base</th>
+                    <th>Modificador armadura</th>
+                    <th>Estados alterados</th>
+                    <th>Borrar</th>
+                  </tr>
+                </thead>
+
+                <tbody id="parte-cuerpos-body">
+                  <% @x.parteCuerpos.each_with_index do |pc, i| %>
+                    <%= render "form_parte_cuerpo_row", index: i, pc: pc %>
+                  <% end %>
+                  <tr style="display:none;" id="parte-cuerpos-next"> </tr>
+                </tbody>
+              </table>
+
+              <button type="button" id="add-parte-cuerpo" class="btn btn-primary">
+                Añadir parte del cuerpo
+              </button>
+
             </div>
           </section>
         </div>
       
       </div>
 
-    </div> <!-- /tabs -->
-
-    <!-- SUBMIT + CANCEL -->
-    <div class="form-actions" style="margin-top:1.5rem;">
-      <%= f.submit "Guardar", class: "btn btn-primary" %>
-      <%= link_to "Cancelar", personajes_path, class: "btn btn-warning" %>
     </div>
-
   <% end %>
 </div>

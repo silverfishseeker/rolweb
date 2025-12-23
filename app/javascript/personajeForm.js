@@ -26,20 +26,18 @@ export function onTurboLoad() {
     });
   });
 
-  const c_body = document.getElementById("calculados-body");
   // Toggle rango (delegado)
+  const c_body = document.getElementById("calculados-body");
   function toggleRango(button) {
-    console.log("Toggling rango for button", button);
     const input = button.closest("tr").querySelector(".rango-input");
     if (input) input.disabled = !input.disabled;
   }
-
-  // Delegación de eventos
   c_body.addEventListener("click", e => {
     if (e.target.classList.contains("toggle-rango")) {
       toggleRango(e.target);
     }
   });
+
   // Añadir calculado libre
   document.getElementById("add-calculado-libre").addEventListener("click", () => {
     const index = c_body.querySelectorAll("tr[data-index]").length;
@@ -48,4 +46,95 @@ export function onTurboLoad() {
     const addRow = document.getElementById("add-calculado-libre").closest("tr");
     addRow.insertAdjacentHTML("beforebegin", html);
   });
+
+  // Añadir estado alterado
+  document.querySelectorAll('.add-estadoalterado').forEach(button => {
+    button.addEventListener('click', () => {
+      const tableId = button.getAttribute('table_id');
+      const tbody = document.querySelector(`#${tableId} tbody`);
+      const templateElement = document.getElementById('estadoalterado-template');
+      const nombreInputBase = "has_estadoalterados";
+      const template = templateElement.innerHTML
+        .replace(/__id__/g, tbody.querySelectorAll('tr').length)
+        .replace(/__nombre_input_base__/g, nombreInputBase);
+      tbody.insertAdjacentHTML('beforeend', template);
+    });
+  });
+
+  // Toggle mapeo parte cuerpo
+  const pc_body = document.getElementById("parte-cuerpos-body");
+  pc_body.addEventListener("click", e => {
+    if (e.target.classList.contains("open-mapeo-parte")) {
+      const id = e.target.getAttribute("index");
+      const input = pc_body.querySelector('#estadoalterado-template');
+      if (isHidden = input.style.display === "none"){
+        e.target.textContent = "Editar";
+        input.style.display = "block";
+      } else {
+        e.target.textContent = "Por defecto";
+        input.style.display = "none";
+      }
+    }
+  });
+
+  // Resumen estados alterados
+  function estadosalterados_summary(table, target_writting) {
+    const tbody = table.querySelector('tbody');
+    const estados = Array.from(tbody.querySelectorAll('tr'))
+    .filter(tr => ! tr.querySelector('input[name$="[_destroy]"]').checked
+    ).map(tr => {
+      const nombreTd = tr.querySelector('td[data-label="Estado"]');
+      const select = nombreTd.querySelector('select');
+      const valorInput = tr.querySelector('td[data-label="Valor"] input');
+      let nombre;
+      let isNumeric;
+      if (select) {
+        const option = select.options[select.selectedIndex];
+        nombre = option.text;
+        isNumeric = option.dataset.isNumeric === 'true';
+      } else {
+        nombre = nombreTd.textContent.trim();
+        isNumeric = valorInput !== null;
+      }
+      return isNumeric ? `${nombre} ${valorInput.value}` : nombre;
+    });
+    target_writting.textContent = estados.join(', ');
+  }
+
+  // Preparar resúmenes de estados alterados en carga
+  document.querySelectorAll('.estado-resumen').forEach(resumen => {
+    const table_id = "table_" + resumen.getAttribute('index');
+    const table = document.querySelector(`#${table_id}`);
+    estadosalterados_summary(table, resumen);
+  });
+
+  // Abrir modal de estados alterados
+  pc_body.addEventListener("click", e => {
+    if (e.target.classList.contains("open-estados-parte")) {
+      const modal = document.getElementById("modal-estadosalterados-parte-" + e.target.getAttribute("index"));
+      modal.style.display = "block";
+    }
+  });
+
+  // Cerrar modal de estados alterados
+  pc_body.addEventListener("click", e => {
+    if (e.target.classList.contains("modal-close")) {
+      const index = e.target.getAttribute("index");
+      const modal = document.getElementById("modal-estadosalterados-parte-" + index);
+      modal.style.display = "none";
+      const table = modal.querySelector('table');
+      const target_writting = pc_body.querySelector(`.estado-resumen[index="${index}"]`);
+      estadosalterados_summary(table, target_writting);
+    }
+  });
+
+  // Añadir parte cuerpo
+  document.getElementById("add-parte-cuerpo").addEventListener("click", () => {
+    const index = pc_body.querySelectorAll("tr[data-index]").length;
+    const template = document.getElementById("parte-cuerpo-template");
+    const html = template.innerHTML.replace(/__INDEX__/g, index);
+    const addRow = document.getElementById("parte-cuerpos-next");
+    addRow.insertAdjacentHTML("beforebegin", html);
+  });
+
 }

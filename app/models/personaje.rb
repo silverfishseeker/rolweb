@@ -24,4 +24,60 @@ class Personaje < ApplicationRecord
   def nivel
     sum_nil nivel_clases, nivel_estadisticas, nivel_habilidades, nivel_otro # sum_nil ignora nils
   end
+
+  def build_base_structure
+    base_stats =  ["fuerza", "inteligencia", "destreza", "constitucion", "resistencia", "percepcion"]
+    base_calcs =  ["penetracion fisica", "penetracion magica", "precision", "armadura magica"]
+    base_rangos = ["estabilidad", "sangre", "peso"]
+    base_cuerpo = {
+      "Cabeza" => 1,
+      "Torso" => 1,
+      "Brazo Izquierdo" => 1,
+      "Brazo Derecho" => 1,
+      "Pierna Izquierda" => 0,
+      "Pierna Derecha" => 0,
+      "Tronco medio" => 0,
+      "Abdomen" => 0
+    }
+
+    base_stats.each do |clave|
+      tipo_estadistic = Pj::TipoEstadistic.find_by(clave: clave)
+      next unless tipo_estadistic
+      estadistics.build(
+        tipoEstadistic: tipo_estadistic,
+        base: 0,
+        lv_mod: 0,
+        modificable: Pj::Modificable.new(passive_mod: 0, active_mod: 0)
+      )
+    end
+    base_calcs.each do |clave|
+      tipo_calculado = Pj::TipoCalculado.find_by(clave: clave)
+      next unless tipo_calculado
+      calculados.build(
+        tipoCalculado: tipo_calculado,
+        modificable: Pj::Modificable.new(passive_mod: 0, active_mod: 0)
+      )
+    end
+    base_rangos.each do |clave|
+      tipo_rango = Pj::TipoRango.find_by(clave: clave)
+      next unless tipo_rango
+      calculados.build(
+        rango: Pj::Rango.new(
+          tipoRango: tipo_rango,
+          valor: 0
+        ),
+        modificable: Pj::Modificable.new(passive_mod: 0, active_mod: 0)
+      )
+    end
+    base_cuerpo.each do |nombre, tipo|
+      parteCuerpos.build(
+        nombre: nombre,
+        tipo: tipo,
+        mapeo: Pj::ParteCuerpo::DEFAULT_MAPEO_NAME,
+        saludmax: 3,
+        saludact: 3,
+        modificable: Pj::Modificable.new(passive_mod: 0, active_mod: 0)
+      )
+    end
+  end
 end
