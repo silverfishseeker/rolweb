@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_21_145555) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_24_160128) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -319,13 +319,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_21_145555) do
     t.integer "base"
     t.integer "lv_mod"
     t.bigint "personaje_id", null: false
-    t.bigint "tipoEstadistic_id", null: false
+    t.bigint "tipo_estadistic_id", null: false
     t.bigint "pj_modificable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["personaje_id"], name: "index_pj_estadistics_on_personaje_id"
     t.index ["pj_modificable_id"], name: "index_pj_estadistics_on_pj_modificable_id"
-    t.index ["tipoEstadistic_id"], name: "index_pj_estadistics_on_tipoEstadistic_id"
+    t.index ["tipo_estadistic_id"], name: "index_pj_estadistics_on_tipo_estadistic_id"
   end
 
   create_table "pj_has_estadoalterados", force: :cascade do |t|
@@ -500,7 +500,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_21_145555) do
   add_foreign_key "pj_calculados", "pj_meta_tipos", column: "tipoCalculado_id"
   add_foreign_key "pj_calculados", "pj_modificables"
   add_foreign_key "pj_estadistics", "personajes"
-  add_foreign_key "pj_estadistics", "pj_meta_tipos", column: "tipoEstadistic_id"
+  add_foreign_key "pj_estadistics", "pj_meta_tipos", column: "tipo_estadistic_id"
   add_foreign_key "pj_estadistics", "pj_modificables"
   add_foreign_key "pj_has_estadoalterados", "estadoalterados"
   add_foreign_key "pj_has_estadoalterados", "personajes"

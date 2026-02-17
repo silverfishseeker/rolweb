@@ -46,34 +46,47 @@ export function onTurboLoad() {
     const addRow = document.getElementById("add-calculado-libre").closest("tr");
     addRow.insertAdjacentHTML("beforebegin", html);
   });
-
+  
   // Añadir estado alterado
-  document.querySelectorAll('.add-estadoalterado').forEach(button => {
-    button.addEventListener('click', () => {
-      const tableId = button.getAttribute('table_id');
+  document.getElementById("tab-estado").addEventListener("click", e => { // Este no lo podemos restringir en pc_body para que funcione para los estados alterados generales
+    if (e.target.classList.contains("add-estadoalterado")) {
+      console.log("Añadir estado alterado");
+      const button = e.target;
+      const tableId = button.dataset.table_id;
+      const nombreInputBase = button.dataset.nombreInputBase;
       const tbody = document.querySelector(`#${tableId} tbody`);
-      const templateElement = document.getElementById('estadoalterado-template');
-      const nombreInputBase = "has_estadoalterados";
-      const template = templateElement.innerHTML
+      const template = document.getElementById('estadoalterado-template').innerHTML
         .replace(/__id__/g, tbody.querySelectorAll('tr').length)
         .replace(/__nombre_input_base__/g, nombreInputBase);
       tbody.insertAdjacentHTML('beforeend', template);
-    });
+    }
   });
 
-  // Toggle mapeo parte cuerpo
+
+
+  // PARTES CUERPO
   const pc_body = document.getElementById("parte-cuerpos-body");
+
+
+  // Toggle mapeo parte cuerpo
   pc_body.addEventListener("click", e => {
-    if (e.target.classList.contains("open-mapeo-parte")) {
-      const id = e.target.getAttribute("index");
-      const input = pc_body.querySelector('#estadoalterado-template');
-      if (isHidden = input.style.display === "none"){
-        e.target.textContent = "Editar";
-        input.style.display = "block";
-      } else {
-        e.target.textContent = "Por defecto";
-        input.style.display = "none";
-      }
+    const button = e.target;
+    if (!button.classList.contains("open-mapeo-parte")) return
+    const index = button.getAttribute("index");
+    const td = button.closest('td');
+    const inputText = td.querySelector(`#mapeo-input-${index}`);
+    const inputIsMapeo = td.querySelector(`#mapeo-isMapeo-${index}`);
+
+    if (inputIsMapeo.value == "0"){
+      button.textContent = "Editar";
+      inputText.style.display = "block";
+      inputText.disabled = false;
+      inputIsMapeo.value = "1";
+    } else {
+      button.textContent = "Por defecto";
+      inputText.style.display = "none";
+      inputText.disabled = true;
+      inputIsMapeo.value = "0";
     }
   });
 
@@ -103,7 +116,7 @@ export function onTurboLoad() {
 
   // Preparar resúmenes de estados alterados en carga
   document.querySelectorAll('.estado-resumen').forEach(resumen => {
-    const table_id = "table_" + resumen.getAttribute('index');
+    const table_id = resumen.dataset.table_id;
     const table = document.querySelector(`#${table_id}`);
     estadosalterados_summary(table, resumen);
   });
@@ -130,7 +143,7 @@ export function onTurboLoad() {
 
   // Añadir parte cuerpo
   document.getElementById("add-parte-cuerpo").addEventListener("click", () => {
-    const index = pc_body.querySelectorAll("tr[data-index]").length;
+    const index = document.getElementById("parte-cuerpos-table").rows.length-2; // -2 para no contar header y fila de template
     const template = document.getElementById("parte-cuerpo-template");
     const html = template.innerHTML.replace(/__INDEX__/g, index);
     const addRow = document.getElementById("parte-cuerpos-next");

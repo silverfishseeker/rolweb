@@ -33,14 +33,20 @@
     <button type="button"
             class="open-mapeo-parte"
             index="<%=index%>">
-      Por defecto
+      <%= pc && pc.is_mapeo ? "Editar" : "Por defecto" %>
     </button>
+    <input type="hidden"
+          name="parte_cuerpos[<%=index%>][isMapeo]"
+          id="mapeo-isMapeo-<%=index%>"
+          value="<%= pc && pc.is_mapeo ? "1" : "0" %>">
     <input type="text"
           name="parte_cuerpos[<%=index%>][mapeo]"
-          value="<%= pc ? pc.mapeo : "" %>"
+          value="<%= pc && pc.is_mapeo ? pc.mapeo : "" %>"
           id="mapeo-input-<%=index%>"
-          style="display:none"
-          disabled>
+          class="input-mapeo"
+          style="display:<%= pc && pc.is_mapeo ? "block" : "none" %>"
+          <%= pc && pc.is_mapeo ? "" : "disabled" %>
+          >
   </td>
 
   <td data-label="Armadura base">
@@ -56,8 +62,7 @@
   </td>
 
   <td data-label="Estados alterados">
-    <div class="estado-resumen"
-        index="<%=index%>">
+    <div class="estado-resumen" index="<%=index%>" data-table_id="<%=ea_t_id index.to_s%>">
       <!-- JS rellena -->
     </div>
     <button type="button"
@@ -70,11 +75,11 @@
           class="pj-modal_estadosalterados_parte">
       <header>
         <h4>Estados alterados de <%= pc ? pc.nombre : "nuevo" %></h4>
-        <button type="button" class="btn btn-danger modal-close" index="<%=index%>">X</button>
+        <button type="button" class="btn btn-danger modal-close" index="<%=index%>">Guardar y cerrar</button>
       </header>
       <div class="pj-modal_content">
         <%= render "personajes/form_estados_alterados",
-                    listaEstadosAlterados: [],
+                    listaEstadosAlterados: pc ? pc.hasEstadoalterados : [],
                     nombre_input_base: "parte_cuerpos[#{index}][has_estadoalterados]",
                     table_id: index %>
       </div>

@@ -7,12 +7,12 @@ class Personaje < ApplicationRecord
   belongs_to :picture, optional: true
 
   has_many :estadistics,
-    -> { joins(:tipoEstadistic).order("pj_meta_tipos.orden ASC") },
+    -> { joins(:tipoEstadistic).order("pj_meta_tipos.orden ASC") }, # scope to order, applied on call
     class_name: "Pj::Estadistic",
     dependent: :destroy, autosave: true
   has_many :calculados, class_name: "Pj::Calculado", dependent: :destroy, autosave: true
-  has_many :parteCuerpos, class_name: "Pj::ParteCuerpo", dependent: :destroy
-  has_many :hasEstadoalterados, class_name: "Pj::HasEstadoalterado", dependent: :destroy
+  has_many :parteCuerpos, class_name: "Pj::ParteCuerpo", dependent: :destroy, autosave: true
+  has_many :hasEstadoalterados, class_name: "Pj::HasEstadoalterado", dependent: :destroy, autosave: true
   has_many :personajeHasClases, class_name: "Pj::PersonajeHasClase", dependent: :destroy
   has_many :personajeHasHabilidads, class_name: "Pj::PersonajeHasHabilidad", dependent: :destroy #habilidades independientes
   has_many :PersonajeHasItem, class_name: "Pj::PersonajeHasItem", dependent: :destroy

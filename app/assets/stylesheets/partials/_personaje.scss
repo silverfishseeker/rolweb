@@ -143,6 +143,9 @@
   input[type="text"]{
     max-width: 110px;
   }
+  input[type="text"].input-mapeo.input-mapeo{
+    max-width: 50px;
+  }
   input[type="number"]{
     width: 40px;
   }

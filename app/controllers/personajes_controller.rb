@@ -27,44 +27,72 @@ class PersonajesController < ModelController
 
   private
 
+  def cleanup_estados_alterados(estadosalterados)
+    estadosalterados&.each_value_with_object({}) do |attrs, cleaned|
+      id = attrs[:estadoalterado_id]
+      if !cleaned[id] || attrs[:_destroy] != "1" 
+        cleaned[id] = { valor: attrs[:valor], _destroy: attrs[:_destroy] }
+      end
+    end
+  end
+  
+  # Procesa estados alterados para el personaje o una parte del cuerpo
+  def process_estados_alterados(estadosalterados, target)
+    return unless estadosalterados
+    # En esta función, si en el formulario hay repetidos, se sobreescriben y cuenta el último
+    estadosalterados.to_unsafe_h.each_with_object({}) do |(_, attrs), cleaned|
+      id = attrs[:estadoalterado_id]
+      if !cleaned[id] || attrs[:_destroy] != "1" 
+        cleaned[id] = {
+          estadoalterado_id: id,
+          valor: attrs[:valor],
+          _destroy: attrs[:_destroy]
+        }
+      end
+    end.each_value  do |attrs|
+      hea = target.hasEstadoalterados.find_by( estadoalterado_id: attrs[:estadoalterado_id])
+      if attrs[:_destroy] == "1"
+        hea.destroy if hea
+      else
+        hea ||= target.hasEstadoalterados.build( estadoalterado_id: attrs[:estadoalterado_id])
+        hea.valor = attrs[:valor].to_i if hea.estadoalterado.isNumeric
+        hea.save!
+      end
+    end
+  end
+
   # Procesa los parámetros complejos y actualiza/crea asociaciones en @personaje (que ya existe en @x)
   def process_associations_for(personaje)
+
+    # ESTADISTICAS
     params[:estadistics].each do |tipo_id_str, attrs|
       tipo_id = tipo_id_str.to_i
       stat = personaje.estadistics.find do |s|
-        s.tipoEstadistic_id == tipo_id
+        s.tipo_estadistic_id == tipo_id
       end
 
       if attrs[:apply].present?
-        if stat
-          stat.base   = attrs[:base].to_i
-          stat.lv_mod = attrs[:lv_mod].to_i
-          stat.modificable.passive_mod = attrs[:passive_mod].to_i
-          stat.modificable.active_mod  = attrs[:active_mod].to_i
-        else
-          personaje.estadistics.build(
-            tipoEstadistic_id: tipo_id,
-            base: attrs[:base].to_i,
-            lv_mod: attrs[:lv_mod].to_i,
-            modificable: Pj::Modificable.new(
-              passive_mod: attrs[:passive_mod].to_i,
-              active_mod: attrs[:active_mod].to_i
-            )
-          )
+        if ! stat
+          stat = personaje.estadistics.build(
+            modificable: Pj::Modificable.new,
+            tipo_estadistic_id: tipo_id)
         end
+        stat.base   = attrs[:base].to_i
+        stat.lv_mod = attrs[:lv_mod].to_i
+        stat.modificable.passive_mod = attrs[:passive_mod].to_i
+        stat.modificable.active_mod  = attrs[:active_mod].to_i
       elsif stat
         stat.destroy
       end
     end
 
+    # ESTADO
     params[:calculados].each do |_, attrs|
       calculado =
         if attrs[:id].present?
           personaje.calculados.find_by(id: attrs[:id])
         else
-          personaje.calculados.build(
-            modificable: Pj::Modificable.new
-          )
+          personaje.calculados.build( modificable: Pj::Modificable.new )
         end
 
       if attrs[:_destroy] == "1"
@@ -99,6 +127,38 @@ class PersonajesController < ModelController
       else
         calculado.calculado_libre&.destroy
       end
+
+      calculado.save!
     end
+
+    # ESTADOS ALTERADOS
+    process_estados_alterados params[:has_estadoalterados], personaje
+
+    # PARTES DEL CUERPO
+    params[:parte_cuerpos]&.each do |_, attrs|
+      pc = if attrs[:id].blank?
+        pc = personaje.parteCuerpos.build(modificable: Pj::Modificable.new)
+        pc.save!(validate: false) # Guardamos sin validar para tener un ID y poder asociar estados alterados
+        pc
+      else
+        personaje.parteCuerpos.find_by(id: attrs[:id])
+      end
+
+      if attrs[:_destroy] == "1"
+        pc.destroy
+        next
+      end
+
+      pc.nombre    = attrs[:nombre]
+      pc.tipo      = attrs[:tipo].to_i
+      pc.saludact  = attrs[:saludact].to_i
+      pc.saludmax  = attrs[:saludmax].to_i
+      pc.mapeo     = attrs[:isMapeo] == "1" ? attrs[:mapeo] : Pj::ParteCuerpo::DEFAULT_MAPEO_NAME
+      pc.modificable.passive_mod = attrs[:passive_mod].to_i
+      pc.modificable.active_mod  = attrs[:active_mod].to_i
+      # Estados alterados por parte
+      process_estados_alterados attrs[:has_estadoalterados], pc
+      pc.save!
+    end  
   end
 end

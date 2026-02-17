@@ -148,7 +148,7 @@
                       <td data-label="Estadística base">
                         <%= tipo.tipoEstadistic ? tipo.tipoEstadistic.nombre : "—" %>
                       </td>
-                      <td data-label="Valor base">>
+                      <td data-label="Valor base">
                         <%= estad&.value || "—" %>
                       </td>
                       <%= render "personajes/form_calculado_row", calc: calc, index: index do %>
@@ -238,7 +238,7 @@
                   <tr>
                     <td colspan="8">
                       <button type="button" id="add-calculado-libre" class="btn btn-primary">
-                        + Añadir calculado libre
+                        + Añadir característica
                       </button>
                     </td>
                   </tr>
@@ -246,6 +246,7 @@
               </table>
             </div>
             <div>
+              <!-- ================= AÑADIR ESTADO ALTERADO ================= -->
               <script type="text/template" id="estadoalterado-template">
                 <tr data-id="__id__">
                   <td data-label="Estado">
@@ -266,18 +267,21 @@
                   </td>
                 </tr>
               </script>
+              <!-- ================= ESTADOS ALTERADOS ================= -->
               <h3>Estados alterados</h3>
               <%= render "personajes/form_estados_alterados",
                          listaEstadosAlterados: @x.hasEstadoalterados,
                          nombre_input_base: "has_estadoalterados",
-                         table_id: "estadoalterados" %>
+                         table_id: "general" %>
 
 
+              <!-- ================= AÑADIR PARTE CUERPO ================= -->
               <script type="text/template" id="parte-cuerpo-template">
                 <%= render "form_parte_cuerpo_row", index: "__INDEX__", pc: nil %>
               </script>
+              <!-- ================= PARTES CUERPO ================= -->
               <h3>Cuerpo</h3>
-              <table class="tabla-estadisticas">
+              <table class="tabla-estadisticas" id="parte-cuerpos-table">
                 <thead>
                   <tr>
                     <th>Parte</th>

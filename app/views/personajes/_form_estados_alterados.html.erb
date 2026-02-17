@@ -1,6 +1,6 @@
 <%# _form_estados_alterados.html.erb %>
 <%# Params: listaEstadosAlterados, nombre_input_base, table_id %>
-<table class="tabla-estadisticas" id="table_<%= table_id %>">
+<table class="tabla-estadisticas" id="<%=ea_t_id table_id %>">
   <thead>
     <tr>
       <th>Estado</th>
@@ -13,10 +13,10 @@
     <% listaEstadosAlterados.each do |ea| %>
       <tr data-id="<%= index %>">
         <td data-label="Estado">
-          <%= ea.EstadoAlterado.nombre %>
+          <%= ea.estadoalterado.nombre %>
         </td>
         <td data-label="Valor">
-          <% if ea.EstadoAlterado.isNumeric %>
+          <% if ea.estadoalterado.isNumeric %>
             <input type="number"
                    name="<%= "#{nombre_input_base}[#{index}][valor]" %>"
                    value="<%= ea.valor %>">
@@ -30,10 +30,9 @@
                  value="1">
         </td>
       </tr>
-      <%= hidden_field_tag "#{nombre_input_base}[#{index}][id]", ea.id %>
-      <%= hidden_field_tag "#{nombre_input_base}[#{index}][estadoalterado_id]", ea.EstadoAlterado.id %>
+      <%= hidden_field_tag "#{nombre_input_base}[#{index}][estadoalterado_id]", ea.estadoalterado.id %>
       <% index += 1 %>
     <% end %>
   </tbody>
 </table>
-<button type="button" class="btn btn-primary add-estadoalterado" table_id="table_<%= table_id %>">Añadir estado alterado</button>
+<button type="button" class="btn btn-primary add-estadoalterado" data-table_id="<%=ea_t_id table_id %>" data-nombre-input-base="<%= nombre_input_base %>">Añadir estado alterado</button>

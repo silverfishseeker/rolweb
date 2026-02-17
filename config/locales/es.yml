@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    errors:
+      messages:
+        record_invalid: "La validación falló: %{errors}"
+      models:
+        personaje:
+          attributes:
+            parteCuerpos:
+              invalid: La parte del cuerpo no es válida.
+        pj/estadistic:
+          attributes:
+            tipoEstadistic:
+              required: "El tipo de estadística es requerido."
