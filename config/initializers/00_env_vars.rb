@@ -51,13 +51,19 @@ module EnvVars
       end
     end
     if unset.any?
-      raise EnvVarError, "The following environment variables are required in production but are not set: #{unset.join(", ")}"
+      raise EnvVarError, "The following environment variables " +
+          "are required in production but are not set: #{unset.join(", ")}"
     end
   end
 
   def self.[](key)
-    raise EnvVarError, "key: #{key}" unless VARS.key?(key)
-    return VARS[key][1] if ENV[key].blank?
+    raise EnvVarError, "Unknown key: #{key}" unless VARS.key?(key)
+
+    if ENV[key].blank?
+      raise EnvVarError, "Environment variable #{key} is required "+
+          "but not set and has no default value" if VARS[key][1].nil?
+      return VARS[key][1] 
+    end
 
     case VARS[key][0]
     when :int
