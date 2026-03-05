@@ -37,6 +37,7 @@ rails server
 
 rails db:migrate
     meter modelos en la DB
+    docker exec -it rolweb-web-1 rails db:migrate
 
 GENERAR COSAS y ejemplos
 
