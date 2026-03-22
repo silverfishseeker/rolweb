@@ -1,6 +1,18 @@
 <div class="texto_info texto_info-margins">
   <h1><%= params[:tipo].humanize %></h1>
 
+  <div class="pj-meta_tipo_card header">
+    <span>Nombre</span>
+    <span>Siglas</span>
+    <span>Clave</span>
+    <span>Orden</span>
+    <% if params[:tipo].humanize != "Estadistic" %>
+      <span>Estadística</span>
+    <% end %>
+    <span>Acciones</span>
+    <span></span>
+  </div>
+
   <% @xs.each do |x| %>
     <%= render "meta_tipo", meta_tipo: x %>
   <% end %>
