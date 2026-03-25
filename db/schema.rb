@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_24_160128) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_18_134302) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -294,23 +294,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_160128) do
   create_table "pj_calculado_libres", force: :cascade do |t|
     t.string "nombre"
     t.integer "base"
-    t.bigint "pj_personaje_has_habilidad_id"
-    t.bigint "pj_personaje_has_clase_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "pj_calculado_id", null: false
     t.index ["pj_calculado_id"], name: "index_pj_calculado_libres_on_pj_calculado_id"
-    t.index ["pj_personaje_has_clase_id"], name: "index_pj_calculado_libres_on_pj_personaje_has_clase_id"
-    t.index ["pj_personaje_has_habilidad_id"], name: "index_pj_calculado_libres_on_pj_personaje_has_habilidad_id"
   end
 
   create_table "pj_calculados", force: :cascade do |t|
-    t.bigint "personaje_id", null: false
     t.bigint "tipoCalculado_id"
     t.bigint "pj_modificable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["personaje_id"], name: "index_pj_calculados_on_personaje_id"
+    t.string "hasCalculados_type", null: false
+    t.bigint "hasCalculados_id", null: false
+    t.index ["hasCalculados_type", "hasCalculados_id"], name: "index_pj_calculados_on_hasCalculados"
     t.index ["pj_modificable_id"], name: "index_pj_calculados_on_pj_modificable_id"
     t.index ["tipoCalculado_id"], name: "index_pj_calculados_on_tipoCalculado_id"
   end
@@ -384,14 +381,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_160128) do
   end
 
   create_table "pj_personaje_has_habilidads", force: :cascade do |t|
-    t.bigint "personaje_id", null: false
-    t.bigint "pj_personaje_has_clase_id", null: false
     t.bigint "habilidad_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "has_habilidads_type", null: false
+    t.bigint "has_habilidads_id", null: false
     t.index ["habilidad_id"], name: "index_pj_personaje_has_habilidads_on_habilidad_id"
-    t.index ["personaje_id"], name: "index_pj_personaje_has_habilidads_on_personaje_id"
-    t.index ["pj_personaje_has_clase_id"], name: "index_pj_personaje_has_habilidads_on_pj_personaje_has_clase_id"
+    t.index ["has_habilidads_type", "has_habilidads_id"], name: "index_pj_personaje_has_habilidads_on_has_habilidads"
   end
 
   create_table "pj_personaje_has_items", force: :cascade do |t|
@@ -494,9 +490,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_160128) do
   add_foreign_key "personajes", "pictures"
   add_foreign_key "personajes", "users"
   add_foreign_key "pj_calculado_libres", "pj_calculados"
-  add_foreign_key "pj_calculado_libres", "pj_personaje_has_clases"
-  add_foreign_key "pj_calculado_libres", "pj_personaje_has_habilidads"
-  add_foreign_key "pj_calculados", "personajes"
   add_foreign_key "pj_calculados", "pj_meta_tipos", column: "tipoCalculado_id"
   add_foreign_key "pj_calculados", "pj_modificables"
   add_foreign_key "pj_estadistics", "personajes"
@@ -511,8 +504,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_160128) do
   add_foreign_key "pj_personaje_has_clases", "clases"
   add_foreign_key "pj_personaje_has_clases", "personajes"
   add_foreign_key "pj_personaje_has_habilidads", "habilidads"
-  add_foreign_key "pj_personaje_has_habilidads", "personajes"
-  add_foreign_key "pj_personaje_has_habilidads", "pj_personaje_has_clases"
   add_foreign_key "pj_personaje_has_items", "items"
   add_foreign_key "pj_personaje_has_items", "personajes"
   add_foreign_key "pj_rangos", "pj_calculados", column: "calculado_id"

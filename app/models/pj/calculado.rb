@@ -1,6 +1,6 @@
 class Pj::Calculado < ApplicationRecord
   #attributes: no other attributes
-  belongs_to :personaje
+  belongs_to :hasCalculados, polymorphic: true, inverse_of: :calculados
   belongs_to :tipoCalculado,
     class_name: "Pj::TipoCalculado",
     foreign_key: "tipoCalculado_id",
@@ -29,12 +29,18 @@ class Pj::Calculado < ApplicationRecord
     end
   end
 
-  def free?
+  validate do
+    if hasCalculados_type != "Personaje" && !calculado_libre.present?
+      errors.add(:base, "Si calculado no pertenece a un personaje, debe de ser libre, pertenece a #{hasCalculados_type}")
+    end
+  end
+
+  def has_libre?
     calculado_libre.present?
   end
 
   def tipoStatistic
-    if free?
+    if has_libre?
       nil
     elsif rango.present?
       rango.tipoRango.tipoEstadistic
@@ -44,7 +50,7 @@ class Pj::Calculado < ApplicationRecord
   end
 
   def nombre
-    if free?
+    if has_libre?
       calculado_libre.nombre
     elsif rango.present?
       rango.tipoRango.nombre
@@ -54,10 +60,11 @@ class Pj::Calculado < ApplicationRecord
   end
 
   def value
-    base = if free?
+    base = if has_libre?
        calculado_libre.base
     else
-      personaje.estadistics.find do |s|
+      # la segunda validación asegura que hasCalculados sea un personaje si no es libre, por lo que tiene estadistics
+      hasCalculados.estadistics.find do |s|
         s.tipo_estadistic_id == tipoStatistic&.id
       end&.value || 0
     end

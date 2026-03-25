@@ -22,7 +22,7 @@ class ApplicationRecord < ActiveRecord::Base
         next unless record.new_record? || record.has_changes_to_save?
         next if record.valid?
         record.errors.full_messages.each do |msg|
-          errors.add(assoc.name, "#{assoc.name.to_s.humanize} (#{error_coalesce(default: record.id){record.nombre}}): #{msg}")
+          errors.add(assoc.name, "#{assoc.name.to_s.humanize} (#{error_coalesce(default: record.id){record.nombre}}): {#{msg}}")
         end
       end
     end

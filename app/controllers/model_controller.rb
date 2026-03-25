@@ -1,5 +1,6 @@
 # Base class for models controllers. Requires subclasses to define `tipo` and `model_params` methods.
 class ModelController < ApplicationController
+  ERRORS_JOIN_CHAR = ' | '.freeze
 
   # This is the model class that the controller manages. Must be defined in the subclass.
   def tipo
@@ -41,7 +42,7 @@ class ModelController < ApplicationController
       if @x.save
         redirect_to @x, notice: "#{tipo.name} creado correctamente."
       else
-        raise @x.errors.full_messages.join(', ')
+        raise @x.errors.full_messages.join(ERRORS_JOIN_CHAR)
       end
     end
   end
@@ -59,7 +60,7 @@ class ModelController < ApplicationController
       if @x.save
         redirect_to @x, notice: "#{tipo.name} actualizado correctamente."
       else
-        raise @x.errors.full_messages.join(', ')
+        raise @x.errors.full_messages.join(ERRORS_JOIN_CHAR)
       end
     end
   end

@@ -8,6 +8,8 @@ es:
           attributes:
             parteCuerpos:
               invalid: La parte del cuerpo no es válida.
+            user:
+              required: "El personaje debe pertenecer a un usuario."
         pj/estadistic:
           attributes:
             tipoEstadistic:
