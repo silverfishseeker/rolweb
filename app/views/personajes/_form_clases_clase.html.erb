@@ -1,0 +1,18 @@
+<%# Expected params: phc, destroy %>
+<div class="carta carta_form carta_form_clase">
+  <input type="hidden" name="phcs[<%= phc.clase.id %>][_destroy]" value="<%= destroy %>">
+  <div>
+    <div class="carta-header">
+      <input type="number" name="phcs[<%= phc.clase.id %>][nivel]" value="<%= phc.nivel %>" class="carta-number carta-level carta-level_clase">
+      <%= link_to phc.clase.nombre, phc.clase, class:"carta-title carta-title_clase" %>
+      <div class="carta-image carta-image_icon">
+        <%= render "shared/image", image: phc.clase.image %>
+      </div>
+    </div>
+    <%= clase_subtitulo(phc.clase) %>
+    <div class="carta-description carta-description_form">
+      <%= phc.clase.efecto %>
+      <%= phc.sobreescritura ? phc.sobreescritura : phc.clase.efecto %>
+    </div>
+  </div>
+</div>

@@ -310,6 +310,26 @@
             </div>
           </section>
         </div>
+
+        <!-- CLASES Y HABILIDADES -->
+        <div id="tab-clases" class="pj-tab_pane">
+          <section class="columns">
+            <div>
+              <h3>Clases</h3>
+              <div class="detalle_section">
+                <h4>Clases actuales</h4>
+                <%= render "form_clases", phClases: @x.personajeHasClases, destroy: "0" %>
+              </div>
+              <div class="detalle_section">
+                <h4>El resto de clases</h4>
+                <% remaining_clases = (Clase.order(:nombre) - @x.personajeHasClases.map(&:clase)).map{ |clase| clase.build_personaje_has_clase(@x) } %>
+                <%= render "form_clases", phClases: remaining_clases, destroy: "0" %>
+              </div>
+            </div>
+            <div>
+              <h3>Habilidades</h3>
+            </div>
+          </section>
       
       </div>
 
