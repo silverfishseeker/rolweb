@@ -150,4 +150,20 @@ export function onTurboLoad() {
     addRow.insertAdjacentHTML("beforebegin", html);
   });
 
+  // Mover clase
+  document.getElementById("clases-section").querySelectorAll(".carta-add_buttom").forEach(button => {
+    button.addEventListener("click", () => {
+      const carta = document.getElementById(`clase_${button.dataset.claseId}`);
+      const destroyInput = carta.querySelector(`input[name$="[_destroy]"]`);
+      if (destroyInput.value === "1") {
+        destroyInput.value = "0";
+        button.textContent = "-";
+        document.getElementById("clases_container_0").appendChild(carta);
+      } else {
+        destroyInput.value = "1";
+        button.textContent = "+";
+        document.getElementById("clases_container_1").appendChild(carta);
+      }
+    });
+  });
 }

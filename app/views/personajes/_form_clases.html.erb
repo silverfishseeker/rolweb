@@ -1,5 +1,5 @@
 <%# Expected params: phClases, destroy %>
-<div class="carta-grid_container carta-grid_container_form">
+<div class="carta-grid_container carta-grid_container_form" id="clases_container_<%= destroy %>">
   <% phClases.each do |phClase| %>
     <%= render "form_clases_clase", phc: phClase, destroy: destroy %>
   <% end %>

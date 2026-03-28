@@ -1,5 +1,5 @@
 <%# Expected params: phc, destroy %>
-<div class="carta carta_form carta_form_clase">
+<div class="carta carta_form carta_form_clase" id="clase_<%= phc.clase.id %>">
   <input type="hidden" name="phcs[<%= phc.clase.id %>][_destroy]" value="<%= destroy %>">
   <div>
     <div class="carta-header">
@@ -7,6 +7,9 @@
       <%= link_to phc.clase.nombre, phc.clase, class:"carta-title carta-title_clase" %>
       <div class="carta-image carta-image_icon">
         <%= render "shared/image", image: phc.clase.image %>
+      </div>
+      <div class="carta-add_buttom" data-clase-id="<%= phc.clase.id %>">
+        <%= destroy == "1" ? "+" : "-" %>
       </div>
     </div>
     <%= clase_subtitulo(phc.clase) %>

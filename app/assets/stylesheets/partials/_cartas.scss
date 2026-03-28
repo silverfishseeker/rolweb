@@ -4,7 +4,7 @@
     --ancho_carta:400px;
     --ancho_carta_clase:540px;
     --alto_carta_clase:340px;
-    --ancho_carta_form: 300px;
+    --ancho_carta_form: 350px;
     
     @include respond-max {
         --ancho_carta: 90vw;
@@ -51,7 +51,7 @@
 
 .carta_form {
     width: var(--ancho_carta_form);
-    height: var(--ancho_carta_form);
+    height: 200px;
 }
 
 .carta_form_clase {
@@ -135,6 +135,29 @@
     font-size: larger;
 }
 
+.carta-add_buttom {
+    height: 30px;
+    width: 30px;
+    color: var(--c_base);
+    background-color: var(--c_alternativo);
+    font-weight: bolder;
+    font-size: larger;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--c_base);
+    border-radius: 5px;
+    transition: all 0.1s ease-in-out;
+    box-shadow: 
+        inset -2px -2px 4px rgba(0, 0, 0, 0.8),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.9)
+}
+.carta-add_buttom:hover {
+    box-shadow: 
+        inset 4px 4px 10px rgba(0, 0, 0, 0.9),
+        inset -1px -1px 6px rgba(0, 0, 0, 0.9);
+}
+
 .carta-subtitles {
     background-color: var(--c_detalle);
     margin: 20px;
@@ -176,7 +199,7 @@
 }
 
 .carta-description_form {
-    max-height: 150px;
+    max-height: 50px;
 }
 
 
