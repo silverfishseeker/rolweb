@@ -158,11 +158,11 @@ export function onTurboLoad() {
       if (destroyInput.value === "1") {
         destroyInput.value = "0";
         button.textContent = "-";
-        document.getElementById("clases_container_0").appendChild(carta);
+        document.getElementById("clases_container_0").prepend(carta);
       } else {
         destroyInput.value = "1";
         button.textContent = "+";
-        document.getElementById("clases_container_1").appendChild(carta);
+        document.getElementById("clases_container_1").prepend(carta);
       }
     });
   });

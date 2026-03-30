@@ -1,6 +1,7 @@
 <%# Expected params: phc, destroy %>
 <div class="carta carta_form carta_form_clase" id="clase_<%= phc.clase.id %>">
   <input type="hidden" name="phcs[<%= phc.clase.id %>][_destroy]" value="<%= destroy %>">
+  <input type="hidden" name="phcs[<%= phc.clase.id %>][clase_id]" value="<%= phc.clase.id %>">
   <div>
     <div class="carta-header">
       <input type="number" name="phcs[<%= phc.clase.id %>][nivel]" value="<%= phc.nivel %>" class="carta-number carta-level carta-level_clase">

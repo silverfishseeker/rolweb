@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_18_134302) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_29_123606) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -384,10 +384,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_18_134302) do
     t.bigint "habilidad_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "has_habilidads_type", null: false
-    t.bigint "has_habilidads_id", null: false
+    t.string "hasHabilidads_type", null: false
+    t.bigint "hasHabilidads_id", null: false
     t.index ["habilidad_id"], name: "index_pj_personaje_has_habilidads_on_habilidad_id"
-    t.index ["has_habilidads_type", "has_habilidads_id"], name: "index_pj_personaje_has_habilidads_on_has_habilidads"
+    t.index ["hasHabilidads_type", "hasHabilidads_id"], name: "index_pj_personaje_has_habilidads_on_has_habilidads"
   end
 
   create_table "pj_personaje_has_items", force: :cascade do |t|

@@ -159,6 +159,20 @@ class PersonajesController < ModelController
       # Estados alterados por parte
       process_estados_alterados attrs[:has_estadoalterados], pc
       pc.save!
-    end  
+    end
+
+    # CLASES
+    params[:phcs]&.each do |_, attrs|
+      clase_id = attrs[:clase_id].to_i
+      phc = personaje.personajeHasClases.find_by(clase_id: clase_id)
+      if attrs[:_destroy] == "1"
+        phc.destroy if phc
+      else
+          phc ||= personaje.personajeHasClases.build(clase_id: clase_id)
+          phc.nivel = attrs[:nivel].to_i
+          phc.save!
+          #TDO sobreescritura
+      end
+    end
   end
 end
