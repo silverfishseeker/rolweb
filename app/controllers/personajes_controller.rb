@@ -170,7 +170,7 @@ class PersonajesController < ModelController
       else
           phc ||= personaje.personajeHasClases.build(clase_id: clase_id)
           phc.nivel = attrs[:nivel].to_i
-          phc.sobreescritura = attrs[:sobreescritura]
+          phc.sobreescritura = attrs[:sobreescritura] # Aquí se podría optimizar el almacenamiendo y no guardar sobreescritura cuando coincide con el efecto original de la clase.
           phc.save!
       end
     end

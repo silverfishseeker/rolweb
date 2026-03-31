@@ -5,6 +5,7 @@
 <div class="carta carta_form carta_form_clase" id="clase_<%= id %>">
   <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
   <input type="hidden" name="<%= base_name %>[clase_id]" value="<%= id %>">
+  <div id="original-efecto-clase-<%= id %>" style="display:none"><%= phc.clase.efecto %></div>
   <div>
     <div class="carta-header">
       <input type="number" name="<%= base_name %>][nivel]" value="<%= phc.nivel %>" class="carta-number carta-level carta-level_clase">
@@ -26,6 +27,11 @@
                 buttom_extra_css: "open-modal_clase",
                 header_text: "Editando #{phc.clase.nombre}",
                 index: "clase-#{id}" do %>
+      <button type="button" class="btn btn-small boton_reseteo_texto_clase" data-id="<%= id %>">
+          Resetear texto
+      </button>
+      <br>
+      <br>
       <div class="white_bk white_bk-small_textarea">
         <input id="sobreescritura-modal-clase-<%= id %>"
               type="hidden"

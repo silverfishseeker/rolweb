@@ -4,6 +4,11 @@
   transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
+.btn-small {
+  padding: 3px 6px;
+  font-size: 0.9em;
+}
+
 .btn-primary {
   background-color: var(--c_alternativo);
   color: var(--c_black);

@@ -181,10 +181,18 @@ export function onTurboLoad() {
   clasesContainer.addEventListener("click", openModal);
   clasesContainer.addEventListener("click", createCloseModalHandler((_, id) => {
     // reemplazar texto de efecto por la sobreescritura en la carta
-    console.log("ID sobreescritura", `sobreescritura-${id}`);
-    console.log("ID efecto", `efecto-${id}`);
     const div_efecto = document.getElementById(`efecto-${id}`);
     const input_sobrreescritura = document.getElementById(`sobreescritura-${id}`);
     div_efecto.innerHTML = input_sobrreescritura.value;
   }));
+
+  // Reseteo texto sobreescritura clase
+  clasesContainer.addEventListener("click", e => {
+    if (e.target.classList.contains("boton_reseteo_texto_clase")) {
+      const id = e.target.dataset.id;
+      const original_efecto = document.getElementById(`original-efecto-clase-${id}`).innerHTML;
+      const trix_editor = document.querySelector(`#sobreescritura-modal-clase-${id} ~ trix-editor`);
+      trix_editor.editor.loadHTML(original_efecto);
+    }
+  });
 }
