@@ -109,6 +109,12 @@
     }
   }
 
+  .white_bk-small_textarea{
+    textarea {
+      max-width: 240px;
+    }
+  }
+
   .detalle_section {
     background: var(--c_detalle);
     color: var(--c_white);
@@ -217,6 +223,7 @@
 }
 
 .pj-modal {
+  color: var(--c_black);
   display: none;
   position: fixed;
   top: 50%;

@@ -14,3 +14,7 @@ es:
           attributes:
             tipoEstadistic:
               required: "El tipo de estadística es requerido."
+        pj/personaje_has_clase:
+          attributes:
+            clase:
+              required: "La clase es requerida en personaje_has_clase."

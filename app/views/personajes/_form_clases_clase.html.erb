@@ -1,30 +1,37 @@
 <%# Expected params: phc, destroy %>
-<div class="carta carta_form carta_form_clase" id="clase_<%= phc.clase.id %>">
-  <input type="hidden" name="phcs[<%= phc.clase.id %>][_destroy]" value="<%= destroy %>">
-  <input type="hidden" name="phcs[<%= phc.clase.id %>][clase_id]" value="<%= phc.clase.id %>">
+<% id = phc.clase.id %>
+<% base_name = "phcs[#{id}]" %>
+<% initial_text = phc.sobreescritura.presence || phc.clase.efecto %>
+<div class="carta carta_form carta_form_clase" id="clase_<%= id %>">
+  <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
+  <input type="hidden" name="<%= base_name %>[clase_id]" value="<%= id %>">
   <div>
     <div class="carta-header">
-      <input type="number" name="phcs[<%= phc.clase.id %>][nivel]" value="<%= phc.nivel %>" class="carta-number carta-level carta-level_clase">
+      <input type="number" name="<%= base_name %>][nivel]" value="<%= phc.nivel %>" class="carta-number carta-level carta-level_clase">
       <%= link_to phc.clase.nombre, phc.clase, class:"carta-title carta-title_clase" %>
       <div class="carta-image carta-image_icon">
         <%= render "shared/image", image: phc.clase.image %>
       </div>
-      <div class="carta-add_buttom" data-clase-id="<%= phc.clase.id %>">
+      <div class="carta-add_buttom" data-clase-id="<%= id %>">
         <%= destroy == "1" ? "+" : "-" %>
       </div>
     </div>
     <%= clase_subtitulo(phc.clase) %>
-    <div class="carta-description carta-description_form">
-      <%= phc.clase.efecto %>
-      <%= phc.sobreescritura ? phc.sobreescritura : phc.clase.efecto %>
+    <div class="carta-description carta-description_form"
+          id="efecto-modal-clase-<%= id %>">
+      <%= initial_text %>
     </div>
     <%= render "personajes/form_modal",
                 buttom_text: "Editar texto de efecto de clase",
                 buttom_extra_css: "open-modal_clase",
                 header_text: "Editando #{phc.clase.nombre}",
-                index: "clase-#{phc.clase.id}" do %>
-      <div class="white_bk">
-        <textarea name="phcs[<%= phc.clase.id %>][sobreescritura]" class="form-control"><%= phc.sobreescritura %></textarea>
+                index: "clase-#{id}" do %>
+      <div class="white_bk white_bk-small_textarea">
+        <input id="sobreescritura-modal-clase-<%= id %>"
+              type="hidden"
+              name="<%= base_name %>[sobreescritura]"
+              value="<%= "<div>"+initial_text.body.to_s %>"> <%# No tengo ni idea de porqué es necesario el div extra al principio, pero así funciona %>
+        <trix-editor input="sobreescritura-modal-clase-<%= id %>"> </trix-editor>
       </div>
     <% end %>
   </div>

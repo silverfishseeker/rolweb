@@ -81,19 +81,6 @@ export function onTurboLoad() {
       }
     }
   }
-  function closeModal(e) {
-    if (e.target.classList.contains("modal-close")) {
-      const index = e.target.dataset.index;
-      const modal = document.getElementById(e.target.dataset.index);
-      modal.style.display = "none";
-      
-      if (modal.classList.contains("pj-modal_partecuerpo_estadosalterados")) {
-        const table = modal.querySelector('table');
-        const target_writting = document.getElementById("resumen-" + index);
-        estadosalterados_summary(table, target_writting);
-      }
-    }
-  }
 
 
 
@@ -192,7 +179,12 @@ export function onTurboLoad() {
 
   // Modal sobreescritura clase
   clasesContainer.addEventListener("click", openModal);
-  clasesContainer.addEventListener("click", createCloseModalHandler(() => {
-    // TODO
+  clasesContainer.addEventListener("click", createCloseModalHandler((_, id) => {
+    // reemplazar texto de efecto por la sobreescritura en la carta
+    console.log("ID sobreescritura", `sobreescritura-${id}`);
+    console.log("ID efecto", `efecto-${id}`);
+    const div_efecto = document.getElementById(`efecto-${id}`);
+    const input_sobrreescritura = document.getElementById(`sobreescritura-${id}`);
+    div_efecto.innerHTML = input_sobrreescritura.value;
   }));
 }

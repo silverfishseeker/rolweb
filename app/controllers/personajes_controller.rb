@@ -170,8 +170,8 @@ class PersonajesController < ModelController
       else
           phc ||= personaje.personajeHasClases.build(clase_id: clase_id)
           phc.nivel = attrs[:nivel].to_i
+          phc.sobreescritura = attrs[:sobreescritura]
           phc.save!
-          #TDO sobreescritura
       end
     end
   end
