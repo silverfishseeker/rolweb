@@ -50,7 +50,6 @@ export function onTurboLoad() {
   // Añadir estado alterado
   document.getElementById("tab-estado").addEventListener("click", e => { // Este no lo podemos restringir en pc_body para que funcione para los estados alterados generales
     if (e.target.classList.contains("add-estadoalterado")) {
-      console.log("Añadir estado alterado");
       const button = e.target;
       const tableId = button.dataset.table_id;
       const nombreInputBase = button.dataset.nombreInputBase;
@@ -116,28 +115,29 @@ export function onTurboLoad() {
 
   // Preparar resúmenes de estados alterados en carga
   document.querySelectorAll('.estado-resumen').forEach(resumen => {
-    const table_id = resumen.dataset.table_id;
-    const table = document.querySelector(`#${table_id}`);
+    const table = document.querySelector(`#${resumen.dataset.table_id}`);
     estadosalterados_summary(table, resumen);
   });
 
-  // Abrir modal de estados alterados
+  // Abrir modal,check: _form_modal.html.erb
   pc_body.addEventListener("click", e => {
-    if (e.target.classList.contains("open-estados-parte")) {
-      const modal = document.getElementById("modal-estadosalterados-parte-" + e.target.getAttribute("index"));
-      modal.style.display = "block";
+    if (e.target.classList.contains("open-modal")) {
+      document.getElementById(e.target.dataset.index).style.display = "block";
     }
   });
 
-  // Cerrar modal de estados alterados
+  // Cerrar modal, check: _form_modal.html.erb
   pc_body.addEventListener("click", e => {
     if (e.target.classList.contains("modal-close")) {
-      const index = e.target.getAttribute("index");
-      const modal = document.getElementById("modal-estadosalterados-parte-" + index);
+      const index = e.target.dataset.index;
+      const modal = document.getElementById(e.target.dataset.index);
       modal.style.display = "none";
-      const table = modal.querySelector('table');
-      const target_writting = pc_body.querySelector(`.estado-resumen[index="${index}"]`);
-      estadosalterados_summary(table, target_writting);
+      
+      if (modal.classList.contains("pj-modal_partecuerpo_estadosalterados")) {
+        const table = modal.querySelector('table');
+        const target_writting = document.getElementById("resumen-" + index);
+        estadosalterados_summary(table, target_writting);
+      }
     }
   });
 

@@ -62,28 +62,19 @@
   </td>
 
   <td data-label="Estados alterados">
-    <div class="estado-resumen" index="<%=index%>" data-table_id="<%=ea_t_id index.to_s%>">
+    <div class="estado-resumen" id="resumen-modal-partecuerpo-<%=index%>" data-table_id="<%=ea_t_id index.to_s%>">
       <!-- JS rellena -->
     </div>
-    <button type="button"
-            class="open-estados-parte"
-            id="btn-estados-<%=index%>"
-            index="<%=index%>">
-      Ver / editar
-    </button>
-    <div id="modal-estadosalterados-parte-<%=index%>"
-          class="pj-modal_estadosalterados_parte">
-      <header>
-        <h4>Estados alterados de <%= pc ? pc.nombre : "nuevo" %></h4>
-        <button type="button" class="btn btn-danger modal-close" index="<%=index%>">Guardar y cerrar</button>
-      </header>
-      <div class="pj-modal_content">
+    <%= render "personajes/form_modal",
+                class_modal_type: "pj-modal_partecuerpo_estadosalterados",
+                buttom_text: "Ver / editar",
+                header_text: "Estados alterados de #{pc ? pc.nombre : "nuevo"}",
+                index: "partecuerpo-#{index}" do %>
         <%= render "personajes/form_estados_alterados",
                     listaEstadosAlterados: pc ? pc.hasEstadoalterados : [],
                     nombre_input_base: "parte_cuerpos[#{index}][has_estadoalterados]",
                     table_id: index %>
-      </div>
-    </div>
+    <% end %>
   </td>
   <td data-label="Borrar" class="checkbox-danger">
     <input type="checkbox"
