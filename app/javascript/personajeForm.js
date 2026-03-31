@@ -63,6 +63,40 @@ export function onTurboLoad() {
 
 
 
+  // MODALES check: _form_modal.html.erb
+  // Abrir modal
+  function openModal(e) {
+    if (e.target.classList.contains("open-modal")) {
+      document.getElementById(e.target.dataset.index).style.display = "block";
+    }
+  }
+  // Cerrar modal
+  function createCloseModalHandler(extraAction){
+    return function(e) {
+      if (e.target.classList.contains("modal-close")) {
+        const index = e.target.dataset.index;
+        const modal = document.getElementById(e.target.dataset.index);
+        modal.style.display = "none";
+        extraAction(modal, index);
+      }
+    }
+  }
+  function closeModal(e) {
+    if (e.target.classList.contains("modal-close")) {
+      const index = e.target.dataset.index;
+      const modal = document.getElementById(e.target.dataset.index);
+      modal.style.display = "none";
+      
+      if (modal.classList.contains("pj-modal_partecuerpo_estadosalterados")) {
+        const table = modal.querySelector('table');
+        const target_writting = document.getElementById("resumen-" + index);
+        estadosalterados_summary(table, target_writting);
+      }
+    }
+  }
+
+
+
   // PARTES CUERPO
   const pc_body = document.getElementById("parte-cuerpos-body");
 
@@ -119,27 +153,13 @@ export function onTurboLoad() {
     estadosalterados_summary(table, resumen);
   });
 
-  // Abrir modal,check: _form_modal.html.erb
-  pc_body.addEventListener("click", e => {
-    if (e.target.classList.contains("open-modal")) {
-      document.getElementById(e.target.dataset.index).style.display = "block";
-    }
-  });
-
-  // Cerrar modal, check: _form_modal.html.erb
-  pc_body.addEventListener("click", e => {
-    if (e.target.classList.contains("modal-close")) {
-      const index = e.target.dataset.index;
-      const modal = document.getElementById(e.target.dataset.index);
-      modal.style.display = "none";
-      
-      if (modal.classList.contains("pj-modal_partecuerpo_estadosalterados")) {
-        const table = modal.querySelector('table');
-        const target_writting = document.getElementById("resumen-" + index);
-        estadosalterados_summary(table, target_writting);
-      }
-    }
-  });
+  // Modal estados alterados parte cuerpo
+  pc_body.addEventListener("click", openModal);
+  pc_body.addEventListener("click", createCloseModalHandler((modal, index) => {
+    const table = modal.querySelector('table');
+    const target_writting = document.getElementById("resumen-" + index);
+    estadosalterados_summary(table, target_writting);
+  }));
 
   // Añadir parte cuerpo
   document.getElementById("add-parte-cuerpo").addEventListener("click", () => {
@@ -150,8 +170,11 @@ export function onTurboLoad() {
     addRow.insertAdjacentHTML("beforebegin", html);
   });
 
+
+  // CLASES
   // Mover clase
-  document.getElementById("clases-section").querySelectorAll(".carta-add_buttom").forEach(button => {
+  const clasesContainer = document.getElementById("clases-section");
+  clasesContainer.querySelectorAll(".carta-add_buttom").forEach(button => {
     button.addEventListener("click", () => {
       const carta = document.getElementById(`clase_${button.dataset.claseId}`);
       const destroyInput = carta.querySelector(`input[name$="[_destroy]"]`);
@@ -166,4 +189,10 @@ export function onTurboLoad() {
       }
     });
   });
+
+  // Modal sobreescritura clase
+  clasesContainer.addEventListener("click", openModal);
+  clasesContainer.addEventListener("click", createCloseModalHandler(() => {
+    // TODO
+  }));
 }

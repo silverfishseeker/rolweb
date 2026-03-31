@@ -1,14 +1,14 @@
-<%# Expected params: class_modal_type, buttom_text, header_text, index, &block %>
+<%# Expected params: buttom_text, buttom_extra_css, header_text, index, &block %>
 <%# index must contain a prefix so it is unique between different kinds of models using the modals %>
 
 <button type="button"
-        class="open-modal"
+        class="open-modal <%= local_assigns[:buttom_extra_css] %>" <%# Con local_assigns la variable no da error si no se asigna y devuelve nil %>
         id="btn-estados-<%=index%>"
         data-index="modal-<%=index%>">
   <%= buttom_text %>
 </button>
 <div id="modal-<%=index%>"
-      class="pj-modal <%=class_modal_type%>">
+      class="pj-modal">
   <header>
     <h4><%= header_text %></h4>
     <button type="button" class="btn btn-danger modal-close"

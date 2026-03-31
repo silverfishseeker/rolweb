@@ -18,5 +18,14 @@
       <%= phc.clase.efecto %>
       <%= phc.sobreescritura ? phc.sobreescritura : phc.clase.efecto %>
     </div>
+    <%= render "personajes/form_modal",
+                buttom_text: "Editar texto de efecto de clase",
+                buttom_extra_css: "open-modal_clase",
+                header_text: "Editando #{phc.clase.nombre}",
+                index: "clase-#{phc.clase.id}" do %>
+      <div class="white_bk">
+        <textarea name="phcs[<%= phc.clase.id %>][sobreescritura]" class="form-control"><%= phc.sobreescritura %></textarea>
+      </div>
+    <% end %>
   </div>
 </div>
