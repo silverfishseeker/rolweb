@@ -5,6 +5,7 @@
     --ancho_carta_clase:540px;
     --alto_carta_clase:340px;
     --ancho_carta_form: 350px;
+    --ancho_carta_form_habilidad: 200px;
     
     @include respond-max {
         --ancho_carta: 90vw;
@@ -26,6 +27,10 @@
 
 .carta-grid_container_form {
     grid-template-columns: repeat(auto-fit, minmax(var(--ancho_carta_form), 1fr));
+}
+
+.carta-grid_container_form_habilidad {
+    grid-template-columns: repeat(auto-fit, minmax(var(--ancho_carta_form_habilidad), 1fr));
 }
 
 
@@ -54,6 +59,11 @@
     height: 200px;
 }
 
+.carta_form_habilidad {
+    width: var(--ancho_carta_form_habilidad);
+    height: 300px;
+}
+
 .carta_form_clase {
     border: 4px solid var(--c_base);
 }
@@ -69,6 +79,10 @@
     margin: 10px;
     font-size: 20px;
     min-height: 8%;
+}
+.carta-header_form {
+    min-height: unset;
+    margin: 0;
 }
 .carta-number {
     padding: 5px;
@@ -201,6 +215,7 @@
 
 .carta-description_form {
     max-height: 50px;
+    margin-bottom: 5px;
 }
 
 

@@ -1,0 +1,20 @@
+<%# Expected params: clase, personaje_has_clase %>
+<div class="pj-habilidades-list">
+  <h3>Habilidades de <%= clase.nombre %></h3>
+  <div class="detalle_section">
+    <h4>Habilidades aprendidas</h4>
+      <% if local_assigns[:personaje_has_clase] %>
+        <%= render "form_habilidades_list", phHabilidades: personaje_has_clase.personajeHasHabilidads, destroy: "0" %>
+      <% end %>
+  </div>
+  <div class="detalle_section">
+    <h4>El resto de habilidades</h4>
+      <% remaining_habilidades = clase.habilidads.order(:nombre)
+      if local_assigns[:personaje_has_clase] 
+        remaining_habilidades -= personaje_has_clase.personajeHasHabilidads.map(&:habilidad)
+      end
+      remaining_habilidades = remaining_habilidades.map{ |habilidad| habilidad.build_personaje_has_habilidad(@x) }
+      %>
+    <%= render "form_habilidades_list", phHabilidades: remaining_habilidades, destroy: "1" %>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<%# Expected params: phh, destroy %>
+<% habilidad = phh.habilidad %>
+<input type="hidden" name="personaje[personaje_has_habilidads_attributes][][habilidad_id]" value="<%= habilidad.id %>">
+<div class="carta carta_form_habilidad">
+  <div class="carta-header carta-header_form">
+    <p class="carta-number carta-level">
+        <%= habilidad.nivel %>
+    </p>
+    <%= image_tag habilidad.tipoImagen, class: "carta-isactive" %>
+  </div>
+
+  <div class="carta-header carta-header_form">
+    <%= link_to habilidad.nombre, habilidad, class:"carta-title" %>
+  </div>
+
+  <div class="carta-subtitles">
+    <% habilidad.categs.each do |ct| %>
+        <%= link_to ct.nombre, ct %>
+    <% end %>
+    <% habilidad.mobs.each do |mb| %>
+        <%= link_to mb.nombre, mb %>
+    <% end %>
+  </div>
+
+  <div class="carta-description">
+      <%= habilidad.efecto %>
+  </div>
+</div>

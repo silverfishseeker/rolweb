@@ -1,0 +1,6 @@
+<%# Expected params: phHabilidades, destroy %>
+<div class="carta-grid_container carta-grid_container_form_habilidad">
+  <% phHabilidades.each do |phh| %>
+    <%= render "form_habilidad", phh: phh, destroy: destroy %>
+  <% end %>
+</div>
