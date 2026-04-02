@@ -2,7 +2,8 @@
 <% id = phc.clase.id %>
 <% base_name = "phcs[#{id}]" %>
 <% initial_text = phc.sobreescritura.presence || phc.clase.efecto %>
-<div class="carta carta_form carta_form_clase" id="clase_<%= id %>" data-habilidades_list="habilidades-list-<%= id %>">
+<div class="carta carta_form carta_form_clase"
+    id="clase_<%= id %>" data-habilidades_list="habilidades-list-<%= id %>">
   <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
   <input type="hidden" name="<%= base_name %>[clase_id]" value="<%= id %>">
   <div id="original-efecto-clase-<%= id %>" style="display:none"><%= phc.clase.efecto %></div>
@@ -13,7 +14,7 @@
       <div class="carta-image carta-image_icon">
         <%= render "shared/image", image: phc.clase.image %>
       </div>
-      <div class="carta-add_buttom" data-clase-id="<%= id %>">
+      <div class="carta-add_buttom" data-carta_id="clase_<%= id %>">
         <%= destroy == "1" ? "+" : "-" %>
       </div>
     </div>

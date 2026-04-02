@@ -1,12 +1,21 @@
-<%# Expected params: phh, destroy %>
+<%# Expected params: phh, clase_id, destroy %>
 <% habilidad = phh.habilidad %>
-<input type="hidden" name="personaje[personaje_has_habilidads_attributes][][habilidad_id]" value="<%= habilidad.id %>">
-<div class="carta carta_form_habilidad">
+<% divID = "habilidad_#{clase_id}-#{habilidad.id}" %>
+<% base_name = "phh[#{habilidad.id}]" %>
+<div class="carta carta_form_habilidad" id="<%= divID %>">
+  <input type="hidden" name="<%= base_name %>[habilidad_id]" value="<%= habilidad.id %>">
+  <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
   <div class="carta-header carta-header_form">
     <p class="carta-number carta-level">
         <%= habilidad.nivel %>
     </p>
     <%= image_tag habilidad.tipoImagen, class: "carta-isactive" %>
+    <div class="carta-add_buttom" 
+        data-carta_id="<%= divID %>"
+        data-alive_container="habilidades-list-<%= clase_id %>-0"
+        data-destroy_container="habilidades-list-<%= clase_id %>-1" >
+      <%= destroy == "1" ? "+" : "-" %>
+    </div>
   </div>
 
   <div class="carta-header carta-header_form">

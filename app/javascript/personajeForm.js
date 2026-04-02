@@ -162,20 +162,36 @@ export function onTurboLoad() {
   const clasesContainer = document.getElementById("clases-section");
   const habilidadesContainer = document.getElementById("habilidades-section");
 
+  //Mover carta genérico
+  function moveCarta(button, aliveContainer, destroyContainer) {
+    const carta = document.getElementById(button.dataset.carta_id);
+    const destroyInput = carta.querySelector(`input[name$="[_destroy]"]`);
+    if (destroyInput.value === "1") {
+      destroyInput.value = "0";
+      button.textContent = "-";
+      aliveContainer.prepend(carta);
+    } else {
+      destroyInput.value = "1";
+      button.textContent = "+";
+      destroyContainer.prepend(carta);
+    }
+  }
+
   // Mover clase
+  const aliveClasesContainer = document.getElementById("clases_container_0");
+  const destroyClasesContainer = document.getElementById("clases_container_1");
   clasesContainer.querySelectorAll(".carta-add_buttom").forEach(button => {
     button.addEventListener("click", () => {
-      const carta = document.getElementById(`clase_${button.dataset.claseId}`);
-      const destroyInput = carta.querySelector(`input[name$="[_destroy]"]`);
-      if (destroyInput.value === "1") {
-        destroyInput.value = "0";
-        button.textContent = "-";
-        document.getElementById("clases_container_0").prepend(carta);
-      } else {
-        destroyInput.value = "1";
-        button.textContent = "+";
-        document.getElementById("clases_container_1").prepend(carta);
-      }
+      moveCarta(button, aliveClasesContainer, destroyClasesContainer);
+    });
+  });
+
+  // Mover habilidad
+  habilidadesContainer.querySelectorAll(".carta-add_buttom").forEach(button => {
+    button.addEventListener("click", () => {
+      const aliveContainer = document.getElementById(button.dataset.alive_container);
+      const destroyContainer = document.getElementById(button.dataset.destroy_container);
+      moveCarta(button, aliveContainer, destroyContainer);
     });
   });
 
@@ -204,7 +220,11 @@ export function onTurboLoad() {
       habilidadesContainer.querySelectorAll(".pj-habilidades_list").forEach(l => {
         l.classList.remove("pj-habilidades_list-active");
       });
+      clasesContainer.querySelectorAll(".carta_form_clase").forEach(carta => {
+        carta.classList.remove("carta_form_clase-selected");
+      });
       document.getElementById(carta.dataset.habilidades_list).classList.add("pj-habilidades_list-active");
+      carta.classList.add("carta_form_clase-selected");
     });
   });
 }

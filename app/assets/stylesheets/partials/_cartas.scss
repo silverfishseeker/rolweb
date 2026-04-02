@@ -68,6 +68,10 @@
     border: 4px solid var(--c_base);
 }
 
+.carta_form_clase-selected{
+    border: 10px solid var(--c_white);
+}
+
 .carta_extendida {
     width:auto;
     height:auto;
@@ -83,6 +87,7 @@
 .carta-header_form {
     min-height: unset;
     margin: 0;
+    margin-right: 10px;
 }
 .carta-number {
     padding: 5px;
