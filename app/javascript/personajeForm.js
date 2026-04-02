@@ -158,9 +158,11 @@ export function onTurboLoad() {
   });
 
 
-  // CLASES
-  // Mover clase
+  // CLASES Y HABILIDADES
   const clasesContainer = document.getElementById("clases-section");
+  const habilidadesContainer = document.getElementById("habilidades-section");
+
+  // Mover clase
   clasesContainer.querySelectorAll(".carta-add_buttom").forEach(button => {
     button.addEventListener("click", () => {
       const carta = document.getElementById(`clase_${button.dataset.claseId}`);
@@ -194,5 +196,15 @@ export function onTurboLoad() {
       const trix_editor = document.querySelector(`#sobreescritura-modal-clase-${id} ~ trix-editor`);
       trix_editor.editor.loadHTML(original_efecto);
     }
+  });
+
+  // Abrir lista habilidades clase
+  clasesContainer.querySelectorAll(".carta_form_clase").forEach(carta => {
+    carta.addEventListener("click", () => {
+      habilidadesContainer.querySelectorAll(".pj-habilidades_list").forEach(l => {
+        l.classList.remove("pj-habilidades_list-active");
+      });
+      document.getElementById(carta.dataset.habilidades_list).classList.add("pj-habilidades_list-active");
+    });
   });
 }

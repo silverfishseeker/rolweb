@@ -326,7 +326,7 @@
                 <%= render "form_clases", phClases: remaining_clases, destroy: "1" %>
               </div>
             </div>
-            <div>
+            <div id="habilidades-section">
               <% Clase.all.each do |clase| %>
                 <%= render "form_habilidades_from_clase", clase: clase, personaje_has_clase: @x.personajeHasClases.find_by(clase: clase) %>
               <% end %>
