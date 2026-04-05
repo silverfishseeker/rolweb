@@ -6,6 +6,10 @@
       <% if local_assigns[:personaje_has_clase] %>
         <%= render "form_habilidades_list", phHabilidades: personaje_has_clase.personajeHasHabilidads,
                     clase_id: clase.id, destroy: "0" %>
+      <% else %>
+        <%= render "form_habilidades_list", phHabilidades: [],
+                    clase_id: clase.id, destroy: "0" %>
+
       <% end %>
   </div>
   <div class="detalle_section">
