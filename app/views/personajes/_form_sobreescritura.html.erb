@@ -1,0 +1,13 @@
+<%# Expected params: base_name, id, initial_text %>
+<button type="button" class="btn btn-primary btn-small boton_reseteo_texto" data-id="<%= id %>">
+    Resetear texto
+</button>
+<br>
+<br>
+<div class="white_bk white_bk-small_textarea">
+  <input id="sobreescritura-modal-<%= id %>"
+        type="hidden"
+        name="<%= base_name %>[sobreescritura]"
+        value="<%= "<div>"+initial_text.body.to_s %>"> <%# No tengo ni idea de porqué es necesario el div extra al principio, pero así funciona %>
+  <trix-editor input="sobreescritura-modal-<%= id %>"> </trix-editor>
+</div>

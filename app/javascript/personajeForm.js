@@ -66,7 +66,7 @@ export function onTurboLoad() {
   // MODALES check: _form_modal.html.erb
   // Abrir modal
   function openModal(e) {
-    if (e.target.classList.contains("open-modal")) {
+    if (e.target.classList.contains("open_modal")) {
       document.getElementById(e.target.dataset.index).style.display = "block";
     }
   }
@@ -195,24 +195,29 @@ export function onTurboLoad() {
     });
   });
 
-  // Modal sobreescritura clase
-  clasesContainer.addEventListener("click", openModal);
-  clasesContainer.addEventListener("click", createCloseModalHandler((_, id) => {
-    // reemplazar texto de efecto por la sobreescritura en la carta
-    const div_efecto = document.getElementById(`efecto-${id}`);
-    const input_sobrreescritura = document.getElementById(`sobreescritura-${id}`);
-    div_efecto.innerHTML = input_sobrreescritura.value;
-  }));
+  // Modal sobreescritura clase y habilidad
+  function modalHandelers(container) {
+    container.addEventListener("click", openModal);
+    container.addEventListener("click", createCloseModalHandler((_, id) => {
+      // reemplazar texto de efecto por la sobreescritura en la carta
+      const div_efecto = document.getElementById(`efecto-${id}`);
+      const input_sobrreescritura = document.getElementById(`sobreescritura-${id}`);
+      div_efecto.innerHTML = input_sobrreescritura.value;
+    }));
 
-  // Reseteo texto sobreescritura clase
-  clasesContainer.addEventListener("click", e => {
-    if (e.target.classList.contains("boton_reseteo_texto_clase")) {
-      const id = e.target.dataset.id;
-      const original_efecto = document.getElementById(`original-efecto-clase-${id}`).innerHTML;
-      const trix_editor = document.querySelector(`#sobreescritura-modal-clase-${id} ~ trix-editor`);
-      trix_editor.editor.loadHTML(original_efecto);
-    }
-  });
+    // Reseteo texto sobreescritura clase o habilidad
+    container.addEventListener("click", e => {
+      if (e.target.classList.contains("boton_reseteo_texto")) {
+        const id = e.target.dataset.id;
+        const original_efecto = document.getElementById(`original-efecto-${id}`).innerHTML;
+        const trix_editor = document.querySelector(`#sobreescritura-modal-${id} ~ trix-editor`);
+        trix_editor.editor.loadHTML(original_efecto);
+      }
+    });
+  }
+  modalHandelers(clasesContainer);
+  modalHandelers(habilidadesContainer);
+
 
   // Abrir lista habilidades clase
   clasesContainer.querySelectorAll(".carta_form_clase").forEach(carta => {

@@ -2,9 +2,12 @@
 <% habilidad = phh.habilidad %>
 <% divID = "habilidad_#{clase_id}-#{habilidad.id}" %>
 <% base_name = "phh[#{habilidad.id}]" %>
+<% initial_text = phh.sobreescritura.presence || habilidad.efecto %>
 <div class="carta carta_form_habilidad" id="<%= divID %>">
   <input type="hidden" name="<%= base_name %>[habilidad_id]" value="<%= habilidad.id %>">
   <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
+  <div id="original-efecto-<%= divID %>" style="display:none"><%= habilidad.efecto %></div>
+  
   <div class="carta-header carta-header_form">
     <p class="carta-number carta-level">
         <%= habilidad.nivel %>
@@ -31,7 +34,15 @@
     <% end %>
   </div>
 
-  <div class="carta-description">
-      <%= habilidad.efecto %>
+  <div class="carta-description" id="efecto-modal-<%= divID %>">
+      <%= initial_text %>
   </div>
+
+  <%= render "personajes/form_modal",
+            buttom_text: "Editar texto de habilidad",
+            buttom_extra_css: "open_modal-habilidad",
+            header_text: "Editando #{habilidad.nombre}",
+            index: divID do %>
+    <%= render "form_sobreescritura", base_name: base_name, id: divID, initial_text: initial_text %>
+  <% end %>
 </div>

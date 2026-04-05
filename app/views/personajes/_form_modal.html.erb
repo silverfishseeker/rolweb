@@ -2,7 +2,7 @@
 <%# index must contain a prefix so it is unique between different kinds of models using the modals %>
 
 <button type="button"
-        class="open-modal <%= local_assigns[:buttom_extra_css] %>" <%# Con local_assigns la variable no da error si no se asigna y devuelve nil %>
+        class="open_modal btn btn-primary btn-small <%= local_assigns[:buttom_extra_css] %>" <%# Con local_assigns la variable no da error si no se asigna y devuelve nil %>
         id="btn-estados-<%=index%>"
         data-index="modal-<%=index%>">
   <%= buttom_text %>
