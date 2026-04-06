@@ -218,6 +218,15 @@ export function onTurboLoad() {
   modalHandelers(clasesContainer);
   modalHandelers(habilidadesContainer);
 
+  // Reseteo clase de habilidad
+  habilidadesContainer.addEventListener("click", e => {
+    if (e.target.classList.contains("boton_reseteo_clase")) {
+      const select = document.getElementById(e.target.dataset.id_select);
+      select.value = e.target.dataset.id_clase;
+    }
+  });
+
+
 
   // Abrir lista habilidades clase
   clasesContainer.querySelectorAll(".carta_form_clase").forEach(carta => {

@@ -45,4 +45,25 @@
             index: divID do %>
     <%= render "form_sobreescritura", base_name: base_name, id: divID, initial_text: initial_text %>
   <% end %>
+
+  
+  <%= render "personajes/form_modal",
+            buttom_text: "Cambiar clase",
+            buttom_extra_css: "open_modal-habilidad",
+            header_text: "Editando #{habilidad.nombre}",
+            index: divID + "-clase" do %>
+    <button type="button" class="btn btn-primary btn-small boton_reseteo_clase"
+        data-id_select="<%= divID %>-clase" data-id_clase="<%= clase_id %>">
+    Resetear Clase
+    </button>
+    <br>
+    <br>
+    <select name="<%= base_name %>[clase_id]" id="<%= divID %>-clase">
+      <% Clase.order(:nombre).each do |clase| %>
+        <option value="<%= clase.id %>" <%= "selected" if clase.id == clase_id %>>
+          <%= clase.nombre %>
+        </option>
+      <% end %>
+    </select>
+    <% end %>
 </div>
