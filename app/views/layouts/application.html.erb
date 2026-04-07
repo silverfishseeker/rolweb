@@ -121,7 +121,7 @@
     </nav>
 
     <% # Divs para mostrar mensajes y alerta del sistema relacionados con el resultado de procesos %>
-    <% if notice || alert %>
+    <% if notice || alert || flash[:warning]%>
       <div class="flash-wrapper">
         <% if notice %>
           <div class="flash-notice">
@@ -133,6 +133,12 @@
           <div class="flash-alert">
             <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
             <%= alert %>
+          </div>
+        <% end %>
+        <% if flash[:warning]%>
+          <div class="flash-warning">
+            <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
+            <%= flash[:warning] %>
           </div>
         <% end %>
       </div>

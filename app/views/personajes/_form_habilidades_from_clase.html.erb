@@ -4,17 +4,18 @@
   <div class="detalle_section">
     <h4>Habilidades aprendidas</h4>
       <% if local_assigns[:personaje_has_clase] %>
-        <%= render "form_habilidades_list", phHabilidades: personaje_has_clase.personajeHasHabilidads,
-                    clase_id: clase.id, destroy: "0" %>
+        <%= render "form_habilidades_list",
+            phHabilidades: personaje_has_clase.personajeHasHabilidads.ordered,
+            clase_id: clase.id, destroy: "0" %>
       <% else %>
         <%= render "form_habilidades_list", phHabilidades: [],
-                    clase_id: clase.id, destroy: "0" %>
+            clase_id: clase.id, destroy: "0" %>
 
       <% end %>
   </div>
   <div class="detalle_section">
     <h4>El resto de habilidades</h4>
-      <% remaining_habilidades = clase.habilidads.order(:nombre)
+      <% remaining_habilidades = clase.habilidads.order(:nivel, :nombre)
       if local_assigns[:personaje_has_clase] 
         remaining_habilidades -= personaje_has_clase.personajeHasHabilidads.map(&:habilidad)
       end

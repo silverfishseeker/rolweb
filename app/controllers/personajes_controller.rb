@@ -170,8 +170,51 @@ class PersonajesController < ModelController
       else
           phc ||= personaje.personajeHasClases.build(clase_id: clase_id)
           phc.nivel = attrs[:nivel].to_i
-          phc.sobreescritura = attrs[:sobreescritura] # Aquí se podría optimizar el almacenamiendo y no guardar sobreescritura cuando coincide con el efecto original de la clase.
+          if phc.clase.efecto == attrs[:sobreescritura]
+            phc.sobreescritura = nil
+          else
+            phc.sobreescritura = attrs[:sobreescritura]
+          end
           phc.save!
+      end
+    end
+
+    # HABILIDADES
+    def process_phhs(habilidades, owner, warn: nil) # Nótese que se pueden añadir habilidades a cualquier clase o personaje, sin importar a qué clase pertenece la habilidad original
+      habilidades.each do |id, attrs|
+        phh = owner.personajeHasHabilidads.find_by(habilidad_id: id)
+        if attrs[:_destroy] == "1"
+          phh.destroy if phh
+        else
+          phh ||= owner.personajeHasHabilidads.build(habilidad_id: id)
+          if phh.habilidad.efecto == attrs[:sobreescritura]
+            phh.sobreescritura = nil
+          else
+            phh.sobreescritura = attrs[:sobreescritura]
+          end
+          phh.save!
+          if warn
+            flash[:warning] += "Tu personaje no tiene la clase #{warn} para la habilidad #{phh.habilidad.nombre}, asociando esa habilidad directamente al personaje. "
+          end
+        end
+      end
+    end
+    hash = {}
+    params[:phhs]&.each do |habilidad_id, attrs|
+      clase_id = attrs[:clase_id].to_i
+      hash[clase_id] ||= {}
+      hash[clase_id][habilidad_id] = attrs
+    end
+    hash.each do |clase_id, habilidades|
+      phc = personaje.personajeHasClases.find_by(clase_id: clase_id)
+      if phc
+        if phc.clase.oculto
+          process_phhs(habilidades, personaje)
+        else
+          process_phhs(habilidades, phc)
+        end
+      else
+        process_phhs(habilidades, personaje, warn: Clase.find(clase_id).nombre)
       end
     end
   end

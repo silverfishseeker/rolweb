@@ -80,6 +80,7 @@ class ModelController < ApplicationController
       rescue => e
         error_message = "#{error_message_prefix}: #{e.message}"
         Rails.logger.error error_message
+        Rails.logger.error e.backtrace.join("\n")
         flash[:alert] = error_message
         flash[:form_data] = params[tipo.model_name.param_key].except(:image)
         redirect_to  action: action_to_redirect, id: params[:id]
