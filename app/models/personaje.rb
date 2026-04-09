@@ -14,7 +14,7 @@ class Personaje < ApplicationRecord
   has_many :parteCuerpos, class_name: "Pj::ParteCuerpo", dependent: :destroy, autosave: true
   has_many :hasEstadoalterados, class_name: "Pj::HasEstadoalterado", dependent: :destroy, autosave: true
   has_many :personajeHasClases, class_name: "Pj::PersonajeHasClase", dependent: :destroy
-  has_many :personajeHasHabilidads, as: :hasHabilidads, class_name: "Pj::PersonajeHasHabilidad", dependent: :destroy #habilidades independientes
+  has_many :personajeHasHabilidads, class_name: "Pj::PersonajeHasHabilidad", dependent: :destroy #habilidades independientes
   has_many :PersonajeHasItem, class_name: "Pj::PersonajeHasItem", dependent: :destroy
 
   has_and_belongs_to_many :etiquets
@@ -23,6 +23,13 @@ class Personaje < ApplicationRecord
 
   def nivel
     sum_nil nivel_clases, nivel_estadisticas, nivel_habilidades, nivel_otro # sum_nil ignora nils
+  end
+
+  def personajeHasHabilidads_by_clase
+    personajeHasHabilidads.ordered.each_with_object({}) do |phh, hash|
+      hash[phh.clase_id] ||= []
+      hash[phh.clase_id] << phh
+    end
   end
 
   def build_base_structure

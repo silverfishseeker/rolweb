@@ -12,8 +12,8 @@ class Habilidad < ApplicationRecord
 
   scope :hide, ->(secreto=false) { where(oculto: secreto) }
 
-  def build_personaje_has_habilidad(personaje)
-    Pj::PersonajeHasHabilidad.new(habilidad: self, hasHabilidads: personaje, sobreescritura: nil)
+  def build_personaje_has_habilidad(personaje, clase)
+    Pj::PersonajeHasHabilidad.new(habilidad: self, personaje: personaje, clase: clase, sobreescritura: nil)
   end
 
   def tipoImagen

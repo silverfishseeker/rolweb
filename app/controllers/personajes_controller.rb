@@ -135,7 +135,7 @@ class PersonajesController < ModelController
     process_estados_alterados params[:has_estadoalterados], personaje
 
     # PARTES DEL CUERPO
-    params[:parte_cuerpos]&.each do |_, attrs|
+    params[:parte_cuerpos].each do |_, attrs|
       pc = if attrs[:id].blank?
         pc = personaje.parteCuerpos.build(modificable: Pj::Modificable.new)
         pc.save!(validate: false) # Guardamos sin validar para tener un ID y poder asociar estados alterados
@@ -162,7 +162,7 @@ class PersonajesController < ModelController
     end
 
     # CLASES
-    params[:phcs]&.each do |_, attrs|
+    params[:phcs].each do |_, attrs|
       clase_id = attrs[:clase_id].to_i
       phc = personaje.personajeHasClases.find_by(clase_id: clase_id)
       if attrs[:_destroy] == "1"
@@ -180,41 +180,41 @@ class PersonajesController < ModelController
     end
 
     # HABILIDADES
-    def process_phhs(habilidades, owner, warn: nil) # Nótese que se pueden añadir habilidades a cualquier clase o personaje, sin importar a qué clase pertenece la habilidad original
-      habilidades.each do |id, attrs|
-        phh = owner.personajeHasHabilidads.find_by(habilidad_id: id)
-        if attrs[:_destroy] == "1"
-          phh.destroy if phh
-        else
-          phh ||= owner.personajeHasHabilidads.build(habilidad_id: id)
-          if phh.habilidad.efecto == attrs[:sobreescritura]
-            phh.sobreescritura = nil
-          else
-            phh.sobreescritura = attrs[:sobreescritura]
-          end
-          phh.save!
-          if warn
-            flash[:warning] += "Tu personaje no tiene la clase #{warn} para la habilidad #{phh.habilidad.nombre}, asociando esa habilidad directamente al personaje. "
-          end
+    phh_hash = {}
+    duplicated_habilidad_ids = Set.new
+    params[:phhs].each do |_, attrs|
+      id = attrs[:habilidad_id].to_i
+      if phh_hash[id]
+        if phh_hash[id][:_destroy] != "1"
+          duplicated_habilidad_ids << id
         end
-      end
-    end
-    hash = {}
-    params[:phhs]&.each do |habilidad_id, attrs|
-      clase_id = attrs[:clase_id].to_i
-      hash[clase_id] ||= {}
-      hash[clase_id][habilidad_id] = attrs
-    end
-    hash.each do |clase_id, habilidades|
-      phc = personaje.personajeHasClases.find_by(clase_id: clase_id)
-      if phc
-        if phc.clase.oculto
-          process_phhs(habilidades, personaje)
-        else
-          process_phhs(habilidades, phc)
+        if attrs[:_destroy] != "1"
+          phh_hash[id] = attrs
         end
       else
-        process_phhs(habilidades, personaje, warn: Clase.find(clase_id).nombre)
+        phh_hash[id] = attrs
+      end
+    end
+
+    if duplicated_habilidad_ids.any?
+      flash[:warning] = "Las siguientes habilidades estaban duplicadas 
+          y se ha escogido una aleatoriamente, deberías revisarlas: 
+          #{duplicated_habilidad_ids.map { |id| Habilidad.find(id).nombre }.join(', ')}"
+    end
+
+    phh_hash.each do |id, attrs|
+      phh = personaje.personajeHasHabilidads.find_by(habilidad_id: id)
+      if attrs[:_destroy] == "1"
+        phh.destroy if phh
+      else
+        phh ||= personaje.personajeHasHabilidads.build(habilidad_id: id)
+        phh.clase_id = attrs[:clase_id].to_i
+        if phh.habilidad.efecto == attrs[:sobreescritura]
+          phh.sobreescritura = nil
+        else
+          phh.sobreescritura = attrs[:sobreescritura]
+        end
+        phh.save!
       end
     end
   end

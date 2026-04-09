@@ -1,6 +1,7 @@
 class Pj::PersonajeHasHabilidad < ApplicationRecord
-  belongs_to :hasHabilidads, polymorphic: true
+  belongs_to :personaje
   belongs_to :habilidad
+  belongs_to :clase
 
   has_many :calculados, as: :hasCalculados, class_name: "Pj::Calculado", dependent: :destroy, autosave: true, inverse_of: :hasCalculados
 

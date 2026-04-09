@@ -1,7 +1,7 @@
 <%# Expected params: phh, clase_id, destroy %>
 <% habilidad = phh.habilidad %>
 <% divID = "habilidad_#{clase_id}-#{habilidad.id}" %>
-<% base_name = "phhs[#{habilidad.id}]" %>
+<% base_name = "phhs[#{clase_id}-#{habilidad.id}]" %>
 <% initial_text = phh.sobreescritura.presence || habilidad.efecto %>
 <div class="carta carta_form_habilidad" id="<%= divID %>">
   <input type="hidden" name="<%= base_name %>[habilidad_id]" value="<%= habilidad.id %>">

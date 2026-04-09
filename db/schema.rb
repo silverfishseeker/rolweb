@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_29_123606) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_07_204006) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -384,10 +384,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_29_123606) do
     t.bigint "habilidad_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "hasHabilidads_type", null: false
-    t.bigint "hasHabilidads_id", null: false
+    t.bigint "personaje_id"
+    t.bigint "clase_id"
+    t.index ["clase_id"], name: "index_pj_personaje_has_habilidads_on_clase_id"
     t.index ["habilidad_id"], name: "index_pj_personaje_has_habilidads_on_habilidad_id"
-    t.index ["hasHabilidads_type", "hasHabilidads_id"], name: "index_pj_personaje_has_habilidads_on_has_habilidads"
+    t.index ["personaje_id"], name: "index_pj_personaje_has_habilidads_on_personaje_id"
   end
 
   create_table "pj_personaje_has_items", force: :cascade do |t|
@@ -503,7 +504,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_29_123606) do
   add_foreign_key "pj_parte_cuerpos", "pj_modificables"
   add_foreign_key "pj_personaje_has_clases", "clases"
   add_foreign_key "pj_personaje_has_clases", "personajes"
+  add_foreign_key "pj_personaje_has_habilidads", "clases"
   add_foreign_key "pj_personaje_has_habilidads", "habilidads"
+  add_foreign_key "pj_personaje_has_habilidads", "personajes"
   add_foreign_key "pj_personaje_has_items", "items"
   add_foreign_key "pj_personaje_has_items", "personajes"
   add_foreign_key "pj_rangos", "pj_calculados", column: "calculado_id"

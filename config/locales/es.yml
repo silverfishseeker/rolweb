@@ -18,3 +18,7 @@ es:
           attributes:
             clase:
               required: "La clase es requerida en personaje_has_clase."
+        user:
+          attributes:
+            password:
+              blank: "La contraseña no puede estar vacía."

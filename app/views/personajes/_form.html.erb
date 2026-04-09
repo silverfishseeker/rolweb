@@ -313,22 +313,29 @@
 
         <!-- CLASES Y HABILIDADES -->
         <div id="tab-clases" class="pj-tab_pane">
+          <h4>Notas</h4>
+          <p> Está permitido aprender habilidades de clases que no has aprendido. </p>
+          <p> Si cambias la clase de una habilidad, la habilidad aparecerá en la sección de la clase a la que has cambiado, (incluso si no has aprendido esa clase).</p>
+          <p> No puedes aprender la misma habilidad varias veces (desde clases distintas), si lo haces el sistema dará un aviso y seleccionará una aleatoriamente como la buena.</p>
           <section class="columns">
             <div id="clases-section">
               <h3>Clases</h3>
               <div class="detalle_section">
                 <h4>Clases aprendidas</h4>
-                <%= render "form_clases", phClases: @x.personajeHasClases, destroy: "0" %>
+                <% clases_ocultas = Clase.where(oculto: true).map{ |clase| clase.build_personaje_has_clase(@x) } %>
+                <%= render "form_clases", phClases: clases_ocultas, destroy: "1", oculto: true %>
+                <%= render "form_clases", phClases: @x.personajeHasClases, destroy: "0", oculto: false %>
               </div>
               <div class="detalle_section">
                 <h4>El resto de clases</h4>
-                <% remaining_clases = (Clase.order(:nombre) - @x.personajeHasClases.map(&:clase)).map{ |clase| clase.build_personaje_has_clase(@x) } %>
-                <%= render "form_clases", phClases: remaining_clases, destroy: "1" %>
+                <% remaining_clases = (Clase.order(:nombre).where(oculto: false) - @x.personajeHasClases.map(&:clase)).map{ |clase| clase.build_personaje_has_clase(@x) } %>
+                <%= render "form_clases", phClases: remaining_clases, destroy: "1", oculto: false %>
               </div>
             </div>
             <div id="habilidades-section">
+              <% habilidades = @x.personajeHasHabilidads_by_clase %>
               <% Clase.all.each do |clase| %>
-                <%= render "form_habilidades_from_clase", clase: clase, personaje_has_clase: @x.personajeHasClases.find_by(clase: clase) %>
+                <%= render "form_habilidades_from_clase", clase: clase, phHabilidades: habilidades[clase.id] || [] %>
               <% end %>
             </div>
           </section>
