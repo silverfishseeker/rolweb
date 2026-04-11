@@ -1,0 +1,49 @@
+<%# Expected params: phi, categ_id, destroy%>
+
+<% id = "item_#{categ_id}_#{phi.item.id}" %>
+<% item = phi.item %>
+<% base_name = "phis[#{id}]" %>
+<% initial_text = phi.sobreescritura.presence %>
+<div class="carta carta_form_habilidad" id="<%= id %>">
+  <input type="hidden" name="<%= base_name %>[item_id]" value="<%= item.id %>">
+  <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
+  <div id="original-efecto-<%= id %>" style="display:none"><%= item.efecto %></div>
+
+  <div class="carta-header carta-header_form">
+    <p class="carta-number carta-coste">
+      <%= item.coste %>
+    </p>
+    <p class="carta-number carta-peso">
+      <%= item.peso %>
+    </p>
+    <div class="carta-add_buttom" 
+        data-carta_id="<%= id %>"
+        data-alive_container="items-list-alive"
+        data-destroy_container="items-list-<%= categ_id %>-destroy" >
+      <%= destroy == "1" ? "+" : "-" %>
+    </div>
+  </div>
+
+  <div class="carta-header carta-header_form">
+    <%= link_to item.nombre, item, class: "carta-title"%>
+  </div>
+
+  <div class="carta-subtitles">
+    <% item.clases.each do |clase| %>
+      <%= link_to clase.nombre, clase %>
+    <% end %>
+  </div>
+
+  <div class="carta-description" id="efecto-modal-<%= id %>">
+    <%= item.ritual_description %>
+    <%= item.efecto %>
+  </div>
+
+  <%= render "personajes/form_modal",
+            buttom_text: "Editar texto de item",
+            buttom_extra_css: "open_modal-habilidad",
+            header_text: "Editando #{item.nombre}",
+            index: id do %>
+    <%#= render "form_sobreescritura", base_name: base_name, id: id, initial_text: initial_text %>
+  <% end %>
+</div>

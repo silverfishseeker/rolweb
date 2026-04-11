@@ -14,8 +14,8 @@ class Personaje < ApplicationRecord
   has_many :parteCuerpos, class_name: "Pj::ParteCuerpo", dependent: :destroy, autosave: true
   has_many :hasEstadoalterados, class_name: "Pj::HasEstadoalterado", dependent: :destroy, autosave: true
   has_many :personajeHasClases, class_name: "Pj::PersonajeHasClase", dependent: :destroy
-  has_many :personajeHasHabilidads, class_name: "Pj::PersonajeHasHabilidad", dependent: :destroy #habilidades independientes
-  has_many :PersonajeHasItem, class_name: "Pj::PersonajeHasItem", dependent: :destroy
+  has_many :personajeHasHabilidads, class_name: "Pj::PersonajeHasHabilidad", dependent: :destroy
+  has_many :personajeHasItems, class_name: "Pj::PersonajeHasItem", dependent: :destroy
 
   has_and_belongs_to_many :etiquets
   has_and_belongs_to_many :cuentos
@@ -29,6 +29,15 @@ class Personaje < ApplicationRecord
     personajeHasHabilidads.ordered.each_with_object({}) do |phh, hash|
       hash[phh.clase_id] ||= []
       hash[phh.clase_id] << phh
+    end
+  end
+
+  def personajeHasItem_by_categ
+    PersonajeHasItem.ordered.each_with_object({}) do |phi, hash|
+      phi.categs.each do |categ|
+        hash[categ.id] ||= []
+        hash[categ.id] << phi
+      end
     end
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_07_204006) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_09_165135) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -275,6 +275,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_07_204006) do
     t.integer "nivel_otro"
     t.bigint "picture_id"
     t.boolean "is_public"
+    t.integer "oro", default: 0, null: false
     t.index ["picture_id"], name: "index_personajes_on_picture_id"
     t.index ["user_id"], name: "index_personajes_on_user_id"
   end

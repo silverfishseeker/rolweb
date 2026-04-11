@@ -226,19 +226,45 @@ export function onTurboLoad() {
     }
   });
 
-
+  // Abrir lista genérica
+  function selectListFromMenu(containerMenu, containerLists, menuClass) {
+    containerMenu.querySelectorAll(`.${menuClass}`).forEach(button => {
+      button.addEventListener("click", () => {
+        containerLists.querySelectorAll(".pj-selected_list").forEach(l => {
+          l.classList.remove("pj-selected_list-active");
+        });
+        containerMenu.querySelectorAll(`.${menuClass}`).forEach(button => {
+          button.classList.remove(`${menuClass}-selected`);
+        });
+        document.getElementById(button.dataset.list).classList.add("pj-selected_list-active");
+        button.classList.add(`${menuClass}-selected`);
+      });
+    });
+  }
 
   // Abrir lista habilidades clase
-  clasesContainer.querySelectorAll(".carta_form_clase").forEach(carta => {
-    carta.addEventListener("click", () => {
-      habilidadesContainer.querySelectorAll(".pj-habilidades_list").forEach(l => {
-        l.classList.remove("pj-habilidades_list-active");
-      });
-      clasesContainer.querySelectorAll(".carta_form_clase").forEach(carta => {
-        carta.classList.remove("carta_form_clase-selected");
-      });
-      document.getElementById(carta.dataset.habilidades_list).classList.add("pj-habilidades_list-active");
-      carta.classList.add("carta_form_clase-selected");
+  selectListFromMenu(clasesContainer, habilidadesContainer, "carta_form_clase");
+
+
+  // ITEMS
+
+  const itemsContainer = document.getElementById("tab-items");
+  // Modal sobreescritura
+  modalHandelers(itemsContainer);
+
+  // Abrir lista items categoría
+  const menu = document.getElementById("items-menu");
+  const listsContainer = document.getElementById("items-lists");
+  selectListFromMenu(menu, listsContainer, "carta-title");
+
+  // Mover item
+  itemsContainer.querySelectorAll(".carta-add_buttom").forEach(button => {
+    button.addEventListener("click", () => {
+      const aliveContainer = document.getElementById("items-list-alive");
+      const destroyContainer = document.getElementById(button.dataset.destroy_container);
+      moveCarta(button, aliveContainer, destroyContainer);
     });
   });
+
+  
 }

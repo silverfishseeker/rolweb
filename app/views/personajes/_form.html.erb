@@ -339,9 +339,51 @@
               <% end %>
             </div>
           </section>
+        </div>
       
-      </div>
+        <!-- INVENTARIO -->
+        <div id="tab-items" class="pj-tab_pane">
+          <h2>Oro: <%= f.number_field :oro, step: 0.01 %> </h2>
+          <section class="columns">
+            <div id="items-alive">
+              <h3>Inventario</h3>
+                <div class="carta-grid_container carta-grid_container_form_habilidad detalle_section"
+                    id="items-list-alive">
+                      <%  @x.personajeHasItems.each do |ph_item| %>
+                        <%= render "form_item", phi: ph_item, categ_id: ct.id, destroy: "1" %>
+                      <% end %>
+                </div>
+            </div>
+            <div>
+              <h3>Selecciona categoría</h3>
+              <div class="miniListadoClases" id="items-menu">
+                <% Categ.all.each do |ct| %>
+                  <span class="carta-title" data-list="items-list-<%= ct.id %>">
+                    <%= ct.nombre %></span>
+                <% end %>
+              </div>
+              <div id="items-lists">
+                <h3>Disponibles</h3>
+                <% owned_items = @x.personajeHasItems %>
+                <% Categ.all.each do |ct| %>
+                  <div class="detalle_section pj-selected_list"
+                      id="items-list-<%= ct.id %>">
+                    <h4><%= ct.nombre %></h4>
+                    <div class="carta-grid_container carta-grid_container_form_habilidad"
+                        id="items-list-<%= ct.id %>-destroy">
+                      <% ph_items = ct.items.map{|i| i.build_personaje_has_item(@x)} - (owned_items[ct.id] || []) %>
+                      <% ph_items.each do |ph_item| %>
+                        <%= render "form_item", phi: ph_item, categ_id: ct.id, destroy: "1" %>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </section>
+        </div>
 
+      </div>
     </div>
   <% end %>
 </div>
