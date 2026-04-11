@@ -197,9 +197,9 @@ class PersonajesController < ModelController
     end
 
     if duplicated_habilidad_ids.any?
-      flash[:warning] = "Las siguientes habilidades estaban duplicadas 
+      flash[:warning] << "Las siguientes habilidades estaban duplicadas 
           y se ha escogido una aleatoriamente, deberías revisarlas: 
-          #{duplicated_habilidad_ids.map { |id| Habilidad.find(id).nombre }.join(', ')}"
+          #{duplicated_habilidad_ids.map { |id| Habilidad.find(id).nombre }.join(', ')}. "
     end
 
     phh_hash.each do |id, attrs|
@@ -215,6 +215,46 @@ class PersonajesController < ModelController
           phh.sobreescritura = attrs[:sobreescritura]
         end
         phh.save!
+      end
+    end
+
+
+    # ITEMS
+    phis_hash = {}
+    duplicated_item_ids = Set.new
+    params[:phis].each do |_, attrs|
+      id = attrs[:item_id].to_i
+      if phis_hash[id]
+        if phis_hash[id][:_destroy] != "1"
+          duplicated_item_ids << id
+        end
+        if attrs[:_destroy] != "1"
+          phis_hash[id] = attrs
+        end
+      else
+        phis_hash[id] = attrs
+      end
+    end
+
+    if duplicated_item_ids.any?
+      flash[:warning] << "Los siguientes items estaban duplicados 
+          y se ha escogido una aleatoriamente, deberías revisarlos: 
+          #{duplicated_item_ids.map { |id| Item.find(id).nombre }.join(', ')}. "
+    end
+
+    phis_hash.each do |id, attrs|
+      phi = personaje.personajeHasItems.find_by(item_id: id)
+      if attrs[:_destroy] == "1"
+        phi.destroy if phi
+      else
+        phi ||= personaje.personajeHasItems.build(item_id: id)
+        phi.cantidad = attrs[:cantidad].to_i
+        if phi.item.efecto == attrs[:sobreescritura]
+          phi.sobreescritura = nil
+        else
+          phi.sobreescritura = attrs[:sobreescritura]
+        end
+        phi.save!
       end
     end
   end
