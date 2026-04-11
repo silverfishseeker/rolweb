@@ -3,7 +3,7 @@
 <% divID = "habilidad_#{clase_id}-#{habilidad.id}" %>
 <% base_name = "phhs[#{clase_id}-#{habilidad.id}]" %>
 <% initial_text = phh.sobreescritura.presence || habilidad.efecto %>
-<div class="carta carta_form_habilidad" id="<%= divID %>">
+<fieldset class="carta carta_form carta_form_habilidad" id="<%= divID %>" <%= "disabled" if destroy == "1" %>>
   <input type="hidden" name="<%= base_name %>[habilidad_id]" value="<%= habilidad.id %>">
   <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
   <div id="original-efecto-<%= divID %>" style="display:none"><%= habilidad.efecto %></div>
@@ -66,4 +66,4 @@
       <% end %>
     </select>
     <% end %>
-</div>
+</fieldset>

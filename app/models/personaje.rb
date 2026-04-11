@@ -33,8 +33,8 @@ class Personaje < ApplicationRecord
   end
 
   def personajeHasItem_by_categ
-    PersonajeHasItem.ordered.each_with_object({}) do |phi, hash|
-      phi.categs.each do |categ|
+    personajeHasItems.ordered.each_with_object({}) do |phi, hash|
+      phi.item.categs.each do |categ|
         hash[categ.id] ||= []
         hash[categ.id] << phi
       end

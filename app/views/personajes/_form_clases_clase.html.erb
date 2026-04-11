@@ -2,7 +2,7 @@
 <% id = phc.clase.id %>
 <% base_name = "phcs[#{id}]" %>
 <% initial_text = phc.sobreescritura.presence || phc.clase.efecto %>
-<div class="carta carta_form carta_form_clase"
+<fieldset class="carta carta_form carta_form_clase" <%= "disabled" if destroy == "1" %>
     id="clase_<%= id %>" data-list="habilidades-list-<%= id %>">
   <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
   <input type="hidden" name="<%= base_name %>[clase_id]" value="<%= id %>">
@@ -41,4 +41,4 @@
       <% end %>
     <% end %>
   </div>
-</div>
+</fieldset>

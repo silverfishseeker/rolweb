@@ -356,21 +356,21 @@
                 <div class="carta-grid_container carta-grid_container_form_habilidad detalle_section"
                     id="items-list-alive">
                       <%  @x.personajeHasItems.each do |ph_item| %>
-                        <%= render "form_item", phi: ph_item, categ_id: ct.id, destroy: "1" %>
+                        <%= render "form_item", phi: ph_item, categ_id: "pj", destroy: "0" %>
                       <% end %>
                 </div>
             </div>
             <div>
               <h3>Selecciona categoría</h3>
               <div class="miniListadoClases" id="items-menu">
-                <% Categ.all.each do |ct| %>
+                <% Categ.order(:nombre).each do |ct| %>
                   <span class="carta-title" data-list="items-list-<%= ct.id %>">
                     <%= ct.nombre %></span>
                 <% end %>
               </div>
               <div id="items-lists">
                 <h3>Disponibles</h3>
-                <% owned_items = @x.personajeHasItems %>
+                <% owned_items = @x.personajeHasItem_by_categ %>
                 <% Categ.all.each do |ct| %>
                   <div class="detalle_section pj-selected_list"
                       id="items-list-<%= ct.id %>">

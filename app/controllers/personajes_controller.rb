@@ -2,7 +2,7 @@ class PersonajesController < ModelController
   def tipo; Personaje end
 
   def model_params
-    params.require(:personaje).permit(:nombre, :is_public, :picture_id, :descripcion)
+    params.require(:personaje).permit(:nombre, :is_public, :picture_id, :descripcion, :oro)
   end
 
   def new
@@ -162,7 +162,7 @@ class PersonajesController < ModelController
     end
 
     # CLASES
-    params[:phcs].each do |_, attrs|
+    params[:phcs]&.each do |_, attrs|
       clase_id = attrs[:clase_id].to_i
       phc = personaje.personajeHasClases.find_by(clase_id: clase_id)
       if attrs[:_destroy] == "1"
@@ -182,7 +182,7 @@ class PersonajesController < ModelController
     # HABILIDADES
     phh_hash = {}
     duplicated_habilidad_ids = Set.new
-    params[:phhs].each do |_, attrs|
+    params[:phhs]&.each do |_, attrs|
       id = attrs[:habilidad_id].to_i
       if phh_hash[id]
         if phh_hash[id][:_destroy] != "1"
@@ -197,9 +197,9 @@ class PersonajesController < ModelController
     end
 
     if duplicated_habilidad_ids.any?
-      flash[:warning] << "Las siguientes habilidades estaban duplicadas 
-          y se ha escogido una aleatoriamente, deberías revisarlas: 
-          #{duplicated_habilidad_ids.map { |id| Habilidad.find(id).nombre }.join(', ')}. "
+      add_warning "Las siguientes habilidades estaban duplicadas " \
+          "y se ha escogido una aleatoriamente, deberías revisarlas: " \
+          "#{duplicated_habilidad_ids.map { |id| Habilidad.find(id).nombre }.join(', ')}. "
     end
 
     phh_hash.each do |id, attrs|
@@ -222,7 +222,7 @@ class PersonajesController < ModelController
     # ITEMS
     phis_hash = {}
     duplicated_item_ids = Set.new
-    params[:phis].each do |_, attrs|
+    params[:phis]&.each do |_, attrs|
       id = attrs[:item_id].to_i
       if phis_hash[id]
         if phis_hash[id][:_destroy] != "1"
@@ -237,9 +237,9 @@ class PersonajesController < ModelController
     end
 
     if duplicated_item_ids.any?
-      flash[:warning] << "Los siguientes items estaban duplicados 
-          y se ha escogido una aleatoriamente, deberías revisarlos: 
-          #{duplicated_item_ids.map { |id| Item.find(id).nombre }.join(', ')}. "
+      add_warning "Los siguientes items estaban duplicados " \
+          "y se ha escogido una aleatoriamente, deberías revisarlos: " \
+          "#{duplicated_item_ids.map { |id| Item.find(id).nombre }.join(', ')}. "
     end
 
     phis_hash.each do |id, attrs|

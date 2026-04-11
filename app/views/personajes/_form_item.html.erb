@@ -4,7 +4,7 @@
 <% item = phi.item %>
 <% base_name = "phis[#{id}]" %>
 <% initial_text = phi.sobreescritura.presence || item.efecto %>
-<div class="carta carta_form_habilidad" id="<%= id %>">
+<fieldset class="carta carta_form carta_form_habilidad" id="<%= id %>" <%= "disabled" if destroy == "1" %>>
   <input type="hidden" name="<%= base_name %>[item_id]" value="<%= item.id %>">
   <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
   <div id="original-efecto-<%= id %>" style="display:none"><%= item.efecto %></div>
@@ -41,7 +41,7 @@
   <div class="carta-description">
     <%= item.ritual_description %>
     <span id="efecto-modal-<%= id %>">
-      <%= item.efecto %>
+      <%= initial_text %>
     </span>
   </div>
 
@@ -54,4 +54,4 @@
       <%= item.ritual_description %>
     <% end %>
   <% end %>
-</div>
+</fieldset>

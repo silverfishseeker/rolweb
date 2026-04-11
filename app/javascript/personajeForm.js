@@ -167,6 +167,7 @@ export function onTurboLoad() {
     const carta = document.getElementById(button.dataset.carta_id);
     const destroyInput = carta.querySelector(`input[name$="[_destroy]"]`);
     if (destroyInput.value === "1") {
+      carta.disabled = false;
       destroyInput.value = "0";
       button.textContent = "-";
       aliveContainer.prepend(carta);
