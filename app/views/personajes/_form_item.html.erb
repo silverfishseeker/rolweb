@@ -10,6 +10,10 @@
   <div id="original-efecto-<%= id %>" style="display:none"><%= item.efecto %></div>
 
   <div class="carta-header carta-header_form">
+    <p class="carta-number">
+      <input type="number" name="<%= base_name %>[cantidad]" 
+          value="<%= phi.cantidad %>" min="0" class="pj-cantidad">
+    </p>
     <p class="carta-number carta-coste">
       <%= item.coste %>
     </p>

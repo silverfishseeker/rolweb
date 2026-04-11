@@ -344,6 +344,12 @@
         <!-- INVENTARIO -->
         <div id="tab-items" class="pj-tab_pane">
           <h2>Oro: <%= f.number_field :oro, step: 0.01 %> </h2>
+          <p> Selecciona la cantidad de cada ítem que tienes en 
+            el número arriba a la izquierda. Puedes tener 0 de un ítem.</p>
+          <p> No puedes tener el mismo ítem varias veces desde diferentes
+             categorías, si lo haces el sistema dará un aviso y seleccionará
+              una aleatoriamente como el bueno. Si quieres más de un mismo
+              ítem, simplemente aumenta la cantidad.</p>
           <section class="columns">
             <div id="items-alive">
               <h3>Inventario</h3>
