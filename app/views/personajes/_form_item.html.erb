@@ -3,7 +3,7 @@
 <% id = "item_#{categ_id}_#{phi.item.id}" %>
 <% item = phi.item %>
 <% base_name = "phis[#{id}]" %>
-<% initial_text = phi.sobreescritura.presence %>
+<% initial_text = phi.sobreescritura.presence || item.efecto %>
 <div class="carta carta_form_habilidad" id="<%= id %>">
   <input type="hidden" name="<%= base_name %>[item_id]" value="<%= item.id %>">
   <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
@@ -34,9 +34,11 @@
     <% end %>
   </div>
 
-  <div class="carta-description" id="efecto-modal-<%= id %>">
+  <div class="carta-description">
     <%= item.ritual_description %>
-    <%= item.efecto %>
+    <span id="efecto-modal-<%= id %>">
+      <%= item.efecto %>
+    </span>
   </div>
 
   <%= render "personajes/form_modal",
@@ -44,6 +46,8 @@
             buttom_extra_css: "open_modal-habilidad",
             header_text: "Editando #{item.nombre}",
             index: id do %>
-    <%#= render "form_sobreescritura", base_name: base_name, id: id, initial_text: initial_text %>
+    <%= render "form_sobreescritura", base_name: base_name, id: id, initial_text: initial_text do %>
+      <%= item.ritual_description %>
+    <% end %>
   <% end %>
 </div>

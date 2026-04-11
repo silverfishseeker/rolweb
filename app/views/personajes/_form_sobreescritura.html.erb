@@ -1,10 +1,16 @@
 <%# Expected params: base_name, id, initial_text %>
+<%# Optional params: block %>
 <button type="button" class="btn btn-primary btn-small boton_reseteo_texto" data-id="<%= id %>">
     Resetear texto
 </button>
 <br>
 <br>
 <div class="white_bk white_bk-small_textarea">
+  <% if block_given? %> <%# Para items de ritual %>
+    <p> <i>
+      <%= yield %>
+    </i></p>
+  <% end %>
   <input id="sobreescritura-modal-<%= id %>"
         type="hidden"
         name="<%= base_name %>[sobreescritura]"
