@@ -2,7 +2,6 @@
 
 <div>
   <%= form_with(model: @x, local: true, html: { multipart: true, class: "pj-form"}) do |f| %>
-    <!-- SUBMIT + CANCEL -->
     <div>
       <%= f.submit "Guardar", class: "btn btn-primary" %>
       <%= link_to "Cancelar", personajes_path, class: "btn btn-warning" %>

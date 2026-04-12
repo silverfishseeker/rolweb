@@ -19,7 +19,7 @@
   </div>
 
   <div class="carta-personaje-stats">
-    <% personaje.estadistics.each do |stat| %>
+    <% personaje.estadistics.ordered.each do |stat| %>
       <span class="carta-number"><%=stat.tipoEstadistic.siglas%> <%=stat.value%>(<b><%=stat.mod_str%></b>)</span>
     <% end %>
   </div>

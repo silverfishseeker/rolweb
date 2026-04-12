@@ -273,3 +273,31 @@
 .pj-cantidad {
   max-width: 25px;
 }
+
+// MAIN VIEW
+.pjv-header {
+  display: flex;
+  .options{
+    margin-left: auto;
+    margin-right: 20px;
+  }
+}
+
+.pjv-stats {
+  background-color: var(--c_base);
+  color: var(--c_contraste);
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  .carta-number {
+    color: var(--c_contraste);
+    margin: 0;
+  }
+}
+
+.pjv-modifier {
+  width: 30px;
+}

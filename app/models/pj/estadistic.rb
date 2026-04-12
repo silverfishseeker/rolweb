@@ -10,6 +10,8 @@ class Pj::Estadistic < ApplicationRecord
     dependent: :destroy,
     autosave: true
 
+  scope :ordered, -> { joins(:tipoEstadistic).order(:orden) }
+
   def value
     sum_nil base, lv_mod, modificable.passive_mod, modificable.active_mod # sum_nil ignora nils
   end

@@ -1,7 +1,34 @@
-<%= render @x %>
+<% importJS "personajeShow" %>
 
-<div>
-  <%= link_to "Editar", edit_personaje_path(@x), class: "btn btn-primary" %>
-  <%= link_to "Eliminar", personaje_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
-  <%= link_to "Volver", personajes_path, class: "btn btn-primary" %>
+<div class="pjv-header">
+  <h1> <%=@x.nombre%></h1>
+
+  <div class="options">
+    <%= link_to "Editar", edit_personaje_path(@x), class: "btn btn-primary" %>
+    <%= link_to "Eliminar", personaje_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
+  </div>
 </div>
+<p><b> Nivel <%= @x.nivel %> </b></p>
+
+<%= form_with(model: @x, local: true, html: { multipart: true, class: "pj-form"}) do |f| %>
+  <div class="pjv-stats">
+    <% @x.estadistics.ordered.each do |stat| %>
+      <span class="carta-number">
+        <%=stat.tipoEstadistic.siglas%>
+        <span id="stat-base-<%=stat.id%>" style="display:none">
+          <%=stat.value%>
+        </span>
+        <span id="stat-val-<%=stat.id%>"> <%=stat.value%> </span>
+        (<b id="stat-mod-<%=stat.id%>"><%=stat.mod_str%></b>)
+        <input type="number"
+            name="estadistics[<%= stat.id %>][active_mod]"
+            value="<%= stat.modificable.active_mod %>"
+            class="pjv-modifier"
+            data-base="stat-base-<%=stat.id%>"
+            data-value="stat-val-<%=stat.id%>"
+            data-mod="stat-mod-<%=stat.id%>">
+      </span>
+    <% end %>
+  </div>
+
+<% end %>
