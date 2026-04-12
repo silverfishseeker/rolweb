@@ -145,7 +145,7 @@
     <% end %>
 
 
-    <div class="main-content">
+    <div class="main-content <%= content_for?(:main_content_class) ? yield(:main_content_class) : '' %>">
       <%= yield %>
     </div>
 
