@@ -1,4 +1,6 @@
 export function onTurboLoad() {
+  // PÁGINA
+
   // wrap en el menú de tabs
   const form = document.querySelector('.pj-form');
   const tabs = document.querySelector('.pj-tabs');
@@ -37,6 +39,21 @@ export function onTurboLoad() {
       toggleRango(e.target);
     }
   });
+
+
+  // Marcar/desmarcar filas borradas
+  document.querySelectorAll(".rm_input").forEach(input => {
+    input.addEventListener("change", () => {
+      const row = input.closest("tr");
+      const type = input.dataset.rm_type == "1"
+      if (input.checked == type)
+        row.classList.remove("pj-fila_borrada");
+      else
+        row.classList.add("pj-fila_borrada");
+    });
+  });
+
+  // ESTADO
 
   // Añadir calculado libre
   document.getElementById("add-calculado-libre").addEventListener("click", () => {

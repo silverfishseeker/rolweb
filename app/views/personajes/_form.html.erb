@@ -48,12 +48,14 @@
 
                 <% Pj::TipoEstadistic.order(:orden).each do |tipo| %>
                   <% stat = @x.estadistics.find { |s| s.tipoEstadistic == tipo } %>
-                  <tr>
+                  <tr class="<%= "pj-fila_borrada" if !stat %>">
                     <td data-label="Aplicar">
                       <input type="checkbox"
                             name="estadistics[<%= tipo.id %>][apply]"
                             value="1"
-                            <%= "checked" if stat %>>
+                            <%= "checked" if stat %>
+                            class="rm_input"
+                            data-rm_type="1">
                     </td>
                     <td data-label="Nombre"><%= "#{tipo.nombre} (#{tipo.siglas})" %></td>
                     <td data-label="Valor actual">
@@ -141,7 +143,7 @@
                       end %>
                     <input type="hidden" name="calculados[<%= index %>][tipo_id]" value="<%= tipo.id %>">
                     <input type="hidden" name="calculados[<%= index %>][is_rango]" value="<%= isR ? 1 : 0 %>">
-                    <tr data-index="<%= index %>">
+                    <tr data-index="<%= index %>" class="<%= "pj-fila_borrada" if !calc.present? %>">
                       <td data-label="Nombre">
                         <strong><%= tipo.nombre %></strong>
                       </td>

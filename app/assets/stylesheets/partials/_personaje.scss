@@ -218,6 +218,12 @@
   }
 }
 
+.pj-fila_borrada {
+  font-style: italic;
+  text-decoration: line-through;
+  background-color: var(--c_alternativo);
+}
+
 .open_modal-clase{
   margin-left: 20px;
 }
