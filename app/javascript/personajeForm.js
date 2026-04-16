@@ -284,5 +284,10 @@ export function onTurboLoad() {
     });
   });
 
-  
+  // Ajustar ancho input cantidad
+  itemsContainer.querySelectorAll(".pj-cantidad").forEach(input => {
+    input.addEventListener("input", () => {
+      input.style.maxWidth = `${(input.value.length || 1) + 2}ch`;
+    });
+  });
 }
