@@ -1,17 +1,19 @@
 <% importJS "personajeShow" %>
 <% content_for :main_content_class, 'main-content-margin_reduced' %>
 
-<div class="pjv-header">
-  <h1> <%=@x.nombre%></h1>
+<%= form_with(model: @x, local: true, html: { multipart: true, class: "pjv-form"}) do |f| %>
 
-  <div class="options">
-    <%= link_to "Editar", edit_personaje_path(@x), class: "btn btn-primary" %>
-    <%= link_to "Eliminar", personaje_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
+  <div class="pjv-header">
+    <h1> <%=@x.nombre%></h1>
+
+    <div class="options">
+      <%= f.submit "Guardar", class: "btn btn-primary" %>
+      <%= link_to "Editar", edit_personaje_path(@x), class: "btn btn-primary" %>
+      <%= link_to "Eliminar", personaje_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
+    </div>
   </div>
-</div>
-<p><b> Nivel <%= @x.nivel %> </b></p>
+  <p class="pjv-nivel"><b> Nivel <%= @x.nivel %> </b></p>
 
-<%= form_with(model: @x, local: true, html: { multipart: true, class: "pj-form"}) do |f| %>
   <div class="pjv-stats">
     <% @x.estadistics.ordered.each do |stat| %>
       <span class="carta-number">
@@ -24,12 +26,57 @@
         <input type="number"
             name="estadistics[<%= stat.id %>][active_mod]"
             value="<%= stat.modificable.active_mod %>"
-            class="pjv-modifier"
+            class="pjv-modifier pjv-input"
             data-base="stat-base-<%=stat.id%>"
             data-value="stat-val-<%=stat.id%>"
             data-mod="stat-mod-<%=stat.id%>">
       </span>
     <% end %>
+  </div>
+  <br>
+  <div class="pjv-columns">
+    <div class="pjv-column">
+      <div class="pjv-section">
+        <h3>Estado</h3>
+        <div class="pjv-stats_container">
+          <% @x.calculados.each do |calc| %>
+            <div class="pjv-stat">
+              <span><%= calc.nombre %>: </span>
+              <span class="pjv-stat-right_side">
+                <% if calc.rango.present? %>
+                  <input type="number"
+                        name="calculados[<%= calc.id %>][rango]"
+                        value="<%= calc.rango.valor %>"
+                        class="pjv-input">
+                  /
+                <% end %>
+                <span id="calc-val-<%=calc.id%>"><%= calc.value %></span>
+                <input type="number"
+                    name="calculados[<%= calc.id %>][active_mod]"
+                    value="<%= calc.modificable.active_mod %>"
+                    class="pjv-modifier pjv-input"
+                    data-base="calc-base-<%=calc.id%>"
+                    data-value="calc-val-<%=calc.id%>">
+                <span id="calc-base-<%=calc.id%>" style="display:none">
+                  <%=calc.value%>
+                </span>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="pjv-section">
+        
+      </div>
+    </div>
+    <div class="pjv-resizer"></div>
+    <div class="pjv-column pjv-column-big">
+      HH
+    </div>
+    <div class="pjv-resizer"></div>
+    <div class="pjv-column">
+      <%= render "shared/image_with_link", image: @x.picture.image, cssclass: "pjv-image" %>
+    </div>
   </div>
 
 <% end %>

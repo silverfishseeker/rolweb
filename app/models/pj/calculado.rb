@@ -1,15 +1,16 @@
 class Pj::Calculado < ApplicationRecord
   #attributes: no other attributes
   belongs_to :hasCalculados, polymorphic: true, inverse_of: :calculados
-  belongs_to :tipoCalculado,
-    class_name: "Pj::TipoCalculado",
-    foreign_key: "tipoCalculado_id",
-    optional: true
   belongs_to :modificable,
     class_name: "Pj::Modificable",
     foreign_key: "pj_modificable_id",
     dependent: :destroy,
     autosave: true
+    
+  belongs_to :tipoCalculado,
+    class_name: "Pj::TipoCalculado",
+    foreign_key: "tipoCalculado_id",
+    optional: true
   has_one :calculado_libre,
     class_name: "CalculadoLibre",
     foreign_key: :pj_calculado_id,
