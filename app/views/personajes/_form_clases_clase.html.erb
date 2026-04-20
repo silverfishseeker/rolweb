@@ -16,7 +16,7 @@
             class="carta-number carta-level carta-level_clase">
       <% end %>
       <%= link_to phc.clase.nombre, phc.clase, class:"carta-title carta-title_clase" %>
-      <div class="carta-image carta-image_icon">
+      <div class="carta-image carta-image-icon">
         <%= render "shared/image", image: phc.clase.image %>
       </div>
       <% if !oculto %>

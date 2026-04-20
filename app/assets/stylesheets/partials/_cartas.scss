@@ -252,13 +252,16 @@
     justify-content: center;
     padding: 20px;
 }
-.carta-image_clase {
+.carta-image-clase {
     max-width: calc(var(--ancho_carta_clase)*0.4);
     max-height: var(--alto_carta_clase);
     padding: 10px;
 }
+.carta-image-item {
+    max-height: 200px;
+}
 
-.carta-image_icon {
+.carta-image-icon {
     height: 70px;
     background-size: cover;
     background-position: center;
