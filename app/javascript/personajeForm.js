@@ -1,3 +1,5 @@
+import { nextZIndex } from "./zIndexCounter.js";
+
 export function onTurboLoad() {
   // PÁGINA
 
@@ -85,7 +87,9 @@ export function onTurboLoad() {
   // Abrir modal
   function openModal(e) {
     if (e.target.classList.contains("open_modal")) {
-      document.getElementById(e.target.dataset.index).style.display = "block";
+      const style = document.getElementById(e.target.dataset.index).style
+      style.display = "block";
+      style.zIndex = nextZIndex();
     }
   }
   // Cerrar modal
