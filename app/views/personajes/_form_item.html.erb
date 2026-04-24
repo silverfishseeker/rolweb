@@ -49,9 +49,18 @@
             buttom_text: "Editar texto de item",
             buttom_extra_css: "open_modal-habilidad",
             header_text: "Editando #{item.nombre}",
-            index: id do %>
+            index: id,
+            close_buttom_extra_css: "modal-close-sobreescritura" do %>
     <%= render "form_sobreescritura", base_name: base_name, id: id, initial_text: initial_text do %>
       <%= item.ritual_description %>
     <% end %>
+  <% end %>
+  <%= render "personajes/form_modal",
+          buttom_text: "Contadores",
+          buttom_extra_css: "open_modal-habilidad",
+          header_text: "Editando contadores de #{item.nombre}",
+          index: id + "-calculados",
+          close_buttom_extra_css: "" do %>
+    <%= render "personajes/form_has_calculados", hasCalcs: phi, prefix: "#{base_name}", html_id: id + "-calculados" %>
   <% end %>
 </fieldset>

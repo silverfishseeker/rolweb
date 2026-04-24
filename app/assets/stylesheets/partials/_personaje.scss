@@ -227,6 +227,16 @@
   background-color: var(--c_alternativo);
 }
 
+fieldset[disabled] .open_modal {
+  cursor: not-allowed !important;
+}
+fieldset[disabled] .open_modal:hover {
+  transform: none;
+}
+fieldset[disabled] .btn-primary:hover {
+  background-color: var(--c_alternativo);
+}
+
 .open_modal-clase{
   margin-left: 20px;
 }

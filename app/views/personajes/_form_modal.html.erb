@@ -1,4 +1,4 @@
-<%# Expected params: buttom_text, buttom_extra_css, header_text, index, &block %>
+<%# Expected params: buttom_text, buttom_extra_css, header_text, index, &block, close_buttom_extra_css %>
 <%# index must contain a prefix so it is unique between different kinds of models using the modals %>
 
 <button type="button"
@@ -11,7 +11,7 @@
       class="pj-modal">
   <header>
     <h4><%= header_text %></h4>
-    <button type="button" class="btn btn-danger modal-close"
+    <button type="button" class="btn btn-danger modal-close <%= local_assigns[:close_buttom_extra_css] %>"
           data-index="modal-<%=index%>">
       Guardar y cerrar
     </button>

@@ -61,6 +61,32 @@ class PersonajesController < ModelController
     end
   end
 
+  # calculados of personaje_has_clase or personaje_has_habilidad or personaje_has_item
+  def process_contadores_for(contadores, target)
+    return unless contadores
+    contadores.each_value do |attrs|
+      contador = target.calculados.find_by(id: attrs[:id].to_i) if attrs[:id]
+      Rails.logger.debug "Processing contador with attrs: #{attrs.inspect}, found contador: #{contador.inspect}"
+      if attrs[:_destroy] == "1"
+        contador.destroy if contador
+        Rails.logger.debug "Destroyed contador with id: #{contador&.id}"
+      else
+        Rails.logger.debug "Before processing contador: #{contador.inspect}"
+        contador ||= target.calculados.build( modificable: Pj::Modificable.new )
+        libre = contador.calculado_libre || contador.build_calculado_libre
+        libre.nombre = attrs[:nombre]
+        libre.base   = attrs[:base].to_i
+        if attrs[:rango].present?
+          contador.build_rango if contador.rango.nil?
+          contador.rango.valor = attrs[:rango]&.to_i || 0
+        else
+          contador.rango&.destroy
+        end
+        contador.save!
+      end
+    end
+  end
+
   # Procesa los parámetros complejos y actualiza/crea asociaciones en @personaje (que ya existe en @x)
   def process_associations_for(personaje)
 
@@ -175,6 +201,7 @@ class PersonajesController < ModelController
           else
             phc.sobreescritura = attrs[:sobreescritura]
           end
+          process_contadores_for attrs[:calculados], phc
           phc.save!
       end
     end
@@ -214,6 +241,7 @@ class PersonajesController < ModelController
         else
           phh.sobreescritura = attrs[:sobreescritura]
         end
+        process_contadores_for attrs[:calculados], phh
         phh.save!
       end
     end
@@ -254,6 +282,7 @@ class PersonajesController < ModelController
         else
           phi.sobreescritura = attrs[:sobreescritura]
         end
+        process_contadores_for attrs[:calculados], phi
         phi.save!
       end
     end

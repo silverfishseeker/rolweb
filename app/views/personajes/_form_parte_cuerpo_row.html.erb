@@ -68,7 +68,8 @@
     <%= render "personajes/form_modal",
                 buttom_text: "Ver / editar",
                 header_text: "Estados alterados de #{pc ? pc.nombre : "nuevo"}",
-                index: "partecuerpo-#{index}" do %>
+                index: "partecuerpo-#{index}",
+                close_buttom_extra_css: "modal-close-resumen" do %>
         <%= render "personajes/form_estados_alterados",
                     listaEstadosAlterados: pc ? pc.hasEstadoalterados : [],
                     nombre_input_base: "parte_cuerpos[#{index}][has_estadoalterados]",

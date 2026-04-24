@@ -42,15 +42,16 @@ export function onTurboLoad() {
 
 
   // Marcar/desmarcar filas borradas
-  document.querySelectorAll(".rm_input").forEach(input => {
-    input.addEventListener("change", () => {
+  document.addEventListener("change", e => {
+    if (e.target.classList.contains("rm_input")) {
+      const input = e.target;
       const row = input.closest("tr");
       const type = input.dataset.rm_type == "1"
       if (input.checked == type)
         row.classList.remove("pj-fila_borrada");
       else
         row.classList.add("pj-fila_borrada");
-    });
+    }
   });
 
   // ESTADO
@@ -94,7 +95,7 @@ export function onTurboLoad() {
         const index = e.target.dataset.index;
         const modal = document.getElementById(e.target.dataset.index);
         modal.style.display = "none";
-        extraAction(modal, index);
+        extraAction(modal, index, e.target.classList);
       }
     }
   }
@@ -159,10 +160,12 @@ export function onTurboLoad() {
 
   // Modal estados alterados parte cuerpo
   pc_body.addEventListener("click", openModal);
-  pc_body.addEventListener("click", createCloseModalHandler((modal, index) => {
-    const table = modal.querySelector('table');
-    const target_writting = document.getElementById("resumen-" + index);
-    estadosalterados_summary(table, target_writting);
+  pc_body.addEventListener("click", createCloseModalHandler((modal, index, classList) => {
+    if (classList.contains("modal-close-resumen")) {
+      const table = modal.querySelector('table');
+      const target_writting = document.getElementById("resumen-" + index);
+      estadosalterados_summary(table, target_writting);
+    }
   }));
 
   // Añadir parte cuerpo
@@ -216,11 +219,13 @@ export function onTurboLoad() {
   // Modal sobreescritura clase y habilidad
   function modalHandelers(container) {
     container.addEventListener("click", openModal);
-    container.addEventListener("click", createCloseModalHandler((_, id) => {
-      // reemplazar texto de efecto por la sobreescritura en la carta
-      const div_efecto = document.getElementById(`efecto-${id}`);
-      const input_sobrreescritura = document.getElementById(`sobreescritura-${id}`);
-      div_efecto.innerHTML = input_sobrreescritura.value;
+    container.addEventListener("click", createCloseModalHandler((_, id, classList) => {
+      if (classList.contains("modal-close-sobreescritura")) {
+        // reemplazar texto de efecto por la sobreescritura en la carta
+        const div_efecto = document.getElementById(`efecto-${id}`);
+        const input_sobrreescritura = document.getElementById(`sobreescritura-${id}`);
+        div_efecto.innerHTML = input_sobrreescritura.value;
+      }
     }));
 
     // Reseteo texto sobreescritura clase o habilidad
@@ -262,6 +267,30 @@ export function onTurboLoad() {
 
   // Abrir lista habilidades clase
   selectListFromMenu(clasesContainer, habilidadesContainer, "carta_form_clase");
+
+  // Añadir contador de clase/habilidad/ítem
+  document.querySelectorAll(".add-contador").forEach(button => {
+    button.addEventListener("click", () => {
+      const conts_body = document.getElementById(button.dataset.conts_body);
+      const index = conts_body.querySelectorAll("tr").length;
+      const prefix = button.dataset.prefix+"[calculados]["+index+"]";
+      const template = document.getElementById("contador-template");
+      const html = template.innerHTML.replace(/__PREFIX__/g, prefix);
+      conts_body.insertAdjacentHTML("beforeend", html);
+    });
+  });
+
+  // Toggle rango contador clase/habilidad
+  function addToggleRangoListener(container) {
+    container.addEventListener("click", e => {
+      if (e.target.classList.contains("toggle-rango")) {
+        toggleRango(e.target);
+      }
+    });
+  }
+  addToggleRangoListener(clasesContainer);
+  addToggleRangoListener(habilidadesContainer);
+
 
 
   // ITEMS

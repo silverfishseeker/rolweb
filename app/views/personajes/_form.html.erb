@@ -235,7 +235,6 @@
                       </td>
                     </tr>
                   </script>
-                  <tr style="display:none;" id="calculado-libre-next"> </tr>
                   <tr>
                     <td colspan="8">
                       <button type="button" id="add-calculado-libre" class="btn btn-primary">
@@ -311,6 +310,33 @@
             </div>
           </section>
         </div>
+
+        <script type="text/template" id="contador-template">
+          <%# Carece de input de id a propósito%>
+          <tr>
+            <td data-label="Nombre">
+              <input type="text"
+                    name="__PREFIX__[nombre]">
+            </td>
+            <td data-label="Valor base">
+              <input type="number"
+                    name="__PREFIX__[base]">
+            </td>
+            <td data-label="Valor actual">
+              <input type="number"
+                    name="__PREFIX__[rango]"
+                    class="rango-input"
+                    disabled>
+              <button type="button" class="toggle-rango">R</button>
+            </td>
+            <td data-label="Borrar" class="checkbox-danger">
+              <input type="checkbox"
+                    class="rm_input"
+                    name="__PREFIX__[_destroy]"
+                    value="1">
+            </td>
+          </tr>
+        </script>
 
         <!-- CLASES Y HABILIDADES -->
         <div id="tab-clases" class="pj-tab_pane">
