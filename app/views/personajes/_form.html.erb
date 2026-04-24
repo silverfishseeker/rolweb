@@ -1,12 +1,20 @@
+<%# expected params: @x (Personaje)%>
+
 <% importJS "personajeForm" %>
 <% importJS "moveModal" %>
 
 <div>
   <%= form_with(model: @x, local: true, html: { multipart: true, class: "pj-form"}) do |f| %>
-    <div>
-      <%= f.submit "Guardar", class: "btn btn-primary" %>
-      <%= link_to "Cancelar", personajes_path, class: "btn btn-warning" %>
-    </div>
+    <header class="pj-header">
+      <h1>
+        <%= f.object.new_record? ? "Nuevo personaje" : "Editando Personaje: #{@x.nombre}" %>
+      </h1>
+      <div class="options">
+        <%= f.submit "Guardar", class: "btn btn-primary" %>
+        <%= link_to "Cancelar", @x, class: "btn btn-danger",
+            data: { turbo_confirm: "¿Seguro que quieres cancelar? Se perderán los cambios." } %>
+      </div>
+    </header>
 
     <div class="pj-tabs">
       <div class="pj-tabs-nav">
