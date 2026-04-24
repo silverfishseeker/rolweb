@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_09_165135) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_24_102216) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -326,6 +326,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_165135) do
     t.index ["tipo_estadistic_id"], name: "index_pj_estadistics_on_tipo_estadistic_id"
   end
 
+  create_table "pj_estadoalterado_libres", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "pj_has_estadoalterados", force: :cascade do |t|
     t.integer "valor"
     t.bigint "personaje_id"
@@ -333,8 +338,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_165135) do
     t.bigint "pj_parte_cuerpo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "pj_estadoalterado_libre_id"
     t.index ["estadoalterado_id"], name: "index_pj_has_estadoalterados_on_estadoalterado_id"
     t.index ["personaje_id"], name: "index_pj_has_estadoalterados_on_personaje_id"
+    t.index ["pj_estadoalterado_libre_id"], name: "index_pj_has_estadoalterados_on_pj_estadoalterado_libre_id"
     t.index ["pj_parte_cuerpo_id"], name: "index_pj_has_estadoalterados_on_pj_parte_cuerpo_id"
   end
 
@@ -499,6 +506,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_165135) do
   add_foreign_key "pj_estadistics", "pj_modificables"
   add_foreign_key "pj_has_estadoalterados", "estadoalterados"
   add_foreign_key "pj_has_estadoalterados", "personajes"
+  add_foreign_key "pj_has_estadoalterados", "pj_estadoalterado_libres"
   add_foreign_key "pj_has_estadoalterados", "pj_parte_cuerpos"
   add_foreign_key "pj_meta_tipos", "pj_meta_tipos", column: "pj_tipo_estadistic_id"
   add_foreign_key "pj_parte_cuerpos", "personajes"
