@@ -2,6 +2,7 @@
 
 <% importJS "personajeForm" %>
 <% importJS "moveModal" %>
+<% content_for :main_content_class, 'main-content-margin_reduced' %>
 
 <div>
   <%= form_with(model: @x, local: true, html: { multipart: true, class: "pj-form"}) do |f| %>
