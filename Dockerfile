@@ -14,6 +14,7 @@ COPY lib/ lib/
 COPY public/ public/
 COPY Rakefile .
 COPY config.ru .
+COPY entrypoint.sh .
 
 RUN if [ "$RAILS_ENV" = "production" ]; then \
     rm -rf /app/public/assets && \
@@ -24,5 +25,6 @@ EXPOSE 3000
 
 # Hay que borrar tmp para evitar errores, ni idea de porqué
 # iniciar rails
-CMD ["sh", "-c", "rm -rf /app/tmp/* && bin/rails server -b 0.0.0.0 -e ${RAILS_ENV}"]
+# CMD ["sh", "-c", "rm -rf /app/tmp/* && bin/rails server -b 0.0.0.0 -e ${RAILS_ENV}"]
+ENTRYPOINT [ "./entrypoint.sh" ]
 
