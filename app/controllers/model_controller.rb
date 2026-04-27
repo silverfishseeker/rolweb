@@ -82,7 +82,7 @@ class ModelController < ApplicationController
         Rails.logger.error error_message
         Rails.logger.error e.backtrace.join("\n")
         flash[:alert] = error_message
-        data = params[tipo.model_name.param_key].except(:image)
+        data = params[tipo.model_name.param_key]&.except(:image)
         flash[:form_data] = data if data.to_s.bytesize < 2000
         redirect_to  action: action_to_redirect, id: params[:id]
       end

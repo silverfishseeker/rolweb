@@ -1,0 +1,14 @@
+
+<%= turbo_frame_tag dom_id(pc) do %>
+  <div class="pjv-var pjv-var-cuerpo 
+      <%= "pj-fila_borrada" if pc.saludact <= 0 %>">
+    <span><%= pc.nombre %>: </span>
+    <span>
+      <span class="pjv-var-cuerpo-big"><%=pc.state%> </span> 
+      <%= pc.saludact%> / 
+      <%= pc.saludmax%>
+      <%= parte_cuerpo_link pc, :aumentar %>
+      <%= parte_cuerpo_link pc, :disminuir %>
+    </span>
+  </div>
+<% end %>

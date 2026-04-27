@@ -36,6 +36,12 @@ Rails.application.routes.draw do
     resources :meta_tipos, controller: 'meta_tipos', path: 'calculado', as: 'tipo_calculados', defaults: { tipo: 'calculado' }
     resources :meta_tipos, controller: 'meta_tipos', path: 'estadistic', as: 'tipo_estadistics', defaults: { tipo: 'estadistic' }
     resources :meta_tipos, controller: 'meta_tipos', path: 'rango', as: 'tipo_rangos', defaults: { tipo: 'rango' }
+    resources :partes_cuerpo, only: [] do
+      member do
+        get :aumentar
+        get :disminuir
+      end
+    end
   end
 
   resource :profile, only: [:edit, :update, :destroy] do

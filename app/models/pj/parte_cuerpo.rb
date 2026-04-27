@@ -13,12 +13,14 @@ class Pj::ParteCuerpo < ApplicationRecord
     2 => "Muy alta"
   }
 
+  DEFAULT_UNKNOWN_STATE = "?"
+
   DEFAULT_MAPEOS = {
-    1 => ["S"],
-    2 => ["G", "S"],
-    3 => ["G", "H", "S"],
-    4 => ["G", "H", "S", "S+"],
-    5 => ["G", "H", "H", "S", "S+"]
+    1 => ["X", "S"],
+    2 => ["X", "G", "S"],
+    3 => ["X", "G", "H", "S"],
+    4 => ["X", "G", "H", "S", "S+"],
+    5 => ["X", "G", "H", "H", "S", "S+"]
   }
 
   DEFAULT_MAPEO_NAME = "DEFAULT_MAPEO"
@@ -53,13 +55,17 @@ class Pj::ParteCuerpo < ApplicationRecord
   end
 
   def state
-    (@curr_mapeo ||=
-      if mapeo == DEFAULT_MAPEO_NAME && DEFAULT_MAPEOS[saludmax]
-        DEFAULT_MAPEOS[saludmax]
-      else
-        str_mapeo_to_list(mapeo)
-      end
-    )[saludact - 1]
+    if saludact < 0
+      DEFAULT_UNKNOWN_STATE
+    else
+      (@curr_mapeo ||=
+        if mapeo == DEFAULT_MAPEO_NAME && DEFAULT_MAPEOS[saludmax]
+          DEFAULT_MAPEOS[saludmax]
+        else
+          str_mapeo_to_list(mapeo)
+        end
+      )[saludact] || DEFAULT_UNKNOWN_STATE
+    end
   end
 
   def mapeo_list

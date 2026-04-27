@@ -38,11 +38,11 @@
     <div class="pjv-column">
       <div class="pjv-section">
         <h3>Estado</h3>
-        <div class="pjv-stats_container">
+        <div class="pjv-vars_container">
           <% @x.calculados.each do |calc| %>
-            <div class="pjv-stat">
+            <div class="pjv-var">
               <span><%= calc.nombre %>: </span>
-              <span class="pjv-stat-right_side">
+              <span>
                 <% if calc.rango.present? %>
                   <input type="number"
                         name="calculados[<%= calc.id %>][rango]"
@@ -66,7 +66,12 @@
         </div>
       </div>
       <div class="pjv-section">
-        
+        <h3>Cuerpo</h3>
+        <div class="pjv-vars_container">
+          <% @x.parteCuerpos.each do |pc| %>
+            <%= render "show_parte_cuerpo", pc: pc %>
+          <% end %>
+        </div>
       </div>
     </div>
     <div class="pjv-resizer"></div>
