@@ -393,8 +393,7 @@ fieldset[disabled] .btn-primary:hover {
 
 .pjv-vars_container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));;
-  font-size: small;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   .pjv-var {
     background-color: var(--c_detalle);
     color: var(--c_white);
@@ -402,6 +401,9 @@ fieldset[disabled] .btn-primary:hover {
     padding: 2px;
     display: grid;
     grid-template-columns: 1fr auto;
+    span {
+      white-space: nowrap;
+    }
   }
   .pjv-var-cuerpo {
     background-color: var(--c_alternativo);
@@ -425,6 +427,9 @@ fieldset[disabled] .btn-primary:hover {
     display: inline;
     margin: 0;
   }
+}
+.pjv-vars_container-cuerpo {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 .pjv-image img {
   width: 100%;
