@@ -4,8 +4,10 @@
       <%= "pj-fila_borrada" if pc.saludact <= 0 %>">
     <span><%= pc.nombre %>: </span>
     <span>
-      <span id="pcarm-val-<%=pc.id%>">
-        <%= pc.modificable.passive_mod + pc.modificable.active_mod %>
+      <span class="pjv-var-cuerpo-armor">
+        <span id="pcarm-val-<%=pc.id%>" class="inner">
+          <%= pc.modificable.passive_mod + pc.modificable.active_mod %>
+        </span>
       </span>
       <input type="number"
           name="parte_cuerpos[<%= pc.id %>][active_mod]"
@@ -18,6 +20,7 @@
       <span id="pcarm-base-<%=pc.id%>" style="display:none">
         <%=pc.modificable.passive_mod%>
       </span>
+      
       <span class="pjv-var-cuerpo-big"><%=pc.state%> </span> 
       <%= pc.saludact%> / 
       <%= pc.saludmax%>

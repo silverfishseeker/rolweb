@@ -348,6 +348,10 @@ fieldset[disabled] .btn-primary:hover {
   max-width: 4ch;
 }
 
+.pjv-modifier-armadura {
+  margin-right: 8px;
+}
+
 .pjv-columns {
   display: flex;
   gap: 5px;
@@ -405,6 +409,16 @@ fieldset[disabled] .btn-primary:hover {
     .pjv-var-cuerpo-big {
       font-size: medium;
       font-weight: bold;
+    }
+    .pjv-var-cuerpo-armor {
+      background-image: url('shield.webp');
+      background-size: 100% 100%;
+      background-position: center;
+      margin-right: 2px;
+      .inner {
+        margin-left: 4px;
+        margin-right: 1px;
+      }
     }
   }
   form {

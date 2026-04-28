@@ -66,12 +66,9 @@ class PersonajesController < ModelController
     return unless contadores
     contadores.each_value do |attrs|
       contador = target.calculados.find_by(id: attrs[:id].to_i) if attrs[:id]
-      Rails.logger.debug "Processing contador with attrs: #{attrs.inspect}, found contador: #{contador.inspect}"
       if attrs[:_destroy] == "1"
         contador.destroy if contador
-        Rails.logger.debug "Destroyed contador with id: #{contador&.id}"
       else
-        Rails.logger.debug "Before processing contador: #{contador.inspect}"
         contador ||= target.calculados.build( modificable: Pj::Modificable.new )
         libre = contador.calculado_libre || contador.build_calculado_libre
         libre.nombre = attrs[:nombre]
