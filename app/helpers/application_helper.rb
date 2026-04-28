@@ -27,4 +27,7 @@ module ApplicationHelper
     end
   end
   
+  def compose_get_params(hash)
+    "?" + hash.map { |k, v| "#{k}=#{v}" }.join("&")
+  end
 end

@@ -4,11 +4,25 @@
       <%= "pj-fila_borrada" if pc.saludact <= 0 %>">
     <span><%= pc.nombre %>: </span>
     <span>
+      <span id="pcarm-val-<%=pc.id%>">
+        <%= pc.modificable.passive_mod + pc.modificable.active_mod %>
+      </span>
+      <input type="number"
+          name="parte_cuerpos[<%= pc.id %>][active_mod]"
+          value="<%= pc.modificable.active_mod %>"
+          class="pjv-modifier pjv-modifier-armadura"
+          data-base="pcarm-base-<%=pc.id%>"
+          data-value="pcarm-val-<%=pc.id%>"
+          data-link-aumentar-id="pcarm-<%=pc.id%>_aumentar"
+          data-link-disminuir-id="pcarm-<%=pc.id%>_disminuir">
+      <span id="pcarm-base-<%=pc.id%>" style="display:none">
+        <%=pc.modificable.passive_mod%>
+      </span>
       <span class="pjv-var-cuerpo-big"><%=pc.state%> </span> 
       <%= pc.saludact%> / 
       <%= pc.saludmax%>
-      <%= parte_cuerpo_link pc, :aumentar %>
-      <%= parte_cuerpo_link pc, :disminuir %>
+      <%= parte_cuerpo_link pc, :aumentar,  "pcarm-#{pc.id}_aumentar"  %>
+      <%= parte_cuerpo_link pc, :disminuir, "pcarm-#{pc.id}_disminuir" %>
     </span>
   </div>
 <% end %>

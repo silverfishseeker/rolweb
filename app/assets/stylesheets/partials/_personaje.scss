@@ -344,8 +344,8 @@ fieldset[disabled] .btn-primary:hover {
   }
 }
 
-.pjv-input {
-  width: 30px;
+.pjv-input, .pjv-modifier { // pjv-modifier tiene JS y pjv-input no
+  max-width: 4ch;
 }
 
 .pjv-columns {

@@ -1,7 +1,12 @@
+
+import { adjustInputWidth } from "./utils.js";
+
 export function onTurboLoad() {
   // Data modifiers
-  document.querySelectorAll(".pjv-modifier").forEach( input => {
-    input.addEventListener("input", () => {
+  document.addEventListener("input", (e) => {
+    const input = e.target;
+    if (input.classList.contains("pjv-modifier")) {
+      adjustInputWidth(input, 1);
       const base  = Number(document.getElementById(input.dataset.base).innerHTML);
       const value = document.getElementById(input.dataset.value);
       const mod = Number(input.value)
@@ -15,7 +20,7 @@ export function onTurboLoad() {
         else
         mod.innerHTML =new_mod;
       }
-    });
+    };
   });
 
   // Resizable columns
@@ -90,4 +95,21 @@ export function onTurboLoad() {
     });
   });
 
+
+  // Actualizar parámetro del link de aumentar/disminuir salud al cambiar el modificador activo
+  function updateLinkParam(link, param, value) {
+    const url = new URL(link.href);
+    url.searchParams.set(param, value);
+    link.href = url.toString();
+  }
+
+  document.addEventListener("input", (e) => {
+    const input = e.target;
+    if (input.classList.contains("pjv-modifier-armadura")) {
+      const aumentar_link = document.getElementById(input.dataset.linkAumentarId);
+      const disminuir_link = document.getElementById(input.dataset.linkDisminuirId);
+      updateLinkParam(aumentar_link, "active_mod", input.value);
+      updateLinkParam(disminuir_link, "active_mod", input.value);
+    }
+  });
 }

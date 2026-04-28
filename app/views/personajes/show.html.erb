@@ -26,7 +26,7 @@
         <input type="number"
             name="estadistics[<%= stat.id %>][active_mod]"
             value="<%= stat.modificable.active_mod %>"
-            class="pjv-modifier pjv-input"
+            class="pjv-modifier"
             data-base="stat-base-<%=stat.id%>"
             data-value="stat-val-<%=stat.id%>"
             data-mod="stat-mod-<%=stat.id%>">
@@ -54,7 +54,7 @@
                 <input type="number"
                     name="calculados[<%= calc.id %>][active_mod]"
                     value="<%= calc.modificable.active_mod %>"
-                    class="pjv-modifier pjv-input"
+                    class="pjv-modifier"
                     data-base="calc-base-<%=calc.id%>"
                     data-value="calc-val-<%=calc.id%>">
                 <span id="calc-base-<%=calc.id%>" style="display:none">
