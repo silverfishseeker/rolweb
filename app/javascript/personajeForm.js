@@ -1,5 +1,6 @@
 import { nextZIndex } from "./zIndexCounter.js";
 import { adjustInputWidth } from "./utils.js";
+import { openModal, createCloseModalHandler  }  from "./modals.js";
 
 export function onTurboLoad() {
   // PÁGINA
@@ -67,43 +68,6 @@ export function onTurboLoad() {
     const addRow = document.getElementById("add-calculado-libre").closest("tr");
     addRow.insertAdjacentHTML("beforebegin", html);
   });
-  
-  // Añadir estado alterado
-  document.getElementById("tab-estado").addEventListener("click", e => { // Este no lo podemos restringir en pc_body para que funcione para los estados alterados generales
-    if (e.target.classList.contains("add-estadoalterado")) {
-      const button = e.target;
-      const tableId = button.dataset.table_id;
-      const nombreInputBase = button.dataset.nombreInputBase;
-      const tbody = document.querySelector(`#${tableId} tbody`);
-      const template = document.getElementById('estadoalterado-template').innerHTML
-        .replace(/__id__/g, tbody.querySelectorAll('tr').length)
-        .replace(/__nombre_input_base__/g, nombreInputBase);
-      tbody.insertAdjacentHTML('beforeend', template);
-    }
-  });
-
-
-
-  // MODALES check: _form_modal.html.erb
-  // Abrir modal
-  function openModal(e) {
-    if (e.target.classList.contains("open_modal")) {
-      const style = document.getElementById(e.target.dataset.index).style
-      style.display = "block";
-      style.zIndex = nextZIndex();
-    }
-  }
-  // Cerrar modal
-  function createCloseModalHandler(extraAction){
-    return function(e) {
-      if (e.target.classList.contains("modal-close")) {
-        const index = e.target.dataset.index;
-        const modal = document.getElementById(e.target.dataset.index);
-        modal.style.display = "none";
-        extraAction(modal, index, e.target.classList);
-      }
-    }
-  }
 
 
 
@@ -133,45 +97,6 @@ export function onTurboLoad() {
     }
   });
 
-  // Resumen estados alterados
-  function estadosalterados_summary(table, target_writting) {
-    const tbody = table.querySelector('tbody');
-    const estados = Array.from(tbody.querySelectorAll('tr'))
-    .filter(tr => ! tr.querySelector('input[name$="[_destroy]"]').checked
-    ).map(tr => {
-      const nombreTd = tr.querySelector('td[data-label="Estado"]');
-      const select = nombreTd.querySelector('select');
-      const valorInput = tr.querySelector('td[data-label="Valor"] input');
-      let nombre;
-      let isNumeric;
-      if (select) {
-        const option = select.options[select.selectedIndex];
-        nombre = option.text;
-        isNumeric = option.dataset.isNumeric === 'true';
-      } else {
-        nombre = nombreTd.textContent.trim();
-        isNumeric = valorInput !== null;
-      }
-      return isNumeric ? `${nombre} ${valorInput.value}` : nombre;
-    });
-    target_writting.textContent = estados.join(', ');
-  }
-
-  // Preparar resúmenes de estados alterados en carga
-  document.querySelectorAll('.estado-resumen').forEach(resumen => {
-    const table = document.querySelector(`#${resumen.dataset.table_id}`);
-    estadosalterados_summary(table, resumen);
-  });
-
-  // Modal estados alterados parte cuerpo
-  pc_body.addEventListener("click", openModal);
-  pc_body.addEventListener("click", createCloseModalHandler((modal, index, classList) => {
-    if (classList.contains("modal-close-resumen")) {
-      const table = modal.querySelector('table');
-      const target_writting = document.getElementById("resumen-" + index);
-      estadosalterados_summary(table, target_writting);
-    }
-  }));
 
   // Añadir parte cuerpo
   document.getElementById("add-parte-cuerpo").addEventListener("click", () => {

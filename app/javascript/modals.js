@@ -1,6 +1,7 @@
 import { nextZIndex } from "./zIndexCounter.js";
 
 export function onTurboLoad() {
+  // Modal dragging and send to front on click
   document.querySelectorAll(".pj-modal").forEach(modal => {
     const header = modal.querySelector("header");
     let isDragging = false;
@@ -33,4 +34,26 @@ export function onTurboLoad() {
       modal.classList.remove("dragging");
     });
   });
+}
+
+// Abrir modal
+export function openModal(e) {
+  const button = e.target.closest(".open_modal");
+  if (button) {
+    const style = document.getElementById(button.dataset.index).style
+    style.display = "block";
+    style.zIndex = nextZIndex();
+  }
+}
+
+// Cerrar modal
+export function createCloseModalHandler(extraAction){
+  return function(e) {
+    if (e.target.classList.contains("modal-close")) {
+      const index = e.target.dataset.index;
+      const modal = document.getElementById(e.target.dataset.index);
+      modal.style.display = "none";
+      extraAction(modal, index, e.target.classList);
+    }
+  }
 }

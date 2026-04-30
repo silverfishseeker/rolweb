@@ -33,7 +33,7 @@
     
     <% if !oculto %>
       <%= render "personajes/form_modal",
-                  buttom_text: "Editar texto de efecto de clase",
+                  buttom_content: "Editar texto de efecto de clase",
                   buttom_extra_css: "open_modal-clase",
                   header_text: "Editando #{phc.clase.nombre}",
                   index: "clase-#{id}",
@@ -41,7 +41,7 @@
         <%= render "form_sobreescritura", base_name: base_name, id: "clase-#{id}", initial_text: initial_text %>
       <% end %>
       <%= render "personajes/form_modal",
-                  buttom_text: "Contadores",
+                  buttom_content: "Contadores",
                   buttom_extra_css: "",
                   header_text: "Editando contadores de #{phc.clase.nombre}",
                   index: "clase-contadores-#{id}",

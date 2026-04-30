@@ -8,13 +8,11 @@ module PersonajesHelper
     link_to(
       type == :aumentar ? "+" : "-",
       "/pj/partes_cuerpo/#{pc.id}/#{type}#{compose_get_params({
-        current: pc.saludact,
-        passive_mod: pc.modificable.passive_mod,
-        active_mod: pc.modificable.active_mod
+        current: pc.saludact
       })}",
       data: {
-        turbo_frame: dom_id(pc),
-        turbo_prefetch: false
+        turbo_frame: "partecuerpo-#{pc.id}_salud",
+        turbo_prefetch: false # Evita que el navegador intente cargar el link al hacer hover.
       },
       class: "btn btn-small #{type == :aumentar ? 'btn-secondary' : 'btn-danger'}",
       id: html_id

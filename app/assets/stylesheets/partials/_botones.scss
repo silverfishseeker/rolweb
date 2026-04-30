@@ -50,6 +50,20 @@
   background-color: var(--c_warning_alt);
 }
 
+.btn-icon{
+  padding: 0;
+  border: none;
+  width: 16px;
+  height: 16px;
+  img {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
 .checkbox-danger {
     display: inline-block;
     background-color: var(--c_black);

@@ -372,7 +372,7 @@ fieldset[disabled] .btn-primary:hover {
       background-color: var(--c_base);
     }
   }
-  @include respond-max {
+  @media (max-width: 1270px) { // Este valor debe de ser MIN_TOTAL_WIDTH en personajeShow.js
     flex-direction: column;
       .pjv-resizer {
         display: none;
@@ -423,6 +423,11 @@ fieldset[disabled] .btn-primary:hover {
       }
     }
   }
+  .pjv-var-cuerpo-borrada {
+    background-color: var(--c_grey);
+    font-style: italic;
+    text-decoration: line-through;
+  }
   form {
     display: inline;
     margin: 0;
@@ -435,4 +440,10 @@ fieldset[disabled] .btn-primary:hover {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.pjv-estados_alterados-horizontal {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 5px;
 }

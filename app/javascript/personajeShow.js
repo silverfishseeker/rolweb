@@ -24,7 +24,8 @@ export function onTurboLoad() {
   });
 
   // Resizable columns
-  const MIN_WIDTH = 230;
+  const MIN_WIDTH = 420;
+  const MIN_TOTAL_WIDTH = MIN_WIDTH*3+10; // 3 columnas mínimo más los gaps y resizers.
   document.querySelectorAll(".pjv-resizer").forEach( resizer => {
     const left = resizer.previousElementSibling;
     const right = resizer.nextElementSibling;
@@ -54,9 +55,9 @@ export function onTurboLoad() {
 
   // Reajustar ancho columnas proporcionalmente al cambiar el tamaño de la ventana
   // Es complejo porque aplicamos un ancho mínimo.
-  window.addEventListener("resize", () => {
+  function adjustColumns() {
     const columns = document.querySelectorAll(".pjv-column");
-    if (window.innerWidth < 768) { // No reajustar en móvil. mismo valor que en respond-max
+    if (window.innerWidth < MIN_TOTAL_WIDTH) {
       columns.forEach( column => {
         column.style.flex = "1";
       });
@@ -93,23 +94,23 @@ export function onTurboLoad() {
     columns_with_widths.forEach( ([column, width]) => {
       column.style.flex = `0 0 ${width}px`;
     });
+  };
+  window.addEventListener("resize", () => {
+    adjustColumns();
   });
+  adjustColumns(); // Ajustar al cargar la página
 
-
-  // Actualizar parámetro del link de aumentar/disminuir salud al cambiar el modificador activo
-  function updateLinkParam(link, param, value) {
-    const url = new URL(link.href);
-    url.searchParams.set(param, value);
-    link.href = url.toString();
-  }
-
-  document.addEventListener("input", (e) => {
-    const input = e.target;
-    if (input.classList.contains("pjv-modifier-armadura")) {
-      const aumentar_link = document.getElementById(input.dataset.linkAumentarId);
-      const disminuir_link = document.getElementById(input.dataset.linkDisminuirId);
-      updateLinkParam(aumentar_link, "active_mod", input.value);
-      updateLinkParam(disminuir_link, "active_mod", input.value);
-    }
+  // Estilo de filas borradas cuando la salud es 0 o menos
+  document.querySelectorAll(".pjv-var-cuerpo").forEach( pc => {
+    pc.addEventListener("turbo:frame-load", (event) => {
+      const frame = event.target;
+      const saludAct_span = frame.querySelector(".pjv-var-cuerpo-act");
+      const saludAct = parseInt(saludAct_span.innerHTML);
+      if (saludAct <= 0) {
+        pc.classList.add("pjv-var-cuerpo-borrada");
+      } else {
+        pc.classList.remove("pjv-var-cuerpo-borrada");
+      }
+    });
   });
 }

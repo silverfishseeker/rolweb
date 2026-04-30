@@ -1,4 +1,5 @@
-<% importJS "personajeShow" %>
+<% importJS "personajeShow", "modals", "estadosAlterados" %>
+<%= render "personajes/estadoalterado-template" %> <%# Requerido por estadosAlterados %>
 <% content_for :main_content_class, 'main-content-margin_reduced' %>
 
 <%= form_with(model: @x, local: true, html: { multipart: true, class: "pjv-form"}) do |f| %>
@@ -35,7 +36,7 @@
   </div>
   <br>
   <div class="pjv-columns">
-    <div class="pjv-column">
+    <div class="pjv-column" id="tab-estado">
       <div class="pjv-section">
         <h3>Estado</h3>
         <div class="pjv-vars_container">
@@ -65,11 +66,40 @@
           <% end %>
         </div>
       </div>
-      <div class="pjv-section">
+      <div class="pjv-section" id="parte-cuerpos-body">
         <h3>Cuerpo</h3>
         <div class="pjv-vars_container pjv-vars_container-cuerpo">
           <% @x.parteCuerpos.each do |pc| %>
-            <%= render "show_parte_cuerpo", pc: pc %>
+            <div class="pjv-var pjv-var-cuerpo 
+                <%= "pjv-var-cuerpo-borrada" if pc.saludact <= 0 %>">
+              <span><%= pc.nombre %>: </span>
+              <span>
+                <%= render "personajes/estados_alterados_parte_cuerpo",
+                  index: pc.id,
+                  target: pc,
+                  buttom_content: image_tag("edit.png", alt: "Editar"),
+                  buttom_extra_css: "btn-icon",
+                  horizontal: true
+                %>
+                <span class="pjv-var-cuerpo-armor">
+                  <span id="pcarm-val-<%=pc.id%>" class="inner">
+                    <%= pc.modificable.passive_mod + pc.modificable.active_mod %>
+                  </span>
+                </span>
+                <input type="number"
+                    name="parte_cuerpos[<%= pc.id %>][active_mod]"
+                    value="<%= pc.modificable.active_mod %>"
+                    class="pjv-modifier pjv-modifier-armadura"
+                    data-base="pcarm-base-<%=pc.id%>"
+                    data-value="pcarm-val-<%=pc.id%>"
+                    data-link-aumentar-id="pcarm-<%=pc.id%>_aumentar"
+                    data-link-disminuir-id="pcarm-<%=pc.id%>_disminuir">
+                <span id="pcarm-base-<%=pc.id%>" style="display:none">
+                  <%=pc.modificable.passive_mod%>
+                </span>
+                <%= render "personajes/show_salud", pc: pc %>
+              </span>
+            </div>
           <% end %>
         </div>
       </div>

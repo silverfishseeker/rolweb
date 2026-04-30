@@ -150,7 +150,7 @@ Paletas:
     Segunda:
         --c_black: #110E08;
         --c_white: #F5F0E9;
-        --c_grey:  #AD8650;
+        --c_grey:  #9D8464;
 
         --c_base: #112250;
         --c_base_alt: #1D3987;
