@@ -86,7 +86,7 @@ class PersonajesController < ModelController
 
   # Procesa los parámetros complejos y actualiza/crea asociaciones en @personaje (que ya existe en @x)
   def process_associations_for(personaje)
-    raise "Tipo de formulario no reconocido" unless Personaje::FORM_TYPES.include?(params[:form_type])
+    raise "Tipo de formulario no reconocido" unless Personaje::FORM_TYPES.values.include?(params[:form_type])
     if params[:form_type] == Personaje::FORM_TYPES[:edit]
       edit_process_associations_for(personaje)
     else
