@@ -21,6 +21,8 @@ class Personaje < ApplicationRecord
   has_and_belongs_to_many :cuentos
   has_and_belongs_to_many :viewUsers, class_name: "User", join_table: "personajes_users"
 
+  FORM_TYPES = [ edit:, show: ].freeze
+
   def nivel
     sum_nil nivel_clases, nivel_estadisticas, nivel_habilidades, nivel_otro # sum_nil ignora nils
   end

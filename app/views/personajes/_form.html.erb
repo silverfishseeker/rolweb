@@ -4,7 +4,9 @@
 <% content_for :main_content_class, 'main-content-margin_reduced' %>
 
 <div>
-  <%= form_with(model: @x, local: true, html: { multipart: true, class: "pj-form"}) do |f| %>
+  <%= form_with(model: @x, html: { multipart: true, class: "pj-form"}) do |f| %>
+    <%= hidden_field_tag :form_type, Personaje::FORM_TYPES[:edit] %>
+
     <header class="pj-header">
       <h1>
         <%= f.object.new_record? ? "Nuevo personaje" : "Editando Personaje: #{@x.nombre}" %>

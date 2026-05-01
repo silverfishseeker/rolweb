@@ -2,7 +2,8 @@
 <%= render "personajes/estadoalterado-template" %> <%# Requerido por estadosAlterados %>
 <% content_for :main_content_class, 'main-content-margin_reduced' %>
 
-<%= form_with(model: @x, local: true, html: { multipart: true, class: "pjv-form"}) do |f| %>
+<%= form_with(model: @x, html: { multipart: true, class: "pjv-form"}) do |f| %>
+  <%= hidden_field_tag :form_type, Personaje::FORM_TYPES[:show] %>
 
   <div class="pjv-header">
     <h1> <%=@x.nombre%></h1>
@@ -111,6 +112,7 @@
     <div class="pjv-resizer"></div>
     <div class="pjv-column">
       <%= render "shared/image_with_link", image: @x.picture.image, cssclass: "pjv-image" %>
+      <div class="white_bk"><%= f.rich_text_area :descripcion %></div>
     </div>
   </div>
 

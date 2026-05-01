@@ -1,6 +1,7 @@
 <%# Expected params: pc %>
 <%= turbo_frame_tag "partecuerpo-#{pc.id}_salud" do %>
   <span class="pjv-var-cuerpo-big"><%=pc.state%> </span> 
+  <input type="hidden" name="parte_cuerpos[<%= pc.id %>][saludact]" value="<%= pc.saludact %>">
   <span class="pjv-var-cuerpo-act">
     <%= pc.saludact%>
   </span>
