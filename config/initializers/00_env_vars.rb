@@ -12,6 +12,9 @@ module EnvVars
   VARS = {
     # "key" => [type, default_value]
     "DATABASE_URL" =>                   [:str, nil],
+    "DATABASE_USER" =>                  [:str, nil],
+    "DATABASE_DATABASE" =>              [:str, nil],
+    "DATABASE_PASSWORD" =>              [:str, nil],
     "APP_HOST" =>                       [:str,  "localhost"], # Used in emails' content
     "IMAGE_STORAGE_BACKEND" =>          [:str,  "minio"], # Options: database, minio, carrierwave
     "CACHE_IS_DISK" =>                  [:bool, true],
@@ -32,6 +35,9 @@ module EnvVars
   # You MUST set these variables in production
   PRODUCTION_REQUIRED_VARS = [
     "DATABASE_URL", # Esta variables se usa en database.yml. No podemos gestionarla aquí pero podemos comprobarla aunque sea posteriomente a su uso.
+    "DATABASE_USER",
+    "DATABASE_DATABASE",
+    "DATABASE_PASSWORD",
     "APP_HOST",
     "MINIO_ENDPOINT",
     "MINIO_ACCESS_KEY_ID",
