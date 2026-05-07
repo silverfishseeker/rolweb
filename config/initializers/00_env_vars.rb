@@ -11,6 +11,7 @@ module EnvVars
 
   VARS = {
     # "key" => [type, default_value]
+    "DATABASE_URL" =>                   [:str, nil],
     "APP_HOST" =>                       [:str,  "localhost"], # Used in emails' content
     "IMAGE_STORAGE_BACKEND" =>          [:str,  "minio"], # Options: database, minio, carrierwave
     "CACHE_IS_DISK" =>                  [:bool, true],
