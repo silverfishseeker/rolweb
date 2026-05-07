@@ -4,6 +4,7 @@ class Pj::HasEstadoalterado < ApplicationRecord
   belongs_to :estadoalterado, optional: true
   belongs_to :estadoalteradoLibre, 
              class_name: "Pj::EstadoalteradoLibre",
+             foreign_key: "pj_estadoalterado_libre_id",
              optional: true,
              dependent: :destroy
   belongs_to :parteCuerpo,
@@ -27,5 +28,9 @@ class Pj::HasEstadoalterado < ApplicationRecord
     if personaje.present? && parteCuerpo.present?
       errors.add(:base, "HasEstadoalterado no puede tener un personaje y una parte de cuerpo asociada a la vez.")
     end
+  end
+
+  def libre?
+    estadoalteradoLibre.present?
   end
 end

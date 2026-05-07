@@ -8,18 +8,22 @@ import { openModal, createCloseModalHandler  }  from "./modals.js";
 export function onTurboLoad() {
 
   // Añadir estado alterado
-  document.getElementById("tab-estado").addEventListener("click", e => { // Este no lo podemos restringir en pc_body para que funcione para los estados alterados generales
-    if (e.target.classList.contains("add-estadoalterado")) {
-      const button = e.target;
-      const tableId = button.dataset.table_id;
-      const nombreInputBase = button.dataset.nombreInputBase;
-      const tbody = document.querySelector(`#${tableId} tbody`);
-      const template = document.getElementById('estadoalterado-template').innerHTML
-        .replace(/__id__/g, tbody.querySelectorAll('tr').length)
-        .replace(/__nombre_input_base__/g, nombreInputBase);
-      tbody.insertAdjacentHTML('beforeend', template);
-    }
-  });
+  function addEstadoalterado(css_class, template_name) {
+    document.getElementById("tab-estado").addEventListener("click", e => { // Este no lo podemos restringir en pc_body para que funcione para los estados alterados generales
+      if (e.target.classList.contains(css_class)) {
+        const button = e.target;
+        const tableId = button.dataset.table_id;
+        const nombreInputBase = button.dataset.nombreInputBase;
+        const tbody = document.querySelector(`#${tableId} tbody`);
+        const template = document.getElementById(template_name).innerHTML
+          .replace(/__id__/g, tbody.querySelectorAll('tr').length)
+          .replace(/__nombre_input_base__/g, nombreInputBase);
+        tbody.insertAdjacentHTML('beforeend', template);
+      }
+    });
+  }
+  addEstadoalterado("add-estadoalterado", "estadoalterado-template");
+  addEstadoalterado("add-estadoalterado-libre", "estadoalterado-template-libre");
 
   // Resumen estados alterados
   function estadosalterados_summary(table, target_writting) {
@@ -27,6 +31,8 @@ export function onTurboLoad() {
     const estados = Array.from(tbody.querySelectorAll('tr'))
     .filter(tr => ! tr.querySelector('input[name$="[_destroy]"]').checked
     ).map(tr => {
+      const libre = tr.querySelector('input[name$="[libre]"]')
+      if (libre) return libre.value;
       const nombreTd = tr.querySelector('td[data-label="Estado"]');
       const select = nombreTd.querySelector('select');
       const valorInput = tr.querySelector('td[data-label="Valor"] input');

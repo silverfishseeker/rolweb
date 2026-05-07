@@ -204,6 +204,12 @@
     width: max-content;
     max-width: 110px;
   }
+  .contenido{
+    background: var(--c_white);
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 55vw;
+  }
   @include respond-max {
     thead {
       display: none;
@@ -411,6 +417,12 @@ fieldset[disabled] .btn-primary:hover {
     .pjv-var-cuerpo-big {
       font-size: medium;
       font-weight: bold;
+    }
+    .pjv-var-cuerpo-nombre {
+      max-width: 120px;
+    }
+    .pjv-var-cuerpo-estados_alterados {
+      white-space: normal;
     }
     .pjv-var-cuerpo-armor {
       background-image: url('shield.webp');

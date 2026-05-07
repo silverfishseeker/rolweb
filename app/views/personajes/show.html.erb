@@ -73,15 +73,19 @@
           <% @x.parteCuerpos.each do |pc| %>
             <div class="pjv-var pjv-var-cuerpo 
                 <%= "pjv-var-cuerpo-borrada" if pc.saludact <= 0 %>">
-              <span><%= pc.nombre %>: </span>
+              <span class="pjv-var-cuerpo-nombre">
+                <%= pc.nombre %>:
+              </span>
               <span>
-                <%= render "personajes/estados_alterados_parte_cuerpo",
-                  index: pc.id,
-                  target: pc,
-                  buttom_content: image_tag("edit.png", alt: "Editar"),
-                  buttom_extra_css: "btn-icon",
-                  horizontal: true
-                %>
+                <span class="pjv-var-cuerpo-estados_alterados">
+                  <%= render "personajes/estados_alterados_parte_cuerpo",
+                    index: pc.id,
+                    target: pc,
+                    buttom_content: image_tag("edit.png", alt: "Editar"),
+                    buttom_extra_css: "btn-icon",
+                    horizontal: true
+                  %>
+                </span>
                 <span class="pjv-var-cuerpo-armor">
                   <span id="pcarm-val-<%=pc.id%>" class="inner">
                     <%= pc.modificable.passive_mod + pc.modificable.active_mod %>

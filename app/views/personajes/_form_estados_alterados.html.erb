@@ -10,29 +10,53 @@
   </thead>
   <tbody>
     <% index = 0%>
+    <% prefix = "#{nombre_input_base}[#{index}]"%>
     <% listaEstadosAlterados.each do |ea| %>
-      <tr data-id="<%= index %>">
-        <td data-label="Estado">
-          <%= ea.estadoalterado.nombre %>
-        </td>
-        <td data-label="Valor">
-          <% if ea.estadoalterado.isNumeric %>
-            <input type="number"
-                   name="<%= "#{nombre_input_base}[#{index}][valor]" %>"
-                   value="<%= ea.valor %>">
-          <% else %>
-            —
-          <% end %>
-        </td>
+      <tr data-id="<%= index %>" class="white_bk">
+        <% if ea.libre? %>
+          <td data-label="" colspan="2">
+            <input type="text"
+                name="<%=prefix%>[libre]"
+                value="<%=ea.estadoalteradoLibre.contenido%>">
+          </td>
+        <% else %>
+          <td data-label="Estado">
+            <%= ea.estadoalterado.nombre %>
+          </td>
+          <td data-label="Valor">
+            <% if ea.estadoalterado.isNumeric %>
+              <input type="number"
+                    name="<%=prefix%>[valor]"
+                    value="<%= ea.valor %>">
+            <% else %>
+              —
+            <% end %>
+          </td>
+        <% end %>
         <td data-label="Eliminar" class="checkbox-danger">
           <input type="checkbox"
-                 name="<%= "#{nombre_input_base}[#{index}][_destroy]" %>"
+                 name="<%=prefix%>[_destroy]"
                  value="1">
         </td>
       </tr>
-      <%= hidden_field_tag "#{nombre_input_base}[#{index}][estadoalterado_id]", ea.estadoalterado.id %>
+      <% if ea.libre? %>
+        <%= hidden_field_tag "#{prefix}[id]", ea.id %>
+      <% else %>
+        <%= hidden_field_tag "#{prefix}[estadoalterado_id]", ea.estadoalterado.id %>
+      <% end %>
       <% index += 1 %>
     <% end %>
   </tbody>
 </table>
-<button type="button" class="btn btn-primary add-estadoalterado" data-table_id="<%=ea_t_id table_id %>" data-nombre-input-base="<%= nombre_input_base %>">Añadir estado alterado</button>
+<button type="button"
+    class="btn btn-primary add-estadoalterado" 
+    data-table_id="<%=ea_t_id table_id %>"
+    data-nombre-input-base="<%= nombre_input_base %>">
+  Añadir estado alterado
+</button>
+<button type="button"
+    class="btn btn-primary add-estadoalterado-libre" 
+    data-table_id="<%=ea_t_id table_id %>"
+    data-nombre-input-base="<%= nombre_input_base %>">
+  Añadir estado alterado personalizado
+</button>

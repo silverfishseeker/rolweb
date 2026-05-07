@@ -40,14 +40,28 @@ class PersonajesController < ModelController
   def process_estados_alterados(estadosalterados, target)
     return unless estadosalterados
     # En esta función, si en el formulario hay repetidos, se sobreescriben y cuenta el último
-    estadosalterados.to_unsafe_h.each_with_object({}) do |(_, attrs), cleaned|
-      id = attrs[:estadoalterado_id]
-      if !cleaned[id] || attrs[:_destroy] != "1" 
-        cleaned[id] = {
-          estadoalterado_id: id,
-          valor: attrs[:valor],
-          _destroy: attrs[:_destroy]
-        }
+    estadosalterados.to_unsafe_h.each_with_object({}) do |(id, attrs), cleaned|
+      if attrs[:libre]
+        hea = target.hasEstadoalterados.find_by(id: attrs[:id])
+        if attrs[:_destroy] == "1"
+          hea.destroy if hea
+        else
+          if !hea
+            hea = target.hasEstadoalterados.build
+            hea.build_estadoalteradoLibre
+          end
+          hea.estadoalteradoLibre.contenido = attrs[:libre]
+          hea.save!
+        end
+      else
+        id = attrs[:estadoalterado_id]
+        if !cleaned[id] || attrs[:_destroy] != "1" 
+          cleaned[id] = {
+            estadoalterado_id: id,
+            valor: attrs[:valor],
+            _destroy: attrs[:_destroy]
+          }
+        end
       end
     end.each_value  do |attrs|
       hea = target.hasEstadoalterados.find_by( estadoalterado_id: attrs[:estadoalterado_id])

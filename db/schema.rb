@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_24_102216) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_06_150958) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -329,12 +329,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_24_102216) do
   create_table "pj_estadoalterado_libres", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "contenido"
   end
 
   create_table "pj_has_estadoalterados", force: :cascade do |t|
     t.integer "valor"
     t.bigint "personaje_id"
-    t.bigint "estadoalterado_id", null: false
+    t.bigint "estadoalterado_id"
     t.bigint "pj_parte_cuerpo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
