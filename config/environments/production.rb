@@ -1,5 +1,5 @@
 require "active_support/core_ext/integer/time"
-require "env_vars"
+require "00_env_vars"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
