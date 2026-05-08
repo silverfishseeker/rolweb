@@ -8,6 +8,7 @@ module Backup
   # Excluimos images también. No queremos descargarlas por duplicado en el caso de que se use DatabaseimageUploader
   DATA_TABLES = ActiveRecord::Base.connection.tables - ["schema_migrations", "ar_internal_metadata", "images"]
   BACKUPS_DIR = Rails.root.join("tmp", "backups")
+  SPACE_NAMES = ["Pj", "Ritual"]
   FileUtils.mkdir_p(BACKUPS_DIR) unless Dir.exist?(BACKUPS_DIR)
 
 
@@ -36,6 +37,61 @@ module Backup
   end
 
 
+  def self.recursive_self_level(levels, records_by_id, model, column, record, visiting=Set.new)
+    Rails.logger.debug "recursive_self_level #{levels} #{model} #{column} #{visiting}"
+    return levels[record.id] if levels.key?(record.id)
+    if visiting.include?(record.id)
+      raise "Circular self dependency in #{model} for id #{record.id}"
+    end
+    visiting.add(record.id)
+    parent_id = record.public_send(column)
+    level =
+      if parent_id.nil? || (parent = records_by_id[parent_id]).nil?
+        0
+      else
+        recursive_self_level(levels, records_by_id, model, column, parent, visiting) + 1
+      end
+    visiting.delete(record.id)
+    levels[record.id] = level
+  end
+
+  def self.fix_classify(name)
+    SPACE_NAMES.each do |space_name|
+      if name.start_with? space_name
+        name.sub! space_name, space_name+"::" 
+      end
+    end
+    name
+  end
+
+  def self.compute_self_level(table)
+    Rails.logger.debug "compute_self_level #{table}"
+    model = fix_classify(table.classify).constantize
+    fk = ActiveRecord::Base.connection.foreign_keys(table).find { |f| f.to_table == table }
+    records_by_id = model.all.index_by(&:id)
+    model.find_each.each_with_object({}) do |record, levels|
+      recursive_self_level(levels, records_by_id, model, fk.column, record)
+    end
+  end
+
+  def self.compute_level(levels, dependencies, table, visiting=Set.new)
+    return levels[table] if levels.key?(table)
+    deps = dependencies[table]
+    if visiting.include?(table)
+      raise "Circular dependency detected involving #{table}, visited: #{visiting}"
+    end
+    visiting << table
+    levels[table] =
+      if deps.empty?
+        0
+      else
+        deps.map do |dep|
+          compute_level(levels, dependencies, dep, visiting) 
+        end.max + 1
+      end
+    visiting.delete(table)
+    levels[table]
+  end
 
   # Create a backup of the database and Minio images
   def self.prepare_backup_files(temp_dir)
@@ -54,6 +110,31 @@ module Backup
       [table, ActiveRecord::Base.connection.columns(table).map(&:name).sort]
     end
     File.write(temp_dir.join("schema.json"), JSON.pretty_generate(schema))
+
+    Rails.logger.info "🕸️ Dumping database dependencies..."
+    dependencies = DATA_TABLES.each_with_object({}) do |table, dependencies|
+      dependencies[table] = ActiveRecord::Base.connection.foreign_keys(table)
+          .map(&:to_table).uniq.select { |t| DATA_TABLES.include?(t) }
+    end
+    dependencies_copy = {}
+    self_levels = dependencies.each_with_object({}) do |(table, deps), self_levels|
+      dependencies_copy[table] = deps - [table]
+      if deps.include?(table)
+        self_levels[table] = compute_self_level(table)
+      end
+    end
+    dependencies = dependencies_copy
+    File.write(temp_dir.join("levels.json"), JSON.pretty_generate(
+      DATA_TABLES.each_with_object({}) do |table, levels|
+        compute_level(levels, dependencies, table)
+      end.to_h do |table, level|
+        [table, {
+          level: level,
+          self_levels:  self_levels[table],
+          dependencies: dependencies[table]
+        }]
+      end
+    ))
     
     Rails.logger.info "🖼️ Dumping images from models..."
     imgdir = Backup.images_dir(temp_dir)
@@ -164,22 +245,20 @@ module Backup
     else
       Rails.logger.info "🧹 Deleting database..."
       ActiveRecord::Base.transaction do
-        DATA_TABLES.each do |table|
-          ActiveRecord::Base.connection.execute("TRUNCATE #{DATA_TABLES.join(', ')} RESTART IDENTITY CASCADE")
-        end
+        ActiveRecord::Base.connection.execute("TRUNCATE #{DATA_TABLES.join(', ')} RESTART IDENTITY CASCADE")
       end
 
       Rails.logger.info "💽 Restoring database data..."
       eager_load
       data = JSON.parse(File.read(restore_dir.join("database.json")))
-      sql_in_replication_role do
-        data.each do |table, records|
-          next unless DATA_TABLES.include?(table)
-          expected_columns = ActiveRecord::Base.connection.columns(table).map(&:name)
-          records.each do |record|
-            filtered_record = record.slice(*expected_columns)
-            ActiveRecord::Base.connection.insert_fixture(filtered_record, table)
-          end
+      levels = JSON.parse(File.read(restore_dir.join("levels.json")))
+      levels.sort_by{ |_, vals| vals["level"]}.each do |table, vals|
+        next unless DATA_TABLES.include?(table)
+        records = data[table]
+        records.sort_by { |r| vals["self_levels"][r["id"]]} if vals["self_levels"]
+        expected_columns = ActiveRecord::Base.connection.columns(table).map(&:name)
+        records.each do |record|
+          ActiveRecord::Base.connection.insert_fixture(record.slice(*expected_columns), table)
         end
       end
 

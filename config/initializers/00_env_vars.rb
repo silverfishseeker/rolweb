@@ -65,13 +65,7 @@ module EnvVars
 
   def self.[](key)
     raise EnvVarError, "Unknown key: #{key}" unless VARS.key?(key)
-
-    if ENV[key].blank?
-      raise EnvVarError, "Environment variable #{key} is required "+
-          "but not set and has no default value" if VARS[key][1].nil?
-      return VARS[key][1] 
-    end
-
+    return VARS[key][1] if ENV[key].blank?
     case VARS[key][0]
     when :int
       ENV[key].to_i
