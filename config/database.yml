@@ -12,6 +12,9 @@ development:
 
 production:
   url: <%= ENV["DATABASE_URL"] %>
+  user: <%= ENV["DATABASE_USER"] %>
+  database: <%= ENV["DATABASE_DATABASE"] %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 

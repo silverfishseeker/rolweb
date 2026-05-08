@@ -4,6 +4,8 @@ class PersonajesController < ModelController
   def model_params
     params.require(:personaje).permit(:nombre, :is_public, :picture_id, :descripcion, :oro)
   end
+  
+  restrict_admin_access
 
   def new
     # Recover form data from rescue_my_errors redirect
