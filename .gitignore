@@ -51,4 +51,4 @@ public/uploads
 vendor/bundle
 
 # Ignorar archivo de variables de entorno
-.env
+*.env
