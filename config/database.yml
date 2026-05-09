@@ -11,10 +11,10 @@ development:
   <<: *default
 
 production:
-  url: <%= ENV["DATABASE_URL"] %>
-  user: <%= ENV["DATABASE_USER"] %>
-  database: <%= ENV["DATABASE_DATABASE"] %>
-  password: <%= ENV["DATABASE_PASSWORD"] %>
+  url: <%= ENV.fetch["DATABASE_URL"] %>
+  user: <%= ENV.fetch["DATABASE_USER"] %>
+  database: <%= ENV.fetch["DATABASE_DATABASE"] %>
+  password: <%= ENV.fetch["DATABASE_PASSWORD"] %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 
