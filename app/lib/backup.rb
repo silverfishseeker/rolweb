@@ -285,6 +285,7 @@ module Backup
       next unless model_dir.directory?
       Rails.logger.info "  Model_dir: #{model_dir}"
       model = model_dir.basename.to_s.safe_constantize
+      records = model.all.index_by(&:id)
       metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
       SilverImageUploader.warn_on_remove_missing = false
       metadata.each do |entry|
@@ -323,7 +324,7 @@ module Backup
             system("convert #{file_path} -strip #{temp_path}")
           end
 
-          record = model.find(id)
+          record = records[id]
           Rails.logger.info "    Found record: #{record}"
           File.open(temp_path) do |f|
             Rails.logger.info "    Opened temp_path: #{temp_path}"
