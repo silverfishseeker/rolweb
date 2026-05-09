@@ -1,9 +1,10 @@
+include UnlimitedCache
+include Maintenance
+include AdminAccess
+
 class AdminController < ApplicationController
-    include AdminAccess
     restrict_admin_access
 
-    include UnlimitedCache
-    
     def control
     end
 
@@ -44,7 +45,9 @@ class AdminController < ApplicationController
     def create_backup
         backup_file = nil
         begin
-            backup_file = Backup.create
+            with_maintenance do # Stops any other actions in ApplicationController
+                backup_file = Backup.create
+            end
             data = File.binread(backup_file)
 
             send_data data,
@@ -69,14 +72,16 @@ class AdminController < ApplicationController
         resume = params[:resume] == "1"
         if params[:backup_file].present? || resume
             begin
-                Backup.restore(
-                    resume ? nil : params[:backup_file].tempfile.path,
-                    resume,
-                    params[:tolerante] == "1",
-                    params[:no_rollback] != "1",
-                    params[:allow_missing_imgs] == "1",
-                    params[:skip_gifs] == "1",
-                    params[:use_max_file_size] == "1" ? params[:max_file_size_mb] : false)
+                with_maintenance do # Stops any other actions in ApplicationController
+                    Backup.restore(
+                        resume ? nil : params[:backup_file].tempfile.path,
+                        resume,
+                        params[:tolerante] == "1",
+                        params[:no_rollback] != "1",
+                        params[:allow_missing_imgs] == "1",
+                        params[:skip_gifs] == "1",
+                        params[:use_max_file_size] == "1" ? params[:max_file_size_mb] : false)
+                end
                 inner_delete_navbar_cache
                 redirect_to "/backup", notice: "Backup restored successfully."
             rescue => e
