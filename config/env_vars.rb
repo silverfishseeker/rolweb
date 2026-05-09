@@ -1,14 +1,6 @@
-# This file is named with a leading 00 to ensure it is loaded before other initializers
-
 require 'dotenv/load'
 
 module EnvVars
-  LOADED = Dotenv.load.any?
-
-  def self.isLoaded
-    LOADED
-  end
-
   VARS = {
     # "key" => [type, default_value]
     "DATABASE_URL" =>                   [:str, nil],
@@ -29,7 +21,8 @@ module EnvVars
     "MAIL_PASSWORD" =>                  [:str,  nil], # Required for mail sending
     "MAIL_DOMAIN" =>                    [:str,  nil], # Required for mail sending
     "MAIL_USER" =>                      [:str,  nil],  # Required for mail sending
-    "MAIL_ADDRESS" =>                   [:str,  nil]  # Required for mail sending
+    "MAIL_ADDRESS" =>                   [:str,  nil],  # Required for mail sending
+    "RAILS_MAX_THREADS" =>              [:int, 5]
   }.freeze
 
   # You MUST set these variables in production
@@ -48,8 +41,6 @@ module EnvVars
     "MAIL_ADDRESS"
   ]
 
-  class EnvVarError < StandardError; end
-
   def self.check_prodution_vars!
     unset = []
     PRODUCTION_REQUIRED_VARS.each do |key|
@@ -62,9 +53,9 @@ module EnvVars
           "are required in production but are not set: #{unset.join(", ")}"
     end
   end
-
+  
   def self.[](key)
-    raise EnvVarError, "Unknown key: #{key}" unless VARS.key?(key)
+    raise "EnvVars Error: Unknown key: #{key}" unless VARS.key?(key)
     return VARS[key][1] if ENV[key].blank?
     case VARS[key][0]
     when :int
@@ -74,7 +65,7 @@ module EnvVars
       when "true", "1", "yes" then true
       when "false", "0", "no" then false
       else
-        raise EnvVarError, "Invalid boolean value for key: #{key}, with value: #{ENV[key]}"
+        raise "EnvVars Error: Invalid boolean value for key: #{key}, with value: #{ENV[key]}"
       end
     else
       ENV[key]
@@ -92,8 +83,4 @@ module EnvVars
       hash[key] = self[key]
     end
   end
-end
-
-if Rails.env.production?
-  EnvVars.check_prodution_vars!
 end

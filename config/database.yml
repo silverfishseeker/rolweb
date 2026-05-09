@@ -5,16 +5,16 @@ default: &default
   user: postgres
   database: postgres
   password: postgres
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  pool: <%= EnvVars["RAILS_MAX_THREADS"] %>
 
 development:
   <<: *default
 
 production:
-  url:      <%= ENV.fetch("DATABASE_URL") %>
-  user:     <%= ENV.fetch("DATABASE_USER") %>
-  database: <%= ENV.fetch("DATABASE_DATABASE") %>
-  password: <%= ENV.fetch("DATABASE_PASSWORD") %>
-  pool:     <%= ENV.fetch("RAILS_MAX_THREADS") { 5 }     %>
+  url:      <%= EnvVars["DATABASE_URL"     ] %>
+  user:     <%= EnvVars["DATABASE_USER"    ] %>
+  database: <%= EnvVars["DATABASE_DATABASE"] %>
+  password: <%= EnvVars["DATABASE_PASSWORD"] %>
+  pool:     <%= EnvVars["RAILS_MAX_THREADS"] %>
 
 
