@@ -1,3 +1,5 @@
+require "ostruct" # OpenStruct
+
 class SilverImageUploader
   MODES = [:none, :cut_to_fit]
 
