@@ -312,26 +312,33 @@ module Backup
           end
 
           if entry["content_type"] == "image/gif"
+            Rails.logger.info "    It is GIF"
             if skip_gifs
               Rails.logger.info "    Entry: id(#{entry["id"]}) is a gif, skipping because skip_gifs=#{skip_gifs}"
               next
             end
             FileUtils.cp(file_path, temp_path)
           else
+            Rails.logger.info "    It is not GIF"
             system("convert #{file_path} -strip #{temp_path}")
           end
 
           record = model.find(id)
+          Rails.logger.info "    Found record: #{record}"
           File.open(temp_path) do |f|
+            Rails.logger.info "    Opened temp_path: #{temp_path}"
             record.image = ActionDispatch::Http::UploadedFile.new(
               filename: entry["original_filename"],
               type: entry["content_type"],
               tempfile: f
             )
+            Rails.logger.info "    Created image: #{record.image}"
             record.save!
+            Rails.logger.info "    Record saved"
           end
 
           RestoreState.save index: restore_index
+          Rails.logger.info "    RestoreState saved, index: #{restore_index}"
         rescue => e
           backtrace = allow_missing_imgs ? "\n#{e.backtrace.join("\n")}" : ""
           Rails.logger.error "    Error uploading. Sikipping. id(#{entry["id"]}) filename(#{entry["original_filename"]}) Error: #{e.message} #{backtrace}"
