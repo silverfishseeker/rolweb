@@ -359,15 +359,13 @@ module Backup
 
 
 
-  class BackupRestoreSchemaMissmatchError < StandardError; end
-  class NotResumeDirError < StandardError; end
 
   def self.restore(file_path, resume=false, flexible=false, rollback=true, allow_missing_imgs=false, skip_gifs=false, max_file_size_mb=false)
     resume_dir = RestoreState.resume_dir
 
     if resume
       rollback=false
-      raise NotResumeDirError("No existe directorio para resumir el restore") unless resume_dir
+      raise "No existe directorio para resumir el restore" unless resume_dir
       Rails.logger.info "♻️ Resume backup from #{file_path} (flexible: #{flexible})[unused] (rollback=#{rollback})[unused] (allow_missing_imgs=#{allow_missing_imgs}) (skip_gifs=#{skip_gifs}) (max_file_size_mb=#{max_file_size_mb})"
       restore_dir = resume_dir
     else
@@ -389,7 +387,7 @@ module Backup
       if missmatch and flexible 
         Rails.logger.warn "⚠️ Schema mismatch detected in flexible mode: \n#{missmatch}"
       elsif missmatch and !flexible
-        raise BackupRestoreSchemaMissmatchError, "Schema mismatch detected in strict mode: \n#{missmatch}"
+        raise "Schema mismatch detected in strict mode: \n#{missmatch}"
       else
         Rails.logger.info "✅ Schema matches."
       end
