@@ -322,7 +322,9 @@ module Backup
           else
             Rails.logger.info "    It is not GIF"
             system("convert #{file_path} -strip #{temp_path}")
+            Rails.logger.info "    got throuch system"
           end
+          Rails.logger.info "    end of GIF"
 
           record = records[id]
           Rails.logger.info "    Found record: #{record}"
