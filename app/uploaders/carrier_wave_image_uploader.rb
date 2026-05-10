@@ -17,11 +17,13 @@ class CarrierWaveImageUploader
   end
 
   def add(file)
+    Rails.logger.info "CarrierWaveImageUploader.add"
     cw_image = CarrierwaveImage.create!(
       nombre: file.original_filename,
       content_type: file.content_type,
       file: file
     )
+    Rails.logger.info "CarrierWaveImageUploader.add: added"
     SilverImage.new(
       id: cw_image.id,
       data: cw_image.file.read,
