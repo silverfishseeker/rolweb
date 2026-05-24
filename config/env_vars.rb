@@ -23,7 +23,8 @@ module EnvVars
     "MAIL_DOMAIN" =>                    [:str,  nil], # Required for mail sending
     "MAIL_USER" =>                      [:str,  nil],  # Required for mail sending
     "MAIL_ADDRESS" =>                   [:str,  nil],  # Required for mail sending
-    "RAILS_MAX_THREADS" =>              [:int, 5]
+    "RAILS_MAX_THREADS" =>              [:int, 5],
+    "PRODUCTION_LOG_LEVEL" =>           [:str, "info"] # Supported values: "debug", "info", "warn", "error", "fatal", "unknown"
   }.freeze
 
   # You MUST set these variables in production
