@@ -9,7 +9,6 @@ class ApplicationController < ActionController::Base
 
   before_action :check_maintenance_mode
   def check_maintenance_mode
-    Rails.logger.debug "check_maintenance_mode: #{maintenance_enabled?}"
     if maintenance_enabled?
       render plain: "Aplicación en mantenimiento", status: 503
     end

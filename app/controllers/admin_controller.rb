@@ -106,15 +106,6 @@ class AdminController < ApplicationController
         end
     end
 
-    def check_minio_connection
-        begin
-            MinioImageUploader.new
-            redirect_to "/control", notice: "Se puede establecer conexión con el minion."
-        rescue MinioConnectionError => e
-            redirect_to "/control", alert: "El minion está enfadado o no está presente: #{e.message}"
-        end
-    end
-
     def ritual
     end
 

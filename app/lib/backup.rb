@@ -38,7 +38,6 @@ module Backup
 
 
   def self.recursive_self_level(levels, records_by_id, model, column, record, visiting=Set.new)
-    Rails.logger.debug "recursive_self_level #{levels} #{model} #{column} #{visiting}"
     return levels[record.id] if levels.key?(record.id)
     if visiting.include?(record.id)
       raise "Circular self dependency in #{model} for id #{record.id}"
@@ -65,7 +64,6 @@ module Backup
   end
 
   def self.compute_self_level(table)
-    Rails.logger.debug "compute_self_level #{table}"
     model = fix_classify(table.classify).constantize
     fk = ActiveRecord::Base.connection.foreign_keys(table).find { |f| f.to_table == table }
     records_by_id = model.all.index_by(&:id)
@@ -263,8 +261,7 @@ module Backup
       end
 
       Rails.logger.info "🗑️ Deleting images..."
-      uploader = ImageUploaderConfig.uploader
-      uploader.clear_all!
+      SilverImageUploader.clear_all!
     end
 
 

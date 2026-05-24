@@ -7,12 +7,12 @@ module ImageUploaderConfig
     @uploader = case EnvVars["IMAGE_STORAGE_BACKEND"]
     when "database"
       DatabaseImageUploader.new
-    when "minio"
-      MinioImageUploader.new
-    when "carrierwave"
-      CarrierWaveImageUploader.new
+    when "local"
+      LocalImageUploader.new
+    when "s3"
+      S3ImageUploader.new
     else
-      raise "Unsupported storage backend"
+      raise "Unsupported storage backend: #{EnvVars["IMAGE_STORAGE_BACKEND"]}. Supported values are: database, local, s3."
     end
     
     @cache_type = case [EnvVars["CACHE_IS_DISK"], EnvVars["CACHE_IS_MEMORY"]]
