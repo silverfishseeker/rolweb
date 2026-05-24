@@ -186,7 +186,7 @@ module Backup
 
 
   def self.can_resume
-    RestoreState.resume_dir != nil
+    RestoreState.get != nil
   end
 
   def self.sql_in_replication_role
@@ -198,8 +198,8 @@ module Backup
 
   require "active_record/fixtures"
   def self.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb, gc, is_rollback: false)
-    if !is_rollback && RestoreState.index
-      Rails.logger.info "⏭️ Restore state file detected, skipping DB deletion, BD restoring and images deletion..."
+    if !is_rollback && RestoreState.get
+      Rails.logger.info "⏭️ Restore state detected, skipping DB deletion, BD restoring and images deletion..."
     else
       Rails.logger.info "🧹 Deleting database..."
       ActiveRecord::Base.transaction do
@@ -227,7 +227,7 @@ module Backup
 
     Rails.logger.info "📷 Restoring images..."
 
-    resume_state_index = RestoreState.index || 0
+    resume_state_index = RestoreState.get || 0
     restore_index = 0
 
     if max_file_size_mb
@@ -251,11 +251,11 @@ module Backup
         restore_index+=1
         
         if restore_index <= resume_state_index
-          Rails.logger.info "    Already restored, skipping"
+          Rails.logger.info "    Skipping entry: index(#{restore_index}) id(#{entry["id"]})"
           next
         end
         
-        Rails.logger.info "    Entry: index(#{restore_index}) id(#{entry["id"]}) filename(#{entry["original_filename"]})"
+        Rails.logger.info "    Entry: index(#{restore_index}) id(#{entry["id"]})"
 
         begin
           id = entry["id"]
@@ -290,7 +290,7 @@ module Backup
             record.save!
           end
 
-          RestoreState.save index: restore_index
+          RestoreState.set restore_index
           Rails.logger.info "    RestoreState saved, index: #{restore_index}"
         rescue => e
           backtrace = allow_missing_imgs ? "\n#{e.backtrace.join("\n")}" : ""
@@ -303,7 +303,7 @@ module Backup
         end
       end
       SilverImageUploader.warn_on_remove_missing = true
-      RestoreState.save index: nil
+      RestoreState.set nil
     end
 
     Rails.logger.info "🔢 Resetting ID sequences..."
@@ -321,26 +321,19 @@ module Backup
 
 
   def self.restore(file_path, resume=false, flexible=false, rollback=true, allow_missing_imgs=false, skip_gifs=false, max_file_size_mb=false, gc=false)
-    resume_dir = RestoreState.resume_dir
+    Rails.logger.info "📦 Restoring backup from #{file_path} (flexible: #{flexible}) (rollback=#{rollback}) (allow_missing_imgs=#{allow_missing_imgs}) (skip_gifs=#{skip_gifs}) (max_file_size_mb=#{max_file_size_mb})"
+    reset_backup_dir
+    restore_dir = BACKUPS_DIR.join("restore_#{time_now}")
+    FileUtils.mkdir_p(restore_dir)
 
+    Rails.logger.info "📥 Unpacking files"
+    Zlib::GzipReader.open(file_path) do |gz|
+      Minitar.unpack(gz, restore_dir.to_s)
+    end
     if resume
-      rollback=false
-      raise "No existe directorio para resumir el restore" unless resume_dir
-      Rails.logger.info "♻️ Resume backup from #{file_path} (flexible: #{flexible})[unused] (rollback=#{rollback})[unused] (allow_missing_imgs=#{allow_missing_imgs}) (skip_gifs=#{skip_gifs}) (max_file_size_mb=#{max_file_size_mb})"
-      restore_dir = resume_dir
+      Rails.logger.info "⏯️ Resuming restore from index #{RestoreState.get}"
     else
-      reset_backup_dir
-      Rails.logger.info "📦 Restoring backup from #{file_path} (flexible: #{flexible}) (rollback=#{rollback}) (allow_missing_imgs=#{allow_missing_imgs}) (skip_gifs=#{skip_gifs}) (max_file_size_mb=#{max_file_size_mb})"
-      restore_id = time_now
-      restore_dir = BACKUPS_DIR.join("restore_#{restore_id}")
-      FileUtils.mkdir_p(restore_dir)
-      RestoreState.save resume_dir: restore_dir
-
-      Rails.logger.info "📥 Unpacking files"
-      Zlib::GzipReader.open(file_path) do |gz|
-        Minitar.unpack(gz, restore_dir.to_s)
-      end
-
+      RestoreState.set nil
       Rails.logger.info "🔍 Validating schema (strict mode)..."
       backup_schema = JSON.parse(File.read(restore_dir.join("schema.json")))
       missmatch = check_schema_matches(backup_schema)
@@ -374,9 +367,7 @@ module Backup
         silence_sql do
           Backup.brave_restore(snapshot_path, false, false, false, false, is_rollback: true)
         end
-        RestoreState.resume_dir
         Rails.logger.info "✅ Successfully reverted."
-        reset_backup_dir
       end
       raise e
     end

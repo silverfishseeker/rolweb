@@ -69,13 +69,12 @@ class AdminController < ApplicationController
     end
 
     def restore_backup
-        resume = params[:resume] == "1"
-        if params[:backup_file].present? || resume
+        if params[:backup_file].present?
             begin
                 with_maintenance do # Stops any other actions in ApplicationController
                     Backup.restore(
-                        resume ? nil : params[:backup_file].tempfile.path,
-                        resume,
+                        params[:backup_file].tempfile.path,
+                        params[:resume] == "1",
                         params[:tolerante] == "1",
                         params[:no_rollback] != "1",
                         params[:allow_missing_imgs] == "1",
