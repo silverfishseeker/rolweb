@@ -6,7 +6,8 @@ require 'minitar'
 module Backup
 
   # Excluimos images también. No queremos descargarlas por duplicado en el caso de que se use DatabaseimageUploader
-  DATA_TABLES = ActiveRecord::Base.connection.tables - ["schema_migrations", "ar_internal_metadata", "images"]
+  # (fíjate que les estamos quitando las tablas de la lista con la resta de arrays)
+  DATA_TABLES = ActiveRecord::Base.connection.tables - ["schema_migrations", "ar_internal_metadata", "images", "restore_states"]
   BACKUPS_DIR = Rails.root.join("tmp", "backups")
   SPACE_NAMES = ["Pj", "Ritual"]
   FileUtils.mkdir_p(BACKUPS_DIR) unless Dir.exist?(BACKUPS_DIR)
@@ -184,47 +185,6 @@ module Backup
   end
 
 
-  
-  class RestoreState
-    FILE = BACKUPS_DIR.join("restore_state.json")
-
-    def self.save(index: nil, resume_dir: nil, is_rollback_dir: nil)
-      state = load || {}
-      state["index"] = index unless index.nil?
-      state["resume_dir"] = resume_dir.to_s unless resume_dir.nil?
-      state["is_rollback_dir"] = is_rollback_dir unless is_rollback_dir.nil?
-      File.write(FILE, JSON.pretty_generate(state))
-    end
-
-    def self.new
-      state = {"index": nil, "resume_dir": nil, "is_rollback_dir": nil }
-      File.write(FILE, JSON.pretty_generate(state))
-    end
-
-    def self.load
-      new if ! File.exist?(FILE)
-      JSON.parse(File.read(FILE))
-    end
-
-    def self.clear
-      File.delete(FILE) if File.exist?(FILE)
-    end
-
-    def self.index
-      load["index"]
-    end
-
-    def self.resume_dir
-      dir = load["resume_dir"]
-      dir && Pathname.new(dir)
-    end
-
-    def self.is_rollback_dir
-      load["is_rollback_dir"]
-    end
-  end
-
-
   def self.can_resume
     RestoreState.resume_dir != nil
   end
@@ -237,7 +197,7 @@ module Backup
   end
 
   require "active_record/fixtures"
-  def self.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb, is_rollback: false)
+  def self.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb, gc, is_rollback: false)
     if !is_rollback && RestoreState.index
       Rails.logger.info "⏭️ Restore state file detected, skipping DB deletion, BD restoring and images deletion..."
     else
@@ -286,6 +246,8 @@ module Backup
       metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
       SilverImageUploader.warn_on_remove_missing = false
       metadata.each do |entry|
+        GC.start if gc
+
         restore_index+=1
         
         if restore_index <= resume_state_index
@@ -302,39 +264,30 @@ module Backup
           if max_file_size_mb 
             file_size_mb = File.size(file_path).to_f / (1024 * 1024)
             if file_size_mb > max_file_size_mb
-              Rails.logger.warn "    Skipping, size #{file_size_mb.round(2)}MB"
+              Rails.logger.warn "      Skipping, size #{file_size_mb.round(2)}MB"
               next
-            else
-              Rails.logger.info "    Passed  , size #{file_size_mb.round(2)}MB"
             end
           end
 
           if entry["content_type"] == "image/gif"
             Rails.logger.info "    It is GIF"
             if skip_gifs
-              Rails.logger.info "    Entry: id(#{entry["id"]}) is a gif, skipping because skip_gifs=#{skip_gifs}"
+              Rails.logger.warn "      Entry: id(#{entry["id"]}) is a gif, skipping because skip_gifs=#{skip_gifs}"
               next
             end
             FileUtils.cp(file_path, temp_path)
           else
-            Rails.logger.info "    It is not GIF"
             system("convert #{file_path} -strip #{temp_path}")
-            Rails.logger.info "    got throuch system"
           end
-          Rails.logger.info "    end of GIF"
 
           record = records[id]
-          Rails.logger.info "    Found record: #{record}"
           File.open(temp_path) do |f|
-            Rails.logger.info "    Opened temp_path: #{temp_path}"
             record.image = ActionDispatch::Http::UploadedFile.new(
               filename: entry["original_filename"],
               type: entry["content_type"],
               tempfile: f
             )
-            Rails.logger.info "    Created image: #{record.image}"
             record.save!
-            Rails.logger.info "    Record saved"
           end
 
           RestoreState.save index: restore_index
@@ -367,7 +320,7 @@ module Backup
 
 
 
-  def self.restore(file_path, resume=false, flexible=false, rollback=true, allow_missing_imgs=false, skip_gifs=false, max_file_size_mb=false)
+  def self.restore(file_path, resume=false, flexible=false, rollback=true, allow_missing_imgs=false, skip_gifs=false, max_file_size_mb=false, gc=false)
     resume_dir = RestoreState.resume_dir
 
     if resume
@@ -412,14 +365,14 @@ module Backup
 
     begin
       silence_sql do
-        Backup.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb)
+        Backup.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb, gc)
       end
     rescue => e
       Rails.logger.error "❌ Error during restoration: #{e.message}\n#{e.backtrace.join("\n")}"
       if rollback
         Rails.logger.error "🔁 Reverting to previous state..."
         silence_sql do
-          Backup.brave_restore(snapshot_path, false, false, false, is_rollback: true)
+          Backup.brave_restore(snapshot_path, false, false, false, false, is_rollback: true)
         end
         RestoreState.resume_dir
         Rails.logger.info "✅ Successfully reverted."

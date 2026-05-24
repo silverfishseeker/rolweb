@@ -80,7 +80,9 @@ class AdminController < ApplicationController
                         params[:no_rollback] != "1",
                         params[:allow_missing_imgs] == "1",
                         params[:skip_gifs] == "1",
-                        params[:use_max_file_size] == "1" ? params[:max_file_size_mb] : false)
+                        params[:use_max_file_size] == "1" ? params[:max_file_size_mb] : false,
+                        params[:gc] == "1"
+                    )
                 end
                 inner_delete_navbar_cache
                 redirect_to "/backup", notice: "Backup restored successfully."
