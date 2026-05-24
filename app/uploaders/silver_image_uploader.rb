@@ -23,13 +23,12 @@ class SilverImageUploader
       @cache.store(u_img)
       u_img
     else
-      Rails.logger.warn "DatabaseImageUploader#get: Imagen no encontrada, id: #{id}"
       OpenStruct.new(id: id, not_found?: true)
     end
   end
 
   def set(file, old_id)
-    raise "DatabaseImageUploader.set: Nil file when trying to set image" if file.nil?
+    raise "SilverImageUploader.set: Nil file when trying to set image" if file.nil?
 
     file = self.class.to_webp(file, @mode)
     ActiveRecord::Base.transaction do
@@ -46,7 +45,7 @@ class SilverImageUploader
       @cache.remove(id)
       ImageUploaderConfig.uploader.remove!(record)
     else
-      Rails.logger.warn "DatabaseImageUploader#remove: Se ha intentado eliminar la imagen no existente, id: #{id}" if warn_on_remove_missing
+      Rails.logger.warn "SilverImageUploader#remove: Se ha intentado eliminar la imagen no existente, id: #{id}" if warn_on_remove_missing
     end
   end
 
