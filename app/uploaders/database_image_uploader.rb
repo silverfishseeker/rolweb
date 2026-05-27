@@ -1,4 +1,4 @@
-class DatabaseImageUploader
+class DatabaseImageUploader < ImageUploaderInterface
   
   # @return nil if not found
   def get(id)

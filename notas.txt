@@ -8,8 +8,8 @@ Importante sobre la versión de ruby. Es deseable que la versión de ruby siempr
     - entorno de desarrollo
 
 gemas:
-    gem install "gema"
     bundle add "gema"
+    bundle remove "gema"
     bundle install
     bundle outdated
     bundle update

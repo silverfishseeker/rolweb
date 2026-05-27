@@ -71,8 +71,6 @@ group :test do
   gem "webdrivers"
 end
 
-# para las imágenes
-gem 'carrierwave', '~> 3.1'
 
 # para hacer peticiones GET y tal
 gem 'httparty'

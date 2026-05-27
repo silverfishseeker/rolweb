@@ -1,10 +1,11 @@
+require "ostruct" # OpenStruct
+
 class SilverImageUploader
   MODES = [:none, :cut_to_fit]
 
   class_attribute :warn_on_remove_missing, default: true
 
   def initialize (mode = :none)
-    # default mode is :none
     raise "SilverImageUploader: Modo no soportado: #{mode}" if !MODES.include?(mode)
     @mode = mode
     @cache = ImageUploaderConfig.cache_type.get_cache(Image)
@@ -22,13 +23,12 @@ class SilverImageUploader
       @cache.store(u_img)
       u_img
     else
-      Rails.logger.warn "DatabaseImageUploader#get: Imagen no encontrada, id: #{id}"
       OpenStruct.new(id: id, not_found?: true)
     end
   end
 
   def set(file, old_id)
-    raise "DatabaseImageUploader.set: Nil file when trying to set image" if file.nil?
+    raise "SilverImageUploader.set: Nil file when trying to set image" if file.nil?
 
     file = self.class.to_webp(file, @mode)
     ActiveRecord::Base.transaction do
@@ -45,7 +45,7 @@ class SilverImageUploader
       @cache.remove(id)
       ImageUploaderConfig.uploader.remove!(record)
     else
-      Rails.logger.warn "DatabaseImageUploader#remove: Se ha intentado eliminar la imagen no existente, id: #{id}" if warn_on_remove_missing
+      Rails.logger.warn "SilverImageUploader#remove: Se ha intentado eliminar la imagen no existente, id: #{id}" if warn_on_remove_missing
     end
   end
 
@@ -53,12 +53,9 @@ class SilverImageUploader
   # This method does not reset the image field in the record. If it does not point to a image, it should be nil.
   # Thus, you need to take care of it after you run that model. If your record does not point to a valid image,
   # it wonn't break the application, but "imageLoadFail.png" will be shown instead.
-  def clear_all!
-    @cache.clear_all!
+  def self.clear_all!
     ImageUploaderConfig.uploader.clear_all!
   end
-
-  class BadImageFileError < StandardError; end
 
   private
 
@@ -68,7 +65,7 @@ class SilverImageUploader
       image = MiniMagick::Image.new(file.tempfile.path)
       image.validate!
     rescue
-      raise BadImageFileError, "El archivo subido no es una imagen válida."
+      raise "SilverImageUploader#to_webp: El archivo subido no es una imagen válida."
     end
 
     formato = image["%m"].downcase
