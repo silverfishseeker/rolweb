@@ -365,6 +365,8 @@ fieldset[disabled] .btn-primary:hover {
     flex: 1;
     min-width: 0;
     overflow: hidden; 
+    max-height: 520px;
+    overflow-y: auto;
   }
   .pjv-column-big {
     flex: 2;

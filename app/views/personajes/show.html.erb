@@ -111,7 +111,41 @@
     </div>
     <div class="pjv-resizer"></div>
     <div class="pjv-column pjv-column-big">
-      HH
+      <div class="pj-tabs">
+        <div class="pj-tabs-nav">
+          <div data_tab_target="#tab-activas" class="pj-tabs-nav-active">Activas</div>
+          <div data_tab_target="#tab-pasivas">Pasivas</div>
+          <div data_tab_target="#tab-otras">Otras</div>
+          <div data_tab_target="#tab-equipo">Equipo</div>
+        </div>
+        
+        <div class="pj-tab-container">
+          <div id="tab-activas" class="pj-tab_pane pj-tab_pane-active">
+            <% @x.personajeHasHabilidads.ordered.joins(:habilidad)
+                .where(habilidads: { tipo: [0, 3, 5] }).each do |phh| %>
+              <%= render "personajes/show_habilidad", phh: phh %>
+            <% end %>
+          </div>
+          <div id="tab-pasivas" class="pj-tab_pane">
+            <% @x.personajeHasClases.order(:nivel).each do |phc| %>
+              <%= render "personajes/show_clase", phc: phc %>
+            <% end %>
+            <% @x.personajeHasHabilidads.ordered.joins(:habilidad)
+                .where(habilidads: { tipo: [1] }).each do |phh| %>
+              <%= render "personajes/show_habilidad", phh: phh %>
+            <% end %>
+          </div>
+          <div id="tab-otras" class="pj-tab_pane">
+            <% @x.personajeHasHabilidads.ordered.joins(:habilidad)
+                .where(habilidads: { tipo: [2, 4, 6] }).each do |phh| %>
+              <%= render "personajes/show_habilidad", phh: phh %>
+            <% end %>
+          </div>
+          <div id="tab-equipo" class="pj-tab_pane">
+            Equipo
+          </div>
+        </div>
+      </div>
     </div>
     <div class="pjv-resizer"></div>
     <div class="pjv-column">

@@ -1,5 +1,6 @@
 
 import { adjustInputWidth } from "./utils.js";
+import { initTabs } from "./tabs.js";
 
 export function onTurboLoad() {
   // Data modifiers
@@ -100,6 +101,9 @@ export function onTurboLoad() {
   });
   adjustColumns(); // Ajustar al cargar la página
 
+  //tabs de la columna central
+  initTabs(document.querySelector('.pjv-column-big'));  
+
   // Estilo de filas borradas cuando la salud es 0 o menos
   document.querySelectorAll(".pjv-var-cuerpo").forEach( pc => {
     pc.addEventListener("turbo:frame-load", (event) => {
@@ -112,5 +116,10 @@ export function onTurboLoad() {
         pc.classList.remove("pjv-var-cuerpo-borrada");
       }
     });
+  });
+
+    // Ajustar ancho input cantidad
+  document.querySelectorAll(".pj-cantidad").forEach(input => {
+    adjustInputWidth(input);
   });
 }

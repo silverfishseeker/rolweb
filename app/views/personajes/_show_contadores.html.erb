@@ -1,0 +1,19 @@
+<%# Expected params: calculados, prefix %>
+<% calculados.each do |contador| %>
+  <div class="carta-contador">
+    <input type="hidden"
+        name="<%= prefix %>[contadores][<%= contador.id %>][is_rango]"
+        value="<%= contador.rango.present? ? 'true' : 'false' %>">
+    <% if contador.rango.present? %>
+      <input type="number" title="<%= contador.nombre %>"
+          name="<%= prefix %>[contadores][<%= contador.id %>][rango]"
+          value="<%= contador.rango.valor %>"
+          class="pj-cantidad">
+      <b> / </b>
+    <% end %>
+    <input type="number" title="<%= contador.nombre %>"
+        name="<%= prefix %>[contadores][<%= contador.id %>][value]"
+        value="<%= contador.value %>"
+        class="pj-cantidad">
+  </div>
+<% end %>

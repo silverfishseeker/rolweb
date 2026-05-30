@@ -1,0 +1,19 @@
+<div class="carta carta_show">
+  <div class="carta-header carta-header-small">
+      <p class="carta-number carta-level">
+          <%= phc.nivel %>
+      </p>
+
+      <div class="carta-image carta-image-icon">
+        <%= render "shared/image", image: phc.clase.image %>
+      </div>
+
+      <%= link_to phc.clase.nombre, phc.clase, class:"carta-title" %>
+
+      <%= render "personajes/show_contadores", calculados: phc.calculados, prefix: "phc[#{phc.id}]" %>
+  </div>
+  
+  <div class="full_container">
+    <%= render "clases/clase", clase: phc.clase %>
+  </div>
+</div>

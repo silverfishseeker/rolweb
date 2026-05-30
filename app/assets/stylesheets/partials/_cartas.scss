@@ -79,6 +79,34 @@
     height:auto;
 }
 
+.carta_show {
+    height: auto;
+    border: 2px solid var(--c_base);
+    background-color: var(--c_alternativo);
+    font-size: small;
+    margin-bottom: 5px;
+    .full_container {
+        display: none;
+        position: absolute;
+        margin-top: 50px;
+        border: 2px solid var(--c_base);
+        border-radius: 10px;
+        .carta {
+            height: var(--ancho_carta);
+        }
+    }
+    &:hover .full_container {
+        display: block;
+    }
+    .carta-header-small {
+        font-size: 16px;
+        margin: 0;
+        .carta-number, .carta-title {
+            margin: 5px;
+        }
+    }
+}
+
 .carta-header {
     display: flex;
     align-items: center;
@@ -163,6 +191,13 @@
 }
 .carta-title-selected:hover{
     background-color: var(--c_contraste_alt);
+}
+
+.carta-contador {
+    border: 1px solid var(--c_base);
+    border-radius: 5px;
+    padding: 2px;
+    margin-right: 5px;
 }
 
 .carta-add_buttom {
