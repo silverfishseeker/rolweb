@@ -2,17 +2,17 @@
 <% calculados.each do |contador| %>
   <div class="carta-contador">
     <input type="hidden"
-        name="<%= prefix %>[contadores][<%= contador.id %>][is_rango]"
-        value="<%= contador.rango.present? ? 'true' : 'false' %>">
+        name="<%= prefix %>[calculados][<%= contador.id %>][id]"
+        value="<%= contador.id %>">
     <% if contador.rango.present? %>
       <input type="number" title="<%= contador.nombre %>"
-          name="<%= prefix %>[contadores][<%= contador.id %>][rango]"
+          name="<%= prefix %>[calculados][<%= contador.id %>][rango]"
           value="<%= contador.rango.valor %>"
           class="pj-cantidad">
       <b> / </b>
     <% end %>
     <input type="number" title="<%= contador.nombre %>"
-        name="<%= prefix %>[contadores][<%= contador.id %>][value]"
+        name="<%= prefix %>[calculados][<%= contador.id %>][base]"
         value="<%= contador.value %>"
         class="pj-cantidad">
   </div>

@@ -1,6 +1,12 @@
-<div class="carta carta_show">
+<div class="carta carta_show" id="phh-<%= phh.id %>">
   <% habil = phh.habilidad %>
   <div class="carta-header carta-header-small">
+      <%= render "personajes/show_position_controller",
+          position: phh.position,
+          input_prefix: "phh[#{phh.id}]",
+          id_prefix: "phh-#{phh.id}"
+      %>
+
       <p class="carta-number carta-level">
           <%= habil.nivel %>
       </p>

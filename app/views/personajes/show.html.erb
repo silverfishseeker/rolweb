@@ -121,23 +121,27 @@
         
         <div class="pj-tab-container">
           <div id="tab-activas" class="pj-tab_pane pj-tab_pane-active">
-            <% @x.personajeHasHabilidads.ordered.joins(:habilidad)
-                .where(habilidads: { tipo: [0, 3, 5] }).each do |phh| %>
+            <% @x.personajeHasHabilidads.joins(:habilidad)
+                .where(habilidads: { tipo: [0, 3, 5] }).order(:position).each do |phh| %>
               <%= render "personajes/show_habilidad", phh: phh %>
             <% end %>
           </div>
           <div id="tab-pasivas" class="pj-tab_pane">
-            <% @x.personajeHasClases.order(:nivel).each do |phc| %>
-              <%= render "personajes/show_clase", phc: phc %>
-            <% end %>
-            <% @x.personajeHasHabilidads.ordered.joins(:habilidad)
-                .where(habilidads: { tipo: [1] }).each do |phh| %>
-              <%= render "personajes/show_habilidad", phh: phh %>
+            <% (
+                @x.personajeHasClases + 
+                @x.personajeHasHabilidads.joins(:habilidad)
+                    .where(habilidads: { tipo: [1] })
+              ).sort_by(&:position).each do |phc_phh| %>
+              <% if phc_phh.is_a?(Pj::PersonajeHasClase) %>
+                <%= render "personajes/show_clase", phc: phc_phh %>
+              <% else %>
+                <%= render "personajes/show_habilidad", phh: phc_phh %>
+              <% end %>
             <% end %>
           </div>
           <div id="tab-otras" class="pj-tab_pane">
-            <% @x.personajeHasHabilidads.ordered.joins(:habilidad)
-                .where(habilidads: { tipo: [2, 4, 6] }).each do |phh| %>
+            <% @x.personajeHasHabilidads.joins(:habilidad)
+                .where(habilidads: { tipo: [2, 4, 6] }).order(:position).each do |phh| %>
               <%= render "personajes/show_habilidad", phh: phh %>
             <% end %>
           </div>

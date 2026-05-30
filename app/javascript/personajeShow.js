@@ -118,8 +118,41 @@ export function onTurboLoad() {
     });
   });
 
-    // Ajustar ancho input cantidad
+  // Ajustar ancho input cantidad
   document.querySelectorAll(".pj-cantidad").forEach(input => {
     adjustInputWidth(input);
+  });
+
+
+  function swapPosition(parent, beforeElement, afterElement, beforeElementNewPosition, afterElementNewPosition) {
+    if (parent && beforeElement && afterElement) {
+      parent.insertBefore(afterElement, beforeElement);
+      document.getElementById(beforeElement.id + "-position")
+          .value = beforeElementNewPosition;
+      document.getElementById(afterElement.id + "-position")
+          .value = afterElementNewPosition;
+    }
+  }
+  // Botones de mover posición
+  document.querySelectorAll(".pjv-pos_controller").forEach( controller => {
+    const upButton = document.getElementById(controller.dataset.idPrefix + "-pos_up");
+    const downButton = document.getElementById(controller.dataset.idPrefix + "-pos_down");
+    const element = document.getElementById(controller.dataset.idPrefix);
+    const parent = element.parentElement;
+
+
+    upButton.addEventListener("click", () => {
+      const pos = Array.from(parent.children).indexOf(element);
+      if (pos > 0) {
+        swapPosition(parent, parent.children[pos - 1], element, pos, pos - 1);
+      }
+    });
+
+    downButton.addEventListener("click", () => {
+      const pos = Array.from(parent.children).indexOf(element);
+      if (pos < parent.children.length - 1) {
+        swapPosition(parent, element, parent.children[pos + 1], pos + 1, pos);
+      }
+    });
   });
 }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_30_210426) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -377,6 +377,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
     t.bigint "clase_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "position"
     t.index ["clase_id"], name: "index_pj_personaje_has_clases_on_clase_id"
     t.index ["personaje_id"], name: "index_pj_personaje_has_clases_on_personaje_id"
   end
@@ -387,6 +388,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
     t.datetime "updated_at", null: false
     t.bigint "personaje_id"
     t.bigint "clase_id"
+    t.integer "position"
     t.index ["clase_id"], name: "index_pj_personaje_has_habilidads_on_clase_id"
     t.index ["habilidad_id"], name: "index_pj_personaje_has_habilidads_on_habilidad_id"
     t.index ["personaje_id"], name: "index_pj_personaje_has_habilidads_on_personaje_id"
@@ -398,6 +400,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
     t.bigint "item_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "position"
     t.index ["item_id"], name: "index_pj_personaje_has_items_on_item_id"
     t.index ["personaje_id"], name: "index_pj_personaje_has_items_on_personaje_id"
   end

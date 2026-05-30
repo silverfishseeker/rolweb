@@ -1,5 +1,11 @@
-<div class="carta carta_show">
+<div class="carta carta_show" id="phc-<%= phc.id %>">
   <div class="carta-header carta-header-small">
+      <%= render "personajes/show_position_controller", 
+          position: phc.position, 
+          input_prefix: "phc[#{phc.id}]", 
+          id_prefix: "phc-#{phc.id}"
+      %>
+
       <p class="carta-number carta-level">
           <%= phc.nivel %>
       </p>

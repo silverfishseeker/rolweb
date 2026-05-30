@@ -87,7 +87,7 @@ class PersonajesController < ModelController
       else
         contador ||= target.calculados.build( modificable: Pj::Modificable.new )
         libre = contador.calculado_libre || contador.build_calculado_libre
-        libre.nombre = attrs[:nombre]
+        libre.nombre = attrs[:nombre] if attrs[:nombre].present?
         libre.base   = attrs[:base].to_i
         if attrs[:rango].present?
           contador.build_rango if contador.rango.nil?
@@ -136,6 +136,22 @@ class PersonajesController < ModelController
       pc.saludact = attrs[:saludact].to_i
       process_estados_alterados attrs[:has_estadoalterados], pc
       pc.save!
+    end
+    
+    # CLASES
+    params[:phc]&.each do |id, attrs|
+      phc = personaje.personajeHasClases.find(id.to_i)
+      phc.position = attrs[:position].to_i
+      process_contadores_for attrs[:calculados], phc
+      phc.save!
+    end
+
+    # HABILIDADES
+    params[:phh]&.each do |id, attrs|
+      phh = personaje.personajeHasHabilidads.find(id.to_i)
+      phh.position = attrs[:position].to_i
+      process_contadores_for attrs[:calculados], phh
+      phh.save!
     end
 
   end
