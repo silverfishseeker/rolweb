@@ -80,6 +80,7 @@
 }
 
 .carta_show {
+    position: relative;
     height: auto;
     border: 2px solid var(--c_base);
     background-color: var(--c_alternativo);
@@ -88,6 +89,7 @@
     .full_container {
         display: none;
         position: absolute;
+        z-index: 4;
         margin-top: 50px;
         border: 2px solid var(--c_base);
         border-radius: 10px;

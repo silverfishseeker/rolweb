@@ -358,6 +358,14 @@ fieldset[disabled] .btn-primary:hover {
   margin-right: 8px;
 }
 
+$min-width: 320px;
+$min-total-width: $min-width * 3 + 10px;
+
+:root {
+  --pjv-columns-min-width: #{ $min-width };
+  --pjv-columns-min-total-width: #{ $min-total-width };
+}
+
 .pjv-columns {
   display: flex;
   gap: 5px;
@@ -380,7 +388,7 @@ fieldset[disabled] .btn-primary:hover {
       background-color: var(--c_base);
     }
   }
-  @media (max-width: 1270px) { // Este valor debe de ser MIN_TOTAL_WIDTH en personajeShow.js
+  @media (max-width: var(--pjv-columns-min-total-width)) {
     flex-direction: column;
       .pjv-resizer {
         display: none;

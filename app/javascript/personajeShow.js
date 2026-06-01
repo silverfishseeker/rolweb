@@ -25,8 +25,9 @@ export function onTurboLoad() {
   });
 
   // Resizable columns
-  const MIN_WIDTH = 420;
-  const MIN_TOTAL_WIDTH = MIN_WIDTH*3+10; // 3 columnas mínimo más los gaps y resizers.
+  const styles = getComputedStyle(document.documentElement);
+  const MIN_WIDTH = parseInt(styles.getPropertyValue("--pjv-columns-min-width"));
+  const MIN_TOTAL_WIDTH = parseInt(styles.getPropertyValue("--pjv-columns-min-total-width"));
   document.querySelectorAll(".pjv-resizer").forEach( resizer => {
     const left = resizer.previousElementSibling;
     const right = resizer.nextElementSibling;
@@ -102,7 +103,7 @@ export function onTurboLoad() {
   adjustColumns(); // Ajustar al cargar la página
 
   //tabs de la columna central
-  initTabs(document.querySelector('.pjv-column-big'));  
+  initTabs(document.querySelector('.pjv-column-tabs'));  
 
   // Estilo de filas borradas cuando la salud es 0 o menos
   document.querySelectorAll(".pjv-var-cuerpo").forEach( pc => {
