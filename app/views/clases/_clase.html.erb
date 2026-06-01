@@ -1,3 +1,4 @@
+<%# expected params: clase, (optional) sobreescritura %>
 <div class="carta carta_clase">
     <div>
         <div class="carta-header carta-header_clase">
@@ -5,7 +6,9 @@
         </div>
         <%= clase_subtitulo(clase) %>
         <div class="carta-details">
-            <div class="carta-description carta-description_clase"><%= clase.efecto %></div>
+            <div class="carta-description carta-description_clase">
+                <%= local_assigns[:sobreescritura] || clase.efecto %>
+            </div>
             <div class="carta-description carta-description_clase"><%= clase.descripcion %></div>
         </div>
     </div>
