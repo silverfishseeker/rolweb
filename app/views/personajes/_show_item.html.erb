@@ -1,0 +1,37 @@
+<%# expected params: phi, isInInventario %>
+
+<% item = phi.item %>
+<% prefix = isInInventario ? "phi_iinv" : "phi" %>
+<div class="carta carta_show inventario-item" id="<%= prefix %>-<%= phi.id %>"
+    data-categs="<%= item.categs.map(&:id).join(",") %>">
+  <div class="carta-header carta-header-small">
+      <%= render "personajes/show_position_controller",
+          position: phi.position,
+          input_prefix: "#{prefix}[#{phi.id}]",
+          id_prefix: "#{prefix}-#{phi.id}"
+      %>
+      <span class="carta-number">
+        <input type="number" name="<%= prefix %>[<%=phi.id%>][cantidad]" 
+            value="<%= phi.cantidad %>" min="0" class="pj-cantidad">
+      </span>
+
+      <span data-label="Equipar">
+        <input type="<%= isInInventario ? 'checkbox' : 'hidden' %>" name="<%= prefix %>[<%=phi.id%>][isEquipped]"
+              value="1" <%= "checked" if !isInInventario || phi.isEquipped %>>
+      </span>
+
+      <% if isInInventario %>
+        <p class="carta-number carta-peso">
+          <%= item.peso %>
+        </p>
+      <% end %>
+
+      <%= link_to item.nombre, item, class:"carta-title" %>
+
+      <%= render "personajes/show_contadores", calculados: phi.calculados, prefix: "#{prefix}[#{phi.id}]" %>
+  </div>
+
+  <div class="full_container">
+    <%= render "items/item", item: item, sobreescritura: phi.sobreescritura %>
+  </div>
+</div>

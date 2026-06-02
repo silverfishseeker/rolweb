@@ -1,6 +1,7 @@
 
 import { adjustInputWidth } from "./utils.js";
 import { initTabs } from "./tabs.js";
+import { openModal, createCloseModalHandler  }  from "./modals.js";
 
 export function onTurboLoad() {
   // Data modifiers
@@ -103,7 +104,7 @@ export function onTurboLoad() {
   adjustColumns(); // Ajustar al cargar la página
 
   //tabs de la columna central
-  initTabs(document.querySelector('.pjv-column-tabs'));  
+  initTabs(document.querySelector('.pjv-column-tabs'));
 
   // Estilo de filas borradas cuando la salud es 0 o menos
   document.querySelectorAll(".pjv-var-cuerpo").forEach( pc => {
@@ -125,14 +126,19 @@ export function onTurboLoad() {
   });
 
 
-  function swapPosition(parent, beforeElement, afterElement, beforeElementNewPosition, afterElementNewPosition) {
+  // Controles para mover de posición las cartas
+  function swapPosition(parent, beforeElement, afterElement) {
     if (parent && beforeElement && afterElement) {
       parent.insertBefore(afterElement, beforeElement);
-      document.getElementById(beforeElement.id + "-position")
-          .value = beforeElementNewPosition;
-      document.getElementById(afterElement.id + "-position")
-          .value = afterElementNewPosition;
+      const beforeElementPosition = document.getElementById(beforeElement.id + "-position");
+      const afterElementPosition = document.getElementById(afterElement.id + "-position");
+      const temp = beforeElementPosition.value;
+      beforeElementPosition.value = afterElementPosition.value;
+      afterElementPosition.value = temp;
     }
+  }
+  function visibleChildren(parent) {
+    return Array.from(parent.children).filter(child => child.offsetParent !== null);
   }
   // Botones de mover posición
   document.querySelectorAll(".pjv-pos_controller").forEach( controller => {
@@ -143,16 +149,55 @@ export function onTurboLoad() {
 
 
     upButton.addEventListener("click", () => {
-      const pos = Array.from(parent.children).indexOf(element);
+      const visible = visibleChildren(parent);
+      const pos = visible.indexOf(element);
       if (pos > 0) {
-        swapPosition(parent, parent.children[pos - 1], element, pos, pos - 1);
+        swapPosition(parent, visible[pos - 1], element);
       }
     });
 
     downButton.addEventListener("click", () => {
-      const pos = Array.from(parent.children).indexOf(element);
-      if (pos < parent.children.length - 1) {
-        swapPosition(parent, element, parent.children[pos + 1], pos + 1, pos);
+      const visible = visibleChildren(parent);
+      const pos = visible.indexOf(element);
+      if (pos < visible.length - 1) {
+        swapPosition(parent, element, visible[pos + 1]);
+      }
+    });
+  });
+
+  // Abrir y cerrar inventario
+  const inventario = document.getElementById("inventario");
+  inventario.addEventListener("click", openModal);
+  inventario.addEventListener("click", createCloseModalHandler());
+
+  //Filtrar intems por categoría
+  let currentlySelected = [];
+  const items =  document.getElementById("inventario-items").querySelectorAll(".inventario-item");
+  const categorySelect = document.getElementById("inventario-selection");
+  categorySelect.querySelectorAll(".inventario-categ").forEach( categ => {
+    categ.addEventListener("click", () => {
+      const categValue = categ.dataset.categ;
+      if (currentlySelected.includes(categValue)) {
+        currentlySelected = currentlySelected.filter(v => v !== categValue);
+        categ.classList.remove("carta-title-selected");
+      } else {
+        currentlySelected.push(categValue);
+        categ.classList.add("carta-title-selected");
+      }
+      
+      if (currentlySelected.length === 0) {
+        items.forEach( item => {
+          item.style.display = "block";
+        });
+      } else {
+        items.forEach( item => {
+          const itemCategories = item.dataset.categs.split(",");
+          if (currentlySelected.every( cat => itemCategories.includes(cat))) {
+            item.style.display = "block";
+          } else {
+            item.style.display = "none";
+          }
+        });
       }
     });
   });

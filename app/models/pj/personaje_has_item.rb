@@ -1,5 +1,5 @@
 class Pj::PersonajeHasItem < ApplicationRecord
-  #attributes: cantidad, sobreescritura, position
+  #attributes: cantidad, sobreescritura, position, isEquipped
   belongs_to :personaje
   belongs_to :item
   

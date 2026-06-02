@@ -16,12 +16,12 @@ export function initTabs(container) {
   }).observe(nav);
 
   // Tabs
-  document.querySelectorAll('.pj-tabs-nav div').forEach(function(a){
+  container.querySelectorAll('.pj-tabs-nav div').forEach(function(a){
     a.addEventListener('click', function(e){
-      document.querySelectorAll('.pj-tabs-nav div').forEach(li => li.classList.remove('pj-tabs-nav-active'));
+      container.querySelectorAll('.pj-tabs-nav div').forEach(li => li.classList.remove('pj-tabs-nav-active'));
       this.classList.add('pj-tabs-nav-active');
-      document.querySelectorAll('.pj-tab_pane').forEach(tp => tp.classList.remove('pj-tab_pane-active'));
-      document.querySelector(this.getAttribute("data_tab_target")).classList.add('pj-tab_pane-active');
+      container.querySelectorAll('.pj-tab_pane').forEach(tp => tp.classList.remove('pj-tab_pane-active'));
+      container.querySelector(this.getAttribute("data_tab_target")).classList.add('pj-tab_pane-active');
     });
   });
 }

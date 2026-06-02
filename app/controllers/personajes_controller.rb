@@ -100,6 +100,16 @@ class PersonajesController < ModelController
     end
   end
 
+  # Al elimar o añadir elementos dejamos huecos o encontramos elementos sin position,
+  # las recalculamos todas manteniendo el orden anterior y añadiendo los nuevos la principio.
+  def recalculate_positions_for(personaje)
+    [personaje.personajeHasClases, personaje.personajeHasHabilidads, personaje.personajeHasItems].each do |association|
+      association.sort_by { |e| e.position || -Float::INFINITY }.each_with_index do |element, index|
+        element.update(position: index)
+      end
+    end
+  end
+
   # Procesa los parámetros complejos y actualiza/crea asociaciones en @personaje (que ya existe en @x)
   def process_associations_for(personaje)
     raise "Tipo de formulario no reconocido" unless Personaje::FORM_TYPES.values.include?(params[:form_type])
@@ -154,6 +164,18 @@ class PersonajesController < ModelController
       phh.save!
     end
 
+    # ITEMS
+    params[:phi_iinv]&.each do |id, attrs|
+      phi = personaje.personajeHasItems.find(id.to_i)
+      attrs = params.dig(:phi, id) || attrs
+      phi.position = attrs[:position].to_i
+      phi.isEquipped = attrs[:isEquipped] == "1"
+      phi.cantidad = attrs[:cantidad].to_i
+      process_contadores_for attrs[:calculados], phi
+      phi.save!
+    end
+
+    recalculate_positions_for personaje
   end
 
   def edit_process_associations_for(personaje)
@@ -354,5 +376,7 @@ class PersonajesController < ModelController
         phi.save!
       end
     end
+
+    recalculate_positions_for personaje
   end
 end

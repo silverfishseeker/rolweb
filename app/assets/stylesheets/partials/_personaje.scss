@@ -388,11 +388,26 @@ $min-total-width: $min-width * 3 + 10px;
       background-color: var(--c_base);
     }
   }
-  @media (max-width: var(--pjv-columns-min-total-width)) {
+  @media (max-width: #{ $min-total-width }) {
     flex-direction: column;
       .pjv-resizer {
         display: none;
       }
+  }
+}
+
+.pjv-subcolumns {
+  display: flex;
+  gap: 5px;
+  height: 350px;
+  .pjv-subcolumn {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden; 
+    overflow-y: auto;
+  }
+  .pjv-subcolumn-big {
+    flex: 3;
   }
 }
 
@@ -488,5 +503,13 @@ $min-total-width: $min-width * 3 + 10px;
     img {
       height: 5px;
     }
+  }
+}
+
+.pjv-inventario {
+  .pj-modal {
+    width: 700px;
+    min-height: 400px;
+    overflow-x: visible;
   }
 }

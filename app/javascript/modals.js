@@ -47,7 +47,7 @@ export function openModal(e) {
 }
 
 // Cerrar modal
-export function createCloseModalHandler(extraAction){
+export function createCloseModalHandler(extraAction = () => {}) {
   return function(e) {
     if (e.target.classList.contains("modal-close")) {
       const index = e.target.dataset.index;

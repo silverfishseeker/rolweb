@@ -146,15 +146,45 @@
             <% end %>
           </div>
           <div id="tab-equipo" class="pj-tab_pane">
-            Equipo
+            <% @x.personajeHasItems.where(isEquipped: true).order(:position).each do |phi| %>
+              <%= render "personajes/show_item", phi: phi, isInInventario: false %>
+            <% end %>
           </div>
         </div>
       </div>
     </div>
     <div class="pjv-resizer"></div>
     <div class="pjv-column pjv-column-big">
-      <%= render "shared/image_with_link", image: @x.picture.image, cssclass: "pjv-image" %>
-      <div class="white_bk"><%= f.rich_text_area :descripcion %></div>
+      <div class="pjv-subcolumns">
+        <div class="pjv-subcolumn">
+          <div id="inventario" class="pjv-inventario">
+            <%= render "personajes/form_modal",
+                buttom_content: "Inventario",
+                header_text: "Inventario",
+                index: "inventario" do %>
+
+              <div class="miniListadoClases" id="inventario-selection">
+                <% @x.personajeHasItems.each_with_object([]) do |phi, currCategs| %>
+                  <% currCategs.concat(phi.item.categs) %>
+                <% end.uniq.sort_by(&:nombre).each do |ct| %>
+                  <span class="carta-title inventario-categ" data-categ="<%= ct.id %>">
+                    <%= ct.nombre %></span>
+                <% end %>
+              </div>
+              <br>
+              <div id="inventario-items">
+                <% @x.personajeHasItems.order(:position).each do |phi| %>
+                  <%= render "personajes/show_item", phi: phi, isInInventario: true %>
+                <% end %>
+              </div>
+            <% end%>
+          </div>
+        </div>
+        <div class="pjv-subcolumn pjv-subcolumn-big">
+          <%= render "shared/image_with_link", image: @x.picture.image, cssclass: "pjv-image" %>
+          <div class="white_bk"><%= f.rich_text_area :descripcion %></div>
+        </div>
+      </div>
     </div>
   </div>
 
