@@ -296,6 +296,26 @@
               <button type="button" id="add-parte-cuerpo" class="btn btn-primary">
                 Añadir parte del cuerpo
               </button>
+              
+              <br>
+              <div id="explicacion-mapeos-container">
+                <%= render "personajes/form_modal",
+                    buttom_content: "Cómo configurar los mapeos de partes del cuerpo",
+                    buttom_extra_css: "to_right",
+                    header_text: "Explicación de mapeos de partes del cuerpo",
+                    index: "explicacion-mapeos" do %>
+                    <p> El mapeo asigna una letra, símbolo o palabra a cada estado de salud de la parte del cuerpo.</p>
+                    <p> Si tu personaje no tiene nada especial al respecto déjalo por defecto y no te preocupes.</p>
+                    <p> Si quieres usar un mapeo personalizado debes de seguir el siguiente formato. Tienes dos opciones: </p>
+                    <ul>
+                      <li><b>1.</b> Usar un carácter o letra por cada estado de salud. Es imprescindible que el número de 
+                        caracteres coincida con la salud máxima de esa parte del cuerpo o dará error.</li>
+                      <li><b>2.</b> Usar el carácter "@" como separador entre los esados de salud. En vez de un único caracter
+                        puedes usar palabras para representar el estado de salud. Igualmente es imprescindible que el número de 
+                        palabras coincida con la salud máxima de esa parte del cuerpo o dará error.</li>
+                    </ul>
+                <% end %>
+              </div>
 
             </div>
           </section>
