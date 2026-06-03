@@ -1,7 +1,6 @@
 
 import { adjustInputWidth } from "./utils.js";
 import { initTabs } from "./tabs.js";
-import { openModal, createCloseModalHandler  }  from "./modals.js";
 
 export function onTurboLoad() {
   // Data modifiers
@@ -164,11 +163,6 @@ export function onTurboLoad() {
       }
     });
   });
-
-  // Abrir y cerrar inventario
-  const inventario = document.getElementById("inventario");
-  inventario.addEventListener("click", openModal);
-  inventario.addEventListener("click", createCloseModalHandler());
 
   //Filtrar intems por categoría
   let currentlySelected = [];

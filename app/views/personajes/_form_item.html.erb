@@ -50,6 +50,7 @@
             buttom_extra_css: "open_modal-habilidad",
             header_text: "Editando #{item.nombre}",
             index: id,
+            default_close: false,
             close_buttom_extra_css: "modal-close-sobreescritura" do %>
     <%= render "form_sobreescritura", base_name: base_name, id: id, initial_text: initial_text do %>
       <%= item.ritual_description %>

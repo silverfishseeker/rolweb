@@ -2,7 +2,7 @@ class PersonajesController < ModelController
   def tipo; Personaje end
 
   def model_params
-    params.require(:personaje).permit(:nombre, :is_public, :picture_id, :descripcion, :oro)
+    params.require(:personaje).permit(:nombre, :is_public, :picture_id, :descripcion, :oro, cuento_ids: [])
   end
   
   restrict_admin_access

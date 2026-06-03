@@ -1,20 +1,22 @@
-<%# Expected params: buttom_content, header_text, index, &block, (optional) buttom_extra_css, (optional) close_buttom_extra_css %>
+<%# Expected params: buttom_content, header_text, index, &block, (optional) default_close = true, (optional) buttom_extra_css, (optional) close_buttom_extra_css %>
 <%# index must contain a prefix so it is unique between different kinds of models using the modals %>
 
-<button type="button"
-        class="open_modal btn btn-primary btn-small <%= local_assigns[:buttom_extra_css] %>"
-        data-index="modal-<%=index%>">
-  <%= buttom_content %>
-</button>
-<div id="modal-<%=index%>" class="pj-modal">
-  <header>
-    <h4><%= header_text %></h4>
-    <button type="button" class="btn btn-danger modal-close <%= local_assigns[:close_buttom_extra_css] %>"
+<span class="modal-container" data-default-close="<%= local_assigns[:default_close] || true %>">
+  <button type="button"
+          class="open_modal btn btn-primary btn-small <%= local_assigns[:buttom_extra_css] %>"
           data-index="modal-<%=index%>">
-      Guardar y cerrar
-    </button>
-  </header>
-  <div class="pj-modal_content">
-    <%= yield %>
+    <%= buttom_content %>
+  </button>
+  <div id="modal-<%=index%>" class="pj-modal">
+    <header>
+      <h4><%= header_text %></h4>
+      <button type="button" class="btn btn-danger modal-close <%= local_assigns[:close_buttom_extra_css] %>"
+            data-index="modal-<%=index%>">
+        Guardar y cerrar
+      </button>
+    </header>
+    <div class="pj-modal_content">
+      <%= yield %>
+    </div>
   </div>
-</div>
+</span>

@@ -315,6 +315,19 @@ fieldset[disabled] .btn-primary:hover {
   max-width: 25px;
 }
 
+.pj-modal_checkbox_list {
+  div {
+    margin: 10px 0;
+  }
+  margin: 10px;
+  input[type="checkbox"] {
+    transform: scale(2);
+  }
+  label {
+    margin-left: 10px;
+  }
+}
+
 // MAIN VIEW
 .pjv-form {
   margin: 10px;
@@ -405,6 +418,7 @@ $min-total-width: $min-width * 3 + 10px;
     min-width: 0;
     overflow: hidden; 
     overflow-y: auto;
+    text-align: center;
   }
   .pjv-subcolumn-big {
     flex: 3;

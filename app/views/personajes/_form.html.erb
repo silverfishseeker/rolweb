@@ -103,19 +103,46 @@
               <% else %>
                 <div class="pj-image-placeholder">Sin imagen</div>
               <% end %>
+              <br>
               <div>
                 <%= label_tag  "picture_file", "Subir imagen" %>
                 <%= file_field_tag "picture[file]" %>
-                <br>
+                <br><br>
                 <%= label_tag  "picture_nombre", "Título de la imagen" %>
                 <%= text_field_tag "picture[nombre]", @x.picture&.nombre %>
-                <br>
-                <%= label_tag "picture_etiquets_ids", "Etiquetas de imagen" %><br>
-                <%= collection_check_boxes :picture, :etiquet_ids, Etiquet.all, :id, :nombre, checked: @x.picture&.etiquet_ids || [] %>
+                <br><br>
+                <%= render "personajes/form_modal",
+                    buttom_content: "Editar etiquetas de la imagen",
+                    header_text: "Etiquetas de la imagen de #{@x.nombre}",
+                    index: "picture_etiquets" do %>
+                  <div class="pj-modal_checkbox_list">
+                    <%= collection_check_boxes :picture, :etiquet_ids, Etiquet.all, :id, :nombre, checked: @x.picture&.etiquet_ids || [] do |etiquet| %>
+                      <div>
+                        <%= etiquet.check_box %>
+                        <%= etiquet.label %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
               </div>
             </div>
           </section>
 
+          <section>
+            <%= render "personajes/form_modal",
+                buttom_content: "Editar artículos relacionados",
+                header_text: "Editando artículos relacionados de #{@x.nombre}",
+                index: "cuentos" do %>
+              <div class="pj-modal_checkbox_list">
+                <%= f.collection_check_boxes :cuento_ids, Cuento.all, :id, :nombre do |cuento| %>
+                  <div>
+                    <%= cuento.check_box %>
+                    <%= cuento.label %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </section>
           <section>
             <h3>Notas</h3>
             <div class="white_bk"><%= f.rich_text_area :descripcion %></div>

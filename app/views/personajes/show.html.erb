@@ -157,7 +157,7 @@
     <div class="pjv-column pjv-column-big">
       <div class="pjv-subcolumns">
         <div class="pjv-subcolumn">
-          <div id="inventario" class="pjv-inventario">
+          <div class="pjv-inventario">
             <%= render "personajes/form_modal",
                 buttom_content: "Inventario",
                 header_text: "Inventario",
@@ -182,9 +182,16 @@
         </div>
         <div class="pjv-subcolumn pjv-subcolumn-big">
           <%= render "shared/image_with_link", image: @x.picture.image, cssclass: "pjv-image" %>
-          <div class="white_bk"><%= f.rich_text_area :descripcion %></div>
         </div>
       </div>
+      
+      <div class="white_bk"><%= f.rich_text_area :descripcion %></div>
+      <h4>Artículos relacionados</h4>
+      <p>
+        <% @x.cuentos.each do |cuento| %>
+          <%= link_to cuento.nombre, cuento %>
+        <% end %>
+      </p>
     </div>
   </div>
 

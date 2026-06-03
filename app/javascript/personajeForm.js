@@ -1,6 +1,6 @@
 import { nextZIndex } from "./zIndexCounter.js";
 import { adjustInputWidth } from "./utils.js";
-import { openModal, createCloseModalHandler  }  from "./modals.js";
+import { createCloseModalHandler  }  from "./modals.js";
 import { initTabs } from "./tabs.js";
 
 export function onTurboLoad() {
@@ -122,14 +122,8 @@ export function onTurboLoad() {
     });
   });
 
-  // Modal explicacion-mapeos
-  const expl_mapeos_container = document.getElementById("explicacion-mapeos-container");
-  expl_mapeos_container.addEventListener("click", openModal);
-  expl_mapeos_container.addEventListener("click", createCloseModalHandler());  
-
   // Modal sobreescritura clase y habilidad
   function modalHandelers(container) {
-    container.addEventListener("click", openModal);
     container.addEventListener("click", createCloseModalHandler((_, id, classList) => {
       if (classList.contains("modal-close-sobreescritura")) {
         // reemplazar texto de efecto por la sobreescritura en la carta

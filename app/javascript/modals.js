@@ -1,6 +1,36 @@
 import { nextZIndex } from "./zIndexCounter.js";
 
+// Abrir modal
+function openModal(e) {
+  const button = e.target.closest(".open_modal");
+  if (button) {
+    const style = document.getElementById(button.dataset.index).style
+    style.display = "block";
+    style.zIndex = nextZIndex();
+  }
+}
+
+// Cerrar modal
+export function createCloseModalHandler(extraAction = () => {}) {
+  return function(e) {
+    if (e.target.classList.contains("modal-close")) {
+      const index = e.target.dataset.index;
+      const modal = document.getElementById(e.target.dataset.index);
+      modal.style.display = "none";
+      extraAction(modal, index, e.target.classList);
+    }
+  }
+}
+
 export function onTurboLoad() {
+  // Default open/close modals based on data attribute
+  document.querySelectorAll(".modal-container").forEach(container => {
+    container.addEventListener("click", openModal);
+    if (container.dataset.defaultClose === "true") {
+      container.addEventListener("click", createCloseModalHandler());
+    }
+  });
+
   // Modal dragging and send to front on click
   document.querySelectorAll(".pj-modal").forEach(modal => {
     const header = modal.querySelector("header");
@@ -34,26 +64,4 @@ export function onTurboLoad() {
       modal.classList.remove("dragging");
     });
   });
-}
-
-// Abrir modal
-export function openModal(e) {
-  const button = e.target.closest(".open_modal");
-  if (button) {
-    const style = document.getElementById(button.dataset.index).style
-    style.display = "block";
-    style.zIndex = nextZIndex();
-  }
-}
-
-// Cerrar modal
-export function createCloseModalHandler(extraAction = () => {}) {
-  return function(e) {
-    if (e.target.classList.contains("modal-close")) {
-      const index = e.target.dataset.index;
-      const modal = document.getElementById(e.target.dataset.index);
-      modal.style.display = "none";
-      extraAction(modal, index, e.target.classList);
-    }
-  }
 }

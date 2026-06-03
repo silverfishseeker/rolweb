@@ -3,7 +3,7 @@
  * nuevoestadoalterado-template ubicado en app/views/personajes/_estadoalterado-template.html.erb
  */
 
-import { openModal, createCloseModalHandler  }  from "./modals.js";
+import { createCloseModalHandler  }  from "./modals.js";
 
 export function onTurboLoad() {
 
@@ -60,7 +60,6 @@ export function onTurboLoad() {
   const pc_body = document.getElementById("parte-cuerpos-body");
 
   // Modal estados alterados parte cuerpo
-  pc_body.addEventListener("click", openModal);
   pc_body.addEventListener("click", createCloseModalHandler((modal, index, classList) => {
     if (classList.contains("modal-close-resumen")) {
       const table = modal.querySelector('table');
