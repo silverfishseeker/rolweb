@@ -180,6 +180,19 @@ class PersonajesController < ModelController
 
   def edit_process_associations_for(personaje)
     
+    # PICTURE
+    if params[:picture].present?
+      pic_params = params[:picture]
+      picture = personaje.picture || personaje.build_picture
+      picture.image = pic_params[:file] if pic_params[:file].present?
+      picture.nombre =
+          pic_params[:nombre].presence ||
+          File.basename(picture.image.nombre.to_s, ".*").presence ||
+          "Imagen de #{personaje.nombre}"
+      picture.etiquets = Etiquet.find(pic_params[:etiquet_ids].reject(&:blank?))
+      picture.save!
+    end
+
     # ESTADISTICAS
     params[:estadistics].each do |tipo_id_str, attrs|
       tipo_id = tipo_id_str.to_i

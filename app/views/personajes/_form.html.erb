@@ -104,9 +104,14 @@
                 <div class="pj-image-placeholder">Sin imagen</div>
               <% end %>
               <div>
-                <%= f.label :picture_id, "Selecciona imagen de la galería:" %>
+                <%= label_tag  "picture_file", "Subir imagen" %>
+                <%= file_field_tag "picture[file]" %>
                 <br>
-                <%= f.collection_select :picture_id, Picture.order(:nombre), :id, :nombre, include_blank: true %>
+                <%= label_tag  "picture_nombre", "Título de la imagen" %>
+                <%= text_field_tag "picture[nombre]", @x.picture&.nombre %>
+                <br>
+                <%= label_tag "picture_etiquets_ids", "Etiquetas de imagen" %><br>
+                <%= collection_check_boxes :picture, :etiquet_ids, Etiquet.all, :id, :nombre, checked: @x.picture&.etiquet_ids || [] %>
               </div>
             </div>
           </section>
