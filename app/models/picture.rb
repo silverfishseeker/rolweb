@@ -3,5 +3,5 @@ class Picture < ApplicationRecord
     mount_image_uploader
 
     has_and_belongs_to_many :etiquets
-    has_many :personajes
+    belongs_to :personaje, optional: true
 end

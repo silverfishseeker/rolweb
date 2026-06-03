@@ -4,7 +4,7 @@ class Personaje < ApplicationRecord
   has_rich_text :descripcion
 
   belongs_to :user
-  belongs_to :picture, optional: true
+  has_one :picture, dependent: :destroy, autosave: true
 
   has_many :estadistics,
     -> { joins(:tipoEstadistic).order("pj_meta_tipos.orden ASC") }, # scope to order, applied on call

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_01_094307) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_03_094859) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -265,10 +265,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_01_094307) do
     t.integer "nivel_habilidades"
     t.integer "nivel_estadisticas"
     t.integer "nivel_otro"
-    t.bigint "picture_id"
     t.boolean "is_public"
     t.integer "oro", default: 0, null: false
-    t.index ["picture_id"], name: "index_personajes_on_picture_id"
     t.index ["user_id"], name: "index_personajes_on_user_id"
   end
 
@@ -282,6 +280,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_01_094307) do
     t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "personaje_id"
+    t.index ["personaje_id"], name: "index_pictures_on_personaje_id", unique: true
   end
 
   create_table "pj_calculado_libres", force: :cascade do |t|
@@ -500,8 +500,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_01_094307) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "personajes", "pictures"
   add_foreign_key "personajes", "users"
+  add_foreign_key "pictures", "personajes"
   add_foreign_key "pj_calculado_libres", "pj_calculados"
   add_foreign_key "pj_calculados", "pj_meta_tipos", column: "tipoCalculado_id"
   add_foreign_key "pj_calculados", "pj_modificables"
