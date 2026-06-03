@@ -2,6 +2,7 @@ class Personaje < ApplicationRecord
   # attributes: nombre, nivel_clases, nivel_habilidades, nivel_estadisticas,
   #   nivel_otro, descripcion, is_public
   has_rich_text :descripcion
+  has_rich_text :descripcion2
 
   belongs_to :user
   has_one :picture, dependent: :destroy, autosave: true
