@@ -10,7 +10,7 @@
 
     <div class="options">
       <%= f.submit "Guardar", class: "btn btn-primary" %>
-      <%= link_to "Editar", edit_personaje_path(@x), class: "btn btn-primary" %>
+      <%= f.submit "Editar", name: "go_to_edit", class: "btn btn-primary" %>
       <%= link_to "Eliminar", personaje_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
     </div>
   </div>

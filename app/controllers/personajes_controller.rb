@@ -21,9 +21,9 @@ class PersonajesController < ModelController
   end
 
   def update
-    @y = tipo.find(params[:id])
     super do
       process_associations_for(@x)
+      edit_personaje_path(@x) if params[:go_to_edit]
     end
   end
 

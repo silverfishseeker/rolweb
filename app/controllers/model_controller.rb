@@ -55,10 +55,11 @@ class ModelController < ApplicationController
       @x = tipo.find(params[:id])
       @x.assign_attributes(model_params)
       
-      yield if block_given? # Used only by a few controllers for special actions.
+      # Used only by a few controllers for special actions and/or return destination (must be executed before save)
+      destination = (yield if block_given?) || @x  
       
       if @x.save
-        redirect_to @x, notice: "#{tipo.name} actualizado correctamente."
+        redirect_to destination, notice: "#{tipo.name} actualizado correctamente."
       else
         raise @x.errors.full_messages.join(ERRORS_JOIN_CHAR)
       end
