@@ -1,5 +1,6 @@
 docker exec -it rolweb-web-1 bash
 docker exec -it rolweb-web-1 rails db:migrate
+docker exec -it rolweb-web-1 rails console
 
 Importante sobre la versión de ruby. Es deseable que la versión de ruby siempre coincida en:
     - archivo .ruby-version

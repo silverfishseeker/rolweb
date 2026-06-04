@@ -5,6 +5,7 @@ class Personaje < ApplicationRecord
   has_rich_text :descripcion2
 
   belongs_to :user
+  belongs_to :personajegroup, optional: true
   has_one :picture, dependent: :destroy, autosave: true
 
   has_many :estadistics,

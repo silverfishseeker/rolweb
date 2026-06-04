@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   resources :etiquets
   resources :contextoloots
   resources :cuentos
+  resources :personajegroups
   get '/recalcular_childs', to: 'cuentos#recalcular_childs'
   resources :personajes
   

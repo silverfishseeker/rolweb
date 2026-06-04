@@ -1,0 +1,20 @@
+<div class="carta carta_clase texto_info">
+  <div>
+    <div class="carta-header">
+      <%= link_to personajegroup.nombre, personajegroup%>
+    </div>
+    <div class="carta-details">
+      <div class="carta-description carta-description_clase">
+        <strong>Personajes:</strong>
+        <% personajegroup.personajes.each do |pj| %>
+          <br>
+          <%= link_to pj.nombre, pj %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <% image = error_coalesce{ personajegroup.personajes.order("RANDOM()").first.image } %>
+  <div class="carta-image carta-image-clase">
+    <%= render "shared/image", image: image %>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<h1>Todos los grupos de personaje: </h1>
+<br>
+<div class="carta-grid_container carta-grid_container_clase">
+  <% @xs.each do |x| %>
+    <%= render x%>
+  <% end %>
+</div>
+<br>
+<%= link_to "Crear nuevo grupo de personajes.", new_personajegroup_path, class: "btn btn-primary" %>

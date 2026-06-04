@@ -38,6 +38,23 @@
 
               <div>
                 <label>
+                  <%= f.label :personajegroup_id, "Selecciona grupo de usuarios (opcional)" %>
+                  <%= f.collection_select(
+                      :personajegroup_id,
+                      Personajegroup.order(:nombre),
+                      :id,
+                      :nombre,
+                      { include_blank: "Sin grupo" }
+                  ) %>
+                </label>
+              </div>
+              <p><i> Al añadir tu personaje a un grupo le estás dando permisos al propietario de
+                grupo para ver y editar tu personaje. Si añades tu personaje a un grupo, ten cuidado
+                de que sea el apropiado.</i></p>
+              <br>
+
+              <div>
+                <label>
                   <%= f.check_box :is_public %> Publicar para que todos puedan verlo. (No recomendable)
                 </label>
               </div>
