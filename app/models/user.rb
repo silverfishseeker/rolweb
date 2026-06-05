@@ -29,11 +29,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :viewPersonajes, class_name: "Personaje", join_table: "personajes_users"
   has_and_belongs_to_many :personajegroups
 
-  def self.rangos
-    ["Espectador", "Jugador", "Game Master", "Administrador"]
-  end
-
   def rango_nombre
-    User.rangos[rango] || "Inválido"
+    AdminAccess::LEVELS_NAMES[rango] || "Inválido"
   end
 end

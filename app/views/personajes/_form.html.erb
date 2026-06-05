@@ -7,6 +7,18 @@
   <%= form_with(model: @x, html: { multipart: true, class: "pj-form"}) do |f| %>
     <%= hidden_field_tag :form_type, Personaje::FORM_TYPES[:edit] %>
 
+    <% if @show_user %>
+      <label>
+        <%= f.label :user_id, "Usuario" %>
+        <%= f.collection_select(
+            :user_id,
+            User.order(:nombre),
+            :id,
+            :nombre
+        ) %>
+      </label>
+    <% end %>
+
     <header class="pj-header">
       <h1>
         <%= f.object.new_record? ? "Nuevo personaje" : "Editando Personaje: #{@x.nombre}" %>
@@ -55,9 +67,55 @@
 
               <div>
                 <label>
-                  <%= f.check_box :is_public %> Publicar para que todos puedan verlo. (No recomendable)
+                  <%= f.check_box :is_public %> Publicar para que todos puedan verlo.
+                  <i>(Se muestra sólo la portada, no el contenido.)</i>
                 </label>
               </div>
+              <h3>Niveles del personaje</h3>
+
+              <table class="pj-niveles-table" id="pj-niveles-table">
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                    <th></th>
+                    <th>Valor calculado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>TOTAL</td>
+                    <td colspan="3">
+                      <span class="calculado">
+                        <%= @x.nivel %>
+                      </span>
+                    </td>
+                  </tr>
+                  <% niveles = [
+                    [:nivel_clases,       "Clases",       :calc_nivel_clases],
+                    [:nivel_habilidades,  "Habilidades",  :calc_nivel_habilidades],
+                    [:nivel_estadisticas, "Estadísticas", :calc_nivel_estadisticas],
+                    [:nivel_otro,         "Otro", nil]
+                  ] %>
+                  <% niveles.each do |attr, label, function| %>
+                    <tr>
+                      <td><%= label %></td>
+                      <td> <%= f.number_field attr, class: "pj-nivel-input", data: { field: attr } %> </td>
+                      <% if attr != :nivel_otro %>
+                      <td class="has_button"> <button type="button" class="btn btn-primary" data-field="<%= attr %>"> ⬅ </button> </td>
+                      <td>
+                        <span class="calculado" data-field="<%= attr %>">
+                          <%= @x.public_send(function) %>
+                        </span>
+                      </td>
+                      <% else %>
+                        <td> — </td>
+                        <td> — </td>
+                      <% end %>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
               <h3> Estadísticas</h3>
               <table class="tabla-estadisticas">
                 <thead>
@@ -162,7 +220,7 @@
           </section>
           <section>
             <h3>Notas 1</h3>
-            <div class="white_bk"><%= f.rich_text_area :descripcion %></div>
+            <div class="white_bk no_trix_toobar"><%= f.rich_text_area :descripcion %></div>
             <h3>Notas 2</h3>
             <div class="white_bk"><%= f.rich_text_area :descripcion2 %></div>
           </section>

@@ -34,6 +34,24 @@ export function onTurboLoad() {
     }
   });
 
+  // NIVELES
+  const tabla_niveles = document.getElementById("pj-niveles-table");
+  tabla_niveles.querySelectorAll("input").forEach(input => {
+    adjustInputWidth(input);
+  });
+
+  tabla_niveles.querySelectorAll("tr").forEach(tr =>{
+    const button = tr.querySelector("button");
+    if(button){
+      const copy_from = tr.querySelector(".calculado");
+      const copy_to = tr.querySelector("input");
+      button.addEventListener("click", () => {
+        copy_to.value = copy_from.textContent.trim();
+        copy_to.dispatchEvent( new Event("input", { bubbles: true }));
+      });
+    }
+  });
+
   // ESTADO
 
   // Añadir calculado libre

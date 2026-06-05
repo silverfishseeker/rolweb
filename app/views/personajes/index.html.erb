@@ -1,4 +1,4 @@
-<h1>Mis personajes</h1>
+<h1><%=@header%></h1>
 
 <div class="carta-grid_container carta-grid_container_clase">
   <% @xs.each do |personaje| %>
@@ -6,4 +6,13 @@
   <% end %>
 </div>
 
-<%= link_to "New personaje", new_personaje_path %>
+
+<% if @all_pjs %>
+  <h1>Todos los personajes</h1>
+
+  <div class="carta-grid_container carta-grid_container_clase">
+    <% @all_pjs.each do |personaje| %>
+      <%= render personaje %>
+    <% end %>
+  </div>
+<% end %>

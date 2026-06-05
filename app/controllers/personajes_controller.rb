@@ -3,10 +3,21 @@ class PersonajesController < ModelController
 
   def model_params
     params.require(:personaje).permit(
-      :nombre, :is_public, :picture_id, :descripcion, :descripcion2, :oro, :personajegroup_id, cuento_ids: [])
+      :nombre, :is_public, :nivel_clases, :nivel_habilidades,
+      :nivel_estadisticas, :nivel_otro, :picture_id, :descripcion,
+      :descripcion2, :oro, :personajegroup_id, :user_id, cuento_ids: [])
   end
-  
-  restrict_admin_access
+
+  def index
+    if params[:mode] == "privados"
+      @xs = current_user.personajes
+      @header = "Mis personajes"
+    else
+      @xs = Personaje.where(is_public: true)
+      @header = "Personajes públicos"
+    end
+    @all_pjs = min_level(:superadmin) ? tipo.all : nil
+  end
 
   def new
     # Recover form data from rescue_my_errors redirect
@@ -21,6 +32,10 @@ class PersonajesController < ModelController
     end
   end
 
+  def edit
+    @show_user = min_level(:superadmin)
+  end
+
   def update
     super do
       process_associations_for(@x)
@@ -29,6 +44,12 @@ class PersonajesController < ModelController
   end
 
   private
+
+  def check_ownership
+    unless @x.user_id == current_user.id || min_level(:superadmin)
+      raise "No eres propietario de este personaje. No tienes permisos para verlo o editarlo."
+    end
+  end
 
   def cleanup_estados_alterados(estadosalterados)
     estadosalterados&.each_value_with_object({}) do |attrs, cleaned|
@@ -114,6 +135,7 @@ class PersonajesController < ModelController
   # Procesa los parámetros complejos y actualiza/crea asociaciones en @personaje (que ya existe en @x)
   def process_associations_for(personaje)
     raise "Tipo de formulario no reconocido" unless Personaje::FORM_TYPES.values.include?(params[:form_type])
+    require_level! :admin if params[:user_id] != current_user.id
     if params[:form_type] == Personaje::FORM_TYPES[:edit]
       edit_process_associations_for(personaje)
     else

@@ -240,6 +240,28 @@
   }
 }
 
+.pj-niveles-table {
+  border-collapse: collapse;
+  background-color: var(--c_white);
+  th, td{
+    padding: 5px;
+    border: 2px solid var(--c_base);
+  }
+  .has_button {
+    padding: 0;
+    .btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 0;
+    }
+  }
+  .calculado {
+    font-weight: bold;
+    padding: 0 10;
+    text-align: center;
+  }
+}
+
 .pj-fila_borrada {
   font-style: italic;
   text-decoration: line-through;

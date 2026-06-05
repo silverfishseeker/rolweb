@@ -1,6 +1,6 @@
 class Personaje < ApplicationRecord
   # attributes: nombre, nivel_clases, nivel_habilidades, nivel_estadisticas,
-  #   nivel_otro, descripcion, is_public
+  #   nivel_otro, is_public
   has_rich_text :descripcion
   has_rich_text :descripcion2
 
@@ -45,7 +45,27 @@ class Personaje < ApplicationRecord
     end
   end
 
+  def calc_nivel_clases
+    personajeHasClases.sum(&:nivel)
+  end
+
+  def calc_nivel_habilidades
+    personajeHasHabilidads.sum do |phh|
+      if phh.clase_id == SystemSetting.instance.habilidades_independientes_clase_id
+        phh.habilidad.nivel
+      else 
+        1
+      end
+    end
+  end
+
+  def calc_nivel_estadisticas
+    estadistics.sum(&:lv_mod)
+  end
+
   def build_base_structure
+    self.is_public = true
+
     base_stats =  ["fuerza", "inteligencia", "destreza", "constitucion", "resistencia", "percepcion"]
     base_calcs =  ["penetracion fisica", "penetracion magica", "precision", "armadura magica"]
     base_rangos = ["estabilidad", "sangre", "peso"]

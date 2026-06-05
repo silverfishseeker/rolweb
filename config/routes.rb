@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   resources :contextoloots
   resources :cuentos
   resources :personajegroups
+  resource :system_setting, only: [:edit, :update]
   get '/recalcular_childs', to: 'cuentos#recalcular_childs'
   resources :personajes
   

@@ -57,7 +57,17 @@
         </div>
 
         <div class="submenu">
-          <%= link_to "Personajes", personajes_path, class:"nblink nblink_notSubMenu" %>
+          <%= link_to "Personajes", personajes_path, class:"nblink #{"nblink_notSubMenu" unless user_signed_in?}" %>
+          <% if user_signed_in? %>
+            <div class="submenu-content">
+              <% current_user.personajes.each do |pj|%>
+                <%= link_to pj.nombre, pj %>
+              <% end %>
+              <%= link_to "Nuevo", new_personaje_path, class:"mainLink" %>
+              <%= link_to "Mis personajes", personajes_path(mode:"privados"), class:"mainLink" %>
+              <%= link_to "Todos los personales", personajes_path, class:"mainLink" %>
+            </div>
+          <% end %>
         </div>
         
         <div class="submenu">
