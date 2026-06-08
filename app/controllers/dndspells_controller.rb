@@ -1,8 +1,5 @@
 class DndspellsController < ApplicationController
   
-  include AdminAccess
-  restrict_admin_access
-
   around_action :wrap_with_socket_error
 
   @@as = MydndapiService.new

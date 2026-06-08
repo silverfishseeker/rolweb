@@ -13,9 +13,7 @@ class ModelController < ApplicationController
 
   before_action :set, only: %i[show edit destroy]
   
-  include AdminAccess
-  restrict_admin_access
-  allow_public_access_to :index, :show
+  configure_access :index, :show, level: :unlogged
 
   def set
     @x = tipo.find(params[:id])

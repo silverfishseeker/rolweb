@@ -30,6 +30,6 @@ class User < ApplicationRecord
   has_and_belongs_to_many :personajegroups
 
   def rango_nombre
-    AdminAccess::LEVELS_NAMES[rango] || "Inválido"
+    AccessControl::LEVELS_NAMES[rango] || "Inválido"
   end
 end

@@ -1,4 +1,6 @@
 class InfoController < ApplicationController
+    
+    configure_access level: :unlogged
 
     def home
         @clase_image = error_coalesce{ Clase.where("oculto IS FALSE AND image IS NOT NULL").order("RANDOM()").first.image }

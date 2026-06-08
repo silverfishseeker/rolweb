@@ -1,7 +1,5 @@
 class ContextolootsController < ModelController
   
-  include AdminAccess
-  restrict_admin_access
 
   def tipo; Contextoloot end
 

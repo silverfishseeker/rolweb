@@ -1,4 +1,7 @@
 class RandompickController < ApplicationController
+
+  configure_access level: :unlogged
+
   def lootbox
   end
 

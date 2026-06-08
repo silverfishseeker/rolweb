@@ -1,10 +1,16 @@
 <h1><%=@header%></h1>
 
-<div class="carta-grid_container carta-grid_container_clase">
-  <% @xs.each do |personaje| %>
-    <%= render personaje %>
-  <% end %>
-</div>
+<% if @xs.any? %>
+  <div class="carta-grid_container carta-grid_container_clase">
+    <% @xs.each do |personaje| %>
+      <%= render personaje %>
+    <% end %>
+  </div>
+<% else %>
+  <p> Aún no has creado ningún personaje. Crear nuevo:
+    <%= link_to "Nuevo", new_personaje_path, class:"btn btn-primary" %>
+  </p>
+<% end %>
 
 
 <% if @all_pjs %>

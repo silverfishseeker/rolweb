@@ -8,15 +8,20 @@ class PersonajesController < ModelController
       :descripcion2, :oro, :personajegroup_id, :user_id, cuento_ids: [])
   end
 
+  configure_access level: :player
+  configure_access :index, level: :unlogged
+  before_action :check_ownership, only: %i[show edit update destroy]
+
   def index
     if params[:mode] == "privados"
+      return unless require_level :player, "Necesitas crear una cuenta para crear personajes."
       @xs = current_user.personajes
       @header = "Mis personajes"
     else
       @xs = Personaje.where(is_public: true)
       @header = "Personajes públicos"
     end
-    @all_pjs = min_level(:superadmin) ? tipo.all : nil
+    @all_pjs = has_level?(:admin) ? Personaje.all : nil
   end
 
   def new
@@ -33,7 +38,7 @@ class PersonajesController < ModelController
   end
 
   def edit
-    @show_user = min_level(:superadmin)
+    @show_user = has_level?(:admin)
   end
 
   def update
@@ -43,13 +48,11 @@ class PersonajesController < ModelController
     end
   end
 
-  private
-
   def check_ownership
-    unless @x.user_id == current_user.id || min_level(:superadmin)
-      raise "No eres propietario de este personaje. No tienes permisos para verlo o editarlo."
-    end
+    require_level(:admin) unless @x.user == current_user
   end
+
+  private
 
   def cleanup_estados_alterados(estadosalterados)
     estadosalterados&.each_value_with_object({}) do |attrs, cleaned|
@@ -135,7 +138,8 @@ class PersonajesController < ModelController
   # Procesa los parámetros complejos y actualiza/crea asociaciones en @personaje (que ya existe en @x)
   def process_associations_for(personaje)
     raise "Tipo de formulario no reconocido" unless Personaje::FORM_TYPES.values.include?(params[:form_type])
-    require_level! :admin if params[:user_id] != current_user.id
+    return unless require_level :player ||
+        (require_level :admin if params[:user_id].present? && params[:user_id].to_i != current_user.id)
     if params[:form_type] == Personaje::FORM_TYPES[:edit]
       edit_process_associations_for(personaje)
     else
@@ -210,7 +214,7 @@ class PersonajesController < ModelController
       picture.image = pic_params[:file] if pic_params[:file].present?
       picture.nombre =
           pic_params[:nombre].presence ||
-          File.basename(picture.image.nombre.to_s, ".*").presence ||
+          (File.basename(picture.image.nombre.to_s, ".*").presence if picture.image) ||
           "Imagen de #{personaje.nombre}"
       picture.etiquets = Etiquet.find(pic_params[:etiquet_ids].reject(&:blank?))
       picture.save!

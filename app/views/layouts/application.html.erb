@@ -172,7 +172,7 @@
       <div>
         <div class="footbar-admin_button">
           <% not_admin_content do %>
-            <%= link_to "Superadmin access", "/control" %>
+            <%= link_to "Superadmin access", new_adminsession_path %>
           <% end %>
 
           <% only_admin_content do %>

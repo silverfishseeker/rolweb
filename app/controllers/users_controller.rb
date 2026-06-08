@@ -1,7 +1,6 @@
 class UsersController < ModelController
 
-  restrict_admin_access
-  allow_public_access_to :dashboard 
+  configure_access :dashboard, level: :player
   
   def tipo; User end
   
@@ -9,10 +8,13 @@ class UsersController < ModelController
     params.require(:user).permit(:email, :nombre, :password, :password_confirmation, :rango)
   end
 
-  def dashboard
-    if !user_signed_in?
-      redirect_to new_user_session_path, notice: "No se ha iniciado sesión."
+  def new
+    @x.rango = AccessControl::LVS[:player]
+  end
+
+  def create
+    super do
+      raise "Rango de nuevo usuario inválido" if @x.rango != AccessControl::LVS[:player]
     end
-    @x = current_user
   end
 end

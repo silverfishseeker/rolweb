@@ -1,7 +1,6 @@
 class MobsController < ModelController
   
-  include AdminAccess
-  restrict_admin_access_to :index
+  configure_access :index, level: :master
 
   def tipo; Mob end
 

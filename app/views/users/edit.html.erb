@@ -14,7 +14,9 @@
 
   <div>
     <%= f.label :rango %><br>
-    <%= f.text_field :rango %>
+    <%= f.select :rango,
+        AccessControl::LEVELS_NAMES[1..].each_with_index.map { |name, i| [name, i+1] },
+        {}, class: "form-control" %>
   </div>
 
   <br>
