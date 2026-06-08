@@ -16,15 +16,7 @@ module ApplicationHelper
   end
 
   def only_admin_content
-    if session[:admin]
-      yield
-    end
-  end
-
-  def not_admin_content
-    unless session[:admin]
-      yield
-    end
+    yield if controller.has_level? :admin
   end
   
   def compose_get_params(hash)

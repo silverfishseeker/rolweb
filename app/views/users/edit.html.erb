@@ -4,7 +4,7 @@
 
   <div>
     <%= f.label :email %><br>
-    <%= f.email_field :email %>
+    <%= @x.email %>
   </div>
 
   <div>
@@ -14,9 +14,7 @@
 
   <div>
     <%= f.label :rango %><br>
-    <%= f.select :rango,
-        AccessControl::LEVELS_NAMES[1..].each_with_index.map { |name, i| [name, i+1] },
-        {}, class: "form-control" %>
+    <%= f.select :rango, @ranks, {}, class: "form-control" %>
   </div>
 
   <br>

@@ -171,12 +171,10 @@
       </div>
       <div>
         <div class="footbar-admin_button">
-          <% not_admin_content do %>
-            <%= link_to "Superadmin access", new_adminsession_path %>
-          <% end %>
-
-          <% only_admin_content do %>
+          <% if session[:admin] %>
             <%= link_to "Cerrar sesión", "/adminsession/close" %>
+          <% else %>
+            <%= link_to "Superadmin access", new_adminsession_path %>
           <% end %>
         </div>
       </div>
