@@ -18,7 +18,7 @@ module AccessControl
   }.freeze
 
   included do
-    before_action :_apply_access_control
+    before_action :_apply_access_control, unless: :devise_controller?
     class_attribute :_access_rules, default: {}
   end
 
