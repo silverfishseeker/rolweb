@@ -12,7 +12,7 @@
       %>
       <span class="carta-number">
         <input type="number" name="<%= prefix %>[<%=phi.id%>][cantidad]" 
-            value="<%= phi.cantidad %>" min="0" class="pj-cantidad">
+            value="<%= phi.cantidad %>" class="pj-cantidad">
       </span>
 
       <span data-label="Equipar">
@@ -32,6 +32,6 @@
   </div>
 
   <div class="full_container">
-    <%= render "items/item", item: item, sobreescritura: phi.sobreescritura %>
+    <%= render "items/item", item: item, sobreescritura: phi.sobreescritura, hide_add: true %>
   </div>
 </div>
