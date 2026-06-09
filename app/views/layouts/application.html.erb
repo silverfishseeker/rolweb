@@ -76,6 +76,12 @@
             </div>
           <% end %>
         </div>
+
+        <% if controller.has_level?(:master) %>
+          <div class="submenu">
+            <%= link_to "Enemigos y seres", mobs_path, class:"nblink nblink_notSubMenu" %>
+          </div>
+        <% end %>
         
         <div class="submenu">
           <%= link_to "Galería", pictures_path, class:"nblink nblink_notSubMenu" %>
@@ -87,8 +93,7 @@
             <div class="submenu-content">
               <%= link_to "Panel de control", "/control" %>
               <%= link_to "Backup", "/backup" %>
-              <%= link_to "Mobs", mobs_path %>
-              <%= link_to "+mob", new_mob_path %>
+              <%= link_to "+enemigo", new_mob_path %>
               <%= link_to "+clase", new_clase_path %>
               <%= link_to "+habilidad", new_habilidad_path %>
               <%= link_to "+item", new_item_path %>
