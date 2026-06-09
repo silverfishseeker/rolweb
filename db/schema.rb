@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_05_140326) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_09_074820) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -263,10 +263,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_05_140326) do
   end
 
   create_table "personajegroups_users", id: false, force: :cascade do |t|
-    t.bigint "pesonajegroup_id", null: false
+    t.bigint "personajegroup_id", null: false
     t.bigint "user_id", null: false
-    t.index ["pesonajegroup_id", "user_id"], name: "index_personajegroups_users_on_pesonajegroup_id_and_user_id"
-    t.index ["user_id", "pesonajegroup_id"], name: "index_personajegroups_users_on_user_id_and_pesonajegroup_id"
+    t.index ["personajegroup_id", "user_id"], name: "index_personajegroups_users_on_personajegroup_id_and_user_id"
+    t.index ["user_id", "personajegroup_id"], name: "index_personajegroups_users_on_user_id_and_personajegroup_id"
   end
 
   create_table "personajes", force: :cascade do |t|

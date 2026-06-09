@@ -65,7 +65,14 @@
               <% end %>
               <%= link_to "Nuevo", new_personaje_path, class:"mainLink" %>
               <%= link_to "Mis personajes", personajes_path(mode:"privados"), class:"mainLink" %>
-              <%= link_to "Todos los personales", personajes_path, class:"mainLink" %>
+              <%= link_to "Todos los personajes", personajes_path, class:"mainLink" %>
+              <% if controller.has_level?(:master) %>
+                <% current_user.personajegroups.each do |pg| %>
+                  <%= link_to pg.nombre, pg %>
+                <% end %>
+                <%= link_to "Nuevo grupo de personajes", new_personajegroup_path, class:"mainLink" %>
+                <%= link_to "Mis grupos de personajes", personajegroups_path, class:"mainLink" %>
+              <% end %>
             </div>
           <% end %>
         </div>

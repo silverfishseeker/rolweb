@@ -10,7 +10,7 @@ class PersonajesController < ModelController
 
   configure_access level: :player
   configure_access :index, level: :unlogged
-  before_action :check_ownership, only: %i[show edit update destroy]
+  before_action :check_ownership, only: %i[show edit destroy]
 
   def index
     if params[:mode] == "privados"
@@ -43,13 +43,18 @@ class PersonajesController < ModelController
 
   def update
     super do
+      raise "No tienes permiso para editar este personaje." unless check_ownership
       process_associations_for(@x)
       edit_personaje_path(@x) if params[:go_to_edit]
     end
   end
 
   def check_ownership
-    require_level(:admin) unless @x.user == current_user
+    (@x.user == current_user) ||  
+    (require_level(:master) && 
+      @x.personajegroup.present? &&
+      @x.personajegroup.users.exists?(current_user.id)) ||
+    require_level(:admin)
   end
 
   private

@@ -5,10 +5,22 @@
     </div>
     <div class="carta-details">
       <div class="carta-description carta-description_clase">
-        <strong>Personajes:</strong>
-        <% personajegroup.personajes.each do |pj| %>
-          <br>
-          <%= link_to pj.nombre, pj %>
+        <% if personajegroup.personajes.any? %>
+          <strong>Personajes:</strong>
+          <% personajegroup.personajes.each do |pj| %>
+            <br>
+            <%= link_to pj.nombre, pj %>
+          <% end %>
+        <% else %>
+          <p> Este grupo aún no tiene personajes. Para añadir un personaje
+            su propietario debe de añadirlo a este grupo desde la edición de
+            ese personaje.
+          </p>
+        <% end %>
+        <br>
+        <strong>Usuarios propietarios:</strong>
+        <% personajegroup.users.each do |u| %>
+          <br> <%= u.nombre %>
         <% end %>
       </div>
     </div>
