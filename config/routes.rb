@@ -11,7 +11,9 @@ Rails.application.routes.draw do
   
   resources :clases
   resources :habilidads
-  resources :items
+  resources :items do
+    post :add_to_personaje, on: :member
+  end
   resources :pictures
   resources :mobs
   resources :categs

@@ -45,4 +45,33 @@ class ItemsController < ModelController
     end
 
   end
+
+  configure_access :add_to_personaje, level: :player
+
+  def add_to_personaje
+    Rails.logger.debug "add_to_personajeHHHHHHHH"
+    item = Item.find(params[:item_id])
+    Rails.logger.debug item.nombre
+    personaje = current_user.personajes.find(params[:personaje_id])
+    phi = personaje.personajeHasItems.find_by(item: item)
+    Rails.logger.debug phi&.item&.nombre
+    if phi
+      phi.cantidad += params[:cantidad].to_i
+      phi.save!
+    else
+      phi = personaje.personajeHasItems.create!(
+        item: item,
+        cantidad: params[:cantidad].to_i,
+        isEquipped: false
+      )
+    end
+
+    render turbo_stream: [
+      turbo_stream.replace(
+        "add-item-flash-#{item.id}",
+        partial: "items/add_to_personaje_flash",
+        locals: { item_id: item.id, added: true }
+      )
+    ]
+  end
 end
