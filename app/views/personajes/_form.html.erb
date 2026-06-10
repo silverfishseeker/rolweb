@@ -502,7 +502,8 @@
               <h3>Inventario</h3>
                 <div class="carta-grid_container carta-grid_container_form_habilidad detalle_section"
                     id="items-list-alive">
-                      <%  @x.personajeHasItems.each do |ph_item| %>
+                      <% @x.personajeHasItems.each do |ph_item| %>
+                        <% next unless ph_item.item%>
                         <%= render "form_item", phi: ph_item, categ_id: "pj", destroy: "0" %>
                       <% end %>
                 </div>

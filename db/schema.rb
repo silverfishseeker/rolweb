@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_09_074820) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_10_002701) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -320,6 +320,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_09_074820) do
     t.index ["tipoCalculado_id"], name: "index_pj_calculados_on_tipoCalculado_id"
   end
 
+  create_table "pj_customitems", force: :cascade do |t|
+    t.string "nombre"
+    t.bigint "personaje_has_item_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["personaje_has_item_id"], name: "index_pj_customitems_on_personaje_has_item_id", unique: true
+  end
+
   create_table "pj_estadistics", force: :cascade do |t|
     t.integer "base"
     t.integer "lv_mod"
@@ -412,7 +420,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_09_074820) do
   create_table "pj_personaje_has_items", force: :cascade do |t|
     t.integer "cantidad"
     t.bigint "personaje_id", null: false
-    t.bigint "item_id", null: false
+    t.bigint "item_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "position"
@@ -528,6 +536,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_09_074820) do
   add_foreign_key "pj_calculado_libres", "pj_calculados"
   add_foreign_key "pj_calculados", "pj_meta_tipos", column: "tipoCalculado_id"
   add_foreign_key "pj_calculados", "pj_modificables"
+  add_foreign_key "pj_customitems", "pj_personaje_has_items", column: "personaje_has_item_id"
   add_foreign_key "pj_estadistics", "personajes"
   add_foreign_key "pj_estadistics", "pj_meta_tipos", column: "tipo_estadistic_id"
   add_foreign_key "pj_estadistics", "pj_modificables"

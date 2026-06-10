@@ -161,10 +161,33 @@
                 buttom_content: "Inventario",
                 header_text: "Inventario",
                 index: "inventario" do %>
-
+              <%= render "personajes/form_modal",
+                  buttom_content: "Información",
+                  header_text: "Información sobre el uso del inventario",
+                  index: "inventario-info" do %>
+                <p> Usas las categorías para filtrar tus ítems, puedes seleccionar
+                  una o varias para filtrar ítems que compartan esas categorías.
+                </p>
+                <p> Para cada ítem tienes en orden:</p>
+                <ol>
+                  <li> Controles de posión del ítem en tu inventario. Úsalo para
+                    que sube o baje puestos. </li>
+                  <li>Cantidad que tienes de ese ítem.</li>
+                  <li>Check para equipar ese ítem y que aparezca en tu pestaña de equipo.</li>
+                  <li>Peso de ese ítem.</li>
+                  <li>Nombre del ítem.</li>
+                  <li>Check para eliminar ese ítem de tu inventario. (También lo quita de
+                    tu equipo.)
+                  </li>
+                </ol>
+                <p> Para lo ítems custom es igual pero sin peso. (No puedes cambiar su posición al
+                  crearlos, guarda el personaje antes.) </p>
+              <% end %>
+              <br>
+              <br>
               <div class="miniListadoClases" id="inventario-selection">
                 <% @x.personajeHasItems.each_with_object([]) do |phi, currCategs| %>
-                  <% currCategs.concat(phi.item.categs) %>
+                  <% currCategs.concat(phi.item&.categs || []) %>
                 <% end.uniq.sort_by(&:nombre).each do |ct| %>
                   <span class="carta-title inventario-categ" data-categ="<%= ct.id %>">
                     <%= ct.nombre %></span>
@@ -176,7 +199,24 @@
                   <%= render "personajes/show_item", phi: phi, isInInventario: true %>
                 <% end %>
               </div>
+              <div id="new-customitem-buttom" class="btn btn-primary btn-small" data-template="customitem-template">
+                Añadir nuevo ítem custom
+              </div>
             <% end%>
+            <template id="customitem-template">
+              <div class="carta carta_show inventario-item" data-categs="">
+                <div class="carta-header carta-header-small">
+                  <span class="carta-number">
+                    <input type="number" name="new_custom_item[__ID__][cantidad]"
+                          value="1" class="pj-cantidad">
+                  </span>
+                  <span data-label="Equipar">
+                    <input type="checkbox" name="new_custom_item[__ID__][isEquipped]" value="1">
+                  </span>
+                  <input type="text" class="carta-customitem" name="new_custom_item[__ID__][customitem]">
+                </div>
+              </div>
+            </template>
           </div>
           <h3> Oro: <%= f.number_field :oro, step: 0.01, class: "carta-number carta-coste pjv-modifier" %> </h3>
           <div class="white_bk no_trix_toobar"><%= f.rich_text_area :descripcion %></div>

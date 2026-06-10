@@ -547,5 +547,6 @@ $min-total-width: $min-width * 3 + 10px;
     width: 700px;
     min-height: 400px;
     overflow-x: visible;
+    scrollbar-gutter: stable;
   }
 }

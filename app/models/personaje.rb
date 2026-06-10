@@ -38,6 +38,7 @@ class Personaje < ApplicationRecord
 
   def personajeHasItem_by_categ
     personajeHasItems.ordered.each_with_object({}) do |phi, hash|
+      next unless phi.item
       phi.item.categs.each do |categ|
         hash[categ.id] ||= []
         hash[categ.id] << phi

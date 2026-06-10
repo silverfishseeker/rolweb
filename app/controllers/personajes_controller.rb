@@ -199,11 +199,27 @@ class PersonajesController < ModelController
     # ITEMS
     params[:phi_iinv]&.each do |id, attrs|
       phi = personaje.personajeHasItems.find(id.to_i)
-      attrs = params.dig(:phi, id) || attrs
+      equiped_attrs = params.dig(:phi, id)
+      if attrs[:_destroy] == "1" || equiped_attrs&[:_destroy] == "1"
+        phi.destroy
+        next
+      end
+      attrs = equiped_attrs || attrs
       phi.position = attrs[:position].to_i
       phi.isEquipped = attrs[:isEquipped] == "1"
       phi.cantidad = attrs[:cantidad].to_i
       process_contadores_for attrs[:calculados], phi
+      phi.customitem.nombre = attrs[:customitem] if attrs[:customitem].present?
+      phi.save!
+    end
+    params[:new_custom_item]&.each do |id, attrs|
+      next if attrs[:_destroy] == "1"
+      phi = personaje.personajeHasItems.build(
+        cantidad: attrs[:cantidad].to_i,
+        isEquipped: attrs[:isEquipped] == "1",
+        item: nil
+      )
+      phi.build_customitem(nombre: attrs[:customitem])
       phi.save!
     end
 

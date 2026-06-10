@@ -216,4 +216,24 @@ export function onTurboLoad() {
       }
     });
   });
+
+  //Añadir item custom
+  let nextCustomItemId = 1;
+  document.getElementById("new-customitem-buttom").addEventListener("click", event => {
+    const template = document.getElementById("customitem-template");
+    const html = template.innerHTML.replaceAll("__ID__",nextCustomItemId++);
+    document .getElementById("inventario-items").insertAdjacentHTML("beforeend", html);
+  });
+
+  //Marcar items a borrar
+  document.addEventListener("change", e => {
+    if (e.target.classList.contains("rm_input")) {
+      const input = e.target;
+      const carta = input.closest(".carta");
+      if (input.checked)
+        carta.classList.add("pj-fila_borrada");
+      else
+        carta.classList.remove("pj-fila_borrada");
+    }
+  });
 }

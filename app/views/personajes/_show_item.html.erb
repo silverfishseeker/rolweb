@@ -3,7 +3,7 @@
 <% item = phi.item %>
 <% prefix = isInInventario ? "phi_iinv" : "phi" %>
 <div class="carta carta_show inventario-item" id="<%= prefix %>-<%= phi.id %>"
-    data-categs="<%= item.categs.map(&:id).join(",") %>">
+    data-categs="<%= item.categs.map(&:id).join(",") if item %>">
   <div class="carta-header carta-header-small">
       <%= render "personajes/show_position_controller",
           position: phi.position,
@@ -20,18 +20,30 @@
               value="1" <%= "checked" if !isInInventario || phi.isEquipped %>>
       </span>
 
-      <% if isInInventario %>
-        <p class="carta-number carta-peso">
-          <%= item.peso %>
-        </p>
+      <% if item %>
+        <% if isInInventario %>
+          <p class="carta-number carta-peso">
+            <%= item.peso %>
+          </p>
+        <% end %>
+
+        <%= link_to item.nombre, item, class:"carta-title" %>
+
+        <%= render "personajes/show_contadores", calculados: phi.calculados, prefix: "#{prefix}[#{phi.id}]" %>
+      <% else %>
+        <input type="text" class="carta-customitem" name="<%= prefix %>[<%=phi.id%>][customitem]" value="<%=phi.customitem.nombre%>">
       <% end %>
-
-      <%= link_to item.nombre, item, class:"carta-title" %>
-
-      <%= render "personajes/show_contadores", calculados: phi.calculados, prefix: "#{prefix}[#{phi.id}]" %>
+      <span data-label="Borrar" class="checkbox-danger" style="margin-left: auto;">
+        <input type="checkbox"
+              name="<%= prefix %>[<%=phi.id%>][_destroy]"
+              value="1"
+              class="rm_input">
+      </span>
   </div>
 
-  <div class="full_container">
-    <%= render "items/item", item: item, sobreescritura: phi.sobreescritura, hide_add: true %>
-  </div>
+  <% if item %>
+    <div class="full_container">
+      <%= render "items/item", item: item, sobreescritura: phi.sobreescritura, hide_add: true %>
+    </div>
+  <% end %>
 </div>
