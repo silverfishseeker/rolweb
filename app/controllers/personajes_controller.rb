@@ -200,7 +200,7 @@ class PersonajesController < ModelController
     params[:phi_iinv]&.each do |id, attrs|
       phi = personaje.personajeHasItems.find(id.to_i)
       equiped_attrs = params.dig(:phi, id)
-      if attrs[:_destroy] == "1" || equiped_attrs&[:_destroy] == "1"
+      if attrs[:_destroy] == "1" || equiped_attrs && equiped_attrs[:_destroy] == "1"
         phi.destroy
         next
       end

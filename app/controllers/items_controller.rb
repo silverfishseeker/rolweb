@@ -49,12 +49,9 @@ class ItemsController < ModelController
   configure_access :add_to_personaje, level: :player
 
   def add_to_personaje
-    Rails.logger.debug "add_to_personajeHHHHHHHH"
     item = Item.find(params[:item_id])
-    Rails.logger.debug item.nombre
     personaje = current_user.personajes.find(params[:personaje_id])
     phi = personaje.personajeHasItems.find_by(item: item)
-    Rails.logger.debug phi&.item&.nombre
     if phi
       phi.cantidad += params[:cantidad].to_i
       phi.save!
