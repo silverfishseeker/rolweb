@@ -1,6 +1,12 @@
 <div class="carta carta_personaje">
   <div class="carta-personaje-header">
-    <h2><%= link_to personaje.nombre, personaje %></h2>
+    <h2>
+      <% if personaje.user == current_user || controller.has_level? %>
+        <%= link_to personaje.nombre, personaje %>
+      <% else %>
+        <%= personaje.nombre %>
+      <% end %>
+    </h2>
     <b> Nivel <%= personaje.nivel %></b>
   </div>
 
@@ -13,14 +19,17 @@
       <% end %>
     </div>
 
-    <div class="carta-image">
+    <div class="carta-image carta-image-personaje">
       <%= render "shared/image", image: personaje.picture&.image %>
     </div>
   </div>
 
   <div class="carta-personaje-stats">
-    <% personaje.estadistics.ordered.each do |stat| %>
-      <span class="carta-number"><%=stat.tipoEstadistic.siglas%> <%=stat.value%>(<b><%=stat.mod_str%></b>)</span>
+    <% stats = personaje.estadistics.ordered.to_a %>
+    <% stats.each_with_index  do |stat, i| %>
+      <div class="carta-number <%= "first_number" if i == 0 %> <%= "last_number" if i == stats.length - 1 %>">
+        <%=stat.tipoEstadistic.siglas%> <%=stat.value%>
+      </div>
     <% end %>
   </div>
 </div>

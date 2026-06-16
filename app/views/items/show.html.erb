@@ -15,7 +15,7 @@
     <div class="carta carta_extendida texto_info-margins carta_fixInnerImage">
         <%= render("shared/image_with_link", image: @x.image, cssclass: "carta-image") if @x.image%>
         <div>
-            <%= render "item_inner", item: @x %>
+            <%= render "item_inner", item: @x, hide_add: false %>
         </div>
     </div>
 </div>

@@ -1,0 +1,15 @@
+<%= form_with model: @setting do |f| %>
+  <div>
+    <%= f.label :habilidades_independientes_clase_id, "Clase de Habilidades Independientes" %>
+
+    <%= f.collection_select(
+      :habilidades_independientes_clase_id,
+      Clase.order(:nombre),
+      :id,
+      :nombre,
+      include_blank: "Ninguna"
+    ) %>
+  </div>
+
+  <%= f.submit "Guardar" %>
+<% end %>

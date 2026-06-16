@@ -1,4 +1,5 @@
 class Pj::PersonajeHasHabilidad < ApplicationRecord
+  #attributes: position
   belongs_to :personaje
   belongs_to :habilidad
   belongs_to :clase

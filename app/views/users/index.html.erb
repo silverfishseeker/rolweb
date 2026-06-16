@@ -22,8 +22,12 @@
           <td><%= user.rango_nombre %></td>
           <td><%= user.confirmed_at.present? ? "✅" : "❌"%></td>
           <td>
-            <%= link_to "Editar", edit_user_path(user), class: "btn btn-primary" %> |
-            <%= link_to "Eliminar", user_path(user), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
+            <% if user.rango != AccessControl::LVS[:admin] || controller.has_level?(:superadmin) %>
+              <%= link_to "Editar", edit_user_path(user), class: "btn btn-primary" %> |
+              <%= link_to "Eliminar", user_path(user), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
+            <% else %>
+              —
+            <% end %>
           </td>
         </tr>
       <% end %>

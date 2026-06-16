@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_10_002701) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -256,6 +256,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
     t.index ["mob_id", "habilidad_id"], name: "index_mobs_has_habils_on_mob_id_and_habilidad_id"
   end
 
+  create_table "personajegroups", force: :cascade do |t|
+    t.string "nombre"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "personajegroups_users", id: false, force: :cascade do |t|
+    t.bigint "personajegroup_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["personajegroup_id", "user_id"], name: "index_personajegroups_users_on_personajegroup_id_and_user_id"
+    t.index ["user_id", "personajegroup_id"], name: "index_personajegroups_users_on_user_id_and_personajegroup_id"
+  end
+
   create_table "personajes", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "nombre"
@@ -265,10 +278,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
     t.integer "nivel_habilidades"
     t.integer "nivel_estadisticas"
     t.integer "nivel_otro"
-    t.bigint "picture_id"
     t.boolean "is_public"
     t.integer "oro", default: 0, null: false
-    t.index ["picture_id"], name: "index_personajes_on_picture_id"
+    t.bigint "personajegroup_id"
+    t.index ["personajegroup_id"], name: "index_personajes_on_personajegroup_id"
     t.index ["user_id"], name: "index_personajes_on_user_id"
   end
 
@@ -282,6 +295,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
     t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "personaje_id"
+    t.index ["personaje_id"], name: "index_pictures_on_personaje_id", unique: true
   end
 
   create_table "pj_calculado_libres", force: :cascade do |t|
@@ -303,6 +318,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
     t.index ["hasCalculados_type", "hasCalculados_id"], name: "index_pj_calculados_on_hasCalculados"
     t.index ["pj_modificable_id"], name: "index_pj_calculados_on_pj_modificable_id"
     t.index ["tipoCalculado_id"], name: "index_pj_calculados_on_tipoCalculado_id"
+  end
+
+  create_table "pj_customitems", force: :cascade do |t|
+    t.string "nombre"
+    t.bigint "personaje_has_item_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["personaje_has_item_id"], name: "index_pj_customitems_on_personaje_has_item_id", unique: true
   end
 
   create_table "pj_estadistics", force: :cascade do |t|
@@ -377,6 +400,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
     t.bigint "clase_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "position"
     t.index ["clase_id"], name: "index_pj_personaje_has_clases_on_clase_id"
     t.index ["personaje_id"], name: "index_pj_personaje_has_clases_on_personaje_id"
   end
@@ -387,6 +411,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
     t.datetime "updated_at", null: false
     t.bigint "personaje_id"
     t.bigint "clase_id"
+    t.integer "position"
     t.index ["clase_id"], name: "index_pj_personaje_has_habilidads_on_clase_id"
     t.index ["habilidad_id"], name: "index_pj_personaje_has_habilidads_on_habilidad_id"
     t.index ["personaje_id"], name: "index_pj_personaje_has_habilidads_on_personaje_id"
@@ -395,9 +420,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
   create_table "pj_personaje_has_items", force: :cascade do |t|
     t.integer "cantidad"
     t.bigint "personaje_id", null: false
-    t.bigint "item_id", null: false
+    t.bigint "item_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "position"
+    t.boolean "isEquipped", default: false, null: false
     t.index ["item_id"], name: "index_pj_personaje_has_items_on_item_id"
     t.index ["personaje_id"], name: "index_pj_personaje_has_items_on_personaje_id"
   end
@@ -474,6 +501,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
     t.index ["item_id"], name: "index_ritual_rituals_on_item_id"
   end
 
+  create_table "system_settings", force: :cascade do |t|
+    t.bigint "habilidades_independientes_clase_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["habilidades_independientes_clase_id"], name: "index_system_settings_on_habilidades_independientes_clase_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -496,11 +530,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "personajes", "pictures"
+  add_foreign_key "personajes", "personajegroups"
   add_foreign_key "personajes", "users"
+  add_foreign_key "pictures", "personajes"
   add_foreign_key "pj_calculado_libres", "pj_calculados"
   add_foreign_key "pj_calculados", "pj_meta_tipos", column: "tipoCalculado_id"
   add_foreign_key "pj_calculados", "pj_modificables"
+  add_foreign_key "pj_customitems", "pj_personaje_has_items", column: "personaje_has_item_id"
   add_foreign_key "pj_estadistics", "personajes"
   add_foreign_key "pj_estadistics", "pj_meta_tipos", column: "tipo_estadistic_id"
   add_foreign_key "pj_estadistics", "pj_modificables"
@@ -526,4 +562,5 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_24_185306) do
   add_foreign_key "ritual_ritual_nivel_rel_rituals", "ritual_ritual_nivels", column: "ritual_nivel_id"
   add_foreign_key "ritual_ritual_nivel_rel_rituals", "ritual_rituals", column: "ritual_id"
   add_foreign_key "ritual_rituals", "items"
+  add_foreign_key "system_settings", "clases", column: "habilidades_independientes_clase_id"
 end

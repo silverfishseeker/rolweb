@@ -33,7 +33,7 @@
     <button type="button"
             class="open-mapeo-parte"
             index="<%=index%>">
-      <%= pc && pc.is_mapeo ? "Editar" : "Por defecto" %>
+      <%= pc && pc.is_mapeo ? "Editando:" : "Por defecto" %>
     </button>
     <input type="hidden"
           name="parte_cuerpos[<%=index%>][isMapeo]"

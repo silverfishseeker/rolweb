@@ -1,0 +1,15 @@
+<div class="clase-main">
+  <div>
+    <%= link_to "Editar", edit_personajegroup_path(@x), class: "btn btn-primary" %>
+    <%= link_to "Eliminar", personajegroup_path(@x), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
+  </div>
+  <br>
+  <br>
+
+  <%= render @x %>
+  <br>
+  <br>
+
+  <%= link_to "Volver", personajegroups_path, class: "btn btn-primary" %>
+</div>
+

@@ -13,9 +13,7 @@ class ModelController < ApplicationController
 
   before_action :set, only: %i[show edit destroy]
   
-  include AdminAccess
-  restrict_admin_access
-  allow_public_access_to :index, :show
+  configure_access :index, :show, level: :unlogged
 
   def set
     @x = tipo.find(params[:id])
@@ -55,10 +53,11 @@ class ModelController < ApplicationController
       @x = tipo.find(params[:id])
       @x.assign_attributes(model_params)
       
-      yield if block_given? # Used only by a few controllers for special actions.
+      # Used only by a few controllers for special actions and/or return destination (must be executed before save)
+      destination = (yield if block_given?) || @x  
       
       if @x.save
-        redirect_to @x, notice: "#{tipo.name} actualizado correctamente."
+        redirect_to destination, notice: "#{tipo.name} actualizado correctamente."
       else
         raise @x.errors.full_messages.join(ERRORS_JOIN_CHAR)
       end
@@ -84,7 +83,7 @@ class ModelController < ApplicationController
         flash[:alert] = error_message
         data = params[tipo.model_name.param_key]&.except(:image)
         flash[:form_data] = data if data.to_s.bytesize < 2000
-        redirect_to  action: action_to_redirect, id: params[:id]
+        redirect_to  action: action_to_redirect, id: params[:id] unless performed?
       end
     end
   end

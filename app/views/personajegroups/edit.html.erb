@@ -1,0 +1,53 @@
+<h1>Editando grupo de personajes</h1>
+
+<div class="clase-main">
+  <%= form_with model: @x do |f| %>
+    <div>
+      <%= f.label :nombre, style: "display: block" %>
+      <%= f.text_field :nombre %>
+    </div>
+    <br>
+    <h3>Personajes del grupo</h3>
+    <p>Puedes desmarcar personajes para sacarlos del grupo, pero para 
+      añadir nuevos se debe de hacer a través de la edición del personaje.</p>
+    <div class="pj-modal_checkbox_list">
+      <% if @x.personajes.any? %>
+        <% @x.personajes.each do |pj| %>
+          <div>
+            <%= check_box_tag(
+                  "personajes_del_grupo[]",
+                  pj.id,
+                  true
+                ) %>
+            <%= label_tag "personajes_del_grupo_#{pj.id}", pj.nombre %>
+          </div>
+        <% end %>
+      <% else %>
+        <p> Aún no se ha añadido ningún personje. Su propietario puede
+          añadirlo en la edición del personaje. </p>
+      <% end %>
+    </div>
+    <h3>Propietarios del grupo</h3>
+    <p>Puedes designar a otros propietarios del grupo pero cuidado,
+      si te quitas de propietario a tí mismo entonces perderás accesso a él.</p>
+    <div class="pj-modal_checkbox_list">
+      <%= f.collection_check_boxes :user_ids, User.all, :id, :nombre do |user| %>
+        <div>
+          <%= user.check_box %>
+          <%= user.label %>
+        </div>
+      <% end %>
+    </div>
+
+    <br>
+    <div>
+      <%= f.submit "Guardar", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <br>
+
+  <div>
+    <%= link_to "Volver", @x, class:"btn btn-primary" %>
+  </div>
+</div>

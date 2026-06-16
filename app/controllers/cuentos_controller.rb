@@ -1,6 +1,6 @@
 class CuentosController < ModelController
-  include AdminAccess
-  restrict_admin_access_to :index
+  
+  configure_access :index
 
   include UnlimitedCache
 

@@ -1,4 +1,5 @@
+<%# expected params: item, (optional) sobreescritura, (optional) hide_add  %>
 <div class="carta">
-    <%= render "items/item_inner", item: item %>
+    <%= render "items/item_inner", item: item, sobreescritura: local_assigns[:sobreescritura], hide_add: local_assigns[:hide_add]%>
     <%= render("shared/image_with_link", image: item.image, cssclass: "carta-image carta-image-item") if item.image%>
 </div>

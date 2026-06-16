@@ -57,8 +57,31 @@
         </div>
 
         <div class="submenu">
-          <%= link_to "Personajes", personajes_path, class:"nblink nblink_notSubMenu" %>
+          <%= link_to "Personajes", personajes_path, class:"nblink #{"nblink_notSubMenu" unless user_signed_in?}" %>
+          <% if user_signed_in? %>
+            <div class="submenu-content">
+              <% current_user.personajes.each do |pj|%>
+                <%= link_to pj.nombre, pj %>
+              <% end %>
+              <%= link_to "Nuevo", new_personaje_path, class:"mainLink" %>
+              <%= link_to "Mis personajes", personajes_path(mode:"privados"), class:"mainLink" %>
+              <%= link_to "Todos los personajes", personajes_path, class:"mainLink" %>
+              <% if controller.has_level?(:master) %>
+                <% current_user.personajegroups.each do |pg| %>
+                  <%= link_to pg.nombre, pg %>
+                <% end %>
+                <%= link_to "Nuevo grupo de personajes", new_personajegroup_path, class:"mainLink" %>
+                <%= link_to "Mis grupos de personajes", personajegroups_path, class:"mainLink" %>
+              <% end %>
+            </div>
+          <% end %>
         </div>
+
+        <% if controller.has_level?(:master) %>
+          <div class="submenu">
+            <%= link_to "Enemigos y seres", mobs_path, class:"nblink nblink_notSubMenu" %>
+          </div>
+        <% end %>
         
         <div class="submenu">
           <%= link_to "Galería", pictures_path, class:"nblink nblink_notSubMenu" %>
@@ -70,8 +93,7 @@
             <div class="submenu-content">
               <%= link_to "Panel de control", "/control" %>
               <%= link_to "Backup", "/backup" %>
-              <%= link_to "Mobs", mobs_path %>
-              <%= link_to "+mob", new_mob_path %>
+              <%= link_to "+enemigo", new_mob_path %>
               <%= link_to "+clase", new_clase_path %>
               <%= link_to "+habilidad", new_habilidad_path %>
               <%= link_to "+item", new_item_path %>
@@ -161,12 +183,10 @@
       </div>
       <div>
         <div class="footbar-admin_button">
-          <% not_admin_content do %>
-            <%= link_to "Admin access", "/control" %>
-          <% end %>
-
-          <% only_admin_content do %>
+          <% if session[:admin] %>
             <%= link_to "Cerrar sesión", "/adminsession/close" %>
+          <% else %>
+            <%= link_to "Superadmin access", new_adminsession_path %>
           <% end %>
         </div>
       </div>

@@ -1,0 +1,32 @@
+<div class="carta carta_clase texto_info">
+  <div>
+    <div class="carta-header">
+      <%= link_to personajegroup.nombre, personajegroup%>
+    </div>
+    <div class="carta-details">
+      <div class="carta-description carta-description_clase">
+        <% if personajegroup.personajes.any? %>
+          <strong>Personajes:</strong>
+          <% personajegroup.personajes.each do |pj| %>
+            <br>
+            <%= link_to pj.nombre, pj %>
+          <% end %>
+        <% else %>
+          <p> Este grupo aún no tiene personajes. Para añadir un personaje
+            su propietario debe de añadirlo a este grupo desde la edición de
+            ese personaje.
+          </p>
+        <% end %>
+        <br>
+        <strong>Usuarios propietarios:</strong>
+        <% personajegroup.users.each do |u| %>
+          <br> <%= u.nombre %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <% image = error_coalesce{ personajegroup.personajes.order("RANDOM()").first.image } %>
+  <div class="carta-image carta-image-clase">
+    <%= render "shared/image", image: image %>
+  </div>
+</div>

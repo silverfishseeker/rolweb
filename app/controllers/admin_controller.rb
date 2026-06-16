@@ -1,9 +1,7 @@
 include UnlimitedCache
 include Maintenance
-include AdminAccess
 
 class AdminController < ApplicationController
-    restrict_admin_access
 
     def control
     end

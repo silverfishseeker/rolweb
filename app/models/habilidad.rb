@@ -17,13 +17,13 @@ class Habilidad < ApplicationRecord
   end
 
   def tipoImagen
-    ["red-triangle.png", 
-     "blue-circle.png", 
-     "orange-diamond.png",
-     "purple-triangle.png",
-     "green-square.png",
-     "yellow-triangle.png",
-     "white-square.png"
+    ["red-triangle.png",    # 0, activa
+     "blue-circle.png",     # 1, pasiva
+     "orange-diamond.png",  # 2, especial
+     "purple-triangle.png", # 3, complemento
+     "green-square.png",    # 4, creacion
+     "yellow-triangle.png", # 5, instantaneo
+     "white-square.png"     # 6, sin clasificar
     ][tipo]
   end
 end

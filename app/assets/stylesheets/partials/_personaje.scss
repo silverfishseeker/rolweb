@@ -240,6 +240,28 @@
   }
 }
 
+.pj-niveles-table {
+  border-collapse: collapse;
+  background-color: var(--c_white);
+  th, td{
+    padding: 5px;
+    border: 2px solid var(--c_base);
+  }
+  .has_button {
+    padding: 0;
+    .btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 0;
+    }
+  }
+  .calculado {
+    font-weight: bold;
+    padding: 0 10;
+    text-align: center;
+  }
+}
+
 .pj-fila_borrada {
   font-style: italic;
   text-decoration: line-through;
@@ -315,6 +337,19 @@ fieldset[disabled] .btn-primary:hover {
   max-width: 25px;
 }
 
+.pj-modal_checkbox_list {
+  div {
+    margin: 10px 0;
+  }
+  margin: 10px;
+  input[type="checkbox"] {
+    transform: scale(2);
+  }
+  label {
+    margin-left: 10px;
+  }
+}
+
 // MAIN VIEW
 .pjv-form {
   margin: 10px;
@@ -358,6 +393,14 @@ fieldset[disabled] .btn-primary:hover {
   margin-right: 8px;
 }
 
+$min-width: 320px;
+$min-total-width: $min-width * 3 + 10px;
+
+:root {
+  --pjv-columns-min-width: #{ $min-width };
+  --pjv-columns-min-total-width: #{ $min-total-width };
+}
+
 .pjv-columns {
   display: flex;
   gap: 5px;
@@ -365,6 +408,8 @@ fieldset[disabled] .btn-primary:hover {
     flex: 1;
     min-width: 0;
     overflow: hidden; 
+    max-height: 520px;
+    overflow-y: auto;
   }
   .pjv-column-big {
     flex: 2;
@@ -378,11 +423,27 @@ fieldset[disabled] .btn-primary:hover {
       background-color: var(--c_base);
     }
   }
-  @media (max-width: 1270px) { // Este valor debe de ser MIN_TOTAL_WIDTH en personajeShow.js
+  @media (max-width: #{ $min-total-width }) {
     flex-direction: column;
       .pjv-resizer {
         display: none;
       }
+  }
+}
+
+.pjv-subcolumns {
+  display: flex;
+  gap: 5px;
+  height: 350px;
+  .pjv-subcolumn {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden; 
+    overflow-y: auto;
+    text-align: center;
+  }
+  .pjv-subcolumn-big {
+    flex: 3;
   }
 }
 
@@ -458,4 +519,34 @@ fieldset[disabled] .btn-primary:hover {
   display: inline-flex;
   flex-wrap: wrap;
   gap: 5px;
+}
+
+.pjv-pos_controller {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  margin: 5px;
+  .pjv-pos_button {
+    background-color: var(--c_contraste);
+    border: 1px solid var(--c_black);
+    border-radius: 5px;
+    transition: background-color 0.2s, transform 0.2s;
+    &:hover {
+      background-color: var(--c_contraste_alt);
+      cursor: pointer;
+    }
+    img {
+      height: 5px;
+    }
+  }
+}
+
+.pjv-inventario {
+  .pj-modal {
+    width: 700px;
+    min-height: 400px;
+    overflow-x: visible;
+    scrollbar-gutter: stable;
+  }
 }

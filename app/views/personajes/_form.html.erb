@@ -7,6 +7,18 @@
   <%= form_with(model: @x, html: { multipart: true, class: "pj-form"}) do |f| %>
     <%= hidden_field_tag :form_type, Personaje::FORM_TYPES[:edit] %>
 
+    <% if @show_user %>
+      <label>
+        <%= f.label :user_id, "Usuario" %>
+        <%= f.collection_select(
+            :user_id,
+            User.order(:nombre),
+            :id,
+            :nombre
+        ) %>
+      </label>
+    <% end %>
+
     <header class="pj-header">
       <h1>
         <%= f.object.new_record? ? "Nuevo personaje" : "Editando Personaje: #{@x.nombre}" %>
@@ -38,9 +50,72 @@
 
               <div>
                 <label>
-                  <%= f.check_box :is_public %> Publicar para que todos puedan verlo. (No recomendable)
+                  <%= f.label :personajegroup_id, "Selecciona grupo de usuarios (opcional)" %>
+                  <%= f.collection_select(
+                      :personajegroup_id,
+                      Personajegroup.order(:nombre),
+                      :id,
+                      :nombre,
+                      { include_blank: "Sin grupo" }
+                  ) %>
                 </label>
               </div>
+              <p><i> Al añadir tu personaje a un grupo le estás dando permisos al propietario de
+                grupo para ver y editar tu personaje. Si añades tu personaje a un grupo, ten cuidado
+                de que sea el apropiado.</i></p>
+              <br>
+
+              <div>
+                <label>
+                  <%= f.check_box :is_public %> Publicar para que todos puedan verlo.
+                  <i>(Se muestra sólo la portada, no el contenido.)</i>
+                </label>
+              </div>
+              <h3>Niveles del personaje</h3>
+
+              <table class="pj-niveles-table" id="pj-niveles-table">
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                    <th></th>
+                    <th>Valor calculado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>TOTAL</td>
+                    <td colspan="3">
+                      <span class="calculado">
+                        <%= @x.nivel %>
+                      </span>
+                    </td>
+                  </tr>
+                  <% niveles = [
+                    [:nivel_clases,       "Clases",       :calc_nivel_clases],
+                    [:nivel_habilidades,  "Habilidades",  :calc_nivel_habilidades],
+                    [:nivel_estadisticas, "Estadísticas", :calc_nivel_estadisticas],
+                    [:nivel_otro,         "Otro", nil]
+                  ] %>
+                  <% niveles.each do |attr, label, function| %>
+                    <tr>
+                      <td><%= label %></td>
+                      <td> <%= f.number_field attr, class: "pj-nivel-input", data: { field: attr } %> </td>
+                      <% if attr != :nivel_otro %>
+                      <td class="has_button"> <button type="button" class="btn btn-primary" data-field="<%= attr %>"> ⬅ </button> </td>
+                      <td>
+                        <span class="calculado" data-field="<%= attr %>">
+                          <%= @x.public_send(function) %>
+                        </span>
+                      </td>
+                      <% else %>
+                        <td> — </td>
+                        <td> — </td>
+                      <% end %>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
               <h3> Estadísticas</h3>
               <table class="tabla-estadisticas">
                 <thead>
@@ -103,17 +178,52 @@
               <% else %>
                 <div class="pj-image-placeholder">Sin imagen</div>
               <% end %>
+              <br>
               <div>
-                <%= f.label :picture_id, "Selecciona imagen de la galería:" %>
-                <br>
-                <%= f.collection_select :picture_id, Picture.order(:nombre), :id, :nombre, include_blank: true %>
+                <%= label_tag  "picture_file", "Subir imagen" %>
+                <%= file_field_tag "picture[file]" %>
+                <br><br>
+                <%= label_tag  "picture_nombre", "Título de la imagen" %>
+                <%= text_field_tag "picture[nombre]", @x.picture&.nombre %>
+                <br><br>
+                <%= render "personajes/form_modal",
+                    buttom_content: "Editar etiquetas de la imagen",
+                    header_text: "Etiquetas de la imagen de #{@x.nombre}",
+                    index: "picture_etiquets" do %>
+                  <div class="pj-modal_checkbox_list">
+                    <%= collection_check_boxes :picture, :etiquet_ids, Etiquet.all, :id, :nombre, checked: @x.picture&.etiquet_ids || [] do |etiquet| %>
+                      <div>
+                        <%= etiquet.check_box %>
+                        <%= etiquet.label %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
               </div>
             </div>
           </section>
-
+          <br>
+          <br>
           <section>
-            <h3>Notas</h3>
-            <div class="white_bk"><%= f.rich_text_area :descripcion %></div>
+            <%= render "personajes/form_modal",
+                buttom_content: "Editar artículos relacionados",
+                header_text: "Editando artículos relacionados de #{@x.nombre}",
+                index: "cuentos" do %>
+              <div class="pj-modal_checkbox_list">
+                <%= f.collection_check_boxes :cuento_ids, Cuento.all, :id, :nombre do |cuento| %>
+                  <div>
+                    <%= cuento.check_box %>
+                    <%= cuento.label %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </section>
+          <section>
+            <h3>Notas 1</h3>
+            <div class="white_bk no_trix_toobar"><%= f.rich_text_area :descripcion %></div>
+            <h3>Notas 2</h3>
+            <div class="white_bk"><%= f.rich_text_area :descripcion2 %></div>
           </section>
 
         </div>
@@ -296,6 +406,26 @@
               <button type="button" id="add-parte-cuerpo" class="btn btn-primary">
                 Añadir parte del cuerpo
               </button>
+              
+              <br>
+              <div id="explicacion-mapeos-container">
+                <%= render "personajes/form_modal",
+                    buttom_content: "Cómo configurar los mapeos de partes del cuerpo",
+                    buttom_extra_css: "to_right",
+                    header_text: "Explicación de mapeos de partes del cuerpo",
+                    index: "explicacion-mapeos" do %>
+                    <p> El mapeo asigna una letra, símbolo o palabra a cada estado de salud de la parte del cuerpo.</p>
+                    <p> Si tu personaje no tiene nada especial al respecto déjalo por defecto y no te preocupes.</p>
+                    <p> Si quieres usar un mapeo personalizado debes de seguir el siguiente formato. Tienes dos opciones: </p>
+                    <ul>
+                      <li><b>1.</b> Usar un carácter o letra por cada estado de salud. Es imprescindible que el número de 
+                        caracteres coincida con la salud máxima de esa parte del cuerpo o dará error.</li>
+                      <li><b>2.</b> Usar el carácter "@" como separador entre los esados de salud. En vez de un único caracter
+                        puedes usar palabras para representar el estado de salud. Igualmente es imprescindible que el número de 
+                        palabras coincida con la salud máxima de esa parte del cuerpo o dará error.</li>
+                    </ul>
+                <% end %>
+              </div>
 
             </div>
           </section>
@@ -372,7 +502,8 @@
               <h3>Inventario</h3>
                 <div class="carta-grid_container carta-grid_container_form_habilidad detalle_section"
                     id="items-list-alive">
-                      <%  @x.personajeHasItems.each do |ph_item| %>
+                      <% @x.personajeHasItems.each do |ph_item| %>
+                        <% next unless ph_item.item%>
                         <%= render "form_item", phi: ph_item, categ_id: "pj", destroy: "0" %>
                       <% end %>
                 </div>

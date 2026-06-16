@@ -1,4 +1,7 @@
 class ProfilesController < ApplicationController
+
+  configure_access level: :player
+
   before_action :authenticate_user!
 
   def dashboard

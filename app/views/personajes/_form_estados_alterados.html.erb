@@ -12,7 +12,7 @@
     <% index = 0%>
     <% prefix = "#{nombre_input_base}[#{index}]"%>
     <% listaEstadosAlterados.each do |ea| %>
-      <tr data-id="<%= index %>" class="white_bk">
+      <tr data-id="<%= index %>">
         <% if ea.libre? %>
           <td data-label="" colspan="2">
             <input type="text"

@@ -1,0 +1,25 @@
+<h1>Mis grupos de personaje: </h1>
+<br>
+<div class="clase-main">
+  <% if @xs.any? %>
+    <div class="carta-grid_container carta-grid_container_clase">
+      <% @xs.each do |x| %>
+        <%= render x %>
+      <% end %>
+    </div>
+  <% else %>
+    <p> Aún no has creado ningún grupo de personajes. </p>
+  <% end  %>
+  <br>
+  <%= link_to "Crear nuevo grupo de personajes.", new_personajegroup_path, class: "btn btn-primary" %>
+  <br>
+  <br>
+  <% if @all_gpjs %>
+    <h1>Todos los grupos de personaje: </h1>
+    <div class="carta-grid_container carta-grid_container_clase">
+      <% @all_gpjs.each do |x| %>
+        <%= render x %>
+      <% end %>
+    </div>
+  <% end  %>
+</div>

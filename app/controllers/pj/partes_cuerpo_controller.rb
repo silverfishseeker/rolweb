@@ -1,4 +1,7 @@
 class Pj::PartesCuerpoController < ApplicationController
+
+  configure_access level: :player
+
   def change(value)
     @parte_cuerpo = Pj::ParteCuerpo.find(params[:id])
     @parte_cuerpo.saludact = params[:current].to_i + value

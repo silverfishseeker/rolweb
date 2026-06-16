@@ -2,10 +2,27 @@ class PersonajesController < ModelController
   def tipo; Personaje end
 
   def model_params
-    params.require(:personaje).permit(:nombre, :is_public, :picture_id, :descripcion, :oro)
+    params.require(:personaje).permit(
+      :nombre, :is_public, :nivel_clases, :nivel_habilidades,
+      :nivel_estadisticas, :nivel_otro, :picture_id, :descripcion,
+      :descripcion2, :oro, :personajegroup_id, :user_id, cuento_ids: [])
   end
-  
-  restrict_admin_access
+
+  configure_access level: :player
+  configure_access :index, level: :unlogged
+  before_action :check_ownership, only: %i[show edit destroy]
+
+  def index
+    if params[:mode] == "privados"
+      return unless require_level :player, "Necesitas crear una cuenta para crear personajes."
+      @xs = current_user.personajes
+      @header = "Mis personajes"
+    else
+      @xs = Personaje.where(is_public: true)
+      @header = "Personajes públicos"
+    end
+    @all_pjs = has_level?(:admin) ? Personaje.all : nil
+  end
 
   def new
     # Recover form data from rescue_my_errors redirect
@@ -20,11 +37,24 @@ class PersonajesController < ModelController
     end
   end
 
+  def edit
+    @show_user = has_level?(:admin)
+  end
+
   def update
-    @y = tipo.find(params[:id])
     super do
+      raise "No tienes permiso para editar este personaje." unless check_ownership
       process_associations_for(@x)
+      edit_personaje_path(@x) if params[:go_to_edit]
     end
+  end
+
+  def check_ownership
+    (@x.user == current_user) ||  
+    (require_level(:master) && 
+      @x.personajegroup.present? &&
+      @x.personajegroup.users.exists?(current_user.id)) ||
+    require_level(:admin)
   end
 
   private
@@ -87,7 +117,7 @@ class PersonajesController < ModelController
       else
         contador ||= target.calculados.build( modificable: Pj::Modificable.new )
         libre = contador.calculado_libre || contador.build_calculado_libre
-        libre.nombre = attrs[:nombre]
+        libre.nombre = attrs[:nombre] if attrs[:nombre].present?
         libre.base   = attrs[:base].to_i
         if attrs[:rango].present?
           contador.build_rango if contador.rango.nil?
@@ -100,9 +130,21 @@ class PersonajesController < ModelController
     end
   end
 
+  # Al elimar o añadir elementos dejamos huecos o encontramos elementos sin position,
+  # las recalculamos todas manteniendo el orden anterior y añadiendo los nuevos la principio.
+  def recalculate_positions_for(personaje)
+    [personaje.personajeHasClases, personaje.personajeHasHabilidads, personaje.personajeHasItems].each do |association|
+      association.sort_by { |e| e.position || -Float::INFINITY }.each_with_index do |element, index|
+        element.update(position: index)
+      end
+    end
+  end
+
   # Procesa los parámetros complejos y actualiza/crea asociaciones en @personaje (que ya existe en @x)
   def process_associations_for(personaje)
     raise "Tipo de formulario no reconocido" unless Personaje::FORM_TYPES.values.include?(params[:form_type])
+    return unless require_level :player ||
+        (require_level :admin if params[:user_id].present? && params[:user_id].to_i != current_user.id)
     if params[:form_type] == Personaje::FORM_TYPES[:edit]
       edit_process_associations_for(personaje)
     else
@@ -137,11 +179,68 @@ class PersonajesController < ModelController
       process_estados_alterados attrs[:has_estadoalterados], pc
       pc.save!
     end
+    
+    # CLASES
+    params[:phc]&.each do |id, attrs|
+      phc = personaje.personajeHasClases.find(id.to_i)
+      phc.position = attrs[:position].to_i
+      process_contadores_for attrs[:calculados], phc
+      phc.save!
+    end
 
+    # HABILIDADES
+    params[:phh]&.each do |id, attrs|
+      phh = personaje.personajeHasHabilidads.find(id.to_i)
+      phh.position = attrs[:position].to_i
+      process_contadores_for attrs[:calculados], phh
+      phh.save!
+    end
+
+    # ITEMS
+    params[:phi_iinv]&.each do |id, attrs|
+      phi = personaje.personajeHasItems.find(id.to_i)
+      equiped_attrs = params.dig(:phi, id)
+      if attrs[:_destroy] == "1" || equiped_attrs && equiped_attrs[:_destroy] == "1"
+        phi.destroy
+        next
+      end
+      attrs = equiped_attrs || attrs
+      phi.position = attrs[:position].to_i
+      phi.isEquipped = attrs[:isEquipped] == "1"
+      phi.cantidad = attrs[:cantidad].to_i
+      process_contadores_for attrs[:calculados], phi
+      phi.customitem.nombre = attrs[:customitem] if attrs[:customitem].present?
+      phi.save!
+    end
+    params[:new_custom_item]&.each do |id, attrs|
+      next if attrs[:_destroy] == "1"
+      phi = personaje.personajeHasItems.build(
+        cantidad: attrs[:cantidad].to_i,
+        isEquipped: attrs[:isEquipped] == "1",
+        item: nil
+      )
+      phi.build_customitem(nombre: attrs[:customitem])
+      phi.save!
+    end
+
+    recalculate_positions_for personaje
   end
 
   def edit_process_associations_for(personaje)
     
+    # PICTURE
+    if params[:picture].present?
+      pic_params = params[:picture]
+      picture = personaje.picture || personaje.build_picture
+      picture.image = pic_params[:file] if pic_params[:file].present?
+      picture.nombre =
+          pic_params[:nombre].presence ||
+          (File.basename(picture.image.nombre.to_s, ".*").presence if picture.image) ||
+          "Imagen de #{personaje.nombre}"
+      picture.etiquets = Etiquet.find(pic_params[:etiquet_ids].reject(&:blank?))
+      picture.save!
+    end
+
     # ESTADISTICAS
     params[:estadistics].each do |tipo_id_str, attrs|
       tipo_id = tipo_id_str.to_i
@@ -338,5 +437,7 @@ class PersonajesController < ModelController
         phi.save!
       end
     end
+
+    recalculate_positions_for personaje
   end
 end

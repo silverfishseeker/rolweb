@@ -49,6 +49,6 @@ class Item < ApplicationRecord
   end
 
   def build_personaje_has_item(personaje)
-    Pj::PersonajeHasItem.new(personaje: personaje, item: self, cantidad: 0)
+    Pj::PersonajeHasItem.new(personaje: personaje, item: self, cantidad: 1)
   end
 end

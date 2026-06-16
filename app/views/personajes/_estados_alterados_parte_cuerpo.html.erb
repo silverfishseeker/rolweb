@@ -8,6 +8,7 @@
             buttom_extra_css: local_assigns[:buttom_extra_css] || "",
             header_text: "Estados alterados de #{target ? target.nombre : "nuevo"}",
             index: "partecuerpo-#{index}",
+            default_close: false,
             close_buttom_extra_css: "modal-close-resumen" do %>
     <%= render "personajes/form_estados_alterados",
                 listaEstadosAlterados: target ? target.hasEstadoalterados : [],
