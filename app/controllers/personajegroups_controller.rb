@@ -11,18 +11,18 @@ class PersonajegroupsController < ModelController
   before_action :check_ownership, only: [:show, :edit, :destroy]
   
   def check_ownership
-    @x.users.exists?(current_user.id) || require_level(:admin)
+    require_level(:admin) || @x.users.exists?(current_user.id)
   end
 
   def create
     super do
-      @x.users << current_user
+      @x.users << current_user if user_signed_in?
       nil
     end
   end
 
   def index
-    @xs = current_user.personajegroups
+    @xs = current_user&.personajegroups || []
     @all_gpjs = has_level?(:admin) ? Personajegroup.all : nil
   end
 

@@ -8,11 +8,10 @@
 
     <%= stylesheet_link_tag "application", media: 'all', "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <%= yield :head %>
+    <%= yield :page_js %>
   </head>
 
   <body <%= content_for?(:body_class) ? "class=#{yield(:body_class)}" : '' %>>
-     <%= yield :page_js %>
      
     <nav class="navbar">
       <h1><%= link_to "Varacia", root_path %></h1>
@@ -147,28 +146,26 @@
     </nav>
 
     <% # Divs para mostrar mensajes y alerta del sistema relacionados con el resultado de procesos %>
-    <% if notice || alert || flash[:warning]%>
-      <div class="flash-wrapper">
-        <% if notice %>
-          <div class="flash-notice">
-            <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
-            <%= notice %>
-          </div>
-        <% end %>
-        <% if alert%>
-          <div class="flash-alert">
-            <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
-            <%= alert %>
-          </div>
-        <% end %>
-        <% if flash[:warning]%>
-          <div class="flash-warning">
-            <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
-            <%= flash[:warning] %>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
+    <div class="flash-wrapper">
+      <% if notice %>
+        <div class="flash-notice">
+          <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
+          <%= notice %>
+        </div>
+      <% end %>
+      <% if alert%>
+        <div class="flash-alert">
+          <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
+          <%= alert %>
+        </div>
+      <% end %>
+      <% if flash[:warning]%>
+        <div class="flash-warning">
+          <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
+          <%= flash[:warning] %>
+        </div>
+      <% end %>
+    </div>
 
 
     <div class="main-content <%= content_for?(:main_content_class) ? yield(:main_content_class) : '' %>">

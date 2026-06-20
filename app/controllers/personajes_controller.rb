@@ -15,7 +15,7 @@ class PersonajesController < ModelController
   def index
     if params[:mode] == "privados"
       return unless require_level :player, "Necesitas crear una cuenta para crear personajes."
-      @xs = current_user.personajes
+      @xs = current_user&.personajes || []
       @header = "Mis personajes"
     else
       @xs = Personaje.where(is_public: true)
@@ -32,7 +32,7 @@ class PersonajesController < ModelController
 
   def create
     super do
-      @x.user = current_user
+      @x.user = current_user if user_signed_in?
       process_associations_for(@x)
     end
   end
@@ -50,11 +50,11 @@ class PersonajesController < ModelController
   end
 
   def check_ownership
-    (@x.user == current_user) ||  
+    (require_level(:admin) ||
+    @x.user == current_user) ||  
     (require_level(:master) && 
       @x.personajegroup.present? &&
-      @x.personajegroup.users.exists?(current_user.id)) ||
-    require_level(:admin)
+      @x.personajegroup.users.exists?(current_user.id))
   end
 
   private

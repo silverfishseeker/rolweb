@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
   # Por defecto TODAS las acciones están restringidas a superadmin, hay que especificar
   # las que se quieran permitir a otros usuarios.
   
-  helper_method :warnings
   def add_warning(message)
     flash[:warning] ||= []
     flash[:warning] << message

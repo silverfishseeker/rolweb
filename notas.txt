@@ -91,9 +91,6 @@ rails console
     meterse en la consola de rails, para interactuar con modelos
 
 
-reinstalar gemas:
-    bundle install
-
 Carpetas necesarias de la BD
     pg_commit_ts
     pg_logical/pg_logical
