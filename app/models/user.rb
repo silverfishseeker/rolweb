@@ -25,6 +25,11 @@ class User < ApplicationRecord
     message: "no es un rango válido."
   }
 
+  after_initialize if: :new_record? do
+    self.rango = AccessControl::LVS[:player]
+  end
+
+
   mount_image_uploader
   
   has_many :personajes, dependent: :destroy

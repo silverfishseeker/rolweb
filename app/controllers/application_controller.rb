@@ -10,8 +10,7 @@ class ApplicationController < ActionController::Base
     flash[:warning] << message
   end
 
-  before_action :check_maintenance_mode
-  def check_maintenance_mode
+  before_action do
     if maintenance_enabled?
       render plain: "Aplicación en mantenimiento. Intente nuevamente más tarde.", status: 503
     end

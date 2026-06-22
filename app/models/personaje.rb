@@ -1,6 +1,6 @@
 class Personaje < ApplicationRecord
   # attributes: nombre, nivel_clases, nivel_habilidades, nivel_estadisticas,
-  #   nivel_otro, is_public
+  #   nivel_otro, is_public, oro
   has_rich_text :descripcion
   has_rich_text :descripcion2
 
