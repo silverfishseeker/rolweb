@@ -1,5 +1,5 @@
 class RestoreState < ApplicationRecord
-  # attributes: index, resume_dir
+  # attributes: index
 
   def self.get
     first_or_create!.index

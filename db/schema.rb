@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_10_002701) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_22_192324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -441,7 +441,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_002701) do
 
   create_table "restore_states", force: :cascade do |t|
     t.integer "index"
-    t.string "resume_dir"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

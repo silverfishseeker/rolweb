@@ -22,7 +22,7 @@ class MemoryCache < InterfaceCache
   end
 
   def store(record)
-    raise 'HybridCache.store: record cannot be nil' unless record
+    raise 'MemoryCache.store: record cannot be nil' unless record
     @memory_cache.write(record.id, record)
   end
 

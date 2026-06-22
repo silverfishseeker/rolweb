@@ -9,18 +9,13 @@ class UsersController < ModelController
   end
 
   def new
-    @x.rango = AccessControl::LVS[:player]
+    raise AbstractController::ActionNotFound, "No se permite crear usuarios desde este controlador"
   end
 
   def create
-    super do
-      raise "Rango de nuevo usuario inválido" if @x.rango != AccessControl::LVS[:player]
-    end
+    raise AbstractController::ActionNotFound, "No se permite crear usuarios desde este controlador"
   end
 
-  def get_ranks
-    
-  end
   def edit
     @ranks = get_LEVELS_NAMES_from :admin
   end

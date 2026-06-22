@@ -8,7 +8,11 @@ module SilverImageUploaderMounter
   end
 
   class_methods do
-    # For this to work, the model must have an 'image' string attribute.
+    # Para que esto funcione, el modelo debe tener un atributo `image` de tipo String.
+    #
+    # @param mode [Symbol] Modo de procesamiento de la imagen. Valores soportados:
+    #   - `:none` (por defecto): no aplica ningún procesamiento adicional.
+    #   - `:cut_to_fit`: elimina los márgenes transparentes de la imagen antes de guardarla.
     def mount_image_uploader(mode: :none)
 
       class_attribute :has_image_uploader, instance_writer: false, default: true

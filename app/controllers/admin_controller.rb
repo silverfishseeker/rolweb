@@ -3,6 +3,8 @@ include Maintenance
 
 class AdminController < ApplicationController
 
+    configure_access :restore_backup, level: :superadmin
+
     def control
     end
 
