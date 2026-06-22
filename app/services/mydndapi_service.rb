@@ -1,8 +1,6 @@
 require 'net/http'
 
 class MydndapiService
-    class UnexpectedResponseError < StandardError; end
-
     def getUrl(url)
         "http://api:3000/#{url}"
     end
@@ -24,7 +22,7 @@ class MydndapiService
     def check_response(response)
         parsed = response.parsed_response
         unless response.code == 204 or parsed.is_a?(Hash) or parsed.is_a?(Array)
-            raise UnexpectedResponseError, "Unexpected response. Code:{#{response.code}} Content:{#{parsed}}" # corta para no saturar logs
+            raise "MydndapiService#check_response: Unexpected response, code:{#{response.code}} content:{#{parsed}}" # corta para no saturar logs
         end
         parsed
     end

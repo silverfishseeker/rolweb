@@ -1,4 +1,4 @@
-<%= importJS "homeRandomGenerator" %>
+<% importJS "homeRandomGenerator" %>
 
 <div class="home-container">
 
@@ -7,8 +7,10 @@
     <div class="section-content texto_info-margins">
       <h2>¿Qué es Varacia?</h2>
       <p>
-        Varacia es un sistema de rol de mesa original centrado en la accesibilidad para nuevos jugadores y la profundidad y complejidad para veteranos.
-        Aunque tiene su propio mundo, su diseño es flexible para adaptarse a cualquier universo. Siempre en desarrollo, se pretende que haya contenido para absolutamente todo.
+        Varacia es un sistema de rol de mesa original centrado en la accesibilidad
+        para nuevos jugadores y la profundidad y complejidad para veteranos.
+        Aunque tiene su propio mundo, su diseño es flexible para adaptarse a cualquier
+        universo. En continua expansión, se pretende que haya contenido para casi todo.
       </p>
       <p>
         En esta página encontrarás todo lo necesario para aprender a jugar, crear personajes y explorar el mundo de Varacia.
@@ -27,7 +29,8 @@
         <%= render "shared/image", image: @clase_image %>
       </div>
       <h2>Clases</h2>
-      <p>Explora más de 50 clases distintas, cada una con su propia mecánica que la hace única y te permite jugar de forma completamente diferente. </p>
+      <p>Explora más de 50 clases distintas, cada una con su propia mecánica que
+        la hace única y te permite jugar de forma completamente diferente. </p>
       <br>
       <%= link_to "Ver clases", clases_path %>
       
@@ -38,9 +41,10 @@
         <%= render "shared/image", image: @habilidad_image %>
       </div>
       <h2>Habilidades</h2>
-      <p>Conoce las razas que habitan Varacia y sus habilidades únicas.</p>
+      <p>Más de 700 habilidades completamente únicas. Hechizos, artes marciales,
+        cocina, crafteos... cualquier cosa que se te venga a la mente.</p>
       <br>
-      <%= link_to "Ver habilidades", clases_path %>
+      <%= link_to "Ver habilidades", habilidads_path %>
     </div>
     <!-- Panel 3 -->
     <div class="home-features-card">

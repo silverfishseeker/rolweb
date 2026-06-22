@@ -4,7 +4,11 @@
     <%= form.text_field :nombre %>
   </div>
   <br>
-  
+  <div>
+    <%= form.label :isNumeric %><br>
+    <%= form.check_box :isNumeric %>
+  </div>
+  <br>
   <div>
     <%= form.label :descripcion %><br>
     <%= form.rich_text_area :descripcion %>

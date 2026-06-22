@@ -1,16 +1,24 @@
-<p style="color: green"><%= notice %></p>
+<h1><%=@header%></h1>
 
-<% content_for :title, "Personajes" %>
+<% if @xs.any? %>
+  <div class="carta-grid_container carta-grid_container_clase">
+    <% @xs.each do |personaje| %>
+      <%= render personaje %>
+    <% end %>
+  </div>
+<% else %>
+  <p> Aún no has creado ningún personaje. Crear nuevo:
+    <%= link_to "Nuevo", new_personaje_path, class:"btn btn-primary" %>
+  </p>
+<% end %>
 
-<h1>Personajes</h1>
 
-<div id="personajes">
-  <% @personajes.each do |personaje| %>
-    <%= render personaje %>
-    <p>
-      <%= link_to "Show this personaje", personaje %>
-    </p>
-  <% end %>
-</div>
+<% if @all_pjs %>
+  <h1>Todos los personajes</h1>
 
-<%= link_to "New personaje", new_personaje_path %>
+  <div class="carta-grid_container carta-grid_container_clase">
+    <% @all_pjs.each do |personaje| %>
+      <%= render personaje %>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,54 @@
+<%# Expected params: hasCalcs, prefix, html_id %>
+<table class="tabla-estadisticas">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Valor</th>
+      <th>Valor rango</th>
+      <th>Borrar</th>
+    </tr>
+  </thead>
+  <tbody id="<%= html_id %>_body">
+    <!-- ================= LIBRES ================= -->
+    <% hasCalcs.calculados.each_with_index do |calc, index| %>
+      <% calc_prefix = "#{prefix}[calculados][#{index}]" %>
+      <% libre = calc.calculado_libre %>
+      <tr>
+        <input type="hidden" name="<%= calc_prefix %>[id]" value="<%= calc.id %>">
+        <td data-label="Nombre">
+          <input type="text"
+                name="<%= calc_prefix %>[nombre]"
+                value="<%= libre.nombre %>">
+        </td>
+        <td data-label="Valor base">
+          <input type="number"
+                name="<%= calc_prefix %>[base]"
+                value="<%= libre.base %>">
+        </td>
+        <td data-label="Valor actual">
+          <input type="number"
+                name="<%= calc_prefix %>[rango]"
+                value="<%= calc.rango&.valor || 0 %>"
+                class="rango-input"
+                <%= "disabled" unless calc.rango.present? %>>
+        <button type="button" class="toggle-rango">R</button>
+        </td>
+        <td data-label="Borrar" class="checkbox-danger">
+          <input type="checkbox"
+                name="<%= calc_prefix %>[_destroy]"
+                value="1"
+                <%= "checked" if !calc.present? %>
+                class="rm_input"
+                data-rm_type="0">
+        </td>
+      </tr>
+      <% index += 1 %>
+    <% end %>
+  </tbody>
+</table>
+
+<button type="button" class="add-contador btn btn-primary"
+    data-conts_body="<%= html_id %>_body"
+    data-prefix="<%= prefix %>">
+  + Añadir contador
+</button>

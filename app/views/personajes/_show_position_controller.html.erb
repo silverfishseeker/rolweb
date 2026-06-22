@@ -1,0 +1,10 @@
+<%# Expected params: position, input_prefix, id_prefix %>
+<div class="pjv-pos_controller" data-id-prefix="<%= id_prefix %>">
+  <button type="button" class="pjv-pos_button" title="Mover arriba" id="<%= id_prefix %>-pos_up">
+    <%= image_tag "upwards-button.png" %>
+  </button>
+  <button type="button" class="pjv-pos_button" title="Mover abajo" id="<%= id_prefix %>-pos_down">
+    <%= image_tag "downwards-button.png" %>
+  </button>
+  <input type="hidden" name="<%= input_prefix %>[position]" id="<%= id_prefix %>-position" value="<%= position %>">
+</div>

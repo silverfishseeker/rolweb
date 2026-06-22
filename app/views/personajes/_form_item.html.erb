@@ -1,0 +1,67 @@
+<%# Expected params: phi, categ_id, destroy%>
+
+<% id = "item_#{categ_id}_#{phi.item.id}" %>
+<% item = phi.item %>
+<% base_name = "phis[#{id}]" %>
+<% initial_text = phi.sobreescritura.presence || item.efecto %>
+<fieldset class="carta carta_form carta_form_habilidad" id="<%= id %>" <%= "disabled" if destroy == "1" %>>
+  <input type="hidden" name="<%= base_name %>[item_id]" value="<%= item.id %>">
+  <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
+  <div id="original-efecto-<%= id %>" style="display:none"><%= item.efecto %></div>
+
+  <div class="carta-header carta-header_form">
+    <p class="carta-number">
+      <input type="number" name="<%= base_name %>[cantidad]" 
+          value="<%= phi.cantidad %>" class="pj-cantidad">
+    </p>
+    <p class="carta-number carta-coste">
+      <%= item.coste %>
+    </p>
+    <p class="carta-number carta-peso">
+      <%= item.peso %>
+    </p>
+    <div class="carta-add_buttom" 
+        data-carta_id="<%= id %>"
+        data-alive_container="items-list-alive"
+        data-destroy_container="items-list-<%= categ_id %>-destroy" >
+      <%= destroy == "1" ? "+" : "-" %>
+    </div>
+  </div>
+
+  <div class="carta-header carta-header_form">
+    <%= link_to item.nombre, item, class: "carta-title"%>
+  </div>
+
+  <div class="carta-subtitles">
+    <% item.clases.each do |clase| %>
+      <%= link_to clase.nombre, clase %>
+    <% end %>
+  </div>
+
+  <div class="carta-description">
+    <%= item.ritual_description %>
+    <span id="efecto-modal-<%= id %>">
+      <%= initial_text %>
+    </span>
+  </div>
+
+  <%= render "personajes/form_modal",
+            buttom_content: "Editar texto de item",
+            buttom_extra_css: "open_modal-habilidad",
+            header_text: "Editando #{item.nombre}",
+            index: id,
+            default_close: false,
+            close_buttom_extra_css: "modal-close-sobreescritura" do %>
+    <%= render "form_sobreescritura", base_name: base_name, id: id, initial_text: initial_text do %>
+      <%= item.ritual_description %>
+    <% end %>
+  <% end %>
+  <%= render "personajes/form_modal",
+          buttom_content: "Contadores",
+          buttom_extra_css: "open_modal-habilidad",
+          header_text: "Editando contadores de #{item.nombre}",
+          index: id + "-calculados",
+          close_buttom_extra_css: "" do %>
+    <%= render "personajes/form_has_calculados", hasCalcs: phi, prefix: "#{base_name}", html_id: id + "-calculados" %>
+  <% end %>
+</fieldset>

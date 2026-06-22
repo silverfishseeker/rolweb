@@ -1,10 +1,239 @@
-<p style="color: green"><%= notice %></p>
+<% importJS "personajeShow", "modals", "estadosAlterados" %>
+<%= render "personajes/estadoalterado-template" %> <%# Requerido por estadosAlterados %>
+<% content_for :main_content_class, 'main-content-margin_reduced' %>
 
-<%= render @personaje %>
+<%= form_with(model: @x, html: { multipart: true, class: "pjv-form"}) do |f| %>
+  <%= hidden_field_tag :form_type, Personaje::FORM_TYPES[:show] %>
 
-<div>
-  <%= link_to "Edit this personaje", edit_personaje_path(@personaje) %> |
-  <%= link_to "Back to personajes", personajes_path %>
+  <div class="pjv-header">
+    <h1> <%=@x.nombre%></h1>
 
-  <%= button_to "Destroy this personaje", @personaje, method: :delete %>
-</div>
+    <div class="options">
+      <%= f.submit "Guardar", class: "btn btn-primary" %>
+      <%= f.submit "Editar", name: "go_to_edit", class: "btn btn-primary" %>
+    </div>
+  </div>
+  <p class="pjv-nivel"><b> Nivel <%= @x.nivel %> </b></p>
+
+  <div class="pjv-stats">
+    <% @x.estadistics.ordered.each do |stat| %>
+      <span class="carta-number">
+        <%=stat.tipoEstadistic.siglas%>
+        <span id="stat-base-<%=stat.id%>" style="display:none">
+          <%=stat.value%>
+        </span>
+        <span id="stat-val-<%=stat.id%>"> <%=stat.value%> </span>
+        (<b id="stat-mod-<%=stat.id%>"><%=stat.mod_str%></b>)
+        <input type="number"
+            name="estadistics[<%= stat.id %>][active_mod]"
+            value="<%= stat.modificable.active_mod %>"
+            class="pjv-modifier"
+            data-base="stat-base-<%=stat.id%>"
+            data-value="stat-val-<%=stat.id%>"
+            data-mod="stat-mod-<%=stat.id%>">
+      </span>
+    <% end %>
+  </div>
+  <br>
+  <div class="pjv-columns">
+    <div class="pjv-column" id="tab-estado">
+      <div class="pjv-section">
+        <h3>Estado</h3>
+        <div class="pjv-vars_container">
+          <% @x.calculados.each do |calc| %>
+            <div class="pjv-var">
+              <span><%= calc.nombre %>: </span>
+              <span>
+                <% if calc.rango.present? %>
+                  <input type="number"
+                        name="calculados[<%= calc.id %>][rango]"
+                        value="<%= calc.rango.valor %>"
+                        class="pjv-input">
+                  /
+                <% end %>
+                <span id="calc-val-<%=calc.id%>"><%= calc.value %></span>
+                <input type="number"
+                    name="calculados[<%= calc.id %>][active_mod]"
+                    value="<%= calc.modificable.active_mod %>"
+                    class="pjv-modifier"
+                    data-base="calc-base-<%=calc.id%>"
+                    data-value="calc-val-<%=calc.id%>">
+                <span id="calc-base-<%=calc.id%>" style="display:none">
+                  <%=calc.value%>
+                </span>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="pjv-section" id="parte-cuerpos-body">
+        <h3>Cuerpo</h3>
+        <div class="pjv-vars_container pjv-vars_container-cuerpo">
+          <% @x.parteCuerpos.each do |pc| %>
+            <div class="pjv-var pjv-var-cuerpo 
+                <%= "pjv-var-cuerpo-borrada" if pc.saludact <= 0 %>">
+              <span class="pjv-var-cuerpo-nombre">
+                <%= pc.nombre %>:
+              </span>
+              <span>
+                <span class="pjv-var-cuerpo-estados_alterados">
+                  <%= render "personajes/estados_alterados_parte_cuerpo",
+                    index: pc.id,
+                    target: pc,
+                    buttom_content: image_tag("edit.png", alt: "Editar"),
+                    buttom_extra_css: "btn-icon",
+                    horizontal: true
+                  %>
+                </span>
+                <span class="pjv-var-cuerpo-armor">
+                  <span id="pcarm-val-<%=pc.id%>" class="inner">
+                    <%= pc.modificable.passive_mod + pc.modificable.active_mod %>
+                  </span>
+                </span>
+                <input type="number"
+                    name="parte_cuerpos[<%= pc.id %>][active_mod]"
+                    value="<%= pc.modificable.active_mod %>"
+                    class="pjv-modifier pjv-modifier-armadura"
+                    data-base="pcarm-base-<%=pc.id%>"
+                    data-value="pcarm-val-<%=pc.id%>"
+                    data-link-aumentar-id="pcarm-<%=pc.id%>_aumentar"
+                    data-link-disminuir-id="pcarm-<%=pc.id%>_disminuir">
+                <span id="pcarm-base-<%=pc.id%>" style="display:none">
+                  <%=pc.modificable.passive_mod%>
+                </span>
+                <%= render "personajes/show_salud", pc: pc %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="pjv-resizer"></div>
+    <div class="pjv-column pjv-column-big pjv-column-tabs">
+      <div class="pj-tabs">
+        <div class="pj-tabs-nav">
+          <div data_tab_target="#tab-activas" class="pj-tabs-nav-active">Activas</div>
+          <div data_tab_target="#tab-pasivas">Pasivas</div>
+          <div data_tab_target="#tab-otras">Otras</div>
+          <div data_tab_target="#tab-equipo">Equipo</div>
+        </div>
+        
+        <div class="pj-tab-container">
+          <div id="tab-activas" class="pj-tab_pane pj-tab_pane-active">
+            <% @x.personajeHasHabilidads.joins(:habilidad)
+                .where(habilidads: { tipo: [0, 3, 5] }).order(:position).each do |phh| %>
+              <%= render "personajes/show_habilidad", phh: phh %>
+            <% end %>
+          </div>
+          <div id="tab-pasivas" class="pj-tab_pane">
+            <% (
+                @x.personajeHasClases + 
+                @x.personajeHasHabilidads.joins(:habilidad)
+                    .where(habilidads: { tipo: [1] })
+              ).sort_by(&:position).each do |phc_phh| %>
+              <% if phc_phh.is_a?(Pj::PersonajeHasClase) %>
+                <%= render "personajes/show_clase", phc: phc_phh %>
+              <% else %>
+                <%= render "personajes/show_habilidad", phh: phc_phh %>
+              <% end %>
+            <% end %>
+          </div>
+          <div id="tab-otras" class="pj-tab_pane">
+            <% @x.personajeHasHabilidads.joins(:habilidad)
+                .where(habilidads: { tipo: [2, 4, 6] }).order(:position).each do |phh| %>
+              <%= render "personajes/show_habilidad", phh: phh %>
+            <% end %>
+          </div>
+          <div id="tab-equipo" class="pj-tab_pane">
+            <% @x.personajeHasItems.where(isEquipped: true).order(:position).each do |phi| %>
+              <%= render "personajes/show_item", phi: phi, isInInventario: false %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pjv-resizer"></div>
+    <div class="pjv-column pjv-column-big">
+      <div class="pjv-subcolumns">
+        <div class="pjv-subcolumn">
+          <div class="pjv-inventario">
+            <%= render "personajes/form_modal",
+                buttom_content: "Inventario",
+                header_text: "Inventario",
+                index: "inventario" do %>
+              <%= render "personajes/form_modal",
+                  buttom_content: "Información",
+                  header_text: "Información sobre el uso del inventario",
+                  index: "inventario-info" do %>
+                <p> Usas las categorías para filtrar tus ítems, puedes seleccionar
+                  una o varias para filtrar ítems que compartan esas categorías.
+                </p>
+                <p> Para cada ítem tienes en orden:</p>
+                <ol>
+                  <li> Controles de posión del ítem en tu inventario. Úsalo para
+                    que sube o baje puestos. </li>
+                  <li>Cantidad que tienes de ese ítem.</li>
+                  <li>Check para equipar ese ítem y que aparezca en tu pestaña de equipo.</li>
+                  <li>Peso de ese ítem.</li>
+                  <li>Nombre del ítem.</li>
+                  <li>Check para eliminar ese ítem de tu inventario. (También lo quita de
+                    tu equipo.)
+                  </li>
+                </ol>
+                <p> Para lo ítems custom es igual pero sin peso. (No puedes cambiar su posición al
+                  crearlos, guarda el personaje antes.) </p>
+              <% end %>
+              <br>
+              <br>
+              <div class="miniListadoClases" id="inventario-selection">
+                <% @x.personajeHasItems.each_with_object([]) do |phi, currCategs| %>
+                  <% currCategs.concat(phi.item&.categs || []) %>
+                <% end.uniq.sort_by(&:nombre).each do |ct| %>
+                  <span class="carta-title inventario-categ" data-categ="<%= ct.id %>">
+                    <%= ct.nombre %></span>
+                <% end %>
+              </div>
+              <br>
+              <div id="inventario-items">
+                <% @x.personajeHasItems.order(:position).each do |phi| %>
+                  <%= render "personajes/show_item", phi: phi, isInInventario: true %>
+                <% end %>
+              </div>
+              <div id="new-customitem-buttom" class="btn btn-primary btn-small" data-template="customitem-template">
+                Añadir nuevo ítem custom
+              </div>
+            <% end%>
+            <template id="customitem-template">
+              <div class="carta carta_show inventario-item" data-categs="">
+                <div class="carta-header carta-header-small">
+                  <span class="carta-number">
+                    <input type="number" name="new_custom_item[__ID__][cantidad]"
+                          value="1" class="pj-cantidad">
+                  </span>
+                  <span data-label="Equipar">
+                    <input type="checkbox" name="new_custom_item[__ID__][isEquipped]" value="1">
+                  </span>
+                  <input type="text" class="carta-customitem" name="new_custom_item[__ID__][customitem]">
+                </div>
+              </div>
+            </template>
+          </div>
+          <h3> Oro: <%= f.number_field :oro, step: 0.01, class: "carta-number carta-coste pjv-modifier" %> </h3>
+          <div class="white_bk no_trix_toobar"><%= f.rich_text_area :descripcion %></div>
+        </div>
+        <div class="pjv-subcolumn pjv-subcolumn-big">
+          <%= render "shared/image_with_link", image: @x.picture.image, cssclass: "pjv-image" %>
+        </div>
+      </div>
+      
+      <div class="white_bk"><%= f.rich_text_area :descripcion2 %></div>
+      <h4>Artículos relacionados</h4>
+      <p>
+        <% @x.cuentos.each do |cuento| %>
+          <%= link_to cuento.nombre, cuento %>
+        <% end %>
+      </p>
+    </div>
+  </div>
+
+<% end %>

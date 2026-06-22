@@ -1,0 +1,21 @@
+<%# Expected params: clase, phHabilidades %>
+<div class="pj-selected_list" id="habilidades-list-<%= clase.id %>">
+  <h3>Habilidades de <%= clase.nombre %></h3>
+  <div class="detalle_section">
+    <h4>Habilidades aprendidas</h4>
+      <%= render "form_habilidades_list",
+          phHabilidades: phHabilidades,
+          clase_id: clase.id, destroy: "0" %>
+  </div>
+  <div class="detalle_section">
+    <h4>El resto de habilidades</h4>
+      <% remaining_habilidades = (
+          clase.habilidads.order(:nivel, :nombre) - phHabilidades.map(&:habilidad)
+        ).map do |habilidad| 
+          habilidad.build_personaje_has_habilidad(@x, clase)
+        end
+      %>
+    <%= render "form_habilidades_list", phHabilidades: remaining_habilidades,
+                clase_id: clase.id, destroy: "1" %>
+  </div>
+</div>

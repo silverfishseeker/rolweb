@@ -1,5 +1,3 @@
-# Uso exclusivo para MinioImageUploader y para CarrierWaveImageUploader
-
 class SilverImage
   include ImageUrlable
 

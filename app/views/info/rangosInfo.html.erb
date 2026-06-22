@@ -2,9 +2,9 @@
 <h1> Rangos</h1>
 <p> Tu rango de cuenta determina los permisos y la cosas que puedes hacer en la página. Existen los siguientes: </p>
 <ul>
-    <li><b><%=User.rangos[0]%></b>: sólo puedes ver contenido normal.</li>
-    <li><b><%=User.rangos[1]%></b>: puedes crear y guardar tus personajes.</li>
-    <li><b><%=User.rangos[2]%></b>: tienes permisos adicionales para ver contenido.</li>
-    <li><b><%=User.rangos[3]%></b>: puedes manipular los contenidos del rol y los usuarios.</li>
+    <li><b><%=AccessControl::LEVELS_NAMES[4]%></b>: sólo puedes ver contenido normal.</li>
+    <li><b><%=AccessControl::LEVELS_NAMES[3]%></b>: puedes crear personajes.</li>
+    <li><b><%=AccessControl::LEVELS_NAMES[2]%></b>: puedes crear grupos de personajes y acceder a personajes de otros jugadores en ese grupo. </li>
+    <li><b><%=AccessControl::LEVELS_NAMES[1]%></b>: puedes cambiar los contenidos del rol y los usuarios.</li>
 </ul>
 </div>

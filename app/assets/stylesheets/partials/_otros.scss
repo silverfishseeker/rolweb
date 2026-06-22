@@ -1,0 +1,44 @@
+/* Barra de búsqueda */
+
+.liveSearch {
+    position:absolute;
+    top: 110px;
+    right: 20px;
+    z-index: 1;
+}
+
+.liveSearch input {
+    padding: 10px;
+    border: 2px solid var(--c_base);
+    border-radius: 10px;
+    width: 300px;
+    font-size: 16px;
+}
+
+
+/* Formularios */
+
+.form-select {
+    height: 200px;
+    width: 200px;
+}
+.form-image img {
+    max-height: 200px;
+    max-width: 400px;
+}
+
+
+/* Árbol */
+
+img.arbol {
+    margin: 1%;
+    max-width:98%;
+}
+
+.to_right {
+    float: right;
+}
+
+.no_trix_toobar trix-toolbar {
+    display: none;
+}

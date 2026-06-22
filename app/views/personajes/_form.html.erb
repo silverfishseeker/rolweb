@@ -1,27 +1,543 @@
-<%= form_with(model: personaje) do |form| %>
-  <% if personaje.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(personaje.errors.count, "error") %> prohibited this personaje from being saved:</h2>
+<%# expected params: @x (Personaje)%>
+<% importJS "personajeForm", "modals", "estadosAlterados" %>
+<%= render "personajes/estadoalterado-template" %> <%# Requerido por estadosAlterados %>
+<% content_for :main_content_class, 'main-content-margin_reduced' %>
 
-      <ul>
-        <% personaje.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+<div>
+  <%= form_with(model: @x, html: { multipart: true, class: "pj-form"}) do |f| %>
+    <%= hidden_field_tag :form_type, Personaje::FORM_TYPES[:edit] %>
+
+    <% if @show_user %>
+      <label>
+        <%= f.label :user_id, "Usuario" %>
+        <%= f.collection_select(
+            :user_id,
+            User.order(:nombre),
+            :id,
+            :nombre
+        ) %>
+      </label>
+    <% end %>
+
+    <header class="pj-header">
+      <h1>
+        <%= f.object.new_record? ? "Nuevo personaje" : "Editando Personaje: #{@x.nombre}" %>
+      </h1>
+      <div class="options">
+        <%= f.submit "Guardar", class: "btn btn-primary" %>
+        <%= link_to "Cancelar", @x, class: "btn btn-danger",
+            data: { turbo_confirm: "¿Seguro que quieres cancelar? Se perderán los cambios." } %>
+      </div>
+    </header>
+
+    <div class="pj-tabs">
+      <div class="pj-tabs-nav">
+        <div data_tab_target="#tab-general" class="pj-tabs-nav-active">General</div>
+        <div data_tab_target="#tab-estado">Estado y cuerpo</div>
+        <div data_tab_target="#tab-clases">Clases & Habilidades</div>
+        <div data_tab_target="#tab-items">Inventario</div>
+      </div>
+
+      <div class="pj-tab-container">
+        <!-- GENERAL -->
+        <div id="tab-general" class="pj-tab_pane pj-tab_pane-active">
+
+          <section class="columns">
+            <div>
+              <h2>
+                <%= f.text_field :nombre, class: "form-control", placeholder: "Nombre del personaje" %>
+              </h2>
+
+              <div>
+                <label>
+                  <%= f.label :personajegroup_id, "Selecciona grupo de usuarios (opcional)" %>
+                  <%= f.collection_select(
+                      :personajegroup_id,
+                      Personajegroup.order(:nombre),
+                      :id,
+                      :nombre,
+                      { include_blank: "Sin grupo" }
+                  ) %>
+                </label>
+              </div>
+              <p><i> Al añadir tu personaje a un grupo le estás dando permisos al propietario de
+                grupo para ver y editar tu personaje. Si añades tu personaje a un grupo, ten cuidado
+                de que sea el apropiado.</i></p>
+              <br>
+
+              <div>
+                <label>
+                  <%= f.check_box :is_public %> Publicar para que todos puedan verlo.
+                  <i>(Se muestra sólo la portada, no el contenido.)</i>
+                </label>
+              </div>
+              <h3>Niveles del personaje</h3>
+
+              <table class="pj-niveles-table" id="pj-niveles-table">
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                    <th></th>
+                    <th>Valor calculado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>TOTAL</td>
+                    <td colspan="3">
+                      <span class="calculado">
+                        <%= @x.nivel %>
+                      </span>
+                    </td>
+                  </tr>
+                  <% niveles = [
+                    [:nivel_clases,       "Clases",       :calc_nivel_clases],
+                    [:nivel_habilidades,  "Habilidades",  :calc_nivel_habilidades],
+                    [:nivel_estadisticas, "Estadísticas", :calc_nivel_estadisticas],
+                    [:nivel_otro,         "Otro", nil]
+                  ] %>
+                  <% niveles.each do |attr, label, function| %>
+                    <tr>
+                      <td><%= label %></td>
+                      <td> <%= f.number_field attr, class: "pj-nivel-input", data: { field: attr } %> </td>
+                      <% if attr != :nivel_otro %>
+                      <td class="has_button"> <button type="button" class="btn btn-primary" data-field="<%= attr %>"> ⬅ </button> </td>
+                      <td>
+                        <span class="calculado" data-field="<%= attr %>">
+                          <%= @x.public_send(function) %>
+                        </span>
+                      </td>
+                      <% else %>
+                        <td> — </td>
+                        <td> — </td>
+                      <% end %>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+              <h3> Estadísticas</h3>
+              <table class="tabla-estadisticas">
+                <thead>
+                  <tr>
+                    <th>Aplicar</th>
+                    <th>Nombre</th>
+                    <th>Valor actual</th>
+                    <th>Valor base</th>
+                    <th>Incremento de niveles</th>
+                    <th>Incremento por efectos permanentes</th>
+                    <th>Incremento por efectos temporales</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                <% Pj::TipoEstadistic.order(:orden).each do |tipo| %>
+                  <% stat = @x.estadistics.find { |s| s.tipoEstadistic == tipo } %>
+                  <tr class="<%= "pj-fila_borrada" if !stat %>">
+                    <td data-label="Aplicar">
+                      <input type="checkbox"
+                            name="estadistics[<%= tipo.id %>][apply]"
+                            value="1"
+                            <%= "checked" if stat %>
+                            class="rm_input"
+                            data-rm_type="1">
+                    </td>
+                    <td data-label="Nombre"><%= "#{tipo.nombre} (#{tipo.siglas})" %></td>
+                    <td data-label="Valor actual">
+                      <%= stat&.value %>
+                    </td>
+                    <td data-label="Valor base">
+                      <input type="number"
+                            name="estadistics[<%= tipo.id %>][base]"
+                            value="<%= stat&.base %>">
+                    </td>
+                    <td data-label="Incremento por niveles">
+                      <input type="number"
+                            name="estadistics[<%= tipo.id %>][lv_mod]"
+                            value="<%= stat&.lv_mod %>">
+                    </td>
+                    <td data-label="Incremento por efectos permanentes">
+                      <input type="number"
+                            name="estadistics[<%= tipo.id %>][passive_mod]"
+                            value="<%= stat&.modificable&.passive_mod %>">
+                    </td>
+                    <td data-label="Incremento por efectos temporales">
+                      <input type="number"
+                            name="estadistics[<%= tipo.id %>][active_mod]"
+                            value="<%= stat&.modificable&.active_mod %>">
+                    </td>
+                  </tr>
+                <% end %>
+                </tbody>
+              </table>
+            </div>
+
+            <div>
+              <% if @x.picture %>
+                <%= render "shared/image_with_link", image: @x.picture.image, cssclass: "pj-image" %>
+              <% else %>
+                <div class="pj-image-placeholder">Sin imagen</div>
+              <% end %>
+              <br>
+              <div>
+                <%= label_tag  "picture_file", "Subir imagen" %>
+                <%= file_field_tag "picture[file]" %>
+                <br><br>
+                <%= label_tag  "picture_nombre", "Título de la imagen" %>
+                <%= text_field_tag "picture[nombre]", @x.picture&.nombre %>
+                <br><br>
+                <%= render "personajes/form_modal",
+                    buttom_content: "Editar etiquetas de la imagen",
+                    header_text: "Etiquetas de la imagen de #{@x.nombre}",
+                    index: "picture_etiquets" do %>
+                  <div class="pj-modal_checkbox_list">
+                    <%= collection_check_boxes :picture, :etiquet_ids, Etiquet.all, :id, :nombre, checked: @x.picture&.etiquet_ids || [] do |etiquet| %>
+                      <div>
+                        <%= etiquet.check_box %>
+                        <%= etiquet.label %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </section>
+          <br>
+          <br>
+          <section>
+            <%= render "personajes/form_modal",
+                buttom_content: "Editar artículos relacionados",
+                header_text: "Editando artículos relacionados de #{@x.nombre}",
+                index: "cuentos" do %>
+              <div class="pj-modal_checkbox_list">
+                <%= f.collection_check_boxes :cuento_ids, Cuento.all, :id, :nombre do |cuento| %>
+                  <div>
+                    <%= cuento.check_box %>
+                    <%= cuento.label %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </section>
+          <section>
+            <h3>Notas 1</h3>
+            <div class="white_bk no_trix_toobar"><%= f.rich_text_area :descripcion %></div>
+            <h3>Notas 2</h3>
+            <div class="white_bk"><%= f.rich_text_area :descripcion2 %></div>
+          </section>
+
+        </div>
+
+        <!-- ESTADO -->
+        <div id="tab-estado" class="pj-tab_pane">
+          <section class="columns">
+            <div>
+              <h3>Estado</h3>
+              <table class="tabla-estadisticas">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Estadísca base</th>
+                    <th>Valor base</th>
+                    <th>Incremento por efectos permanentes</th>
+                    <th>Incremento por efectos temporales</th>
+                    <th>Valor calculado</th>
+                    <th>Valor actual</th> <!-- si es un rango-->
+                    <th>Borrar</th>
+                  </tr>
+                </thead>
+                <tbody id="calculados-body">
+                  <% index = 0 %>
+                  <!-- ================= DEPENDIENTES ================= -->
+                  <% (Pj::TipoCalculado.all + Pj::TipoRango.all).each do |tipo| %>
+                    <% isR = tipo.is_a?(Pj::TipoRango)
+                      calc = @x.calculados.find do |c|
+                        if isR
+                          c.rango ? c.rango.tipoRango_id == tipo.id : false
+                        else
+                          c.tipoCalculado_id == tipo.id
+                        end
+                      end # It is allowed for calc to be nil
+                      estad = @x.estadistics.find do |s|
+                        s.tipoEstadistic == tipo.tipoEstadistic
+                      end %>
+                    <input type="hidden" name="calculados[<%= index %>][tipo_id]" value="<%= tipo.id %>">
+                    <input type="hidden" name="calculados[<%= index %>][is_rango]" value="<%= isR ? 1 : 0 %>">
+                    <tr data-index="<%= index %>" class="<%= "pj-fila_borrada" if !calc.present? %>">
+                      <td data-label="Nombre">
+                        <strong><%= tipo.nombre %></strong>
+                      </td>
+                      <td data-label="Estadística base">
+                        <%= tipo.tipoEstadistic ? tipo.tipoEstadistic.nombre : "—" %>
+                      </td>
+                      <td data-label="Valor base">
+                        <%= estad&.value || "—" %>
+                      </td>
+                      <%= render "personajes/form_calculado_row", calc: calc, index: index do %>
+                          <td data-label="Valor actual">
+                          <% if isR %>
+                            <input type="number"
+                                  name="calculados[<%= index %>][rango]"
+                                  value="<%= calc&.rango&.valor || 0 %>"
+                                  class="rango-input">
+                          <% else %>
+                            —
+                          <% end %>
+                        </td>
+                      <% end %>
+                    </tr>
+                    <% index += 1 %>
+                  <% end %>
+
+                  <!-- ================= LIBRES ================= -->
+                  <% @x.calculados.select(&:calculado_libre).each do |calc| %>
+                    <% libre = calc.calculado_libre %>
+                    <tr data-index="<%= calc.id %>">
+                      <td data-label="Nombre">
+                        <input type="text"
+                              name="calculados[<%= index %>][nombre]"
+                              value="<%= libre.nombre %>">
+                      </td>
+                      <td data-label="Estadística base">—</td>
+                      <td data-label="Valor base">
+                        <input type="number"
+                              name="calculados[<%= index %>][base]"
+                              value="<%= libre.base %>">
+                      </td>
+                      <%= render "personajes/form_calculado_row", calc: calc, index: index do %>
+                        <td data-label="Valor actual">
+                          <input type="number"
+                                name="calculados[<%= index %>][rango]"
+                                value="<%= calc&.rango&.valor || 0 %>"
+                                class="rango-input"
+                                <%= "disabled" unless calc&.rango.present? %>>
+                        <button type="button" class="toggle-rango">R</button>
+                        </td>
+                      <% end %>
+                    </tr>
+                    <% index += 1 %>
+                  <% end %>
+
+                  <!-- ================= AÑADIR LIBRE ================= -->
+                  <script type="text/template" id="calculado-libre-template">
+                    <tr data-index="__INDEX__">
+                      <td data-label="Nombre">
+                        <input type="text"
+                              name="calculados[__INDEX__][nombre]">
+                      </td>
+                      <td data-label="Estadística base">—</td>
+                      <td data-label="Valor base">
+                        <input type="number"
+                              name="calculados[__INDEX__][base]">
+                      </td>
+                      <td data-label="Incremento por efectos permanentes">
+                        <input type="number"
+                              name="calculados[__INDEX__][passive_mod]"
+                              value="0">
+                      </td>
+                      <td data-label="Incremento por efectos temporales">
+                        <input type="number"
+                              name="calculados[__INDEX__][active_mod]"
+                              value="0">
+                      </td>
+                      <td data-label="Valor calculado">—</td>
+
+                      <td data-label="Valor actual">
+                        <input type="number"
+                              name="calculados[__INDEX__][rango]"
+                              class="rango-input"
+                              disabled>
+                        <button type="button" class="toggle-rango">R</button>
+                      </td>
+                      <td data-label="Borrar" class="checkbox-danger">
+                        <input type="checkbox"
+                              name="calculados[__INDEX__][_destroy]"
+                              value="1">
+                      </td>
+                    </tr>
+                  </script>
+                  <tr>
+                    <td colspan="8">
+                      <button type="button" id="add-calculado-libre" class="btn btn-primary">
+                        + Añadir característica
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <!-- ================= ESTADOS ALTERADOS ================= -->
+              <h3>Estados alterados</h3>
+              <%= render "personajes/form_estados_alterados",
+                         listaEstadosAlterados: @x.hasEstadoalterados,
+                         nombre_input_base: "has_estadoalterados",
+                         table_id: "general" %>
+
+
+              <!-- ================= AÑADIR PARTE CUERPO ================= -->
+              <script type="text/template" id="parte-cuerpo-template">
+                <%= render "form_parte_cuerpo_row", index: "__INDEX__", pc: nil %>
+              </script>
+              <!-- ================= PARTES CUERPO ================= -->
+              <h3>Cuerpo</h3>
+              <table class="tabla-estadisticas" id="parte-cuerpos-table">
+                <thead>
+                  <tr>
+                    <th>Parte</th>
+                    <th>Tipo</th>
+                    <th>Salud</th>
+                    <th>Mapeo</th>
+                    <th>Armadura base</th>
+                    <th>Modificador armadura</th>
+                    <th>Estados alterados</th>
+                    <th>Borrar</th>
+                  </tr>
+                </thead>
+
+                <tbody id="parte-cuerpos-body">
+                  <% @x.parteCuerpos.each_with_index do |pc, i| %>
+                    <%= render "form_parte_cuerpo_row", index: i, pc: pc %>
+                  <% end %>
+                  <tr style="display:none;" id="parte-cuerpos-next"> </tr>
+                </tbody>
+              </table>
+
+              <button type="button" id="add-parte-cuerpo" class="btn btn-primary">
+                Añadir parte del cuerpo
+              </button>
+              
+              <br>
+              <div id="explicacion-mapeos-container">
+                <%= render "personajes/form_modal",
+                    buttom_content: "Cómo configurar los mapeos de partes del cuerpo",
+                    buttom_extra_css: "to_right",
+                    header_text: "Explicación de mapeos de partes del cuerpo",
+                    index: "explicacion-mapeos" do %>
+                    <p> El mapeo asigna una letra, símbolo o palabra a cada estado de salud de la parte del cuerpo.</p>
+                    <p> Si tu personaje no tiene nada especial al respecto déjalo por defecto y no te preocupes.</p>
+                    <p> Si quieres usar un mapeo personalizado debes de seguir el siguiente formato. Tienes dos opciones: </p>
+                    <ul>
+                      <li><b>1.</b> Usar un carácter o letra por cada estado de salud. Es imprescindible que el número de 
+                        caracteres coincida con la salud máxima de esa parte del cuerpo o dará error.</li>
+                      <li><b>2.</b> Usar el carácter "@" como separador entre los esados de salud. En vez de un único caracter
+                        puedes usar palabras para representar el estado de salud. Igualmente es imprescindible que el número de 
+                        palabras coincida con la salud máxima de esa parte del cuerpo o dará error.</li>
+                    </ul>
+                <% end %>
+              </div>
+
+            </div>
+          </section>
+        </div>
+
+        <script type="text/template" id="contador-template">
+          <%# Carece de input de id a propósito%>
+          <tr>
+            <td data-label="Nombre">
+              <input type="text"
+                    name="__PREFIX__[nombre]">
+            </td>
+            <td data-label="Valor base">
+              <input type="number"
+                    name="__PREFIX__[base]">
+            </td>
+            <td data-label="Valor actual">
+              <input type="number"
+                    name="__PREFIX__[rango]"
+                    class="rango-input"
+                    disabled>
+              <button type="button" class="toggle-rango">R</button>
+            </td>
+            <td data-label="Borrar" class="checkbox-danger">
+              <input type="checkbox"
+                    class="rm_input"
+                    name="__PREFIX__[_destroy]"
+                    value="1">
+            </td>
+          </tr>
+        </script>
+
+        <!-- CLASES Y HABILIDADES -->
+        <div id="tab-clases" class="pj-tab_pane">
+          <h4>Notas</h4>
+          <p> Está permitido aprender habilidades de clases que no has aprendido. </p>
+          <p> Si cambias la clase de una habilidad, la habilidad aparecerá en la sección de la clase a la que has cambiado, (incluso si no has aprendido esa clase).</p>
+          <p> No puedes aprender la misma habilidad varias veces (desde clases distintas), si lo haces el sistema dará un aviso y seleccionará una aleatoriamente como la buena.</p>
+          <section class="columns">
+            <div id="clases-section">
+              <h3>Clases</h3>
+              <div class="detalle_section">
+                <h4>Clases aprendidas</h4>
+                <% clases_ocultas = Clase.where(oculto: true).map{ |clase| clase.build_personaje_has_clase(@x) } %>
+                <%= render "form_clases", phClases: clases_ocultas, destroy: "1", oculto: true %>
+                <%= render "form_clases", phClases: @x.personajeHasClases, destroy: "0", oculto: false %>
+              </div>
+              <div class="detalle_section">
+                <h4>El resto de clases</h4>
+                <% remaining_clases = (Clase.order(:nombre).where(oculto: false) - @x.personajeHasClases.map(&:clase)).map{ |clase| clase.build_personaje_has_clase(@x) } %>
+                <%= render "form_clases", phClases: remaining_clases, destroy: "1", oculto: false %>
+              </div>
+            </div>
+            <div id="habilidades-section">
+              <% habilidades = @x.personajeHasHabilidads_by_clase %>
+              <% Clase.all.each do |clase| %>
+                <%= render "form_habilidades_from_clase", clase: clase, phHabilidades: habilidades[clase.id] || [] %>
+              <% end %>
+            </div>
+          </section>
+        </div>
+      
+        <!-- INVENTARIO -->
+        <div id="tab-items" class="pj-tab_pane">
+          <h2>Oro: <%= f.number_field :oro, step: 0.01 %> </h2>
+          <p> Selecciona la cantidad de cada ítem que tienes en 
+            el número arriba a la izquierda. Puedes tener 0 de un ítem.</p>
+          <p> No puedes tener el mismo ítem varias veces desde diferentes
+             categorías, si lo haces el sistema dará un aviso y seleccionará
+              una aleatoriamente como el bueno. Si quieres más de un mismo
+              ítem, simplemente aumenta la cantidad.</p>
+          <section class="columns">
+            <div id="items-alive">
+              <h3>Inventario</h3>
+                <div class="carta-grid_container carta-grid_container_form_habilidad detalle_section"
+                    id="items-list-alive">
+                      <% @x.personajeHasItems.each do |ph_item| %>
+                        <% next unless ph_item.item%>
+                        <%= render "form_item", phi: ph_item, categ_id: "pj", destroy: "0" %>
+                      <% end %>
+                </div>
+            </div>
+            <div>
+              <h3>Selecciona categoría</h3>
+              <div class="miniListadoClases" id="items-menu">
+                <% Categ.order(:nombre).each do |ct| %>
+                  <span class="carta-title" data-list="items-list-<%= ct.id %>">
+                    <%= ct.nombre %></span>
+                <% end %>
+              </div>
+              <div id="items-lists">
+                <h3>Disponibles</h3>
+                <% owned_items = @x.personajeHasItem_by_categ %>
+                <% Categ.all.each do |ct| %>
+                  <div class="detalle_section pj-selected_list"
+                      id="items-list-<%= ct.id %>">
+                    <h4><%= ct.nombre %></h4>
+                    <div class="carta-grid_container carta-grid_container_form_habilidad"
+                        id="items-list-<%= ct.id %>-destroy">
+                      <% ph_items = ct.items.map{|i| i.build_personaje_has_item(@x)} - (owned_items[ct.id] || []) %>
+                      <% ph_items.each do |ph_item| %>
+                        <%= render "form_item", phi: ph_item, categ_id: ct.id, destroy: "1" %>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </div>
     </div>
   <% end %>
-
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
-  </div>
-
-  <div>
-    <%= form.label :nombre, style: "display: block" %>
-    <%= form.text_field :nombre %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
-<% end %>
+</div>

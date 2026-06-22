@@ -1,9 +1,10 @@
-class AdminController < ApplicationController
-    include AdminAccess
-    restrict_admin_access
+include UnlimitedCache
+include Maintenance
 
-    include UnlimitedCache
-    
+class AdminController < ApplicationController
+
+    configure_access :restore_backup, level: :superadmin
+
     def control
     end
 
@@ -44,7 +45,9 @@ class AdminController < ApplicationController
     def create_backup
         backup_file = nil
         begin
-            backup_file = Backup.create
+            with_maintenance do # Stops any other actions in ApplicationController
+                backup_file = Backup.create
+            end
             data = File.binread(backup_file)
 
             send_data data,
@@ -66,17 +69,20 @@ class AdminController < ApplicationController
     end
 
     def restore_backup
-        resume = params[:resume] == "1"
-        if params[:backup_file].present? || resume
+        if params[:backup_file].present?
             begin
-                Backup.restore(
-                    resume ? nil : params[:backup_file].tempfile.path,
-                    resume,
-                    params[:tolerante] == "1",
-                    params[:no_rollback] != "1",
-                    params[:allow_missing_imgs] == "1",
-                    params[:skip_gifs] == "1",
-                    params[:use_max_file_size] == "1" ? params[:max_file_size_mb] : false)
+                with_maintenance do # Stops any other actions in ApplicationController
+                    Backup.restore(
+                        params[:backup_file].tempfile.path,
+                        params[:resume] == "1",
+                        params[:tolerante] == "1",
+                        params[:no_rollback] != "1",
+                        params[:allow_missing_imgs] == "1",
+                        params[:skip_gifs] == "1",
+                        params[:use_max_file_size] == "1" ? params[:max_file_size_mb] : false,
+                        params[:gc] == "1"
+                    )
+                end
                 inner_delete_navbar_cache
                 redirect_to "/backup", notice: "Backup restored successfully."
             rescue => e
@@ -101,19 +107,15 @@ class AdminController < ApplicationController
         end
     end
 
-    def check_minio_connection
-        begin
-            MinioImageUploader.new
-            redirect_to "/control", notice: "Se puede establecer conexión con el minion."
-        rescue MinioConnectionError => e
-            redirect_to "/control", alert: "El minion está enfadado o no está presente: #{e.message}"
-        end
-    end
-
     def ritual
     end
 
-
+    def test_mail
+        TestMailer.probe_email.deliver_now
+        redirect_to "/control", notice: "Correo enviado correctamente"
+    rescue => e
+        redirect_to "/control", alert: "Error al enviar correo: #{e.message}"
+    end
 
     private
 

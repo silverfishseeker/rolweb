@@ -3,8 +3,12 @@ module UnlimitedCache
   @@memory_cache ||= ActiveSupport::Cache::MemoryStore.new
 
   def cache_fetch key
-    @@memory_cache.fetch(key, expires_in: 1.weeks) do
-      yield
+    if block_given?
+      @@memory_cache.fetch(key, expires_in: 1.weeks) do
+        yield
+      end
+    else
+      @@memory_cache.fetch(key, expires_in: 1.weeks)
     end
   end
 

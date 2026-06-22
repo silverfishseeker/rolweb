@@ -36,16 +36,10 @@ class HabilidadsController < ModelController
   end
 
   def update
-    @x = Habilidad.find(params[:id])
-    
-    if @x.update(model_params)
+    super do
       if params[:from_clasificar]
-        redirect_to clasificar_habilidad_path, notice: "Guardada correctamente, continuamos."
-      else
-        redirect_to @x
+        clasificar_habilidad_path
       end
-    else
-      render :edit
     end
   end
 

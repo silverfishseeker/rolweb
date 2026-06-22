@@ -7,10 +7,13 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
     registrations: 'users/registrations'
   }
+  resources :users
   
   resources :clases
   resources :habilidads
-  resources :items
+  resources :items do
+    post :add_to_personaje, on: :member
+  end
   resources :pictures
   resources :mobs
   resources :categs
@@ -19,6 +22,8 @@ Rails.application.routes.draw do
   resources :etiquets
   resources :contextoloots
   resources :cuentos
+  resources :personajegroups
+  resource :system_setting, only: [:edit, :update]
   get '/recalcular_childs', to: 'cuentos#recalcular_childs'
   resources :personajes
   
@@ -31,7 +36,17 @@ Rails.application.routes.draw do
     resources :ritual_clases
   end
 
-  resources :users
+  namespace :pj do
+    resources :meta_tipos, controller: 'meta_tipos', path: 'calculado', as: 'tipo_calculados', defaults: { tipo: 'calculado' }
+    resources :meta_tipos, controller: 'meta_tipos', path: 'estadistic', as: 'tipo_estadistics', defaults: { tipo: 'estadistic' }
+    resources :meta_tipos, controller: 'meta_tipos', path: 'rango', as: 'tipo_rangos', defaults: { tipo: 'rango' }
+    resources :partes_cuerpo, only: [] do
+      member do
+        get :aumentar
+        get :disminuir
+      end
+    end
+  end
 
   resource :profile, only: [:edit, :update, :destroy] do
     collection do
@@ -63,8 +78,8 @@ Rails.application.routes.draw do
   get '/create_backup', to: 'admin#create_backup'
   post '/restore_backup', to: 'admin#restore_backup'
   get '/download_logs', to: 'admin#download_logs'
-  get '/check_minio_connection', to: 'admin#check_minio_connection'
   get '/ritual', to: 'admin#ritual'
+  get '/test_mail', to: 'admin#test_mail'
 
   get '/lootbox', to: 'randompick#lootbox'
   post '/lootboxing', to: 'randompick#lootboxing'

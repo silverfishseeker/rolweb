@@ -5,7 +5,7 @@
     <%= render "devise/shared/error_messages", resource: resource %>
 
     <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-      <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+      <div>Esperando confirmación para: <%= resource.unconfirmed_email %></div>
     <% end %>
 
     <div class="field">

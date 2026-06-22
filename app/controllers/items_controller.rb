@@ -29,7 +29,6 @@ class ItemsController < ModelController
         ritual_nivel_rel_rituals_attributes: [:id, :ritual_nivel_id, :cantidad, :_destroy]
       ]
     ).tap do |ps|
-      Rails.logger.debug "HHHH es_ritual: #{ps[:es_ritual].present?} - #{ps[:es_ritual]}"
       if ps[:es_ritual] == "0"
         ps[:ritual_attributes] = { _destroy: "1", id: error_coalesce{@x.ritual.id}, }
       else
@@ -45,5 +44,31 @@ class ItemsController < ModelController
       end
     end
 
+  end
+
+  configure_access :add_to_personaje, level: :player
+
+  def add_to_personaje
+    item = Item.find(params[:item_id])
+    personaje = current_user.personajes.find(params[:personaje_id])
+    phi = personaje.personajeHasItems.find_by(item: item)
+    if phi
+      phi.cantidad += params[:cantidad].to_i
+      phi.save!
+    else
+      phi = personaje.personajeHasItems.create!(
+        item: item,
+        cantidad: params[:cantidad].to_i,
+        isEquipped: false
+      )
+    end
+
+    render turbo_stream: [
+      turbo_stream.replace(
+        "add-item-flash-#{item.id}",
+        partial: "items/add_to_personaje_flash",
+        locals: { item_id: item.id, added: true }
+      )
+    ]
   end
 end

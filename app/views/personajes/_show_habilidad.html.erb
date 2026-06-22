@@ -1,0 +1,24 @@
+<div class="carta carta_show" id="phh-<%= phh.id %>">
+  <% habil = phh.habilidad %>
+  <div class="carta-header carta-header-small">
+      <%= render "personajes/show_position_controller",
+          position: phh.position,
+          input_prefix: "phh[#{phh.id}]",
+          id_prefix: "phh-#{phh.id}"
+      %>
+
+      <p class="carta-number carta-level">
+          <%= habil.nivel %>
+      </p>
+
+      <%= image_tag habil.tipoImagen, class: "carta-isactive" %>
+
+      <%= link_to habil.nombre, habil, class:"carta-title" %>
+
+      <%= render "personajes/show_contadores", calculados: phh.calculados, prefix: "phh[#{phh.id}]" %>
+  </div>
+
+  <div class="full_container">
+    <%= render "habilidads/habilidad", habil: habil, sobreescritura: phh.sobreescritura %>
+  </div>
+</div>

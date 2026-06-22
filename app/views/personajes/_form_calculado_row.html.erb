@@ -1,0 +1,23 @@
+<input type="hidden" name="calculados[<%= index %>][id]" value="<%= calc&.id %>">
+<td data-label="Incremento por efectos permanentes">
+  <input type="number"
+        name="calculados[<%= index %>][passive_mod]"
+        value="<%= calc&.modificable&.passive_mod || 0%>">
+</td>
+<td data-label="Incremento por efectos temporales">
+  <input type="number"
+        name="calculados[<%= index %>][active_mod]"
+        value="<%= calc&.modificable&.active_mod || 0 %>">
+</td>
+<td data-label="Valor calculado">
+  <%= calc&.value || "ninguno" %>
+</td>
+<%= yield %>
+<td data-label="Borrar" class="checkbox-danger">
+  <input type="checkbox"
+        name="calculados[<%= index %>][_destroy]"
+        value="1"
+        <%= "checked" if !calc.present? %>
+        class="rm_input"
+        data-rm_type="0">
+</td>

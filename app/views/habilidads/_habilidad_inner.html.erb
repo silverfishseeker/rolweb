@@ -3,22 +3,7 @@
         <%= habil.nivel %>
     </p>
 
-    <%= case habil.tipo
-    when 0
-        image_tag "red-triangle.png", class: "carta-isactive"
-    when 1
-        image_tag "blue-circle.png", class: "carta-isactive"
-    when 2
-        image_tag "orange-diamond.png", class: "carta-isactive"
-    when 3
-         image_tag "purple-triangle.png", class: "carta-isactive"
-    when 4
-         image_tag "green-square.png", class: "carta-isactive"
-    when 5
-         image_tag "yellow-triangle.png", class: "carta-isactive"
-    else
-         image_tag "white-square.png", class: "carta-isactive"
-    end %>
+    <%= image_tag habil.tipoImagen, class: "carta-isactive" %>
 
     <%= link_to habil.nombre, habil, class:"carta-title" %>
 </div>
@@ -33,5 +18,5 @@
 </div>
 
 <div class="carta-description">
-    <%= habil.efecto %>
+    <%= local_assigns[:sobreescritura] || habil.efecto %>
 </div>

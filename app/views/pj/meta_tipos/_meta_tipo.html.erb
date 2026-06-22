@@ -1,0 +1,11 @@
+<div class="pj-meta_tipo_card">
+  <span><strong><%= meta_tipo.nombre %></strong></span>
+  <span>(<%= meta_tipo.siglas %>)</span>
+  <span><%= meta_tipo.clave %></span>
+  <span><%= meta_tipo.orden %></span>
+  <% if meta_tipo.type != "Pj::TipoEstadistic" %>
+    <span><%= meta_tipo.tipoEstadistic&.nombre %></span>
+  <% end %>
+  <%= link_to "Editar", edit_pj_meta_tipo_path( meta_tipo), class: "btn btn-primary " %>
+  <%= link_to "Eliminar", pj_meta_tipo_path(meta_tipo), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger " %>
+</div>

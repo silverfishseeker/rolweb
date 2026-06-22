@@ -1,12 +1,15 @@
 module Kernel
-  def error_coalesce(*allowed_exceptions)
-    begin
-      yield || nil
-    rescue NoMethodError 
-      nil
-    rescue => e
-      raise e unless allowed_exceptions.include?(e.class)
-      nil
-    end
+  def error_coalesce(*allowed_exceptions, default:nil)
+    yield || default
+  rescue NoMethodError 
+    default
+  rescue => e
+    raise e unless allowed_exceptions.include?(e.class)
+    default
   end
+
+  def sum_nil(*sums)
+    sums.compact.sum
+  end
+
 end

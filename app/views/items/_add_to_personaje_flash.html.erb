@@ -1,0 +1,8 @@
+<%= turbo_frame_tag "add-item-flash-#{item_id}" do %>
+  <% if added %>
+    <div class="flash-notice">
+        <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
+        ¡Añadido!
+    </div>
+  <% end %>
+<% end %>

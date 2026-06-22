@@ -1,4 +1,4 @@
-<%= importJS("checkAllBoxes", "backupDownloadNotice") %>
+<% importJS("checkAllBoxes", "backupDownloadNotice") %>
 
 <h1>Backup y Restauración del Sistema</h1>
 <p style="margin: 30px;">
@@ -11,48 +11,57 @@
   </div>
 </div>
 
-<hr>
+<% if controller.has_level?(:superadmin)%>
+  <hr>
 
-<%= form_with url: restore_backup_path, method: :post, multipart: true do %>
-  <p>
-    <label for="backup_file">Archivo de backup:</label>
-    <%= file_field_tag :backup_file %>
-  </p>
-  <p>
-    <%= button_tag "Restaurar", type: "submit", class: "btn btn-warning" %>
-    <%= button_tag "Resumir backup", type: "submit", name:"resume", value:"1", class: "btn btn-warning" if Backup.can_resume %>
-  </p>
+  <%= form_with url: restore_backup_path, method: :post, multipart: true do %>
+    <p>
+      <label for="backup_file">Archivo de backup:</label>
+      <%= file_field_tag :backup_file %>
+    </p>
+    <p>
+      <%= button_tag "Restaurar", type: "submit", class: "btn btn-warning" %>
+      <%= button_tag "Resumir backup", type: "submit", name:"resume", value:"1", class: "btn btn-warning" if Backup.can_resume %>
+    </p>
 
-  <div class="checks_container">
-    <div class="checkbox-danger">
-      <%= check_box_tag :check_all, "1", false, class: "check_all" %>
-      <%= label_tag :check_all, "Marcar / Desmarcar todos" %>
+    <div class="checks_container">
+      <div class="checkbox-danger">
+        <%= check_box_tag :check_all, "1", false, class: "check_all" %>
+        <%= label_tag :check_all, "Marcar / Desmarcar todos" %>
+      </div>
+      <br>
+      <div class="checkbox-danger">
+        <%= check_box_tag :tolerante, "1", false, class: "toggleable" %>
+        <%= label_tag :tolerante, "Permitir discrepancias en esquemas" %>
+      </div>
+      <br>
+      <div class="checkbox-danger">
+        <%= check_box_tag :no_rollback, "1", false, class: "toggleable" %>
+        <%= label_tag :no_rollback, "No Hacer Rollback" %>
+      </div>
+      <br>
+      <div class="checkbox-danger">
+        <%= check_box_tag :allow_missing_imgs, "1", false, class: "toggleable" %>
+        <%= label_tag :allow_missing_imgs, "Permitir imágenes faltantes por error" %>
+      </div>
+      <br>
+      <div class="checkbox-danger">
+        <%= check_box_tag :skip_gifs, "1", false, class: "toggleable" %>
+        <%= label_tag :skip_gifs, "Saltarse los gifs" %>
+      </div>
+      <br>
+      <div class="checkbox-danger">
+        <%= check_box_tag :use_max_file_size, "1", false, id: "use_max_file_size", class: "toggleable" %>
+        <%= number_field_tag :max_file_size_mb, ImageUploaderConfig.backup_upload_max_file_size_mb, min: 1, class: "input-danger" %>
+        <%= label_tag :use_max_file_size, "Activar límite de tamaño de archivo (MB)" %>
+      </div>
+      <br>
+      <div class="checkbox-danger">
+        <%= check_box_tag :gc, "1", false, class: "toggleable" %>
+        <%= label_tag :gc, "Recolector de basura" %>
+      </div>
     </div>
-    <br>
-    <div class="checkbox-danger">
-      <%= check_box_tag :tolerante, "1", false, class: "toggleable" %>
-      <%= label_tag :tolerante, "Permitir discrepancias en esquemas" %>
-    </div>
-    <br>
-    <div class="checkbox-danger">
-      <%= check_box_tag :no_rollback, "1", false, class: "toggleable" %>
-      <%= label_tag :no_rollback, "No Hacer Rollback" %>
-    </div>
-    <br>
-    <div class="checkbox-danger">
-      <%= check_box_tag :allow_missing_imgs, "1", false, class: "toggleable" %>
-      <%= label_tag :allow_missing_imgs, "Permitir imágenes faltantes por error" %>
-    </div>
-    <br>
-    <div class="checkbox-danger">
-      <%= check_box_tag :skip_gifs, "1", false, class: "toggleable" %>
-      <%= label_tag :skip_gifs, "Saltarse los gifs" %>
-    </div>
-    <br>
-    <div class="checkbox-danger">
-      <%= check_box_tag :use_max_file_size, "1", false, id: "use_max_file_size", class: "toggleable" %>
-      <%= number_field_tag :max_file_size_mb, ImageUploaderConfig.backup_upload_max_file_size_mb, min: 1, class: "input-danger" %>
-      <%= label_tag :use_max_file_size, "Activar límite de tamaño de archivo (MB)" %>
-    </div>
-  </div>
+  <% end %>
+<% else %>
+  <p> No eres superadmin para restaurar un backup. </p>
 <% end %>

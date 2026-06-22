@@ -8,21 +8,18 @@ module ApplicationHelper
   end
 
   def importJS (*module_names)
-    module_names.map do |module_name|
-      concat(content_tag(:div, "", data: { js: module_name }))
-    end.join("\n").html_safe
+    module_names.each do |module_name|
+      content_for :page_js do
+        concat content_tag(:div, "", data: { js: module_name })
+      end
+    end
   end
 
   def only_admin_content
-    if session[:admin]
-      yield
-    end
-  end
-
-  def not_admin_content
-    unless session[:admin]
-      yield
-    end
+    yield if controller.has_level? :admin
   end
   
+  def compose_get_params(hash)
+    "?" + hash.map { |k, v| "#{k}=#{v}" }.join("&")
+  end
 end

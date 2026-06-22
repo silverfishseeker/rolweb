@@ -1,0 +1,25 @@
+<div class="carta carta_show" id="phc-<%= phc.id %>">
+  <div class="carta-header carta-header-small">
+      <%= render "personajes/show_position_controller", 
+          position: phc.position, 
+          input_prefix: "phc[#{phc.id}]", 
+          id_prefix: "phc-#{phc.id}"
+      %>
+
+      <p class="carta-number carta-level">
+          <%= phc.nivel %>
+      </p>
+
+      <div class="carta-image carta-image-icon">
+        <%= render "shared/image", image: phc.clase.image %>
+      </div>
+
+      <%= link_to phc.clase.nombre, phc.clase, class:"carta-title" %>
+
+      <%= render "personajes/show_contadores", calculados: phc.calculados, prefix: "phc[#{phc.id}]" %>
+  </div>
+  
+  <div class="full_container">
+    <%= render "clases/clase", clase: phc.clase, sobreescritura: phc.sobreescritura %>
+  </div>
+</div>

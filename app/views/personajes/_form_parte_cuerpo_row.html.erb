@@ -1,0 +1,80 @@
+<%# Expected params: index, pc%>
+
+<tr index="<%=index%>">
+  <td data-label="Parte">
+    <input type="text"
+          name="parte_cuerpos[<%=index%>][nombre]"
+          value="<%= pc ? pc.nombre : "" %>">
+  </td>
+
+  <td data-label="Tipo">
+    <select name="parte_cuerpos[<%=index%>][tipo]">
+      <% Pj::ParteCuerpo::TIPOS.each do |key, value| %>
+        <option value="<%= key %>" <%= "selected" if (pc ? pc.tipo : 0) == key %>>
+          <%= value %>
+        </option>
+      <% end %>
+    </select>
+  </td>
+
+  <td data-label="Salud">
+    <div class="salud">
+      <input type="number"
+            name="parte_cuerpos[<%=index%>][saludact]"
+            value="<%= pc ? pc.saludact : 3 %>">
+      /
+      <input type="number"
+            name="parte_cuerpos[<%=index%>][saludmax]"
+            value="<%= pc ? pc.saludmax : 3 %>">
+    </div>
+  </td>
+
+  <td data-label="Mapeo" style="display:flex">
+    <button type="button"
+            class="open-mapeo-parte"
+            index="<%=index%>">
+      <%= pc && pc.is_mapeo ? "Editando:" : "Por defecto" %>
+    </button>
+    <input type="hidden"
+          name="parte_cuerpos[<%=index%>][isMapeo]"
+          id="mapeo-isMapeo-<%=index%>"
+          value="<%= pc && pc.is_mapeo ? "1" : "0" %>">
+    <input type="text"
+          name="parte_cuerpos[<%=index%>][mapeo]"
+          value="<%= pc && pc.is_mapeo ? pc.mapeo : "" %>"
+          id="mapeo-input-<%=index%>"
+          class="input-mapeo"
+          style="display:<%= pc && pc.is_mapeo ? "block" : "none" %>"
+          <%= pc && pc.is_mapeo ? "" : "disabled" %>
+          >
+  </td>
+
+  <td data-label="Armadura base">
+    <input type="number"
+          name="parte_cuerpos[<%=index%>][passive_mod]"
+          value="<%= pc ? pc.modificable&.passive_mod || 0 : 0 %>">
+  </td>
+
+  <td data-label="Modificador armadura">
+    <input type="number"
+          name="parte_cuerpos[<%=index%>][active_mod]"
+          value="<%= pc ? pc.modificable&.active_mod || 0 : 0 %>">
+  </td>
+
+  <td data-label="Estados alterados">
+    <%= render "personajes/estados_alterados_parte_cuerpo",
+      index: index,
+      target: pc
+    %>
+  </td>
+  <td data-label="Borrar" class="checkbox-danger">
+    <input type="checkbox"
+          name="parte_cuerpos[<%=index%>][_destroy]"
+          value="1"
+          class="rm_input"
+          data-rm_type="0">
+  </td>
+</tr>
+<input type="hidden"
+      name="parte_cuerpos[<%= index %>][id]"
+      value="<%= pc ? pc.id : nil %>">

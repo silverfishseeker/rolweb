@@ -1,0 +1,14 @@
+<h1>Nuevo grupo de personajes</h1>
+
+<div class="clase-main">
+    <%= form_with model: @x do |f| %>
+    <div>
+      <%= f.label :nombre, style: "display: block" %>
+      <%= f.text_field :nombre %>
+    </div>
+    <br>
+    <div>
+      <%= f.submit "Guardar", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

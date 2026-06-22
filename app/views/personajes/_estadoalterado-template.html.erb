@@ -1,0 +1,34 @@
+  <!-- ================= AÑADIR ESTADO ALTERADO ================= -->
+  <script type="text/template" id="estadoalterado-template">
+    <tr data-id="__id__">
+      <td data-label="Estado">
+        <select name="<%= "__nombre_input_base__[__id__][estadoalterado_id]" %>">
+          <% Estadoalterado.order(:nombre).each do |ea| %>
+            <option value="<%= ea.id %>"
+                  data-is-numeric="<%= ea.isNumeric %>">
+              <%= ea.nombre %>
+            </option>
+          <% end %>
+        </select>
+      </td>
+      <td data-label="Valor">
+        <input type="number" name="<%= "__nombre_input_base__[__id__][valor]" %>" value="0">
+      </td>
+      <td data-label="Eliminar" class="checkbox-danger">
+        <input type="checkbox" name="<%= "__nombre_input_base__[__id__][_destroy]" %>" value="1">
+      </td>
+    </tr>
+  </script>
+
+    <!-- ================= AÑADIR ESTADO ALTERADO LIBRE ================= -->
+
+  <script type="text/template" id="estadoalterado-template-libre">
+    <tr data-id="__id__">
+      <td data-label="" colspan="2">
+        <input type="text" name="__nombre_input_base__[__id__][libre]">
+      </td>
+      <td data-label="Eliminar" class="checkbox-danger">
+        <input type="checkbox" name="__nombre_input_base__[__id__][_destroy]" value="1">
+      </td>
+    </tr>
+  </script>

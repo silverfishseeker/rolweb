@@ -8,10 +8,11 @@
 
     <%= stylesheet_link_tag "application", media: 'all', "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <%= yield :head %>
+    <%= yield :page_js %>
   </head>
 
   <body <%= content_for?(:body_class) ? "class=#{yield(:body_class)}" : '' %>>
+     
     <nav class="navbar">
       <h1><%= link_to "Varacia", root_path %></h1>
       <div class="subnavbar">
@@ -53,6 +54,33 @@
             <% end %>
           </div>
         </div>
+
+        <div class="submenu">
+          <%= link_to "Personajes", personajes_path, class:"nblink #{"nblink_notSubMenu" unless user_signed_in?}" %>
+          <% if user_signed_in? %>
+            <div class="submenu-content">
+              <% current_user.personajes.each do |pj|%>
+                <%= link_to pj.nombre, pj %>
+              <% end %>
+              <%= link_to "Nuevo", new_personaje_path, class:"mainLink" %>
+              <%= link_to "Mis personajes", personajes_path(mode:"privados"), class:"mainLink" %>
+              <%= link_to "Todos los personajes", personajes_path, class:"mainLink" %>
+              <% if controller.has_level?(:master) %>
+                <% current_user.personajegroups.each do |pg| %>
+                  <%= link_to pg.nombre, pg %>
+                <% end %>
+                <%= link_to "Nuevo grupo de personajes", new_personajegroup_path, class:"mainLink" %>
+                <%= link_to "Mis grupos de personajes", personajegroups_path, class:"mainLink" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <% if controller.has_level?(:master) %>
+          <div class="submenu">
+            <%= link_to "Enemigos y seres", mobs_path, class:"nblink nblink_notSubMenu" %>
+          </div>
+        <% end %>
         
         <div class="submenu">
           <%= link_to "Galería", pictures_path, class:"nblink nblink_notSubMenu" %>
@@ -64,8 +92,7 @@
             <div class="submenu-content">
               <%= link_to "Panel de control", "/control" %>
               <%= link_to "Backup", "/backup" %>
-              <%= link_to "Mobs", mobs_path %>
-              <%= link_to "+mob", new_mob_path %>
+              <%= link_to "+enemigo", new_mob_path %>
               <%= link_to "+clase", new_clase_path %>
               <%= link_to "+habilidad", new_habilidad_path %>
               <%= link_to "+item", new_item_path %>
@@ -118,26 +145,30 @@
       </div>
     </nav>
 
-    <% # Divs para mostrar mensajes y alerta del sistema relacionados con el resutado de procesos %>
-    <% if notice || alert %>
-      <div class="flash-wrapper">
-        <% if notice %>
-          <div class="flash-notice">
-            <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
-            <%= notice %>
-          </div>
-        <% end %>
-        <% if alert %>
-          <div class="flash-alert">
-            <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
-            <%= alert %>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
+    <% # Divs para mostrar mensajes y alerta del sistema relacionados con el resultado de procesos %>
+    <div class="flash-wrapper">
+      <% if notice %>
+        <div class="flash-notice">
+          <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
+          <%= notice %>
+        </div>
+      <% end %>
+      <% if alert%>
+        <div class="flash-alert">
+          <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
+          <%= alert %>
+        </div>
+      <% end %>
+      <% if flash[:warning]%>
+        <div class="flash-warning">
+          <span class="flash-close" onclick="this.parentElement.remove()">✕</span>
+          <%= flash[:warning] %>
+        </div>
+      <% end %>
+    </div>
 
 
-    <div class="main-content">
+    <div class="main-content <%= content_for?(:main_content_class) ? yield(:main_content_class) : '' %>">
       <%= yield %>
     </div>
 
@@ -149,12 +180,10 @@
       </div>
       <div>
         <div class="footbar-admin_button">
-          <% not_admin_content do %>
-            <%= link_to "Admin access", "/control" %>
-          <% end %>
-
-          <% only_admin_content do %>
+          <% if session[:admin] %>
             <%= link_to "Cerrar sesión", "/adminsession/close" %>
+          <% else %>
+            <%= link_to "Superadmin access", new_adminsession_path %>
           <% end %>
         </div>
       </div>

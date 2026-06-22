@@ -1,0 +1,186 @@
+.main-content {
+    margin-top: var(--margin-top);
+    flex: 1;
+}
+.main-content-margin_reduced {
+    margin-top: var(--margin_top_reduced);
+}
+
+
+.navbar {
+    background-color: var(--c_base);
+    color: var(--c_contraste);
+    padding: 0px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+.navbar h1 {
+    margin: 5px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: lighter;
+}
+
+.navbar h1 a:hover {
+    color: var(--c_contraste_alt);
+}
+
+.subnavbar {
+    width: 100%;
+    display: flex;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+}
+
+.subnavbar a {
+    padding: 10px;
+}
+
+.subnavbar .nblink {
+    text-align: center;
+    color: var(--c_contraste); 
+    font-size: larger;
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+}
+
+.subnavbar button.nblink {
+    background: none;
+    border: none;
+    font-family: inherit;
+}
+
+.subnavbar button.nblink::after {
+  content: " ►"; /* Cerrado */
+}
+
+.subnavbar button.nblink.open::after {
+  content: " ▼"; /* Abierto */
+}
+
+.subnavbar .nblink_notSubMenu {
+  text-decoration: underline;
+}
+
+.subnavbar a:hover, .subnavbar button:hover {
+    background-color: var(--c_base_alt);
+}
+
+.subnavbar a:visited {
+    color: var(--c_contraste); 
+}
+
+/* SUBMENÚ */
+
+.subnavbar-scroll_indicator {
+    display: none; /* Oculto por defecto */
+    position: absolute;
+    right: 18px;
+    height: 18px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.submenu {
+    padding-bottom: 10px;
+}
+
+.submenu:hover .submenu-content,
+.submenu:focus-within .submenu-content {
+    display: block;
+}
+
+.submenu-content {
+    display: none;
+    position: absolute;
+    max-height: 450px; /* Tamaño fijo pequeño del submenú */
+    max-width: 100vw;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 3px solid var(--c_base);
+    margin-top: 8px;
+}
+
+.submenu-content div {
+    width: 100%;
+}
+
+.submenu-content a {
+    color: var(--c_white);
+    background-color: var(--c_detalle);
+    display: block;
+    width: 100%;
+}
+
+.submenu-content a.mainLink {
+    border-bottom: 3px solid var(--c_base);
+    font-weight: bold;
+}
+
+.submenu-content a:hover {
+    background-color: var(--c_detalle_alt);
+}
+
+.submenu-content a:visited{
+    color: var(--c_white);
+}
+
+
+// ########## AUTH ##########
+
+.auth-submenu {
+    margin-left:auto;
+}
+.auth-submenu-content {
+    right: 0;
+    background-color: var(--c_detalle);
+    padding: 10px;
+}
+.auth-section {
+    color: var(--c_base);
+    background-color: var(--c_contraste);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+.auth-section:last-child {
+    margin-bottom: 0;
+}
+.auth-section h3 {
+    margin: 0;
+}
+.auth-form {
+    margin: 10px 10px 0;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+.auth-form div {
+    display: flex;
+    flex-direction: row;
+}
+.auth-form label {
+    margin-right: 10px;
+}
+.auth-form input.text {
+    margin-left: auto;
+}
+.submenu-content .auth-btn {
+    background: var(--c_base);
+    color: var(--c_white);
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+.submenu-content .auth-btn:hover {
+    background: var(--c_base_alt);
+}
