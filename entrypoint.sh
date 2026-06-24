@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e # Devolver error inmediatamente si un comando falla
 
+echo "Entrypoint: Instalando gemas"
+bundle install
+
 echo "Entrypoint: Preparando base de datos"
 bundle exec rails db:prepare
 
