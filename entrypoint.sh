@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e # Devolver error inmediatamente si un comando falla
 
+echo ""
+echo ""
 echo "Entrypoint: Instalando gemas"
 bundle install
 
