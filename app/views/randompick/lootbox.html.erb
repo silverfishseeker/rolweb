@@ -1,83 +1,96 @@
 <% importJS "checkAllBoxes" %>
 
 <div class="lootbox-main">
-  <h1>Cofre aleatorio</h1>
+  <div>
+    <h1>Cofre aleatorio</h1>
+    <%= form_with url: "/lootboxing", method: :post do |f| %>
+      <div class="carta carta_clase lootbox-form">
+        <div class="lootbox-form-inner">
 
-  <h1>Contenido cofre</h1>
-
-  <%= form_with url: "/lootboxing", method: :post do |f| %>
-    <div class="carta carta_clase lootbox-form">
-      <div class="lootbox-form-inner">
-
-        <div class="lootbox-form-column">
-          <h3> Categorías a incluir: </h3>
-          <div class="lootbox-select checks_container">
-            <div class="lootbox-option">
-              <input type="checkbox" class="check_all" id="check_all1">
-              <label for="check_all1">Seleccionar todo / Ninguno</label>
-            </div>
-            <% Categ.order(:nombre).each do |ct| %>
+          <div class="lootbox-form-column">
+            <h3> Categorías a incluir: </h3>
+            <div class="lootbox-select checks_container">
               <div class="lootbox-option">
-                <input type="checkbox" name="categ_ids[]" value="<%= ct.id %>" class="toggleable" id="categ_<%= ct.id %>"
-                    <%="checked" if session[:lootbox_categ_ids]&.include? ct.id.to_s %>>
-                <label for="categ_<%= ct.id %>"><%= ct.nombre %></label>
+                <input type="checkbox" class="check_all" id="check_all1">
+                <label for="check_all1">Seleccionar todo / Ninguno</label>
               </div>
-            <% end %>
-          </div>
-        </div>
-
-        <div class="lootbox-form-column">
-          <h3> Contexto donde se busca </h3>
-          <div class="lootbox-select checks_container">
-            <div class="lootbox-option">
-              <input type="checkbox" class="check_all" id="check_all2">
-              <label for="check_all2">Seleccionar todo / Ninguno</label>
+              <% Categ.order(:nombre).each do |ct| %>
+                <div class="lootbox-option">
+                  <input type="checkbox" name="categ_ids[]" value="<%= ct.id %>" class="toggleable" id="categ_<%= ct.id %>"
+                      <%="checked" if session[:lootbox_categ_ids]&.include? ct.id.to_s %>>
+                  <label for="categ_<%= ct.id %>"><%= ct.nombre %></label>
+                </div>
+              <% end %>
             </div>
-            <% Contextoloot.order(:nombre).each do |ct| %>
-              <div class="lootbox-option">
-                <input type="checkbox" name="contextoloot_ids[]" value="<%= ct.id %>" class="toggleable" id="contextoloot_<%= ct.id %>"
-                    <%="checked" if session[:lootbox_contextoloot_ids]&.include? ct.id.to_s %>>
-                <label for="contextoloot_<%= ct.id %>"><%= ct.nombre %></label>
-              </div>
-            <% end %>
           </div>
-          <h3 style="padding-left: 10px">
-            <%= f.label :oromin, "Oro   mínimo:" %>
-            <%= f.number_field :oromin, value: session[:lootbox_oromin] || 5, class:"lootbox-number" %>
-          </h3>
-          <h3 style="padding-left: 10px">
-            <%= f.label :copia, "Número copias:" %>
-            <%= f.text_field :copia, value: session[:lootbox_copia] || 4, class:"lootbox-number" %>
-          </h3>
-        </div>
 
+          <div class="lootbox-form-column">
+            <h3> Contexto donde se busca </h3>
+            <div class="lootbox-select checks_container">
+              <div class="lootbox-option">
+                <input type="checkbox" class="check_all" id="check_all2">
+                <label for="check_all2">Seleccionar todo / Ninguno</label>
+              </div>
+              <% Contextoloot.order(:nombre).each do |ct| %>
+                <div class="lootbox-option">
+                  <input type="checkbox" name="contextoloot_ids[]" value="<%= ct.id %>" class="toggleable" id="contextoloot_<%= ct.id %>"
+                      <%="checked" if session[:lootbox_contextoloot_ids]&.include? ct.id.to_s %>>
+                  <label for="contextoloot_<%= ct.id %>"><%= ct.nombre %></label>
+                </div>
+              <% end %>
+            </div>
+            <h3 style="padding-left: 10px">
+              <%= f.label :oromin, "Oro   mínimo:" %>
+              <%= f.number_field :oromin, value: session[:lootbox_oromin] || 5, class:"lootbox-number" %>
+            </h3>
+            <h3 style="padding-left: 10px">
+              <%= f.label :copia, "Número copias:" %>
+              <%= f.number_field :copia, value: session[:lootbox_copia] || 4, class:"lootbox-number" %>
+            </h3>
+          </div>
+
+        </div>
+        
+        <%= f.submit "Abrir", class:"carta-title carta-title_clase"%>
       </div>
-      
-      <%= f.submit "Abrir", class:"carta-title carta-title_clase"%>
-    </div>
-  <% end %>
-
-  <div class="carta-subtitles lootbox-chest">
-    <% if session[:lootbox] == nil %>
-      <p> No hubo ninguna coincidencia </p>
-    <% else %>
-      <% for itId, num in session[:lootbox] do %>
-          <% item = error_coalesce(ActiveRecord::RecordNotFound){Item.find(itId)} %>
-          <% if item %>
-            <div class="lootbox-item">
-              <span class="carta-number carta-level carta-number_lootbox"> <%=num%> </span>
-              <%= link_to item.nombre, item %>
-              <span class="carta-number carta-coste">
-                  <%= item.coste %>
-              </span>
-              <span class="carta-number carta-peso">
-                  <%= item.peso %>
-              </span>
-              <span class="carta-description"><%= item.efecto %></span>
-            </div>
-          <% end %>
-      <% end %>
     <% end %>
   </div>
 
+  <div>
+    <h1>Contenido cofre</h1>
+    <div class="carta-subtitles lootbox-chest">
+      <% if session[:lootbox] == nil %>
+        <p> No hubo ninguna coincidencia </p>
+      <% else %>
+        <%= form_with(url: add_items_to_personaje_personajes_path, method: :post) do |f| %>
+
+          <% for itId, num in session[:lootbox] do %>
+              <% item = error_coalesce(ActiveRecord::RecordNotFound){Item.find(itId)} %>
+              <% if item %>
+                <%= hidden_field_tag "items[#{item.id}]", num %>
+                <div class="lootbox-item">
+                  <span class="carta-number carta-level carta-number_lootbox"> <%=num%> </span>
+                  <%= link_to item.nombre, item %>
+                  <span class="carta-number carta-coste">
+                      <%= item.coste %>
+                  </span>
+                  <span class="carta-number carta-peso">
+                      <%= item.peso %>
+                  </span>
+                  <span class="carta-description"><%= item.efecto %></span>
+                </div>
+              <% end %>
+          <% end %>
+        
+          <% if current_user.personajes.any? %>
+            <br>
+            <%= f.submit "Añadir inventario a personaje:", class: "btn btn-primary btn-small" %>
+            <%= select_tag(:id, options_from_collection_for_select(current_user.personajes,:id,:nombre)) %>
+            <br> <br>
+            <%= render "items/add_to_personaje_flash", id: "items", added: false %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
 </div>

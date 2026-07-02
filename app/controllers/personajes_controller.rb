@@ -10,6 +10,7 @@ class PersonajesController < ModelController
 
   configure_access level: :player
   configure_access :index, level: :unlogged
+  before_action :set, only: %i[show edit destroy add_to_personaje add_items_to_personaje]
   before_action :check_ownership, only: %i[show edit destroy]
 
   def index
@@ -57,7 +58,44 @@ class PersonajesController < ModelController
       @x.personajegroup.users.exists?(current_user.id))
   end
 
+  def add_to_personaje
+    add_item(params[:item_id], params[:cantidad].to_i)
+    added_response(params[:item_id])
+  end
+
+  def add_items_to_personaje
+    params[:items].each do |item_id, num|
+      add_item(item_id, num.to_i)
+    end
+    added_response("items")
+  end
+
   private
+
+  def add_item(item_id, cantidad)
+    item = Item.find(item_id)
+    phi = @x.personajeHasItems.find_by(item_id: item.id)
+    if phi
+      phi.cantidad += cantidad
+      phi.save!
+    else
+      phi = @x.personajeHasItems.create!(
+        item: item,
+        cantidad: cantidad,
+        isEquipped: false
+      )
+    end
+  end
+
+  def added_response(id)
+    render turbo_stream: [
+      turbo_stream.replace(
+        "add-item-flash-#{id}",
+        partial: "items/add_to_personaje_flash",
+        locals: { id: id, added: true }
+      )
+    ]
+  end
 
   def cleanup_estados_alterados(estadosalterados)
     estadosalterados&.each_value_with_object({}) do |attrs, cleaned|

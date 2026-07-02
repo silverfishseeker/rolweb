@@ -11,9 +11,7 @@ Rails.application.routes.draw do
   
   resources :clases
   resources :habilidads
-  resources :items do
-    post :add_to_personaje, on: :member
-  end
+  resources :items
   resources :pictures
   resources :mobs
   resources :categs
@@ -25,7 +23,10 @@ Rails.application.routes.draw do
   resources :personajegroups
   resource :system_setting, only: [:edit, :update]
   get '/recalcular_childs', to: 'cuentos#recalcular_childs'
-  resources :personajes
+  resources :personajes do
+    post :add_to_personaje, on: :collection
+    post :add_items_to_personaje, on: :collection
+  end
   
   resource :adminsession, only: [:new, :create]
   get '/adminsession/close', to: 'adminsessions#close'

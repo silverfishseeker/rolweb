@@ -425,9 +425,15 @@ $min-total-width: $min-width * 3 + 10px;
   }
   @media (max-width: #{ $min-total-width }) {
     flex-direction: column;
-      .pjv-resizer {
-        display: none;
-      }
+    .pjv-resizer {
+      display: none;
+    }
+    .pjv-column {
+      max-height: none;
+    }
+    .full_container {
+      margin-left: 0;
+    }
   }
 }
 
