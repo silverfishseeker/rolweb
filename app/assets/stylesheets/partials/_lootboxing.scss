@@ -1,7 +1,11 @@
+@import "respondMax";
+
 .lootbox-main {
-    display: grid;  
-    grid-template-columns: 1fr 2fr;
+    display: flex;  
     margin: 10px;
+    @include respond-max {
+        flex-direction: column;
+    }
 }
 
 .lootbox-main h3 {
@@ -19,6 +23,9 @@
 
 .lootbox-form-inner {
     display: flex;
+    @include respond-max {
+        flex-direction: column;
+    }
 }
 
 .lootbox-form-column {

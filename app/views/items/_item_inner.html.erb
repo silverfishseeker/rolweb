@@ -25,13 +25,13 @@
   <hr>
   <h4>Añadir a personaje</h4>
     <% if current_user.personajes.any? %>
-        <%= form_with(url: add_to_personaje_item_path(item), method: :post) do |f| %>
+        <%= form_with(url: add_to_personaje_personajes_path, method: :post) do |f| %>
             <%= hidden_field_tag :item_id, item.id %>
-            <%= select_tag(:personaje_id, options_from_collection_for_select(current_user.personajes,:id,:nombre)) %>
+            <%= select_tag(:id, options_from_collection_for_select(current_user.personajes,:id,:nombre)) %>
             <%= number_field_tag :cantidad, 1, step: 1 %>
             <%= f.submit "Añadir", class: "btn btn-primary btn-small" %>
             <br>
-            <%= render "items/add_to_personaje_flash", item_id: item.id, added: false %>
+            <%= render "items/add_to_personaje_flash", id: item.id, added: false %>
         <% end %>
     <% end %>
 <% end %>
