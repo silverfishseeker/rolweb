@@ -52,3 +52,6 @@ vendor/bundle
 
 # Ignorar archivo de variables de entorno
 *.env
+
+# Ignorar archivos temportales de buckets de S3
+dev_tools/bucket

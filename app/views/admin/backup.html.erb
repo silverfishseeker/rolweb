@@ -2,7 +2,8 @@
 
 <h1>Backup y Restauración del Sistema</h1>
 <p style="margin: 30px;">
-  <%= link_to "Descargar backup", create_backup_path, class: "btn btn-primary", download: true, id: "download-backup-btn" %>
+  <%= link_to "Descargar backup", create_backup_path, class: "btn btn-primary btn-download-backup", download: true %>
+  <%= link_to "Descargar backup sin imágenes", create_backup_path(skip_images: "1"), class: "btn btn-primary btn-download-backup", download: true %>
 </p>
 <div class="flash-wrapper">
   <div class="flash-notice" id="download-status" style="display:none;">

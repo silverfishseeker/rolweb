@@ -22,3 +22,5 @@ es:
           attributes:
             password:
               blank: "La contraseña no puede estar vacía."
+            email:
+              blank: "no puede estar vacío"

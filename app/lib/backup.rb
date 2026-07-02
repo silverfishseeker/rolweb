@@ -29,6 +29,10 @@ module Backup
     images_path
   end
 
+  def self.images_ids_map_file(dir)
+    dir.join("images_ids_map.json")
+  end
+
   def self.silence_sql
     original_logger = ActiveRecord::Base.logger
     ActiveRecord::Base.logger = Logger.new(IO::NULL)
@@ -93,7 +97,7 @@ module Backup
   end
 
   # Create a backup of the database and Minio images
-  def self.prepare_backup_files(temp_dir)
+  def self.prepare_backup_files(temp_dir, skip_images=false)
     Rails.logger.info "🔧 Preparing backup files in #{temp_dir}"
     FileUtils.rm_rf(temp_dir) if Dir.exist?(temp_dir)
     FileUtils.mkdir_p(temp_dir)
@@ -135,41 +139,55 @@ module Backup
       end
     ))
     
-    Rails.logger.info "🖼️ Dumping images from models..."
-    imgdir = Backup.images_dir(temp_dir)
-
     eager_load
-    ActiveRecord::Base.descendants.each do |model|
-      next unless model.respond_to?(:has_image_uploader)
-      model_imgdir = imgdir.join(model.name)
-      FileUtils.mkdir_p(model_imgdir)
-      metadata = []
-      model.find_each do |record|
-        img = record.image
-        next unless img
-        File.binwrite(model_imgdir.join(record.id.to_s), img.data)
-        metadata << {
-          id: record.id,
-          original_filename: img.nombre,
-          content_type: img.content_type || "application/octet-stream"
-        }
-      end
-      File.write(model_imgdir.join("images_meta.json"), JSON.pretty_generate(metadata))
-    end
 
-    Rails.logger.info "✅ Images downloaded."
+    if skip_images
+      Rails.logger.info "🖼️ Preparing images ids map file..."
+      references  = {}
+      ActiveRecord::Base.descendants.each do |model|
+        next unless model.respond_to?(:has_image_uploader)
+        refs_model = {}
+        model.find_each do |record|
+          refs_model[record.id] = record.read_attribute(:image)
+        end
+        references[model.name] = refs_model
+      end
+      File.write(Backup.images_ids_map_file(temp_dir), JSON.pretty_generate(references))
+
+    else
+      Rails.logger.info "🖼️ Dumping images from models..."
+      imgdir = Backup.images_dir(temp_dir)
+      ActiveRecord::Base.descendants.each do |model|
+        next unless model.respond_to?(:has_image_uploader)
+        model_imgdir = imgdir.join(model.name)
+        FileUtils.mkdir_p(model_imgdir)
+        metadata = []
+        model.find_each do |record|
+          img = record.image
+          next unless img
+          File.binwrite(model_imgdir.join(record.id.to_s), img.data)
+          metadata << {
+            id: record.id,
+            original_filename: img.nombre,
+            content_type: img.content_type || "application/octet-stream"
+          }
+        end
+        File.write(model_imgdir.join("images_meta.json"), JSON.pretty_generate(metadata))
+      end
+      Rails.logger.info "✅ Images downloaded."
+    end
   end
 
 
 
-  def self.create
+  def self.create(skip_images)
     Rails.logger.info "🚀 Starting backup process..."
     backup_name = "backup_#{time_now}"
     temp_dir = BACKUPS_DIR.join(backup_name)
     backup_path = BACKUPS_DIR.join("#{backup_name}.tar.gz")
 
     begin
-      prepare_backup_files(temp_dir)
+      prepare_backup_files(temp_dir, skip_images=skip_images)
 
       Rails.logger.info "📦 Packing backup files into #{backup_path} from #{temp_dir}..."
       Zlib::GzipWriter.open(backup_path) do |gz|
@@ -225,85 +243,97 @@ module Backup
     end
 
 
-    Rails.logger.info "📷 Restoring images..."
 
-    resume_state_index = RestoreState.get || 0
-    restore_index = 0
-
-    if max_file_size_mb
-      max_file_size_mb = max_file_size_mb.to_f
-      Rails.logger.info "Using max size: #{max_file_size_mb}MB"
-    end
-
-    imgdir = images_dir(restore_dir)
-    temp_path = imgdir.join("uploading_image")
-
-    imgdir.children.each do |model_dir|
-      next unless model_dir.directory?
-      Rails.logger.info "  Model_dir: #{model_dir}"
-      model = model_dir.basename.to_s.safe_constantize
-      records = model.all.index_by(&:id)
-      metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
-      SilverImageUploader.warn_on_remove_missing = false
-      metadata.each do |entry|
-        GC.start if gc
-
-        restore_index+=1
-        
-        if restore_index <= resume_state_index
-          Rails.logger.info "    Skipping entry: index(#{restore_index}) id(#{entry["id"]})"
-          next
-        end
-        
-        Rails.logger.info "    Entry: index(#{restore_index}) id(#{entry["id"]})"
-
-        begin
-          id = entry["id"]
-          file_path = model_dir.join(id.to_s)
-
-          if max_file_size_mb 
-            file_size_mb = File.size(file_path).to_f / (1024 * 1024)
-            if file_size_mb > max_file_size_mb
-              Rails.logger.warn "      Skipping, size #{file_size_mb.round(2)}MB"
-              next
-            end
-          end
-
-          if entry["content_type"] == "image/gif"
-            Rails.logger.info "    It is GIF"
-            if skip_gifs
-              Rails.logger.warn "      Entry: id(#{entry["id"]}) is a gif, skipping because skip_gifs=#{skip_gifs}"
-              next
-            end
-            FileUtils.cp(file_path, temp_path)
-          else
-            system("convert #{file_path} -strip #{temp_path}")
-          end
-
-          record = records[id]
-          File.open(temp_path) do |f|
-            record.image = ActionDispatch::Http::UploadedFile.new(
-              filename: entry["original_filename"],
-              type: entry["content_type"],
-              tempfile: f
-            )
-            record.save!
-          end
-
-          RestoreState.set restore_index
-          Rails.logger.info "    RestoreState saved, index: #{restore_index}"
-        rescue => e
-          backtrace = allow_missing_imgs ? "\n#{e.backtrace.join("\n")}" : ""
-          Rails.logger.error "    Error uploading. Sikipping. id(#{entry["id"]}) filename(#{entry["original_filename"]}) Error: #{e.message} #{backtrace}"
-          unless allow_missing_imgs
-            SilverImageUploader.warn_on_remove_missing = true
-            raise e
-          end
-          restore_index+=1
+    images_ids_map_file = Backup.images_ids_map_file(restore_dir)
+    if images_ids_map_file.exist?
+      Rails.logger.info "🖼️ Restoring images from ids map file..."
+      JSON.parse(File.read(images_ids_map_file)).each do |model_name, refs|
+        model = model_name.safe_constantize
+        refs.each do |record_id, image_id|
+          model.find(record_id).update_column(:image, image_id)
         end
       end
-      SilverImageUploader.warn_on_remove_missing = true
-      RestoreState.set nil
+
+    else
+      Rails.logger.info "📷 Restoring images..."
+      resume_state_index = RestoreState.get || 0
+      restore_index = 0
+
+      if max_file_size_mb
+        max_file_size_mb = max_file_size_mb.to_f
+        Rails.logger.info "Using max size: #{max_file_size_mb}MB"
+      end
+
+      imgdir = images_dir(restore_dir)
+      temp_path = imgdir.join("uploading_image")
+
+      imgdir.children.each do |model_dir|
+        next unless model_dir.directory?
+        Rails.logger.info "  Model_dir: #{model_dir}"
+        model = model_dir.basename.to_s.safe_constantize
+        records = model.all.index_by(&:id)
+        metadata = JSON.parse(File.read(model_dir.join("images_meta.json")))
+        SilverImageUploader.warn_on_remove_missing = false
+        metadata.each do |entry|
+          GC.start if gc
+
+          restore_index+=1
+          
+          if restore_index <= resume_state_index
+            Rails.logger.info "    Skipping entry: index(#{restore_index}) id(#{entry["id"]})"
+            next
+          end
+          
+          Rails.logger.info "    Entry: index(#{restore_index}) id(#{entry["id"]})"
+
+          begin
+            id = entry["id"]
+            file_path = model_dir.join(id.to_s)
+
+            if max_file_size_mb 
+              file_size_mb = File.size(file_path).to_f / (1024 * 1024)
+              if file_size_mb > max_file_size_mb
+                Rails.logger.warn "      Skipping, size #{file_size_mb.round(2)}MB"
+                next
+              end
+            end
+
+            if entry["content_type"] == "image/gif"
+              Rails.logger.info "    It is GIF"
+              if skip_gifs
+                Rails.logger.warn "      Entry: id(#{entry["id"]}) is a gif, skipping because skip_gifs=#{skip_gifs}"
+                next
+              end
+              FileUtils.cp(file_path, temp_path)
+            else
+              system("convert #{file_path} -strip #{temp_path}")
+            end
+
+            record = records[id]
+            File.open(temp_path) do |f|
+              record.image = ActionDispatch::Http::UploadedFile.new(
+                filename: entry["original_filename"],
+                type: entry["content_type"],
+                tempfile: f
+              )
+              record.save!
+            end
+
+            RestoreState.set restore_index
+            Rails.logger.info "    RestoreState saved, index: #{restore_index}"
+          rescue => e
+            backtrace = allow_missing_imgs ? "\n#{e.backtrace.join("\n")}" : ""
+            Rails.logger.error "    Error uploading. Sikipping. id(#{entry["id"]}) filename(#{entry["original_filename"]}) Error: #{e.message} #{backtrace}"
+            unless allow_missing_imgs
+              SilverImageUploader.warn_on_remove_missing = true
+              raise e
+            end
+            restore_index+=1
+          end
+        end
+        SilverImageUploader.warn_on_remove_missing = true
+        RestoreState.set nil
+      end
     end
 
     Rails.logger.info "🔢 Resetting ID sequences..."
