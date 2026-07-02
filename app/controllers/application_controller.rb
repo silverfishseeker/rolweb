@@ -15,4 +15,11 @@ class ApplicationController < ActionController::Base
       render plain: "Aplicación en mantenimiento. Intente nuevamente más tarde.", status: 503
     end
   end
+
+  rescue_from Net::OpenTimeout do |e|
+    Rails.logger.error e.full_message
+
+    redirect_to root_path,
+      alert: "No se pudo enviar el correo electrónico. Inténtalo más tarde."
+  end
 end

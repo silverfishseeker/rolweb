@@ -46,7 +46,7 @@ class AdminController < ApplicationController
         backup_file = nil
         begin
             with_maintenance do # Stops any other actions in ApplicationController
-                backup_file = Backup.create
+                backup_file = Backup.create(params[:skip_images] == "1")
             end
             data = File.binread(backup_file)
 

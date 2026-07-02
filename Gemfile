@@ -96,3 +96,5 @@ gem "devise", "~> 4.9"
 
 # carga de variables de entorno desde un fichero .env
 gem "dotenv", "~> 3.1"
+
+gem "mailgun-ruby", "~> 1.4"
