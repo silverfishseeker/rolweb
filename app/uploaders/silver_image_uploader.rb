@@ -1,7 +1,7 @@
 require "ostruct" # OpenStruct
 
 class SilverImageUploader
-  MODES = [:none, :cut_to_fit]
+  MODES = [:none, :cut_to_fit, :original]
 
   class_attribute :warn_on_remove_missing, default: true
 
@@ -67,6 +67,8 @@ class SilverImageUploader
     rescue
       raise "SilverImageUploader#to_webp: El archivo subido no es una imagen válida."
     end
+
+    return file if mode == :original
 
     formato = image["%m"].downcase
     

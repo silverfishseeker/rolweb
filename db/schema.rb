@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_22_192324) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_02_231015) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -504,6 +504,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_22_192324) do
     t.bigint "habilidades_independientes_clase_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image"
     t.index ["habilidades_independientes_clase_id"], name: "index_system_settings_on_habilidades_independientes_clase_id"
   end
 

@@ -13,6 +13,7 @@ module SilverImageUploaderMounter
     # @param mode [Symbol] Modo de procesamiento de la imagen. Valores soportados:
     #   - `:none` (por defecto): no aplica ningún procesamiento adicional.
     #   - `:cut_to_fit`: elimina los márgenes transparentes de la imagen antes de guardarla.
+    #   - `:original`: guarda la imagen tal cual, sin procesarla.
     def mount_image_uploader(mode: :none)
 
       class_attribute :has_image_uploader, instance_writer: false, default: true

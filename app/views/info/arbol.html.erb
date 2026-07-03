@@ -1,1 +1,3 @@
-<%= image_tag "ArbolDeClases.png", class: "arbol" %>
+<%= render "shared/image_with_link",
+  image: SystemSetting.instance.image,
+  cssclass: "arbol" %>
