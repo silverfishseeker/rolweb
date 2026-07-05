@@ -466,6 +466,7 @@ class PersonajesController < ModelController
       else
         phi ||= personaje.personajeHasItems.build(item_id: id)
         phi.cantidad = attrs[:cantidad].to_i
+        phi.isEquipped = attrs[:isEquipped] == "1"
         if phi.item.efecto == attrs[:sobreescritura]
           phi.sobreescritura = nil
         else

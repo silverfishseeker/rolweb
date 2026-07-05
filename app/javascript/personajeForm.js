@@ -240,4 +240,16 @@ export function onTurboLoad() {
   itemsContainer.querySelectorAll(".pj-cantidad").forEach(input => {
     adjustInputWidth(input);
   });
+
+  // Equipar/desquipar item
+  itemsContainer.addEventListener("click", e => {
+    if (e.target.classList.contains("equiper")) {
+      const button = e.target;
+      const input = document.getElementById(button.dataset.input);
+      const isEquipped = input.value !== "1";
+      input.value = isEquipped ? "1" : "0";
+      button.textContent = isEquipped ? "Equipado" : "Sin equipar";
+      button.classList.toggle("btn-shadow", isEquipped);
+    }
+  });
 }

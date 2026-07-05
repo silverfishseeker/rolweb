@@ -50,6 +50,12 @@
   background-color: var(--c_warning_alt);
 }
 
+.btn-shadow {
+  box-shadow: 
+      inset 4px 4px 10px rgba(0, 0, 0, 0.9),
+      inset -1px -1px 6px rgba(0, 0, 0, 0.9);
+}
+
 .btn-icon{
   padding: 0;
   border: none;
