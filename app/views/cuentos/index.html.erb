@@ -1,8 +1,5 @@
 <h1>Listado de cuentos</h1>
 
-<br>
-<%= link_to "Recalcular cuentos", "/recalcular_childs", style: "margin:40px"%>
-<br>
 <ul style="list-style: none;">
   <% @xs.order(prioridad: :desc, nombre: :asc).each do |cuento| %>
     <li>

@@ -32,7 +32,10 @@
     <div class="cuento-content_text_and_imgs">
       <div class="cuento-text">
         <div class="texto_info">
-          <%= enlazar_nombres_conocidos(@x) %>
+          <%= get_cuento_html %>
+        </div>
+        <div class="texto_info">
+          <%= @x.texto %>
         </div>
         <% if @x.parents.any? %>
           <div class="carta-subtitles">

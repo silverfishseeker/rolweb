@@ -1,13 +1,34 @@
 module CuentosHelper
   include UnlimitedCache
 
-  def enlazar_nombres_conocidos(cuento)
-    cache_fetch "cuentos_html_#{cuento.id}" do
-      html=cuento.texto.body.to_html
-      cuentos, regex = CuentosUtils.cuentos_regex(cuento.childs, cuento)
-      html.gsub(regex) do |match|
-        %(<a href="/cuentos/#{cuentos[match.downcase].id}">#{match}</a>)
-      end.html_safe
+  SPECIAL_CHARACTER = "_"
+
+  def calculate_cuento(cuento, do_childs = true)
+    cuentos = Cuento.where.not(id: cuento.id).where(oculto: false)
+        .select(:id, :nombre).map do |c|
+      [c.nombre.downcase, c]
+    end.to_h
+
+    regex = /\b(#{cuentos.keys.map { |n| Regexp.escape(n) }.join("|")})\b/ix
+    
+    cuento.childs.clear if do_childs
+
+    html = cuento.texto.body.to_html.gsub(regex) do |match|
+      curr_cuento = cuentos[match.downcase]
+      cuento.childs << curr_cuento if do_childs
+      match = match[1..-1] if match.starts_with?(SPECIAL_CHARACTER)
+      %(<a href="/cuentos/#{curr_cuento.id}">#{match}</a>)
+    end.html_safe
+
+    cuento.save! if do_childs && cuento.changed?
+    cache_set "cuentos_html_#{cuento.id}", html
+    
+    html
+  end
+
+  def get_cuento_html
+    cache_fetch "cuentos_html_#{@x.id}" do
+      calculate_cuento(@x, false)
     end
   end
 

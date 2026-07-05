@@ -1,14 +1,15 @@
 module UnlimitedCache
+  EXPIRES = 1.week
   
   @@memory_cache ||= ActiveSupport::Cache::MemoryStore.new
 
+  def cache_set key, value
+    @@memory_cache.write(key, value, expires_in: EXPIRES)
+  end
+
   def cache_fetch key
-    if block_given?
-      @@memory_cache.fetch(key, expires_in: 1.weeks) do
-        yield
-      end
-    else
-      @@memory_cache.fetch(key, expires_in: 1.weeks)
+    @@memory_cache.fetch(key, expires_in: EXPIRES) do
+      yield if block_given?
     end
   end
 

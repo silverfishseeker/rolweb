@@ -22,7 +22,6 @@ Rails.application.routes.draw do
   resources :cuentos
   resources :personajegroups
   resource :system_setting, only: [:edit, :update]
-  get '/recalcular_childs', to: 'cuentos#recalcular_childs'
   resources :personajes do
     post :add_to_personaje, on: :collection
     post :add_items_to_personaje, on: :collection
