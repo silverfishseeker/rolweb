@@ -7,4 +7,8 @@ class SystemSetting < ApplicationRecord
   def self.instance
     first_or_create!
   end
+
+  def self.arbol_image
+    SystemSetting.instance.image
+  end
 end

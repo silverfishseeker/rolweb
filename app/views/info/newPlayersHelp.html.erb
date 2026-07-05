@@ -89,4 +89,6 @@
 <br>
 </div>
 
-<%= image_tag "ArbolDeClases.png", class: "arbol" %>
+<%= render "shared/image_with_link",
+  image: SystemSetting.arbol_image,
+  cssclass: "arbol" %>
