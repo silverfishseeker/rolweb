@@ -18,15 +18,13 @@ document.addEventListener("turbo:load", () => {
   }
 
 
-  function setupMobileSubmenus() {
-    if (!( // Detect touch screen
-        (window.PointerEvent && ('maxTouchPoints' in navigator)) ?
-          navigator.maxTouchPoints > 0
-        :
-          ((window.matchMedia && window.matchMedia("(any-pointer:coarse)").matches) ||
-          (window.TouchEvent || ('ontouchstart' in window)))
-    ))
-      return;
+  if ( // Detect touch screen
+      (window.PointerEvent && ('maxTouchPoints' in navigator)) ?
+        navigator.maxTouchPoints > 0
+      :
+        ((window.matchMedia && window.matchMedia("(any-pointer:coarse)").matches) ||
+        (window.TouchEvent || ('ontouchstart' in window)))
+  ){
 
     const all_submenus = subnavbar.querySelectorAll(".submenu");
     const all_submenu_contents = subnavbar.querySelectorAll(".submenu-content");
@@ -59,7 +57,6 @@ document.addEventListener("turbo:load", () => {
 
   // Initial setup
   updateScrollIndicator();
-  setupMobileSubmenus();
 
   // Update on resize
   window.addEventListener("resize", updateScrollIndicator);
