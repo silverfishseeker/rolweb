@@ -38,7 +38,7 @@
       <%= initial_text %>
   </div>
 
-  <%= render "personajes/form_modal",
+  <%= render "shared/modal",
             buttom_content: "Editar texto de habilidad",
             buttom_extra_css: "open_modal-habilidad",
             header_text: "Editando #{habilidad.nombre}",
@@ -49,7 +49,7 @@
   <% end %>
 
   
-  <%= render "personajes/form_modal",
+  <%= render "shared/modal",
             buttom_content: "Contadores",
             buttom_extra_css: "open_modal-habilidad",
             header_text: "Editando contadores de #{habilidad.nombre}",
@@ -59,7 +59,7 @@
   <% end %>
 
   
-  <%= render "personajes/form_modal",
+  <%= render "shared/modal",
             buttom_content: "Cambiar clase",
             buttom_extra_css: "open_modal-habilidad",
             header_text: "Editando #{habilidad.nombre}",

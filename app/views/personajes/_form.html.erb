@@ -186,7 +186,7 @@
                 <%= label_tag  "picture_nombre", "Título de la imagen" %>
                 <%= text_field_tag "picture[nombre]", @x.picture&.nombre %>
                 <br><br>
-                <%= render "personajes/form_modal",
+                <%= render "shared/modal",
                     buttom_content: "Editar etiquetas de la imagen",
                     header_text: "Etiquetas de la imagen de #{@x.nombre}",
                     index: "picture_etiquets" do %>
@@ -205,7 +205,7 @@
           <br>
           <br>
           <section>
-            <%= render "personajes/form_modal",
+            <%= render "shared/modal",
                 buttom_content: "Editar artículos relacionados",
                 header_text: "Editando artículos relacionados de #{@x.nombre}",
                 index: "cuentos" do %>
@@ -409,7 +409,7 @@
               
               <br>
               <div id="explicacion-mapeos-container">
-                <%= render "personajes/form_modal",
+                <%= render "shared/modal",
                     buttom_content: "Cómo configurar los mapeos de partes del cuerpo",
                     buttom_extra_css: "to_right",
                     header_text: "Explicación de mapeos de partes del cuerpo",

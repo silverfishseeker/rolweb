@@ -45,7 +45,7 @@
     </span>
   </div>
 
-  <%= render "personajes/form_modal",
+  <%= render "shared/modal",
       buttom_content: "Editar texto de item",
       buttom_extra_css: "open_modal-habilidad",
       header_text: "Editando #{item.nombre}",
@@ -56,7 +56,7 @@
       <%= item.ritual_description %>
     <% end %>
   <% end %>
-  <%= render "personajes/form_modal",
+  <%= render "shared/modal",
       buttom_content: "Contadores",
       buttom_extra_css: "open_modal-habilidad",
       header_text: "Editando contadores de #{item.nombre}",

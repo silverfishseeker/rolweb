@@ -3,7 +3,7 @@
     id="resumen-modal-partecuerpo-<%=index%>" data-table_id="<%=ea_t_id index.to_s%>">
   <!-- JS rellena -->
 </div>
-<%= render "personajes/form_modal",
+<%= render "shared/modal",
             buttom_content: local_assigns[:buttom_content] || "Ver / editar",
             buttom_extra_css: local_assigns[:buttom_extra_css] || "",
             header_text: "Estados alterados de #{target ? target.nombre : "nuevo"}",

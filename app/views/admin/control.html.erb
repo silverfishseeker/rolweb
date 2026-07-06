@@ -1,3 +1,6 @@
+<% importJS "modals" %>
+<% content_for :main_content_class, 'main-content-margin_reduced' %>
+
 <h2>Estas funciones son solo de administrador</h2>
 
 <div class="texto_info admin-cuerpo">
@@ -83,21 +86,32 @@
     </div>
 
     <div class="admin-column admin-column-small">
-        <p>
-            <b> Configuación de SilverImageUploader: </b> <br>  
-            uploader: <%= ImageUploaderConfig.uploader.class%> <br>
-            cache_type: <%= ImageUploaderConfig.cache_type%> <br>
-            memory_size: <%= ImageUploaderConfig.memory_size%> <br>
-            backup_upload_max_file_size_mb: <%= ImageUploaderConfig.backup_upload_max_file_size_mb%> <br>
-            <br>
-            <b>Valores de variables de entorno usados:</b> <br>
-            <% EnvVars.all.each do |key, value| %>
-                <%= key %>: <%= value %> <br>
-            <% end %>
-            <br>
-            <b>Variables de entorno configuradas:</b> <br>
-            <% EnvVars.all_raw.each do |key, value| %>
-                <%= key %>: <%= value %> <br>
-            <% end %>
-        </p>
+        <%= render "shared/modal",
+            buttom_content: "Configuación de SilverImageUploader",
+            header_text: "Configuación de SilverImageUploader",
+            index: "conf1" do %>
+                uploader: <%= ImageUploaderConfig.uploader.class%> <br>
+                cache_type: <%= ImageUploaderConfig.cache_type%> <br>
+                memory_size: <%= ImageUploaderConfig.memory_size%> <br>
+                backup_upload_max_file_size_mb: <%= ImageUploaderConfig.backup_upload_max_file_size_mb%> 
+        <% end %>
+        <br><br>
+        <%= render "shared/modal",
+            buttom_content: "Valores de variables de entorno usados:",
+            header_text: "Valores de variables de entorno usados:",
+            index: "conf2" do %>
+                <% EnvVars.all.each do |key, value| %>
+                    <%= key %>: <%= value %> <br>
+                <% end %>
+        <% end %>
+        <br><br>
+        <%= render "shared/modal",
+            buttom_content: "Variables de entorno configuradas:",
+            header_text: "Variables de entorno configuradas:",
+            index: "conf3" do %>
+                <% EnvVars.all_raw.each do |key, value| %>
+                    <%= key %>: <%= value %> <br>
+                <% end %>
+        <% end %>
+    </div>
 </div>
