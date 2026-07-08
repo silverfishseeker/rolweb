@@ -74,5 +74,10 @@ module AccessControl
       end
     end
   end
-
+  
+  def self.public_action?(controller_class, action)
+    controller_class.respond_to?(:_access_rules) &&
+      (rules = controller_class._access_rules
+      (rules[action.to_sym] || rules[:all]) == :unlogged)
+  end
 end

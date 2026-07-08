@@ -1,5 +1,7 @@
 class Pj::MetaTiposController < ModelController
 
+  configure_access
+  
   def tipo
     Pj::MetaTipo.str_tipo(params[:tipo])
   end

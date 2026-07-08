@@ -85,4 +85,6 @@ Rails.application.routes.draw do
   post '/lootboxing', to: 'randompick#lootboxing'
   get '/resetdndspells', to: 'dndspells#reset'
   get '/clasificar_habilidad', to: 'habilidads#clasificar'
+
+  get "/sitemap.xml", to: "seo#sitemap", defaults: { format: :xml }
 end
