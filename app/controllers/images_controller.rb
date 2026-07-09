@@ -6,9 +6,10 @@ class ImagesController < ActionController::Base
 
   # Acción para servir el archivo binario como imagen descargable
   def download
-    @image = @@image_uploader.get(params[:id])
-    nombre = @image.nombre
-    extension = File.extname(nombre).delete_prefix('.')
-    send_data @image.data, filename: "#{nombre}", type: "image/#{extension}", disposition: "inline"
+    image = @@image_uploader.get(params[:id])
+    send_data image.data,
+        filename: image.nombre,
+        type: image.content_type,
+        disposition: "inline"
   end
 end
