@@ -270,13 +270,17 @@ class PersonajesController < ModelController
     if params[:picture].present?
       pic_params = params[:picture]
       picture = personaje.picture || personaje.build_picture
-      picture.image = pic_params[:file] if pic_params[:file].present?
-      picture.nombre =
-          pic_params[:nombre].presence ||
-          (File.basename(picture.image.nombre.to_s, ".*").presence if picture.image) ||
-          "Imagen de #{personaje.nombre}"
-      picture.etiquets = Etiquet.find(pic_params[:etiquet_ids].reject(&:blank?))
-      picture.save!
+      if pic_params[:file].present?
+        picture.image = pic_params[:file]
+        picture.nombre =
+            pic_params[:nombre].presence ||
+            (File.basename(picture.image.nombre.to_s, ".*").presence if picture.image) ||
+            "Imagen de #{personaje.nombre}"
+        picture.etiquets = Etiquet.find(pic_params[:etiquet_ids].reject(&:blank?))
+        picture.save!
+      else
+        picture.destroy if picture.persisted?
+      end
     end
 
     # ESTADISTICAS
