@@ -229,8 +229,12 @@
       <div class="white_bk"><%= f.rich_text_area :descripcion2 %></div>
       <h4>Artículos relacionados</h4>
       <p>
-        <% @x.cuentos.each do |cuento| %>
-          <%= link_to cuento.nombre, cuento %>
+        <% if @x.cuentos.any? %>
+          <% @x.cuentos.each do |cuento| %>
+            <%= link_to cuento.nombre, cuento %>
+          <% end %>
+        <% else %>
+          <p>No hay artículos relacionados.</p>
         <% end %>
       </p>
     </div>
