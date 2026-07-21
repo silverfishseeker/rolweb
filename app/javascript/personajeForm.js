@@ -2,8 +2,12 @@ import { nextZIndex } from "./zIndexCounter.js";
 import { adjustInputWidth } from "./utils.js";
 import { createCloseModalHandler  }  from "./modals.js";
 import { initTabs } from "./tabs.js";
+import { warnUnsaved } from "./warnUnsaved.js";
 
 export function onTurboLoad() {
+
+  // Aviso de cambios sin guardar
+  warnUnsaved(document.querySelector(".pj-form"));
 
   //tabs
   initTabs(document.querySelector('.pj-form'));  
