@@ -5,17 +5,21 @@
       <span> <%= link_to cuento.nombre, cuento %> </span>
       <span> <%= link_to "Editar", edit_cuento_path(cuento) %> </span>
       <span> <%= link_to "Eliminar", cuento_path(cuento), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro?" } %> </span>
-      <span><%= oculto ? "Oculto" : "Disponible" %></span>
     </div>
   <% end %>
 <% end %>
 
-<div class="texto_info texto_info-margins">
+<div class="texto_info-margins">
   <h1>Listado de cuentos</h1>
-  <h2>Visibles:</h2>
-  <% list false %>
+  <div class="cuentos_admin">
+    <div>
+      <h2>Visibles:</h2>
+      <% list false %>
+    </div>
 
-  <hr>
-  <h2>Ocultos:</h2>
-  <% list true %>
+    <div>
+      <h2>Ocultos:</h2>
+      <% list true %>
+    </div>
+  </div>
 </div>

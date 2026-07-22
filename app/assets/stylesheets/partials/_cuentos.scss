@@ -83,3 +83,14 @@
     margin: 0;
   }
 }
+
+.cuentos_admin {
+  display: flex;
+  gap: 10px;
+  div {
+    flex: 1;
+  }
+  @include respond-max {
+    flex-direction: column;
+  }
+}
