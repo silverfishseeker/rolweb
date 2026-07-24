@@ -51,11 +51,11 @@ class PersonajesController < ModelController
   end
 
   def check_ownership
-    (require_level(:admin) ||
-    @x.user == current_user) ||  
+    (@x.user == current_user) ||  
     (require_level(:master) && 
       @x.personajegroup.present? &&
-      @x.personajegroup.users.exists?(current_user.id))
+      @x.personajegroup.users.exists?(current_user.id) ||
+      require_level(:admin)) # Debe de ejecutarse el último porque envía redireccón al fallar
   end
 
   def add_to_personaje
