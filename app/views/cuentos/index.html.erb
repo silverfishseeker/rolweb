@@ -1,25 +1,14 @@
-<% def list(oculto) %>
-  <% @xs.where(oculto: oculto).order(prioridad: :desc, nombre: :asc).each do |cuento| %>
-    <div class="pj-meta_tipo_card">
-      <span> <%= cuento.prioridad %> </span>
-      <span> <%= link_to cuento.nombre, cuento %> </span>
-      <span> <%= link_to "Editar", edit_cuento_path(cuento) %> </span>
-      <span> <%= link_to "Eliminar", cuento_path(cuento), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro?" } %> </span>
-    </div>
-  <% end %>
-<% end %>
-
 <div class="texto_info-margins">
   <h1>Listado de cuentos</h1>
   <div class="cuentos_admin">
     <div>
       <h2>Visibles:</h2>
-      <% list false %>
+      <%= list_cuentos false %>
     </div>
 
     <div>
       <h2>Ocultos:</h2>
-      <% list true %>
+      <%= list_cuentos true %>
     </div>
   </div>
 </div>
