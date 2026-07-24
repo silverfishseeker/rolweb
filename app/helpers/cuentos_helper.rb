@@ -15,7 +15,7 @@ module CuentosHelper
 
     html = cuento.texto.body.to_html.gsub(regex) do |match|
       curr_cuento = cuentos[match.downcase]
-      cuento.childs << curr_cuento if do_childs
+      cuento.childs << curr_cuento if do_childs && !cuento.childs.include?(curr_cuento)
       match = match[1..-1] if match.starts_with?(SPECIAL_CHARACTER)
       %(<a href="/cuentos/#{curr_cuento.id}">#{match}</a>)
     end.html_safe
@@ -32,9 +32,9 @@ module CuentosHelper
     end
   end
   
-def list_cuentos(oculto)
-  @xs.where(oculto: oculto).order(prioridad: :desc, nombre: :asc)
-end
+  def list_cuentos(oculto)
+    @xs.where(oculto: oculto).order(prioridad: :desc, nombre: :asc)
+  end
 
 
 end
