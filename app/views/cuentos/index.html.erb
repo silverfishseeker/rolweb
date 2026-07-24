@@ -3,12 +3,16 @@
   <div class="cuentos_admin">
     <div>
       <h2>Visibles:</h2>
-      <%= list_cuentos false %>
+      <% list_cuentos(false).each do |cuento| %>
+        <%= render "cuento", cuento: cuento %>
+      <% end %>
     </div>
 
     <div>
       <h2>Ocultos:</h2>
-      <%= list_cuentos true %>
+      <% list_cuentos(true).each do |cuento| %>
+        <%= render "cuento", cuento: cuento %>
+      <% end %>
     </div>
   </div>
 </div>

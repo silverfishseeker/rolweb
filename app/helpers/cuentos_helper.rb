@@ -33,18 +33,8 @@ module CuentosHelper
   end
   
 def list_cuentos(oculto)
-  cuentos = @xs.where(oculto: oculto).order(prioridad: :desc, nombre: :asc)
-
-  cuentos.map do |cuento|
-    content_tag :div, class: "pj-meta_tipo_card" do
-      safe_join([
-        content_tag(:span, cuento.prioridad),
-        content_tag(:span, link_to(cuento.nombre, cuento)),
-        content_tag(:span, link_to("Editar", edit_cuento_path(cuento))),
-        content_tag(:span, link_to("Eliminar", cuento_path(cuento), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro?" }))
-      ])
-    end
-  end.join.html_safe
+  @xs.where(oculto: oculto).order(prioridad: :desc, nombre: :asc)
 end
+
 
 end
