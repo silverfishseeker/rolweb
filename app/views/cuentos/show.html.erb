@@ -13,10 +13,13 @@
   <%# importante aplicar los estilos en el orden en que estás colocadas las clases. Recordemos que los estilos de la última clase %>
   <%# sobrescribe al los anteriores.%>
 
-  <h2><%= @x.titulo %></h1>
+  <h2><%= @x.titulo %></h2>
   
   <% only_admin_content do %>
     <h5>(<%= @x.nombre%>) </h5>
+    <% if @x.oculto %>
+      <div class="cuento-oculto"> Oculto </div>
+    <% end %>
   <% end %>
 
   <% if @x.spoilers %>
