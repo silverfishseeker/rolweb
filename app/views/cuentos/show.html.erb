@@ -34,10 +34,11 @@
         <div class="texto_info">
           <%= get_cuento_html %>
         </div>
-        <% if @x.parents.any? %>
+        <% visible_parents = @x.parents.where(oculto: false).order(prioridad: :desc, nombre: :asc) %>
+        <% if visible_parents.any? %>
           <div class="carta-subtitles">
             <h4>🔗 Este artículo es nombrado en:</h4>
-            <% @x.parents.order(prioridad: :desc, nombre: :asc).each do |parent| %>
+            <% visible_parents.each do |parent| %>
               <%= link_to parent.titulo, parent %>
             <% end %>
           </div>
