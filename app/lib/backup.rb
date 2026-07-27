@@ -182,7 +182,7 @@ module Backup
 
   def self.create(skip_images)
     Rails.logger.info "🚀 Starting backup process..."
-    backup_name = "backup_#{time_now}"
+    backup_name = "backup_#{time_now}#{skip_images ? "_no_imgs" : ""}"
     temp_dir = BACKUPS_DIR.join(backup_name)
     backup_path = BACKUPS_DIR.join("#{backup_name}.tar.gz")
 
@@ -216,6 +216,8 @@ module Backup
 
   require "active_record/fixtures"
   def self.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb, gc, is_rollback: false)
+    images_ids_map_file = Backup.images_ids_map_file(restore_dir)
+
     if !is_rollback && RestoreState.get
       Rails.logger.info "⏭️ Restore state detected, skipping DB deletion, BD restoring and images deletion..."
     else
@@ -238,13 +240,12 @@ module Backup
         end
       end
 
-      Rails.logger.info "🗑️ Deleting images..."
-      SilverImageUploader.clear_all!
+      if !images_ids_map_file.exist?
+        Rails.logger.info "🗑️ Deleting images..."
+        SilverImageUploader.clear_all!
+      end
     end
 
-
-
-    images_ids_map_file = Backup.images_ids_map_file(restore_dir)
     if images_ids_map_file.exist?
       Rails.logger.info "🖼️ Restoring images from ids map file..."
       JSON.parse(File.read(images_ids_map_file)).each do |model_name, refs|

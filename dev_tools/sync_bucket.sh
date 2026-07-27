@@ -1,26 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-# Cargar variables desde ../.env (formato: KEY: VALUE)
-while IFS='=' read -r key value; do
-    export "$key=$value"
-done < <(
-    awk -F': *' '
-        /^[[:space:]]*#/ { next }
-        /^[[:space:]]*$/ { next }
-        {
-            key = $1
-            sub(/^[[:space:]]+/, "", key)
-            sub(/[[:space:]]+$/, "", key)
-
-            value = substr($0, index($0, ":") + 1)
-            sub(/^[[:space:]]+/, "", value)
-            sub(/[[:space:]]+$/, "", value)
-
-            print key "=" value
-        }
-    ' ../.env
-)
+read -rp "S3 Endpoint: " S3_ENDPOINT
+read -rp "Bucket: " S3_BUCKET
+read -rp "Access Key ID: " S3_ACCESS_KEY_ID
+read -rp "Secret Access Key: " S3_SECRET_ACCESS_KEY
+echo
 
 AWS_ACCESS_KEY_ID="$S3_ACCESS_KEY_ID" \
 AWS_SECRET_ACCESS_KEY="$S3_SECRET_ACCESS_KEY" \
