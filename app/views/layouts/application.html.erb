@@ -183,8 +183,6 @@
         <div class="footbar-admin_button">
           <% if session[:admin] %>
             <%= link_to "Cerrar sesión", "/adminsession/close" %>
-          <% else %>
-            <%= link_to "Superadmin access", new_adminsession_path %>
           <% end %>
         </div>
       </div>
