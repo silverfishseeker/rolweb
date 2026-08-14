@@ -182,7 +182,7 @@ module Backup
 
   def self.create(skip_images)
     Rails.logger.info "🚀 Starting backup process..."
-    backup_name = "backup_#{time_now}#{skip_images ? "_no_imgs" : ""}"
+    backup_name = "backup_#{time_now}#{skip_images ? "_no_imgs" : "_full"}"
     temp_dir = BACKUPS_DIR.join(backup_name)
     backup_path = BACKUPS_DIR.join("#{backup_name}.tar.gz")
 
