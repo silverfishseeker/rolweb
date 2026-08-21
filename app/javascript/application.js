@@ -5,6 +5,8 @@ import "trix"
 import "@rails/actiontext"
 import "./navbar.js"
 
+Trix.config.blockAttributes.heading1.tagName = "h4"
+
 document.addEventListener("turbo:load", () => {
   document.querySelectorAll("[data-js]").forEach(el => {
     const jsName = el.dataset.js
