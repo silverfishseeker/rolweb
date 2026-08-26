@@ -100,15 +100,14 @@
     display: none;
     position: absolute;
     max-height: 450px; /* Tamaño fijo pequeño del submenú */
-    max-width: 100vw;
     overflow-y: auto;
-    overflow-x: hidden;
     border: 3px solid var(--c_base);
     margin-top: 8px;
 }
 
 .submenu-content div {
     width: 100%;
+    box-sizing: border-box;
 }
 
 .submenu-content a {
@@ -116,6 +115,7 @@
     background-color: var(--c_detalle);
     display: block;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .submenu-content a.mainLink {
@@ -184,3 +184,71 @@
 .submenu-content .auth-btn:hover {
     background: var(--c_base_alt);
 }
+
+
+
+// ########### ENCYCLOPEDIA MENU ##########
+@import "respondMax";
+
+$encyclopedia-menu-col-width: 220px;
+$encyclopedia-menu-col-gap: 8px;
+
+.submenu:has(.encyclopedia-menu){
+    > .submenu-content {
+        display: block;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 1s, visibility 1s;
+        overflow: visible;
+
+        @include respond-max {
+            transition: opacity 0s, visibility 0s;
+        }
+    }
+    &:hover > .submenu-content,
+    &:focus-within > .submenu-content {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0s, visibility 0s;
+    }
+}
+
+
+.encyclopedia-menu_content {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s, visibility 1s; // fade out con margen para llegar con el ratón
+    position: absolute;
+    top: -3px;
+    left: 100%;
+    border: 3px solid var(--c_base);
+}
+
+
+.encyclopedia-menu {
+    > .encyclopedia-menu_link::after {
+        content: " ▾";
+        @include respond-max {
+            content: none;
+        }
+    }
+    &:hover, &:focus-within {
+        > .encyclopedia-menu_link::after {
+            content: " ▸"; // flecha hacia la derecha en hover/focus
+            @include respond-max {
+                content: none;
+            }
+        }
+        > .encyclopedia-menu_content {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0s, visibility 0s; // aparece al instante
+
+            @include respond-max {
+                display: none;
+            }
+        }
+    }
+}
+
+

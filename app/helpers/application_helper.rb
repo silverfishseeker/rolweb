@@ -1,12 +1,5 @@
 module ApplicationHelper
 
-  def main_cuento_path
-    cache_fetch "cuento_first" do
-      cuento = Cuento.order(prioridad: :desc).first
-      cuento.present? ? cuento_path(cuento) : "#"
-    end
-  end
-
   def importJS (*module_names)
     module_names.each do |module_name|
       content_for :page_js do

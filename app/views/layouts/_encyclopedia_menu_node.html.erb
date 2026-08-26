@@ -1,0 +1,13 @@
+<%# Expected params: node, (opcional) label%>
+<% has_childs = node[:childs]&.any? %>
+<div class="<%= 'encyclopedia-menu' if has_childs %>">
+  <%= link_to( local_assigns.fetch(:label) { node[:cuento].titulo },
+      node[:cuento], class: "encyclopedia-menu_link") %>
+  <% if has_childs %>
+    <div class="encyclopedia-menu_content">
+      <% node[:childs].each do |child| %>
+        <%= render "layouts/encyclopedia_menu_node", node: child %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

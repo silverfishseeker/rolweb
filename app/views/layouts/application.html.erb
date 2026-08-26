@@ -41,7 +41,7 @@
               <a href="/reglas">Reglas</a>
               <a href="/estadosAlterados">Estados Alterados</a>
               <a href="/newPlayersHelp">Ayuda para nuevos jugadores</a>
-              <%= link_to "Historias y trasfondo", main_cuento_path%>
+              <%= render "layouts/encyclopedia_menu_node", node: navbar_cache_encyclopedia_tree, label: "Enciclopedia de Varacia" %>
           </div>
         </div>
 

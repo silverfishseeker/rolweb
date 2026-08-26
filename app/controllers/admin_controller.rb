@@ -123,7 +123,7 @@ class AdminController < ApplicationController
         cache_delete "clases_ocultas"
         cache_delete "clases_visibles"
         cache_delete "categorias"
-        cache_delete "cuento_first"
+        cache_delete "encyclopedia_tree"
     end
 end
 

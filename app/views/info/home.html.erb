@@ -81,7 +81,9 @@
   <!-- MAP SECTION -->
   <section class="home-map ">
     <div class="section-content texto_info-margins">
-      <h2> <%= link_to "Explora Varacia", main_cuento_path %> </h2>
+      <h2> <%= link_to "Explora Varacia", 
+        error_coalesce{cuento_path(navbar_cache_encyclopedia_tree[:cuento])}
+      %> </h2>
       <p> Explora el mundo de Varacia y sus historias.</p>
       <%= image_tag "map.webp" %>
     </div>
