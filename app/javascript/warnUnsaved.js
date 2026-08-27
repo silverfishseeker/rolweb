@@ -1,9 +1,10 @@
 export function warnUnsaved(form) {
   let cantLeave = false;
-  
-  form.addEventListener("input", () => { cantLeave = true; });
+  const markDirty = () => { cantLeave = true; };
 
-  form.addEventListener("change", () => { cantLeave = true; });
+  form.addEventListener("input", markDirty);
+  form.addEventListener("change", markDirty);
+  new MutationObserver(markDirty).observe(form, { childList: true, subtree: true });
 
   form.querySelectorAll('input[type="submit"]').forEach(button => {
     button.addEventListener("click", () => { cantLeave = false; });
@@ -12,7 +13,6 @@ export function warnUnsaved(form) {
   window.addEventListener("beforeunload", (event) => { // Aviso al cerrar pestaña, recargar o navegar fuera
     if (cantLeave) {
       event.preventDefault();
-      event.returnValue = "";
     }
   });
   

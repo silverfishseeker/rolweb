@@ -173,6 +173,7 @@ export function onTurboLoad() {
     if (e.target.classList.contains("boton_reseteo_clase")) {
       const select = document.getElementById(e.target.dataset.id_select);
       select.value = e.target.dataset.id_clase;
+      select.dispatchEvent(new Event("input", { bubbles: true }));
     }
   });
 
@@ -252,6 +253,7 @@ export function onTurboLoad() {
       const input = document.getElementById(button.dataset.input);
       const isEquipped = input.value !== "1";
       input.value = isEquipped ? "1" : "0";
+      input.dispatchEvent(new Event("input", { bubbles: true }));
       button.textContent = isEquipped ? "Equipado" : "Sin equipar";
       button.classList.toggle("btn-shadow", isEquipped);
     }
