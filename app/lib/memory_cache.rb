@@ -1,14 +1,15 @@
-class MemoryCache < InterfaceCache
-  
+class MemoryCache
+
+  @@caches = {}
+
   private(:initialize)
-  def initialize(model_class)
+  def initialize
     size = ImageUploaderConfig.memory_size.megabytes
     @memory_cache = ActiveSupport::Cache::MemoryStore.new(size: size)
-    @model_class = model_class.to_s
   end
 
   def self.get_cache(model_class)
-    MemoryCache.new(model_class)
+    @@caches[model_class] ||= MemoryCache.new
   end
 
   def fetch(id)

@@ -1,6 +1,8 @@
 require "active_support/cache"
 
-class HybridCache < InterfaceCache
+class HybridCache
+
+  @@caches = {}
 
   private(:initialize)
   def initialize(model_class)
@@ -10,7 +12,7 @@ class HybridCache < InterfaceCache
 
   # Asgurar una interfaz identica a DiskCache
   def self.get_cache(model_class) 
-    HybridCache.new(model_class)
+    @@caches[model_class] ||= HybridCache.new(model_class)
   end
 
   # fetches from memory cache first, then from disk cache if not found in memory

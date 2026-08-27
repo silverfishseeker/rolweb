@@ -1,4 +1,4 @@
-class NoneCache < InterfaceCache
+class NoneCache
   def self.get_cache(model_class)
     NoneCache.new
   end
@@ -9,5 +9,7 @@ class NoneCache < InterfaceCache
   def store(record)
   end
   def remove(id)
+  end
+  def clear_all!
   end
 end

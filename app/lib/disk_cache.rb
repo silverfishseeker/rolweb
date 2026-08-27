@@ -1,23 +1,19 @@
 require "fileutils"
 require "stringio"
 
-class DiskCache < InterfaceCache
+class DiskCache
   CACHE_DIR = Rails.root.join('tmp', 'cache', 'hybrid_cache')
   FileUtils.mkdir_p(CACHE_DIR) unless Dir.exist?(CACHE_DIR)
   @@caches = {}
 
   private(:initialize)
   def initialize(model_class)
-    @model_class = model_class
     @disk_cache_path = CACHE_DIR.join(model_class.name.underscore)
     FileUtils.mkdir_p(@disk_cache_path) unless Dir.exist?(@disk_cache_path)
-    @@caches[model_class] = self
   end
 
   def self.get_cache(model_class)
-    @@caches.fetch(model_class, DiskCache.new(model_class))
-    # nótese que cuando falla, no añade el segundo argumento al hash,
-    # pero lo estamos añadiendo en el initialize
+    @@caches[model_class] ||= DiskCache.new(model_class)
   end
   
   def disk_cache_file(id)
