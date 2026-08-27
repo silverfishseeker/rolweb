@@ -1,6 +1,9 @@
 class CuentosController < ModelController
   
   configure_access :index
+  after_action only: %i[create update destroy] do
+    cache_delete "navbar_shared"
+  end
 
   include UnlimitedCache
   include CuentosHelper

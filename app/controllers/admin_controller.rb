@@ -24,11 +24,6 @@ class AdminController < ApplicationController
         redirect_to "/control", notice: "Caché de disco eliminada"
     end
 
-    def delete_navbar_cache
-        inner_delete_navbar_cache
-        redirect_to "/control", notice: "Caché de la barra de navegación eliminada"
-    end
-
     def delete_all_cache
         cache_clear
         redirect_to "/control", notice: "Caché de memoria eliminada"
@@ -83,7 +78,7 @@ class AdminController < ApplicationController
                         params[:gc] == "1"
                     )
                 end
-                inner_delete_navbar_cache
+                cache_clear
                 redirect_to "/backup", notice: "Backup restored successfully."
             rescue => e
                 Rails.logger.error "❌ Restore (#{params[:mode]=="1" ? "flexible" : "strict"}) failed: #{e.message}\n#{e.backtrace.join("\n")}"
@@ -117,13 +112,5 @@ class AdminController < ApplicationController
         redirect_to "/control", alert: "Error al enviar correo: #{e.message}"
     end
 
-    private
-
-    def inner_delete_navbar_cache
-        cache_delete "clases_ocultas"
-        cache_delete "clases_visibles"
-        cache_delete "categorias"
-        cache_delete "encyclopedia_tree"
-    end
 end
 

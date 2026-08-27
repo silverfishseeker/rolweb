@@ -35,57 +35,67 @@
           </div>
         <% end %>
 
-        <div class="submenu">
-          <a href="/reglas" class="nblink">Información</a>
-          <div class="submenu-content">
-              <a href="/reglas">Reglas</a>
-              <a href="/estadosAlterados">Estados Alterados</a>
-              <a href="/newPlayersHelp">Ayuda para nuevos jugadores</a>
-              <%= render "layouts/encyclopedia_menu_node", node: navbar_cache_encyclopedia_tree, label: "Enciclopedia de Varacia" %>
-          </div>
-        </div>
 
-        <div class="submenu">
-          <%= link_to "Clases y habilidades", clases_path, class:"nblink" %>
-          <div class="submenu-content">
-            <%= link_to "Todas las clases", clases_path, class:"mainLink" %>
-            <%= link_to "Todas las habilidades", habilidads_path, class:"mainLink" %>
-            <%= link_to "Árbol de clases", "/clases-arbol", class:"mainLink" %>
-            <%= link_to "Clases radicales", clases_path(mode:"radical"), class:"mainLink" %>
-            <%= link_to "Razas", clases_path(mode:"raza"), class:"mainLink" %>
-            <% navbar_cache_clases_ocultas.each do |clase| %>
-                <%= link_to clase.nombre, clase, class:"mainLink"  %>
-            <% end %>
-            <% navbar_cache_clases_visibles.each do |clase| %>
-                <%= link_to clase.nombre, clase %>
-            <% end %>
-          </div>
-        </div>
+        <%= cache_fetch("navbar_shared") do capture do %>
 
-        <div class="submenu">
-          <%= link_to "Items", items_path, class:"nblink" %>
-          <div class="submenu-content">
-            <%= link_to "Todos los items", items_path, class:"mainLink" %>
-            <%= link_to "Cofre aleatorio", "/lootbox", class:"mainLink" %>
-            <% navbar_cache_categorias.each do |ct| %>
-                <%= link_to ct.nombre, ct %>
-            <% end %>
+          <div class="submenu">
+            <a href="/reglas" class="nblink">Información</a>
+            <div class="submenu-content">
+                <a href="/reglas">Reglas</a>
+                <a href="/estadosAlterados">Estados Alterados</a>
+                <a href="/newPlayersHelp">Ayuda para nuevos jugadores</a>
+                <%= render "layouts/encyclopedia_menu_node", node: navbar_cache_encyclopedia_tree, label: "Enciclopedia de Varacia" %>
+            </div>
           </div>
-        </div>
+
+          <div class="submenu">
+            <%= link_to "Clases y habilidades", clases_path, class:"nblink" %>
+            <div class="submenu-content">
+              <%= link_to "Todas las clases", clases_path, class:"mainLink" %>
+              <%= link_to "Todas las habilidades", habilidads_path, class:"mainLink" %>
+              <%= link_to "Árbol de clases", "/clases-arbol", class:"mainLink" %>
+              <%= link_to "Clases radicales", clases_path(mode:"radical"), class:"mainLink" %>
+              <%= link_to "Razas", clases_path(mode:"raza"), class:"mainLink" %>
+              <% Clase.where(oculto: true).order(:nombre).each do |clase| %>
+                  <%= link_to clase.nombre, clase, class:"mainLink"  %>
+              <% end %>
+              <% Clase.where(oculto: false).order(:nombre).each do |clase| %>
+                  <%= link_to clase.nombre, clase, class:"mainLink" %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="submenu">
+            <%= link_to "Items", items_path, class:"nblink" %>
+            <div class="submenu-content">
+              <%= link_to "Todos los items", items_path, class:"mainLink" %>
+              <%= link_to "Cofre aleatorio", "/lootbox", class:"mainLink" %>
+              <% Categ.order(:nombre).each do |categ| %>
+                  <%= link_to categ.nombre, categ, class:"mainLink" %>
+              <% end %>
+            </div>
+          </div>
+
+        <% end end %>
+
 
         <div class="submenu">
           <%= link_to "Personajes", personajes_path, class:"nblink #{"nblink_notSubMenu" unless user_signed_in?}" %>
           <% if user_signed_in? %>
             <div class="submenu-content">
-              <% current_user.personajes.each do |pj|%>
-                <%= link_to pj.nombre, pj %>
+              <% cache_fetch "#{current_user.id}_personajes" do
+                current_user.personajes.pluck(:id, :nombre)
+              end.each do |id, nombre|%>
+                <%= link_to nombre, personaje_path(id) %>
               <% end %>
               <%= link_to "Nuevo", new_personaje_path, class:"mainLink" %>
               <%= link_to "Mis personajes", personajes_path(mode:"privados"), class:"mainLink" %>
               <%= link_to "Todos los personajes", personajes_path, class:"mainLink" %>
               <% if controller.has_level?(:master) %>
-                <% current_user.personajegroups.each do |pg| %>
-                  <%= link_to pg.nombre, pg %>
+                <% cache_fetch "#{current_user.id}_personajegroups" do
+                  current_user.personajegroups.pluck(:id, :nombre)
+                end.each do |id, nombre| %>
+                  <%= link_to nombre, personajegroup_path(id) %>
                 <% end %>
                 <%= link_to "Nuevo grupo de personajes", new_personajegroup_path, class:"mainLink" %>
                 <%#= link_to "Mis grupos de personajes", personajegroups_path, class:"mainLink" %>

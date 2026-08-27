@@ -70,7 +70,6 @@ Rails.application.routes.draw do
   get '/habilidads_ocultas', to: 'admin#habilidads_ocultas'
   get '/habilidads_sueltas', to: 'admin#habilidads_sueltas'
   get '/delete_disk_cache', to: 'admin#delete_disk_cache'
-  get '/delete_navbar_cache', to: 'admin#delete_navbar_cache'
   get '/delete_all_cache', to: 'admin#delete_all_cache'
   get '/delete_session_data', to: 'admin#delete_session_data'
   get '/backup', to: 'admin#backup'

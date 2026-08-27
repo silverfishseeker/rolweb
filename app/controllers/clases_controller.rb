@@ -1,4 +1,9 @@
 class ClasesController < ModelController
+  include UnlimitedCache
+
+  after_action only: %i[create update destroy] do
+    cache_delete "navbar_shared"
+  end
 
   def tipo; Clase end
 

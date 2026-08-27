@@ -1,4 +1,6 @@
 class PersonajesController < ModelController
+  include UnlimitedCache
+
   def tipo; Personaje end
 
   def model_params
@@ -12,6 +14,9 @@ class PersonajesController < ModelController
   configure_access :index, level: :unlogged
   before_action :set, only: %i[show edit destroy add_to_personaje add_items_to_personaje]
   before_action :check_ownership, only: %i[show edit destroy]
+  after_action only: %i[create update destroy] do
+    cache_delete "#{current_user.id}_personajes" if user_signed_in?
+  end
 
   def index
     if params[:mode] == "privados"

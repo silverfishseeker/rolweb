@@ -1,6 +1,10 @@
 class PersonajegroupsController < ModelController
+  include UnlimitedCache
 
   configure_access level: :master
+  after_action only: %i[create update destroy] do
+    cache_delete "#{current_user.id}_personajegroups" if user_signed_in?
+  end
 
   def tipo; Personajegroup end
 
