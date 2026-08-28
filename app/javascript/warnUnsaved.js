@@ -7,8 +7,11 @@ export function warnUnsaved(form) {
 
   form.addEventListener("input", markDirty);
   form.addEventListener("change", markDirty);
+
   const observer = new MutationObserver(markDirty);
-  observer.observe(form, { childList: true, subtree: true });
+  requestAnimationFrame(() => requestAnimationFrame(() => { // Esperamos dos frames para evitar que el obsrver pille mutaciones de carga de la página.
+    observer.observe(form, { childList: true, subtree: true });
+  }));
 
   form.querySelectorAll('input[type="submit"]').forEach(button => {
     button.addEventListener("click", () => {
