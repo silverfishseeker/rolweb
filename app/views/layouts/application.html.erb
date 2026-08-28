@@ -44,7 +44,11 @@
                 <a href="/reglas">Reglas</a>
                 <a href="/estadosAlterados">Estados Alterados</a>
                 <a href="/newPlayersHelp">Ayuda para nuevos jugadores</a>
-                <%= render "layouts/encyclopedia_menu_node", node: navbar_cache_encyclopedia_tree, label: "Enciclopedia de Varacia" %>
+                <% if navbar_cache_encyclopedia_tree.nil? %>
+                  <a>No existen cuentos</a>
+                <% else %>
+                  <%= render "layouts/encyclopedia_menu_node", node: navbar_cache_encyclopedia_tree, label: "Enciclopedia de Varacia" %>
+                <% end %>
             </div>
           </div>
 
