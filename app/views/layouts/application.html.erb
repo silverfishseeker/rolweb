@@ -60,7 +60,7 @@
                   <%= link_to clase.nombre, clase, class:"mainLink"  %>
               <% end %>
               <% Clase.where(oculto: false).order(:nombre).each do |clase| %>
-                  <%= link_to clase.nombre, clase, class:"mainLink" %>
+                  <%= link_to clase.nombre, clase %>
               <% end %>
             </div>
           </div>
@@ -71,7 +71,7 @@
               <%= link_to "Todos los items", items_path, class:"mainLink" %>
               <%= link_to "Cofre aleatorio", "/lootbox", class:"mainLink" %>
               <% Categ.order(:nombre).each do |categ| %>
-                  <%= link_to categ.nombre, categ, class:"mainLink" %>
+                  <%= link_to categ.nombre, categ %>
               <% end %>
             </div>
           </div>
