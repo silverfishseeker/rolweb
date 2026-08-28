@@ -1,5 +1,5 @@
 <div class="carta-grid_container">
-    <% habilidades.hide(defined?(@secreto) ? true : false).order(:nivel, :nombre).each do |habil| %>
+    <% habilidades.includes(:categs, :mobs, :rich_text_efecto).hide(defined?(@secreto) ? true : false).order(:nivel, :nombre).each do |habil| %>
         <%= render "habilidads/habilidad", habil: habil %>
     <% end %>
 </div>

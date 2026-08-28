@@ -30,14 +30,14 @@ class Personaje < ApplicationRecord
   end
 
   def personajeHasHabilidads_by_clase
-    personajeHasHabilidads.ordered.each_with_object({}) do |phh, hash|
+    personajeHasHabilidads.ordered.includes(habilidad: [:categs, :mobs, :rich_text_efecto]).each_with_object({}) do |phh, hash|
       hash[phh.clase_id] ||= []
       hash[phh.clase_id] << phh
     end
   end
 
   def personajeHasItem_by_categ
-    personajeHasItems.ordered.each_with_object({}) do |phi, hash|
+    personajeHasItems.ordered.includes(item: [:categs, :clases, :rich_text_efecto]).each_with_object({}) do |phi, hash|
       next unless phi.item
       phi.item.categs.each do |categ|
         hash[categ.id] ||= []

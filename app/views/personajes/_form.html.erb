@@ -475,13 +475,13 @@
               </div>
               <div class="detalle_section">
                 <h4>El resto de clases</h4>
-                <% remaining_clases = (Clase.order(:nombre).where(oculto: false) - @x.personajeHasClases.map(&:clase)).map{ |clase| clase.build_personaje_has_clase(@x) } %>
+                <% remaining_clases = (Clase.order(:nombre).where(oculto: false) - @x.personajeHasClases.includes(:clase).map(&:clase)).map{ |clase| clase.build_personaje_has_clase(@x) } %>
                 <%= render "form_clases", phClases: remaining_clases, destroy: "1", oculto: false %>
               </div>
             </div>
             <div id="habilidades-section">
               <% habilidades = @x.personajeHasHabilidads_by_clase %>
-              <% Clase.all.each do |clase| %>
+              <% Clase.includes(habilidads: [:categs, :mobs, :rich_text_efecto]).all.each do |clase| %>
                 <%= render "form_habilidades_from_clase", clase: clase, phHabilidades: habilidades[clase.id] || [] %>
               <% end %>
             </div>
@@ -502,7 +502,7 @@
               <h3>Inventario</h3>
                 <div class="carta-grid_container carta-grid_container_form_habilidad detalle_section"
                     id="items-list-alive">
-                      <% @x.personajeHasItems.each do |ph_item| %>
+                      <% @x.personajeHasItems.includes(item: [:clases, :rich_text_efecto]).each do |ph_item| %>
                         <% next unless ph_item.item%>
                         <%= render "form_item", phi: ph_item, categ_id: "pj", destroy: "0" %>
                       <% end %>
@@ -519,7 +519,7 @@
               <div id="items-lists">
                 <h3>Disponibles</h3>
                 <% owned_items = @x.personajeHasItem_by_categ %>
-                <% Categ.all.each do |ct| %>
+                <% Categ.includes(items: [:clases, :rich_text_efecto]).all.each do |ct| %>
                   <div class="detalle_section pj-selected_list"
                       id="items-list-<%= ct.id %>">
                     <h4><%= ct.nombre %></h4>

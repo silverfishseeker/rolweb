@@ -19,7 +19,7 @@ class ClasesController < ModelController
       @xs = Clase.where(oculto:false)
       @titulo = "Todas las clases"
     end
-    @xs = @xs.sort_by(&:nombre)
+    @xs = @xs.includes(:rich_text_efecto, :rich_text_descripcion).sort_by(&:nombre)
   end
 
   def model_params

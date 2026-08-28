@@ -2,7 +2,7 @@
     <h2><%=link_to x.nombre, x%></h2>
 
     <div class="carta-grid_container">
-        <% x.items.order(coste: :asc, nombre: :asc).each do |item| %>
+        <% x.items.includes(:clases, :rich_text_efecto).order(coste: :asc, nombre: :asc).each do |item| %>
             <%= render "items/item", item: item %>
         <% end %>
     </div>

@@ -43,6 +43,13 @@ class PersonajesController < ModelController
     end
   end
 
+  def show
+    # Se cargan una sola vez y en la vista se filtran/agrupan en memoria (antes se
+    # repetía la misma consulta con distintos where para cada pestaña/sección).
+    @personaje_has_habilidads = @x.personajeHasHabilidads.includes(habilidad: [:categs, :mobs, :rich_text_efecto]).order(:position)
+    @personaje_has_items = @x.personajeHasItems.includes(item: [:categs, :clases, :rich_text_efecto]).order(:position)
+  end
+
   def edit
     @show_user = has_level?(:admin)
   end

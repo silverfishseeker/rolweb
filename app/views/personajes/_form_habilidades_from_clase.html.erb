@@ -10,8 +10,8 @@
   <div class="detalle_section">
     <h4>El resto de habilidades</h4>
       <% remaining_habilidades = (
-          clase.habilidads.order(:nivel, :nombre) - phHabilidades.map(&:habilidad)
-        ).map do |habilidad| 
+          clase.habilidads.sort_by { |h| [h.nivel, h.nombre] } - phHabilidades.map(&:habilidad)
+        ).map do |habilidad|
           habilidad.build_personaje_has_habilidad(@x, clase)
         end
       %>
