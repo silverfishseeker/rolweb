@@ -66,7 +66,7 @@ class PersonajesController < ModelController
     (@x.user == current_user) ||  
     (require_level(:master) && 
       @x.personajegroup.present? &&
-      @x.personajegroup.users.exists?(current_user.id) ||
+      @x.personajegroup.users.exists?(current_user&.id) ||
       require_level(:admin)) # Debe de ejecutarse el último porque envía redireccón al fallar
   end
 
