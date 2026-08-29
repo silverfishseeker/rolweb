@@ -2,7 +2,7 @@ import { nextZIndex } from "./zIndexCounter.js";
 import { adjustInputWidth } from "./utils.js";
 import { createCloseModalHandler  }  from "./modals.js";
 import { initTabs } from "./tabs.js";
-import { warnUnsaved } from "./warnUnsaved.js";
+import { warnUnsaved, markUnsaved } from "./warnUnsaved.js";
 
 export function onTurboLoad() {
 
@@ -17,6 +17,7 @@ export function onTurboLoad() {
   function toggleRango(button) {
     const input = button.closest("tr").querySelector(".rango-input");
     if (input) input.disabled = !input.disabled;
+    markUnsaved();
   }
   c_body.addEventListener("click", e => {
     if (e.target.classList.contains("toggle-rango")) {
@@ -51,7 +52,7 @@ export function onTurboLoad() {
       const copy_to = tr.querySelector("input");
       button.addEventListener("click", () => {
         copy_to.value = copy_from.textContent.trim();
-        copy_to.dispatchEvent( new Event("input", { bubbles: true }));
+        markUnsaved();
       });
     }
   });
@@ -65,6 +66,7 @@ export function onTurboLoad() {
     const html = template.innerHTML.replace(/__INDEX__/g, index);
     const addRow = document.getElementById("add-calculado-libre").closest("tr");
     addRow.insertAdjacentHTML("beforebegin", html);
+    markUnsaved();
   });
 
 
@@ -93,6 +95,7 @@ export function onTurboLoad() {
       inputText.disabled = true;
       inputIsMapeo.value = "0";
     }
+    markUnsaved();
   });
 
 
@@ -103,6 +106,7 @@ export function onTurboLoad() {
     const html = template.innerHTML.replace(/__INDEX__/g, index);
     const addRow = document.getElementById("parte-cuerpos-next");
     addRow.insertAdjacentHTML("beforebegin", html);
+    markUnsaved();
   });
 
 
@@ -124,6 +128,7 @@ export function onTurboLoad() {
       button.textContent = "+";
       destroyContainer.prepend(carta);
     }
+    markUnsaved();
   }
 
   // Mover clase
@@ -162,6 +167,7 @@ export function onTurboLoad() {
         const original_efecto = document.getElementById(`original-efecto-${id}`).innerHTML;
         const trix_editor = document.querySelector(`#sobreescritura-modal-${id} ~ trix-editor`);
         trix_editor.editor.loadHTML(original_efecto);
+        markUnsaved();
       }
     });
   }
@@ -173,7 +179,7 @@ export function onTurboLoad() {
     if (e.target.classList.contains("boton_reseteo_clase")) {
       const select = document.getElementById(e.target.dataset.id_select);
       select.value = e.target.dataset.id_clase;
-      select.dispatchEvent(new Event("input", { bubbles: true }));
+      markUnsaved();
     }
   });
 
@@ -205,6 +211,7 @@ export function onTurboLoad() {
       const template = document.getElementById("contador-template");
       const html = template.innerHTML.replace(/__PREFIX__/g, prefix);
       conts_body.insertAdjacentHTML("beforeend", html);
+      markUnsaved();
     });
   });
 
@@ -253,7 +260,7 @@ export function onTurboLoad() {
       const input = document.getElementById(button.dataset.input);
       const isEquipped = input.value !== "1";
       input.value = isEquipped ? "1" : "0";
-      input.dispatchEvent(new Event("input", { bubbles: true }));
+      markUnsaved();
       button.textContent = isEquipped ? "Equipado" : "Sin equipar";
       button.classList.toggle("btn-shadow", isEquipped);
     }

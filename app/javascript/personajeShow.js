@@ -1,7 +1,7 @@
 
 import { adjustInputWidth } from "./utils.js";
 import { initTabs } from "./tabs.js";
-import {warnUnsaved } from "./warnUnsaved.js";
+import { warnUnsaved, markUnsaved } from "./warnUnsaved.js";
 
 export function onTurboLoad() {
 
@@ -140,6 +140,7 @@ export function onTurboLoad() {
       const temp = beforeElementPosition.value;
       beforeElementPosition.value = afterElementPosition.value;
       afterElementPosition.value = temp;
+      markUnsaved();
     }
   }
   function visibleChildren(parent) {
@@ -208,6 +209,7 @@ export function onTurboLoad() {
     const template = document.getElementById("customitem-template");
     const html = template.innerHTML.replaceAll("__ID__",nextCustomItemId++);
     document .getElementById("inventario-items").insertAdjacentHTML("beforeend", html);
+    markUnsaved();
   });
 
   //Marcar items a borrar

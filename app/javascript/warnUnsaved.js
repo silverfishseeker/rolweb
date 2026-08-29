@@ -1,26 +1,24 @@
+let cantLeave;
 let currentBeforeUnloadListener = null;
 let currentTurboVisitListener = null;
 
+export function markUnsaved() {
+  cantLeave = true;
+}
+
 export function warnUnsaved(form) {
-  let cantLeave = false;
-  const markDirty = () => { cantLeave = true; };
+  cantLeave = false;
 
-  form.addEventListener("input", markDirty);
-  form.addEventListener("change", markDirty);
-
-  const observer = new MutationObserver(markDirty);
-  requestAnimationFrame(() => requestAnimationFrame(() => { // Esperamos dos frames para evitar que el obsrver pille mutaciones de carga de la página.
-    observer.observe(form, { childList: true, subtree: true });
-  }));
+  form.addEventListener("input", () => { cantLeave = true; });
+  form.addEventListener("change", () => { cantLeave = true; });
 
   form.querySelectorAll('input[type="submit"]').forEach(button => {
     button.addEventListener("click", () => {
       cantLeave = false;
-      observer.disconnect();
     });
   });
 
-  // Si ya había un listener, lo eliminamos para evitar duplicados. (turbo no recarga la página)
+  // Con turbo no se quitan los listeners al navegar, los quitamos si hay uno anterior
   if (currentBeforeUnloadListener) window.removeEventListener("beforeunload", currentBeforeUnloadListener);
   if (currentTurboVisitListener) document.removeEventListener("turbo:before-visit", currentTurboVisitListener);
 
