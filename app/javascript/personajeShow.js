@@ -122,6 +122,7 @@ export function onTurboLoad() {
       } else {
         pc.classList.remove("pjv-var-cuerpo-borrada");
       }
+      markUnsaved();
     });
   });
 
