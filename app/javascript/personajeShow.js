@@ -9,6 +9,15 @@ export function onTurboLoad() {
   warnUnsaved(document.querySelector(".pjv-form"));
 
 
+  // Autoguardado
+  document.addEventListener("input", (e) => {
+    const input = e.target;
+    if (input.classList.contains("update-stadistic")) {
+      fetch(input.dataset.updateUrl+"?active_mod="+input.value);
+    }
+  });
+
+
   // Data modifiers
   document.addEventListener("input", (e) => {
     const input = e.target;

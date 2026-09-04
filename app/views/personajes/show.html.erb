@@ -2,6 +2,8 @@
 <%= render "personajes/estadoalterado-template" %> <%# Requerido por estadosAlterados %>
 <% content_for :main_content_class, 'main-content-margin_reduced' %>
 
+<%= turbo_stream_from @x %>
+
 <%= form_with(model: @x, html: { multipart: true, class: "pjv-form"}) do |f| %>
   <%= hidden_field_tag :form_type, Personaje::FORM_TYPES[:show] %>
 
@@ -27,10 +29,12 @@
         <input type="number"
             name="estadistics[<%= stat.id %>][active_mod]"
             value="<%= stat.modificable.active_mod %>"
-            class="pjv-modifier"
+            class="pjv-modifier update-stadistic"
             data-base="stat-base-<%=stat.id%>"
             data-value="stat-val-<%=stat.id%>"
-            data-mod="stat-mod-<%=stat.id%>">
+            data-mod="stat-mod-<%=stat.id%>"
+            data-update-url="<%= update_stadistic_personaje_path(@x, stadistic_id: stat.id) %>"
+            id="stat-modifier-<%=stat.id%>">
       </span>
     <% end %>
   </div>

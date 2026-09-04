@@ -12,8 +12,8 @@ class PersonajesController < ModelController
 
   configure_access level: :player
   configure_access :index, level: :unlogged
-  before_action :set, only: %i[show edit destroy add_to_personaje add_items_to_personaje]
-  before_action :check_ownership, only: %i[show edit destroy]
+  before_action :set, only: %i[show edit destroy add_to_personaje add_items_to_personaje update_stadistic]
+  before_action :check_ownership, only: %i[show edit destroy update_stadistic]
   after_action only: %i[create update destroy] do
     cache_delete "#{current_user.id}_personajes" if user_signed_in?
   end
@@ -80,6 +80,22 @@ class PersonajesController < ModelController
       add_item(item_id, num.to_i)
     end
     added_response("items")
+  end
+
+
+  # Acciones de guardado automático en el show
+  def update_stadistic
+    stadistic = @x.estadistics.find_by(id: params[:stadistic_id])
+    stadistic.modificable.active_mod = params[:active_mod].to_i
+    stadistic.save!
+    @x.broadcast_action_to(
+      @x,
+      action: "update_input",
+      target: "stat-mod-#{stadistic.id}",
+      attributes: { value: stadistic.modificable.active_mod },
+      render: false
+    )
+    head :ok
   end
 
   private

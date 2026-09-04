@@ -25,6 +25,9 @@ Rails.application.routes.draw do
   resources :personajes do
     post :add_to_personaje, on: :collection
     post :add_items_to_personaje, on: :collection
+    member do
+      get "update_stadistic/:stadistic_id", action: :update_stadistic, as: :update_stadistic
+    end
   end
   
   resource :adminsession, only: [:new, :create]
