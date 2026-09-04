@@ -27,6 +27,10 @@ Rails.application.routes.draw do
     post :add_items_to_personaje, on: :collection
     member do
       get "update_stadistic/:stadistic_id", action: :update_stadistic, as: :update_stadistic
+      get "update_calculado_mod/:calculado_id", action: :update_calculado_mod, as: :update_calculado_mod
+      get "update_calculado_rango/:calculado_id", action: :update_calculado_rango, as: :update_calculado_rango
+      get "update_parte_cuerpo_mod/:parte_cuerpo_id", action: :update_parte_cuerpo_mod, as: :update_parte_cuerpo_mod
+      get "update_oro", action: :update_oro, as: :update_oro
     end
   end
   

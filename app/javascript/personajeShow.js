@@ -12,8 +12,9 @@ export function onTurboLoad() {
   // Autoguardado
   document.addEventListener("input", (e) => {
     const input = e.target;
-    if (input.classList.contains("update-stadistic")) {
-      fetch(input.dataset.updateUrl+"?active_mod="+input.value);
+    if (input.classList.contains("autosave-input")) {
+      const param = input.dataset.updateParam;
+      fetch(input.dataset.updateUrl+"?"+param+"="+encodeURIComponent(input.value));
     }
   });
 

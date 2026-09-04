@@ -29,11 +29,12 @@
         <input type="number"
             name="estadistics[<%= stat.id %>][active_mod]"
             value="<%= stat.modificable.active_mod %>"
-            class="pjv-modifier update-stadistic"
+            class="pjv-modifier autosave-input"
             data-base="stat-base-<%=stat.id%>"
             data-value="stat-val-<%=stat.id%>"
             data-mod="stat-mod-<%=stat.id%>"
             data-update-url="<%= update_stadistic_personaje_path(@x, stadistic_id: stat.id) %>"
+            data-update-param="active_mod"
             id="stat-modifier-<%=stat.id%>">
       </span>
     <% end %>
@@ -52,16 +53,22 @@
                   <input type="number"
                         name="calculados[<%= calc.id %>][rango]"
                         value="<%= calc.rango.valor %>"
-                        class="pjv-input">
+                        class="pjv-input autosave-input"
+                        data-update-url="<%= update_calculado_rango_personaje_path(@x, calculado_id: calc.id) %>"
+                        data-update-param="rango"
+                        id="calc-rango-<%=calc.id%>">
                   /
                 <% end %>
                 <span id="calc-val-<%=calc.id%>"><%= calc.value %></span>
                 <input type="number"
                     name="calculados[<%= calc.id %>][active_mod]"
                     value="<%= calc.modificable.active_mod %>"
-                    class="pjv-modifier"
+                    class="pjv-modifier autosave-input"
                     data-base="calc-base-<%=calc.id%>"
-                    data-value="calc-val-<%=calc.id%>">
+                    data-value="calc-val-<%=calc.id%>"
+                    data-update-url="<%= update_calculado_mod_personaje_path(@x, calculado_id: calc.id) %>"
+                    data-update-param="active_mod"
+                    id="calc-modifier-<%=calc.id%>">
                 <span id="calc-base-<%=calc.id%>" style="display:none">
                   <%=calc.value%>
                 </span>
@@ -97,11 +104,14 @@
                 <input type="number"
                     name="parte_cuerpos[<%= pc.id %>][active_mod]"
                     value="<%= pc.modificable.active_mod %>"
-                    class="pjv-modifier pjv-modifier-armadura"
+                    class="pjv-modifier pjv-modifier-armadura autosave-input"
                     data-base="pcarm-base-<%=pc.id%>"
                     data-value="pcarm-val-<%=pc.id%>"
                     data-link-aumentar-id="pcarm-<%=pc.id%>_aumentar"
-                    data-link-disminuir-id="pcarm-<%=pc.id%>_disminuir">
+                    data-link-disminuir-id="pcarm-<%=pc.id%>_disminuir"
+                    data-update-url="<%= update_parte_cuerpo_mod_personaje_path(@x, parte_cuerpo_id: pc.id) %>"
+                    data-update-param="active_mod"
+                    id="pcarm-modifier-<%=pc.id%>">
                 <span id="pcarm-base-<%=pc.id%>" style="display:none">
                   <%=pc.modificable.passive_mod%>
                 </span>
@@ -219,7 +229,13 @@
               </div>
             </template>
           </div>
-          <h3> Oro: <%= f.number_field :oro, step: 0.01, class: "carta-number carta-coste pjv-modifier" %> </h3>
+          <h3> Oro: <%= f.number_field :oro, step: 0.01,
+                class: "carta-number carta-coste pjv-modifier autosave-input",
+                id: "personaje-oro",
+                data: {
+                  update_url: update_oro_personaje_path(@x),
+                  update_param: "oro"
+                } %> </h3>
           <div class="white_bk no_trix_toobar"><%= f.rich_text_area :descripcion %></div>
         </div>
         <div class="pjv-subcolumn pjv-subcolumn-big">

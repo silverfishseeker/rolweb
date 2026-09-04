@@ -12,8 +12,16 @@ class PersonajesController < ModelController
 
   configure_access level: :player
   configure_access :index, level: :unlogged
-  before_action :set, only: %i[show edit destroy add_to_personaje add_items_to_personaje update_stadistic]
-  before_action :check_ownership, only: %i[show edit destroy update_stadistic]
+  before_action :set, only: %i[
+    show edit destroy add_to_personaje add_items_to_personaje
+    update_stadistic update_calculado_mod update_calculado_rango
+    update_parte_cuerpo_mod update_oro
+  ]
+  before_action :check_ownership, only: %i[
+    show edit destroy
+    update_stadistic update_calculado_mod update_calculado_rango
+    update_parte_cuerpo_mod update_oro
+  ]
   after_action only: %i[create update destroy] do
     cache_delete "#{current_user.id}_personajes" if user_signed_in?
   end
@@ -84,17 +92,49 @@ class PersonajesController < ModelController
 
 
   # Acciones de guardado automático en el show
+  def broadcast_update_div(target, value)
+    @x.broadcast_action_to(@x, action: "update_div", target: target, attributes: { value: value }, render: false)
+  end
   def update_stadistic
     stadistic = @x.estadistics.find_by(id: params[:stadistic_id])
     stadistic.modificable.active_mod = params[:active_mod].to_i
     stadistic.save!
-    @x.broadcast_action_to(
-      @x,
-      action: "update_input",
-      target: "stat-mod-#{stadistic.id}",
-      attributes: { value: stadistic.modificable.active_mod },
-      render: false
-    )
+    broadcast_update_div("stat-modifier-#{stadistic.id}", stadistic.modificable.active_mod)
+    broadcast_update_div("stat-val-#{stadistic.id}", stadistic.value)
+    broadcast_update_div("stat-mod-#{stadistic.id}", stadistic.mod_str)
+    head :ok
+  end
+
+  def update_calculado_mod
+    calculado = @x.calculados.find_by(id: params[:calculado_id])
+    calculado.modificable.active_mod = params[:active_mod].to_i
+    calculado.save!
+    broadcast_update_div("calc-modifier-#{calculado.id}", calculado.modificable.active_mod)
+    broadcast_update_div("calc-val-#{calculado.id}", calculado.value)
+    head :ok
+  end
+
+  def update_calculado_rango
+    calculado = @x.calculados.find_by(id: params[:calculado_id])
+    calculado.rango.valor = params[:rango].to_i
+    calculado.save!
+    broadcast_update_div("calc-rango-#{calculado.id}", calculado.rango.valor)
+    head :ok
+  end
+
+  def update_parte_cuerpo_mod
+    pc = @x.parteCuerpos.find_by(id: params[:parte_cuerpo_id])
+    pc.modificable.active_mod = params[:active_mod].to_i
+    pc.save!
+    broadcast_update_div("pcarm-modifier-#{pc.id}", pc.modificable.active_mod)
+    broadcast_update_div("pcarm-val-#{pc.id}", pc.modificable.passive_mod + pc.modificable.active_mod)
+    head :ok
+  end
+
+  def update_oro
+    @x.oro = params[:oro].to_f
+    @x.save!
+    broadcast_update_div("personaje-oro", @x.oro)
     head :ok
   end
 
