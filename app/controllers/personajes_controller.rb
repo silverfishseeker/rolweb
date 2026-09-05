@@ -16,11 +16,13 @@ class PersonajesController < ModelController
     show edit destroy add_to_personaje add_items_to_personaje
     update_stadistic update_calculado_mod update_calculado_rango
     update_parte_cuerpo_mod update_parte_cuerpo_salud update_oro
+    update_contador_base update_contador_rango
   ]
   before_action :check_ownership, only: %i[
     show edit destroy
     update_stadistic update_calculado_mod update_calculado_rango
     update_parte_cuerpo_mod update_parte_cuerpo_salud update_oro
+    update_contador_base update_contador_rango
   ]
   after_action only: %i[create update destroy] do
     cache_delete "#{current_user.id}_personajes" if user_signed_in?
@@ -154,7 +156,39 @@ class PersonajesController < ModelController
     head :ok
   end
 
+  def update_contador_base
+    calculado = find_contador(params[:calculado_id])
+    libre = calculado.calculado_libre || calculado.build_calculado_libre
+    libre.base = params[:base].to_i
+    calculado.save!
+    broadcast_update_div("contador-base-#{calculado.id}", calculado.value)
+    head :ok
+  end
+
+  def update_contador_rango
+    calculado = find_contador(params[:calculado_id])
+    calculado.build_rango if calculado.rango.nil?
+    calculado.rango.valor = params[:rango].to_i
+    calculado.save!
+    broadcast_update_div("contador-rango-#{calculado.id}", calculado.rango.valor)
+    head :ok
+  end
+
   private
+
+  # Busca un calculado "contador" (de clase o habilidad) comprobando que pertenece a @x
+  def find_contador(calculado_id)
+    calculado = Pj::Calculado.find_by(id: calculado_id)
+    owner = calculado&.hasCalculados
+    valid = case owner
+      when Pj::PersonajeHasClase, Pj::PersonajeHasHabilidad
+        owner.personaje_id == @x.id
+      else
+        false
+      end
+    raise ActiveRecord::RecordNotFound unless valid
+    calculado
+  end
 
   def add_item(item_id, cantidad)
     item = Item.find(item_id)

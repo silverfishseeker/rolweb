@@ -8,12 +8,18 @@
       <input type="number" title="<%= contador.nombre %>"
           name="<%= prefix %>[calculados][<%= contador.id %>][rango]"
           value="<%= contador.rango.valor %>"
-          class="pj-cantidad">
+          class="pj-cantidad autosave-input"
+          data-update-url="<%= update_contador_rango_personaje_path(@x, calculado_id: contador.id) %>"
+          data-update-param="rango"
+          id="contador-rango-<%=contador.id%>">
       <b> / </b>
     <% end %>
     <input type="number" title="<%= contador.nombre %>"
         name="<%= prefix %>[calculados][<%= contador.id %>][base]"
         value="<%= contador.value %>"
-        class="pj-cantidad">
+        class="pj-cantidad autosave-input"
+        data-update-url="<%= update_contador_base_personaje_path(@x, calculado_id: contador.id) %>"
+        data-update-param="base"
+        id="contador-base-<%=contador.id%>">
   </div>
 <% end %>
