@@ -15,12 +15,12 @@ class PersonajesController < ModelController
   before_action :set, only: %i[
     show edit destroy add_to_personaje add_items_to_personaje
     update_stadistic update_calculado_mod update_calculado_rango
-    update_parte_cuerpo_mod update_oro
+    update_parte_cuerpo_mod update_parte_cuerpo_salud update_oro
   ]
   before_action :check_ownership, only: %i[
     show edit destroy
     update_stadistic update_calculado_mod update_calculado_rango
-    update_parte_cuerpo_mod update_oro
+    update_parte_cuerpo_mod update_parte_cuerpo_salud update_oro
   ]
   after_action only: %i[create update destroy] do
     cache_delete "#{current_user.id}_personajes" if user_signed_in?
@@ -95,6 +95,11 @@ class PersonajesController < ModelController
   def broadcast_update_div(target, value)
     @x.broadcast_action_to(@x, action: "update_div", target: target, attributes: { value: value }, render: false)
   end
+
+  def broadcast_toggle_class(target, class_name, on) # Note. We may delete this method later if it is only used once. Keep this note until end of development.
+    @x.broadcast_action_to(@x, action: "toggle_class", target: target, attributes: { "class-name" => class_name, on: on }, render: false)
+  end
+
   def update_stadistic
     stadistic = @x.estadistics.find_by(id: params[:stadistic_id])
     stadistic.modificable.active_mod = params[:active_mod].to_i
@@ -128,6 +133,17 @@ class PersonajesController < ModelController
     pc.save!
     broadcast_update_div("pcarm-modifier-#{pc.id}", pc.modificable.active_mod)
     broadcast_update_div("pcarm-val-#{pc.id}", pc.modificable.passive_mod + pc.modificable.active_mod)
+    head :ok
+  end
+
+  def update_parte_cuerpo_salud
+    pc = @x.parteCuerpos.find_by(id: params[:parte_cuerpo_id])
+    pc.saludact += params[:delta].to_i
+    pc.save!
+    broadcast_update_div("pcsalud-act-#{pc.id}", pc.saludact)
+    broadcast_update_div("pcsalud-state-#{pc.id}", pc.state)
+    broadcast_update_div("pcsalud-hidden-#{pc.id}", pc.saludact)
+    broadcast_toggle_class("pcsalud-row-#{pc.id}", "pjv-var-cuerpo-borrada", pc.saludact <= 0)
     head :ok
   end
 

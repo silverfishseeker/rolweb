@@ -81,8 +81,9 @@
         <h3>Cuerpo</h3>
         <div class="pjv-vars_container pjv-vars_container-cuerpo">
           <% @x.parteCuerpos.each do |pc| %>
-            <div class="pjv-var pjv-var-cuerpo 
-                <%= "pjv-var-cuerpo-borrada" if pc.saludact <= 0 %>">
+            <div class="pjv-var pjv-var-cuerpo
+                <%= "pjv-var-cuerpo-borrada" if pc.saludact <= 0 %>"
+                id="pcsalud-row-<%=pc.id%>">
               <span class="pjv-var-cuerpo-nombre">
                 <%= pc.nombre %>:
               </span>
@@ -115,7 +116,20 @@
                 <span id="pcarm-base-<%=pc.id%>" style="display:none">
                   <%=pc.modificable.passive_mod%>
                 </span>
-                <%= render "personajes/show_salud", pc: pc %>
+                <span class="pjv-var-cuerpo-big" id="pcsalud-state-<%=pc.id%>"><%= pc.state %></span>
+                <input type="hidden"
+                    name="parte_cuerpos[<%= pc.id %>][saludact]"
+                    value="<%= pc.saludact %>"
+                    id="pcsalud-hidden-<%=pc.id%>">
+                <span class="pjv-var-cuerpo-act" id="pcsalud-act-<%=pc.id%>"><%= pc.saludact %></span>
+                /
+                <%= pc.saludmax %>
+                <span class="btn btn-small btn-secondary"
+                    onclick="autosaveFetch('<%= update_parte_cuerpo_salud_personaje_path(@x, parte_cuerpo_id: pc.id, delta: 1) %>')"
+                    id="pcsalud-<%=pc.id%>_aumentar">+</span>
+                <span class="btn btn-small btn-danger"
+                    onclick="autosaveFetch('<%= update_parte_cuerpo_salud_personaje_path(@x, parte_cuerpo_id: pc.id, delta: -1) %>')"
+                    id="pcsalud-<%=pc.id%>_disminuir">-</span>
               </span>
             </div>
           <% end %>

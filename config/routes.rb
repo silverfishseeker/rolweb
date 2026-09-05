@@ -30,6 +30,7 @@ Rails.application.routes.draw do
       get "update_calculado_mod/:calculado_id", action: :update_calculado_mod, as: :update_calculado_mod
       get "update_calculado_rango/:calculado_id", action: :update_calculado_rango, as: :update_calculado_rango
       get "update_parte_cuerpo_mod/:parte_cuerpo_id", action: :update_parte_cuerpo_mod, as: :update_parte_cuerpo_mod
+      get "update_parte_cuerpo_salud/:parte_cuerpo_id", action: :update_parte_cuerpo_salud, as: :update_parte_cuerpo_salud
       get "update_oro", action: :update_oro, as: :update_oro
     end
   end
@@ -47,12 +48,6 @@ Rails.application.routes.draw do
     resources :meta_tipos, controller: 'meta_tipos', path: 'calculado', as: 'tipo_calculados', defaults: { tipo: 'calculado' }
     resources :meta_tipos, controller: 'meta_tipos', path: 'estadistic', as: 'tipo_estadistics', defaults: { tipo: 'estadistic' }
     resources :meta_tipos, controller: 'meta_tipos', path: 'rango', as: 'tipo_rangos', defaults: { tipo: 'rango' }
-    resources :partes_cuerpo, only: [] do
-      member do
-        get :aumentar
-        get :disminuir
-      end
-    end
   end
 
   resource :profile, only: [:edit, :update, :destroy] do

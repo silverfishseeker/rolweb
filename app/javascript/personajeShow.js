@@ -3,6 +3,11 @@ import { adjustInputWidth } from "./utils.js";
 import { initTabs } from "./tabs.js";
 import { warnUnsaved, markUnsaved } from "./warnUnsaved.js";
 
+// Usado directamente desde onclick="" en botones de autoguardado (p.ej. +/- de salud)
+window.autosaveFetch = function (url) {
+  fetch(url);
+};
+
 export function onTurboLoad() {
 
   // Aviso de cambios sin guardar
@@ -120,21 +125,6 @@ export function onTurboLoad() {
 
   //tabs de la columna central
   initTabs(document.querySelector('.pjv-column-tabs'));
-
-  // Estilo de filas borradas cuando la salud es 0 o menos
-  document.querySelectorAll(".pjv-var-cuerpo").forEach( pc => {
-    pc.addEventListener("turbo:frame-load", (event) => {
-      const frame = event.target;
-      const saludAct_span = frame.querySelector(".pjv-var-cuerpo-act");
-      const saludAct = parseInt(saludAct_span.innerHTML);
-      if (saludAct <= 0) {
-        pc.classList.add("pjv-var-cuerpo-borrada");
-      } else {
-        pc.classList.remove("pjv-var-cuerpo-borrada");
-      }
-      markUnsaved();
-    });
-  });
 
   // Ajustar ancho input cantidad
   document.querySelectorAll(".pj-cantidad").forEach(input => {
