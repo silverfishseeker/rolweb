@@ -33,8 +33,7 @@
             data-base="stat-base-<%=stat.id%>"
             data-value="stat-val-<%=stat.id%>"
             data-mod="stat-mod-<%=stat.id%>"
-            data-update-url="<%= update_stadistic_personaje_path(@x, stadistic_id: stat.id) %>"
-            data-update-param="active_mod"
+            data-update-url="<%= update_field_personaje_path(@x, field: "stat_mod", target_id: stat.id) %>"
             id="stat-modifier-<%=stat.id%>">
       </span>
     <% end %>
@@ -54,8 +53,7 @@
                         name="calculados[<%= calc.id %>][rango]"
                         value="<%= calc.rango.valor %>"
                         class="pjv-input autosave-input"
-                        data-update-url="<%= update_calculado_rango_personaje_path(@x, calculado_id: calc.id) %>"
-                        data-update-param="rango"
+                        data-update-url="<%= update_field_personaje_path(@x, field: "calc_rango", target_id: calc.id) %>"
                         id="calc-rango-<%=calc.id%>">
                   /
                 <% end %>
@@ -66,8 +64,7 @@
                     class="pjv-modifier autosave-input"
                     data-base="calc-base-<%=calc.id%>"
                     data-value="calc-val-<%=calc.id%>"
-                    data-update-url="<%= update_calculado_mod_personaje_path(@x, calculado_id: calc.id) %>"
-                    data-update-param="active_mod"
+                    data-update-url="<%= update_field_personaje_path(@x, field: "calc_mod", target_id: calc.id) %>"
                     id="calc-modifier-<%=calc.id%>">
                 <span id="calc-base-<%=calc.id%>" style="display:none">
                   <%=calc.value%>
@@ -110,8 +107,7 @@
                     data-value="pcarm-val-<%=pc.id%>"
                     data-link-aumentar-id="pcarm-<%=pc.id%>_aumentar"
                     data-link-disminuir-id="pcarm-<%=pc.id%>_disminuir"
-                    data-update-url="<%= update_parte_cuerpo_mod_personaje_path(@x, parte_cuerpo_id: pc.id) %>"
-                    data-update-param="active_mod"
+                    data-update-url="<%= update_field_personaje_path(@x, field: "pc_mod", target_id: pc.id) %>"
                     id="pcarm-modifier-<%=pc.id%>">
                 <span id="pcarm-base-<%=pc.id%>" style="display:none">
                   <%=pc.modificable.passive_mod%>
@@ -125,10 +121,10 @@
                 /
                 <%= pc.saludmax %>
                 <span class="btn btn-small btn-secondary"
-                    onclick="autosaveFetch('<%= update_parte_cuerpo_salud_personaje_path(@x, parte_cuerpo_id: pc.id, delta: 1) %>')"
+                    onclick="autosaveFetch('<%= update_field_personaje_path(@x, field: "pc_salud", target_id: pc.id, value: 1) %>')"
                     id="pcsalud-<%=pc.id%>_aumentar">+</span>
                 <span class="btn btn-small btn-danger"
-                    onclick="autosaveFetch('<%= update_parte_cuerpo_salud_personaje_path(@x, parte_cuerpo_id: pc.id, delta: -1) %>')"
+                    onclick="autosaveFetch('<%= update_field_personaje_path(@x, field: "pc_salud", target_id: pc.id, value: -1) %>')"
                     id="pcsalud-<%=pc.id%>_disminuir">-</span>
               </span>
             </div>
@@ -247,8 +243,7 @@
                 class: "carta-number carta-coste pjv-modifier autosave-input",
                 id: "personaje-oro",
                 data: {
-                  update_url: update_oro_personaje_path(@x),
-                  update_param: "oro"
+                  update_url: update_field_personaje_path(@x, field: "oro")
                 } %> </h3>
           <div class="white_bk no_trix_toobar"><%= f.rich_text_area :descripcion %></div>
         </div>

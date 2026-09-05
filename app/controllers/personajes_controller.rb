@@ -13,16 +13,10 @@ class PersonajesController < ModelController
   configure_access level: :player
   configure_access :index, level: :unlogged
   before_action :set, only: %i[
-    show edit destroy add_to_personaje add_items_to_personaje
-    update_stadistic update_calculado_mod update_calculado_rango
-    update_parte_cuerpo_mod update_parte_cuerpo_salud update_oro
-    update_contador_base update_contador_rango
+    show edit destroy add_to_personaje add_items_to_personaje update_field
   ]
   before_action :check_ownership, only: %i[
-    show edit destroy
-    update_stadistic update_calculado_mod update_calculado_rango
-    update_parte_cuerpo_mod update_parte_cuerpo_salud update_oro
-    update_contador_base update_contador_rango
+    show edit destroy update_field
   ]
   after_action only: %i[create update destroy] do
     cache_delete "#{current_user.id}_personajes" if user_signed_in?
@@ -102,75 +96,71 @@ class PersonajesController < ModelController
     @x.broadcast_action_to(@x, action: "toggle_class", target: target, attributes: { "class-name" => class_name, on: on }, render: false)
   end
 
-  def update_stadistic
-    stadistic = @x.estadistics.find_by(id: params[:stadistic_id])
-    stadistic.modificable.active_mod = params[:active_mod].to_i
-    stadistic.save!
-    broadcast_update_div("stat-modifier-#{stadistic.id}", stadistic.modificable.active_mod)
-    broadcast_update_div("stat-val-#{stadistic.id}", stadistic.value)
-    broadcast_update_div("stat-mod-#{stadistic.id}", stadistic.mod_str)
-    head :ok
-  end
+  # Único punto de entrada para todos los campos de autoguardado del show.
+  # params[:field] identifica qué se actualiza, params[:target_id] el registro afectado
+  # (no aplica para "oro", que actúa sobre el propio personaje) y params[:value] el valor nuevo.
+  def update_field
+    value = params[:value]
+    case params[:field]
+    when "stat_mod"
+      stadistic = @x.estadistics.find(params[:target_id])
+      stadistic.modificable.active_mod = value.to_i
+      stadistic.save!
+      broadcast_update_div("stat-modifier-#{stadistic.id}", stadistic.modificable.active_mod)
+      broadcast_update_div("stat-val-#{stadistic.id}", stadistic.value)
+      broadcast_update_div("stat-mod-#{stadistic.id}", stadistic.mod_str)
 
-  def update_calculado_mod
-    calculado = @x.calculados.find_by(id: params[:calculado_id])
-    calculado.modificable.active_mod = params[:active_mod].to_i
-    calculado.save!
-    broadcast_update_div("calc-modifier-#{calculado.id}", calculado.modificable.active_mod)
-    broadcast_update_div("calc-val-#{calculado.id}", calculado.value)
-    head :ok
-  end
+    when "calc_mod"
+      calculado = @x.calculados.find(params[:target_id])
+      calculado.modificable.active_mod = value.to_i
+      calculado.save!
+      broadcast_update_div("calc-modifier-#{calculado.id}", calculado.modificable.active_mod)
+      broadcast_update_div("calc-val-#{calculado.id}", calculado.value)
 
-  def update_calculado_rango
-    calculado = @x.calculados.find_by(id: params[:calculado_id])
-    calculado.rango.valor = params[:rango].to_i
-    calculado.save!
-    broadcast_update_div("calc-rango-#{calculado.id}", calculado.rango.valor)
-    head :ok
-  end
+    when "calc_rango"
+      calculado = @x.calculados.find(params[:target_id])
+      calculado.rango.valor = value.to_i
+      calculado.save!
+      broadcast_update_div("calc-rango-#{calculado.id}", calculado.rango.valor)
 
-  def update_parte_cuerpo_mod
-    pc = @x.parteCuerpos.find_by(id: params[:parte_cuerpo_id])
-    pc.modificable.active_mod = params[:active_mod].to_i
-    pc.save!
-    broadcast_update_div("pcarm-modifier-#{pc.id}", pc.modificable.active_mod)
-    broadcast_update_div("pcarm-val-#{pc.id}", pc.modificable.passive_mod + pc.modificable.active_mod)
-    head :ok
-  end
+    when "pc_mod"
+      pc = @x.parteCuerpos.find(params[:target_id])
+      pc.modificable.active_mod = value.to_i
+      pc.save!
+      broadcast_update_div("pcarm-modifier-#{pc.id}", pc.modificable.active_mod)
+      broadcast_update_div("pcarm-val-#{pc.id}", pc.modificable.passive_mod + pc.modificable.active_mod)
 
-  def update_parte_cuerpo_salud
-    pc = @x.parteCuerpos.find_by(id: params[:parte_cuerpo_id])
-    pc.saludact += params[:delta].to_i
-    pc.save!
-    broadcast_update_div("pcsalud-act-#{pc.id}", pc.saludact)
-    broadcast_update_div("pcsalud-state-#{pc.id}", pc.state)
-    broadcast_update_div("pcsalud-hidden-#{pc.id}", pc.saludact)
-    broadcast_toggle_class("pcsalud-row-#{pc.id}", "pjv-var-cuerpo-borrada", pc.saludact <= 0)
-    head :ok
-  end
+    when "pc_salud"
+      pc = @x.parteCuerpos.find(params[:target_id])
+      pc.saludact += value.to_i # aquí "value" es un delta (+1/-1), no un valor absoluto
+      pc.save!
+      broadcast_update_div("pcsalud-act-#{pc.id}", pc.saludact)
+      broadcast_update_div("pcsalud-state-#{pc.id}", pc.state)
+      broadcast_update_div("pcsalud-hidden-#{pc.id}", pc.saludact)
+      broadcast_toggle_class("pcsalud-row-#{pc.id}", "pjv-var-cuerpo-borrada", pc.saludact <= 0)
 
-  def update_oro
-    @x.oro = params[:oro].to_f
-    @x.save!
-    broadcast_update_div("personaje-oro", @x.oro)
-    head :ok
-  end
+    when "oro"
+      @x.oro = value.to_f
+      @x.save!
+      broadcast_update_div("personaje-oro", @x.oro)
 
-  def update_contador_base
-    calculado = find_contador(params[:calculado_id])
-    libre = calculado.calculado_libre || calculado.build_calculado_libre
-    libre.base = params[:base].to_i
-    calculado.save!
-    broadcast_update_div("contador-base-#{calculado.id}", calculado.value)
-    head :ok
-  end
+    when "contador_base"
+      calculado = find_contador(params[:target_id])
+      libre = calculado.calculado_libre || calculado.build_calculado_libre
+      libre.base = value.to_i
+      calculado.save!
+      broadcast_update_div("contador-base-#{calculado.id}", calculado.value)
 
-  def update_contador_rango
-    calculado = find_contador(params[:calculado_id])
-    calculado.build_rango if calculado.rango.nil?
-    calculado.rango.valor = params[:rango].to_i
-    calculado.save!
-    broadcast_update_div("contador-rango-#{calculado.id}", calculado.rango.valor)
+    when "contador_rango"
+      calculado = find_contador(params[:target_id])
+      calculado.build_rango if calculado.rango.nil?
+      calculado.rango.valor = value.to_i
+      calculado.save!
+      broadcast_update_div("contador-rango-#{calculado.id}", calculado.rango.valor)
+
+    else
+      raise ActiveRecord::RecordNotFound, "Campo desconocido: #{params[:field]}"
+    end
     head :ok
   end
 

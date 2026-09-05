@@ -9,8 +9,7 @@
           name="<%= prefix %>[calculados][<%= contador.id %>][rango]"
           value="<%= contador.rango.valor %>"
           class="pj-cantidad autosave-input"
-          data-update-url="<%= update_contador_rango_personaje_path(@x, calculado_id: contador.id) %>"
-          data-update-param="rango"
+          data-update-url="<%= update_field_personaje_path(@x, field: "contador_rango", target_id: contador.id) %>"
           id="contador-rango-<%=contador.id%>">
       <b> / </b>
     <% end %>
@@ -18,8 +17,7 @@
         name="<%= prefix %>[calculados][<%= contador.id %>][base]"
         value="<%= contador.value %>"
         class="pj-cantidad autosave-input"
-        data-update-url="<%= update_contador_base_personaje_path(@x, calculado_id: contador.id) %>"
-        data-update-param="base"
+        data-update-url="<%= update_field_personaje_path(@x, field: "contador_base", target_id: contador.id) %>"
         id="contador-base-<%=contador.id%>">
   </div>
 <% end %>

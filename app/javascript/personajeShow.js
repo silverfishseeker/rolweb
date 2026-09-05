@@ -18,8 +18,7 @@ export function onTurboLoad() {
   document.addEventListener("input", (e) => {
     const input = e.target;
     if (input.classList.contains("autosave-input")) {
-      const param = input.dataset.updateParam;
-      fetch(input.dataset.updateUrl+"?"+param+"="+encodeURIComponent(input.value));
+      fetch(input.dataset.updateUrl+"?value="+encodeURIComponent(input.value));
     }
   });
 
