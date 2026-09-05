@@ -32,6 +32,8 @@ Rails.application.routes.draw do
       get "update_parte_cuerpo_mod/:parte_cuerpo_id", action: :update_parte_cuerpo_mod, as: :update_parte_cuerpo_mod
       get "update_parte_cuerpo_salud/:parte_cuerpo_id", action: :update_parte_cuerpo_salud, as: :update_parte_cuerpo_salud
       get "update_oro", action: :update_oro, as: :update_oro
+      get "update_contador_base/:calculado_id", action: :update_contador_base, as: :update_contador_base
+      get "update_contador_rango/:calculado_id", action: :update_contador_rango, as: :update_contador_rango
     end
   end
   
