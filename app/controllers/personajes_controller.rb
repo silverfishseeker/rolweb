@@ -92,13 +92,27 @@ class PersonajesController < ModelController
     @x.broadcast_action_to(@x, action: "update_div", target: target, attributes: { value: value }, render: false)
   end
 
-  def broadcast_toggle_class(target, class_name, on) # Note. We may delete this method later if it is only used once. Keep this note until end of development.
-    @x.broadcast_action_to(@x, action: "toggle_class", target: target, attributes: { "class-name" => class_name, on: on }, render: false)
+  def broadcast_upsert_item(phi, seq: nil)
+    broadcast_upsert_item_copy(phi, "phi_iinv-#{phi.id}", isInInventario: true, container_id: "inventario-items", seq: seq)
+    if phi.isEquipped
+      broadcast_upsert_item_copy(phi, "phi-#{phi.id}", isInInventario: false, container_id: "tab-equipo", seq: seq)
+    else
+      # Puede que antes de eliminarse estuviera equipado y ahora se restaure sin estarlo: si queda una copia congelada en la pestaña de equipo, ya no corresponde a nada real y hay que quitarla.
+      @x.broadcast_action_to(@x, action: "remove_div", target: "phi-#{phi.id}", render: false)
+    end
   end
 
-  # Único punto de entrada para todos los campos de autoguardado del show.
-  # params[:field] identifica qué se actualiza, params[:target_id] el registro afectado
-  # (no aplica para "oro", que actúa sobre el propio personaje) y params[:value] el valor nuevo.
+  def broadcast_upsert_item_copy(phi, dom_id, isInInventario:, container_id:, seq: nil)
+    @x.broadcast_action_to(
+      @x,
+      action: "upsert_item",
+      target: dom_id,
+      attributes: { container: container_id, seq: seq },
+      partial: "personajes/show_item",
+      locals: { phi: phi, isInInventario: isInInventario }
+    )
+  end
+
   def update_field
     value = params[:value]
     case params[:field]
@@ -137,7 +151,12 @@ class PersonajesController < ModelController
       broadcast_update_div("pcsalud-act-#{pc.id}", pc.saludact)
       broadcast_update_div("pcsalud-state-#{pc.id}", pc.state)
       broadcast_update_div("pcsalud-hidden-#{pc.id}", pc.saludact)
-      broadcast_toggle_class("pcsalud-row-#{pc.id}", "pjv-var-cuerpo-borrada", pc.saludact <= 0)
+      @x.broadcast_action_to(
+        @x,
+        action:"toggle_class",
+        target: "pcsalud-row-#{pc.id}",
+        attributes: { "class-name" => "pjv-var-cuerpo-borrada", on: pc.saludact <= 0 },
+        render: false)
 
     when "oro"
       @x.oro = value.to_f
@@ -158,8 +177,46 @@ class PersonajesController < ModelController
       calculado.save!
       broadcast_update_div("contador-rango-#{calculado.id}", calculado.rango.valor)
 
+    when "item_eliminar"
+      phi = @x.personajeHasItems.find(params[:target_id])
+      phi.destroy
+      @x.broadcast_action_to(
+        @x,
+        action: "eliminar_item",
+        targets: "#phi-#{phi.id}, #phi_iinv-#{phi.id}",
+        attributes: { seq: params[:seq] },
+        render: false
+      )
+
+    when "item_restaurar"
+      target_id = params[:target_id].to_i
+      existing = Pj::PersonajeHasItem.find_by(id: target_id)
+      if existing
+        raise ActiveRecord::RecordNotFound unless existing.personaje_id == @x.id
+        phi = existing
+      else
+        phi = @x.personajeHasItems.new(
+          id: target_id,
+          cantidad: params[:cantidad].to_i,
+          isEquipped: params[:is_equipped] == "1"
+        )
+        if params[:item_id].present?
+          phi.item_id = params[:item_id]
+        else
+          phi.build_customitem(nombre: params[:customitem])
+        end
+        phi.save!
+      end
+      broadcast_upsert_item(phi, seq: params[:seq])
+
+    when "item_crear_custom"
+      phi = @x.personajeHasItems.new(cantidad: 1, isEquipped: false)
+      phi.build_customitem(nombre: "Nuevo ítem personalizado")
+      phi.save!
+      broadcast_upsert_item(phi)
+
     else
-      raise ActiveRecord::RecordNotFound, "Campo desconocido: #{params[:field]}"
+      raise ActiveRecord::RecordNotFound, "Opción de actualización de campo desconocida: #{params[:field]}"
     end
     head :ok
   end
@@ -186,12 +243,16 @@ class PersonajesController < ModelController
     if phi
       phi.cantidad += cantidad
       phi.save!
+      @x.broadcast_action_to(@x, action: "update_div",
+          targets: "#phi-#{phi.id}-cantidad, #phi_iinv-#{phi.id}-cantidad",
+          attributes: { value: phi.cantidad }, render: false)
     else
       phi = @x.personajeHasItems.create!(
         item: item,
         cantidad: cantidad,
         isEquipped: false
       )
+      broadcast_upsert_item(phi)
     end
   end
 

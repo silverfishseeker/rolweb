@@ -2,11 +2,40 @@
 import { adjustInputWidth } from "./utils.js";
 import { initTabs } from "./tabs.js";
 import { warnUnsaved, markUnsaved } from "./warnUnsaved.js";
+import { createCloseModalHandler } from "./modals.js";
 
-// Usado directamente desde onclick="" en botones de autoguardado (p.ej. +/- de salud)
-window.autosaveFetch = function (url) {
-  fetch(url);
+
+// --- Gestión de ítems del inventario: eliminar / restaurar / crear personalizado ---
+
+// Sistema de secuencias para evitar que se procesen acciones de ítems obsoletas
+const itemActionSeq = new Map(); // phiId (string) -> último seq usado
+window.nextItemSeq = function (phiId) {
+  const seq = (itemActionSeq.get(phiId) || 0) + 1;
+  itemActionSeq.set(phiId, seq);
+  return seq;
 };
+window.isStaleItemSeq = function (phiId, seq) {
+  const current = itemActionSeq.get(phiId);
+  return current !== undefined && Number(seq) < current;
+};
+
+window.setItemCardState = function (card, isDeleted) {
+  card.classList.toggle("pj-fila_borrada", isDeleted);
+  card.querySelectorAll("input, select, textarea, button").forEach(el => {
+    el.disabled = isDeleted;
+  });
+  card.querySelector(`#${card.id}-eliminar`).hidden = isDeleted;
+  card.querySelector(`#${card.id}-restaurar`).hidden = !isDeleted;
+};
+
+// Busca el item en el inventario y el equipado
+window.setItemCardStateToBoth = function(card, isDeleted) {
+  const phiId = card.id.match(/-(\d+)$/)[1];
+  const card_equipped = document.getElementById(`phi-${phiId}`);
+  const card_inventory = document.getElementById(`phi_iinv-${phiId}`);
+  if (card_equipped) window.setItemCardState(card_equipped, isDeleted);
+  if (card_inventory) window.setItemCardState(card_inventory, isDeleted);
+}
 
 export function onTurboLoad() {
 
@@ -173,7 +202,6 @@ export function onTurboLoad() {
 
   //Filtrar intems por categoría
   let currentlySelected = [];
-  const items =  document.getElementById("inventario-items").querySelectorAll(".inventario-item");
   const categorySelect = document.getElementById("inventario-selection");
   categorySelect.querySelectorAll(".inventario-categ").forEach( categ => {
     categ.addEventListener("click", () => {
@@ -185,7 +213,7 @@ export function onTurboLoad() {
         currentlySelected.push(categValue);
         categ.classList.add("carta-title-selected");
       }
-      
+      const items = document.getElementById("inventario-items").querySelectorAll(".inventario-item");
       if (currentlySelected.length === 0) {
         items.forEach( item => {
           item.style.display = "block";
@@ -203,24 +231,10 @@ export function onTurboLoad() {
     });
   });
 
-  //Añadir item custom
-  let nextCustomItemId = 1;
-  document.getElementById("new-customitem-buttom").addEventListener("click", event => {
-    const template = document.getElementById("customitem-template");
-    const html = template.innerHTML.replaceAll("__ID__",nextCustomItemId++);
-    document .getElementById("inventario-items").insertAdjacentHTML("beforeend", html);
-    markUnsaved();
-  });
-
-  //Marcar items a borrar
-  document.addEventListener("change", e => {
-    if (e.target.classList.contains("rm_input")) {
-      const input = e.target;
-      const carta = input.closest(".carta");
-      if (input.checked)
-        carta.classList.add("pj-fila_borrada");
-      else
-        carta.classList.remove("pj-fila_borrada");
-    }
-  });
+  // Quitar ítems marcados como borrados al cerrar el modal.
+  document.getElementById("inventario-selection").closest(".modal-container")
+    .addEventListener("click", createCloseModalHandler(() => {
+      document.querySelectorAll("#inventario-items .pj-fila_borrada, #tab-equipo .pj-fila_borrada")
+        .forEach(card => card.remove());
+    }));
 }

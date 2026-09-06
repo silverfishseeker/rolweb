@@ -120,11 +120,11 @@
                 <span class="pjv-var-cuerpo-act" id="pcsalud-act-<%=pc.id%>"><%= pc.saludact %></span>
                 /
                 <%= pc.saludmax %>
-                <span class="btn btn-small btn-secondary"
-                    onclick="autosaveFetch('<%= update_field_personaje_path(@x, field: "pc_salud", target_id: pc.id, value: 1) %>')"
+                <span class="btn btn-small btn-secondary pjv-var-cuerpo-salud_btn btn-no_tachado"
+                    onclick="fetch('<%= update_field_personaje_path(@x, field: "pc_salud", target_id: pc.id, value: 1) %>')"
                     id="pcsalud-<%=pc.id%>_aumentar">+</span>
-                <span class="btn btn-small btn-danger"
-                    onclick="autosaveFetch('<%= update_field_personaje_path(@x, field: "pc_salud", target_id: pc.id, value: -1) %>')"
+                <span class="btn btn-small btn-danger pjv-var-cuerpo-salud_btn btn-no_tachado"
+                    onclick="fetch('<%= update_field_personaje_path(@x, field: "pc_salud", target_id: pc.id, value: -1) %>')"
                     id="pcsalud-<%=pc.id%>_disminuir">-</span>
               </span>
             </div>
@@ -220,24 +220,11 @@
                   <%= render "personajes/show_item", phi: phi, isInInventario: true %>
                 <% end %>
               </div>
-              <div id="new-customitem-buttom" class="btn btn-primary btn-small" data-template="customitem-template">
+              <div class="btn btn-primary btn-small"
+                  onclick="fetch('<%= update_field_personaje_path(@x, field: "item_crear_custom") %>')">
                 Añadir nuevo ítem custom
               </div>
             <% end%>
-            <template id="customitem-template">
-              <div class="carta carta_show inventario-item" data-categs="">
-                <div class="carta-header carta-header-small">
-                  <span class="carta-number">
-                    <input type="number" name="new_custom_item[__ID__][cantidad]"
-                          value="1" class="pj-cantidad">
-                  </span>
-                  <span data-label="Equipar">
-                    <input type="checkbox" name="new_custom_item[__ID__][isEquipped]" value="1">
-                  </span>
-                  <input type="text" class="carta-customitem" name="new_custom_item[__ID__][customitem]">
-                </div>
-              </div>
-            </template>
           </div>
           <h3> Oro: <%= f.number_field :oro, step: 0.01,
                 class: "carta-number carta-coste pjv-modifier autosave-input",
