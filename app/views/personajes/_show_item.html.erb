@@ -19,14 +19,14 @@
 
       <% if isInInventario %>
         <span data-label="Equipar">
-          <span class="btn btn-small btn-primary item-equipar-btn" <%= "hidden" if phi.isEquipped %> id="<%=js_base_id%>-equipar"
+          <button type="button" class="btn btn-small btn-primary item-equipar-btn" <%= "hidden" if phi.isEquipped %> id="<%=js_base_id%>-equipar"
               onclick="equiparItem(this.closest('.carta'), true, '<%= update_field_personaje_path(phi.personaje, field: 'item_equipar', target_id: phi.id) %>')">
             Equipar
-          </span>
-          <span class="btn btn-small btn-secondary item-desequipar-btn" <%= "hidden" unless phi.isEquipped %> id="<%=js_base_id%>-desequipar"
+          </button>
+          <button type="button" class="btn btn-small btn-secondary item-desequipar-btn" <%= "hidden" unless phi.isEquipped %> id="<%=js_base_id%>-desequipar"
               onclick="equiparItem(this.closest('.carta'), false, '<%= update_field_personaje_path(phi.personaje, field: 'item_equipar', target_id: phi.id) %>')">
             Retirar
-          </span>
+          </button>
         </span>
       <% end %>
 
