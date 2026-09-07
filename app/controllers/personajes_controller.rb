@@ -215,6 +215,23 @@ class PersonajesController < ModelController
       phi.save!
       broadcast_upsert_item(phi)
 
+    when "item_equipar"
+      phi = @x.personajeHasItems.find(params[:target_id])
+      phi.isEquipped = value == "1"
+      phi.save!
+      @x.broadcast_action_to(
+        @x,
+        action: "set_hidden",
+        targets: "#phi_iinv-#{phi.id}-equipar, #phi_iinv-#{phi.id}-desequipar",
+        attributes: { value: phi.isEquipped, seq: params[:seq] },
+        render: false
+      )
+      if phi.isEquipped
+        broadcast_upsert_item_copy(phi, "phi-#{phi.id}", isInInventario: false, container_id: "tab-equipo", seq: params[:seq])
+      else
+        @x.broadcast_action_to(@x, action: "remove_div", target: "phi-#{phi.id}", attributes: { seq: params[:seq] }, render: false)
+      end
+
     else
       raise ActiveRecord::RecordNotFound, "Opción de actualización de campo desconocida: #{params[:field]}"
     end

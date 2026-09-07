@@ -17,10 +17,18 @@
             value="<%= phi.cantidad %>" class="pj-cantidad" id="<%=js_base_id%>-cantidad">
       </span>
 
-      <span data-label="Equipar">
-        <input type="<%= isInInventario ? 'checkbox' : 'hidden' %>" name="<%= prefix %>[<%=phi.id%>][isEquipped]"
-              value="1" <%= "checked" if !isInInventario || phi.isEquipped %>>
-      </span>
+      <% if isInInventario %>
+        <span data-label="Equipar">
+          <span class="btn btn-small btn-primary item-equipar-btn" <%= "hidden" if phi.isEquipped %> id="<%=js_base_id%>-equipar"
+              onclick="equiparItem(this.closest('.carta'), true, '<%= update_field_personaje_path(phi.personaje, field: 'item_equipar', target_id: phi.id) %>')">
+            Equipar
+          </span>
+          <span class="btn btn-small btn-secondary item-desequipar-btn" <%= "hidden" unless phi.isEquipped %> id="<%=js_base_id%>-desequipar"
+              onclick="equiparItem(this.closest('.carta'), false, '<%= update_field_personaje_path(phi.personaje, field: 'item_equipar', target_id: phi.id) %>')">
+            Retirar
+          </span>
+        </span>
+      <% end %>
 
       <% if item %>
         <% if isInInventario %>
@@ -31,40 +39,42 @@
 
         <%= link_to item.nombre, item, class:"carta-title" %>
 
-        <%# Los ítems aún no están migrados al autoguardado (pendiente junto con cantidad/equipar/eliminar/posición).
+        <%# Cantidad y posición aún no están migradas al autoguardado (equipar/eliminar ya sí).
             "personajes/show_contadores" ahora asume autoguardado (rutas update_contador_base/rango sin
             comprobar el dueño para ítems), así que de momento se deja comentado para no romper nada. %>
         <%# render "personajes/show_contadores", calculados: phi.calculados, prefix: "#{prefix}[#{phi.id}]" %>
       <% else %>
         <input type="text" class="carta-customitem" name="<%= prefix %>[<%=phi.id%>][customitem]" value="<%=phi.customitem.nombre%>">
       <% end %>
-      <span data-label="Borrar" style="margin-left: auto;">
-        <span class="btn btn-small btn-danger item-eliminar-btn" id="<%=js_base_id%>-eliminar"
-            onclick="
-                const seq = nextItemSeq('<%= phi.id %>');
-                setItemCardStateToBoth(this.closest('.carta'), true);
-                fetch('<%= update_field_personaje_path(phi.personaje, field: 'item_eliminar', target_id: phi.id) %>?seq=' + seq)
-                ">
-          Eliminar
-        </span>
-        <span class="btn btn-small btn-secondary pj-fila_borrada-restaurar_btn btn-no_tachado" hidden id="<%=js_base_id%>-restaurar"
-            onclick="
-                const card = this.closest('.carta');
-                const equipadoInput = card.querySelector('[data-label=Equipar] input');
-                const customitemInput = card.querySelector('.carta-customitem');
-                const seq = nextItemSeq('<%= phi.id %>');
+      <% if isInInventario %>
+        <span data-label="Borrar" style="margin-left: auto;">
+          <span class="btn btn-small btn-danger item-eliminar-btn" id="<%=js_base_id%>-eliminar"
+              onclick="
+                  const seq = nextItemSeq('<%= phi.id %>');
+                  setItemCardStateToBoth(this.closest('.carta'), true);
+                  fetch('<%= update_field_personaje_path(phi.personaje, field: 'item_eliminar', target_id: phi.id) %>?seq=' + seq)
+                  ">
+            Eliminar
+          </span>
+          <span class="btn btn-small btn-secondary pj-fila_borrada-restaurar_btn btn-no_tachado" hidden id="<%=js_base_id%>-restaurar"
+              onclick="
+                  const card = this.closest('.carta');
+                  const isEquipped = !card.querySelector(`#${card.id}-desequipar`).hidden;
+                  const customitemInput = card.querySelector('.carta-customitem');
+                  const seq = nextItemSeq('<%= phi.id %>');
 
-                setItemCardStateToBoth(card, false);
-                fetch(
-                  '<%= update_field_personaje_path(phi.personaje, field: 'item_restaurar', target_id: phi.id) %>'
-                  + '?cantidad=' + encodeURIComponent(card.querySelector('.pj-cantidad').value)
-                  + '&is_equipped=' + (!(equipadoInput.type === 'checkbox') || equipadoInput.checked ? '1' : '0')
-                  + (customitemInput ? '&customitem=' + encodeURIComponent(customitemInput.value)
-                    : '&item_id=' + encodeURIComponent(card.dataset.itemId))
-                  + '&seq=' + seq);
-            ">
-          Restaurar</span>
-      </span>
+                  setItemCardStateToBoth(card, false);
+                  fetch(
+                    '<%= update_field_personaje_path(phi.personaje, field: 'item_restaurar', target_id: phi.id) %>'
+                    + '?cantidad=' + encodeURIComponent(card.querySelector('.pj-cantidad').value)
+                    + '&is_equipped=' + (isEquipped ? '1' : '0')
+                    + (customitemInput ? '&customitem=' + encodeURIComponent(customitemInput.value)
+                      : '&item_id=' + encodeURIComponent(card.dataset.itemId))
+                    + '&seq=' + seq);
+              ">
+            Restaurar</span>
+        </span>
+      <% end %>
   </div>
 
   <% if item %>

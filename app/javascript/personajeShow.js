@@ -8,15 +8,18 @@ import { createCloseModalHandler } from "./modals.js";
 // --- Gestión de ítems del inventario: eliminar / restaurar / crear personalizado ---
 
 // Sistema de secuencias para evitar que se procesen acciones de ítems obsoletas
-const itemActionSeq = new Map(); // phiId (string) -> último seq usado
+const itemActionSeq = new Map(); // phiId (string) -> seq más reciente visto (propio o de otra pestaña)
 window.nextItemSeq = function (phiId) {
-  const seq = (itemActionSeq.get(phiId) || 0) + 1;
+  const seq = Math.max(Date.now(), (itemActionSeq.get(phiId) || 0) + 1);
   itemActionSeq.set(phiId, seq);
   return seq;
 };
 window.isStaleItemSeq = function (phiId, seq) {
   const current = itemActionSeq.get(phiId);
-  return current !== undefined && Number(seq) < current;
+  const numSeq = Number(seq);
+  if (current !== undefined && numSeq < current) return true;
+  itemActionSeq.set(phiId, numSeq); // recordar también lo que llega de otras pestañas
+  return false;
 };
 
 window.setItemCardState = function (card, isDeleted) {
@@ -24,8 +27,11 @@ window.setItemCardState = function (card, isDeleted) {
   card.querySelectorAll("input, select, textarea, button").forEach(el => {
     el.disabled = isDeleted;
   });
-  card.querySelector(`#${card.id}-eliminar`).hidden = isDeleted;
-  card.querySelector(`#${card.id}-restaurar`).hidden = !isDeleted;
+  // Eliminar/Restaurar solo existen en la copia del inventario, no en la de Equipo.
+  const eliminarBtn = card.querySelector(`#${card.id}-eliminar`);
+  const restaurarBtn = card.querySelector(`#${card.id}-restaurar`);
+  if (eliminarBtn) eliminarBtn.hidden = isDeleted;
+  if (restaurarBtn) restaurarBtn.hidden = !isDeleted;
 };
 
 // Busca el item en el inventario y el equipado
@@ -36,6 +42,15 @@ window.setItemCardStateToBoth = function(card, isDeleted) {
   if (card_equipped) window.setItemCardState(card_equipped, isDeleted);
   if (card_inventory) window.setItemCardState(card_inventory, isDeleted);
 }
+
+window.equiparItem = function (card, equip, url) {
+  const phiId = card.id.match(/-(\d+)$/)[1];
+  const seq = window.nextItemSeq(phiId);
+  card.querySelector(`#${card.id}-equipar`).hidden = equip;
+  card.querySelector(`#${card.id}-desequipar`).hidden = !equip;
+  if (!equip) document.getElementById(`phi-${phiId}`)?.remove();
+  fetch(url + "?value=" + (equip ? "1" : "0") + "&seq=" + seq);
+};
 
 export function onTurboLoad() {
 
