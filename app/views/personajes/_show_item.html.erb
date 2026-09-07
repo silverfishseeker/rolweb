@@ -50,7 +50,7 @@
         <span data-label="Borrar" style="margin-left: auto;">
           <span class="btn btn-small btn-danger item-eliminar-btn" id="<%=js_base_id%>-eliminar"
               onclick="
-                  const seq = nextItemSeq('<%= phi.id %>');
+                  const seq = nextSeq('<%= phi.id %>');
                   setItemCardStateToBoth(this.closest('.carta'), true);
                   fetch('<%= update_field_personaje_path(phi.personaje, field: 'item_eliminar', target_id: phi.id) %>?seq=' + seq)
                   ">
@@ -61,7 +61,7 @@
                   const card = this.closest('.carta');
                   const isEquipped = !card.querySelector(`#${card.id}-desequipar`).hidden;
                   const customitemInput = card.querySelector('.carta-customitem');
-                  const seq = nextItemSeq('<%= phi.id %>');
+                  const seq = nextSeq('<%= phi.id %>');
 
                   setItemCardStateToBoth(card, false);
                   fetch(

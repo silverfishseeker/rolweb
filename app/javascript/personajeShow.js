@@ -3,24 +3,10 @@ import { adjustInputWidth } from "./utils.js";
 import { initTabs } from "./tabs.js";
 import { warnUnsaved, markUnsaved } from "./warnUnsaved.js";
 import { createCloseModalHandler } from "./modals.js";
+import { nextSeq, extractId } from "./seqManager.js";
 
 
 // --- Gestión de ítems del inventario: eliminar / restaurar / crear personalizado ---
-
-// Sistema de secuencias para evitar que se procesen acciones de ítems obsoletas
-const itemActionSeq = new Map(); // phiId (string) -> seq más reciente visto (propio o de otra pestaña)
-window.nextItemSeq = function (phiId) {
-  const seq = Math.max(Date.now(), (itemActionSeq.get(phiId) || 0) + 1);
-  itemActionSeq.set(phiId, seq);
-  return seq;
-};
-window.isStaleItemSeq = function (phiId, seq) {
-  const current = itemActionSeq.get(phiId);
-  const numSeq = Number(seq);
-  if (current !== undefined && numSeq < current) return true;
-  itemActionSeq.set(phiId, numSeq); // recordar también lo que llega de otras pestañas
-  return false;
-};
 
 window.setItemCardState = function (card, isDeleted) {
   card.classList.toggle("pj-fila_borrada", isDeleted);
@@ -36,7 +22,7 @@ window.setItemCardState = function (card, isDeleted) {
 
 // Busca el item en el inventario y el equipado
 window.setItemCardStateToBoth = function(card, isDeleted) {
-  const phiId = card.id.match(/-(\d+)$/)[1];
+  const phiId = extractId(card.id);
   const card_equipped = document.getElementById(`phi-${phiId}`);
   const card_inventory = document.getElementById(`phi_iinv-${phiId}`);
   if (card_equipped) window.setItemCardState(card_equipped, isDeleted);
@@ -44,8 +30,8 @@ window.setItemCardStateToBoth = function(card, isDeleted) {
 }
 
 window.equiparItem = function (card, equip, url) {
-  const phiId = card.id.match(/-(\d+)$/)[1];
-  const seq = window.nextItemSeq(phiId);
+  const phiId = extractId(card.id);
+  const seq = nextSeq(phiId);
   card.querySelector(`#${card.id}-equipar`).hidden = equip;
   card.querySelector(`#${card.id}-desequipar`).hidden = !equip;
   if (!equip) document.getElementById(`phi-${phiId}`)?.remove();
