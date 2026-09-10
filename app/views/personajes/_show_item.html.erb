@@ -14,7 +14,8 @@
       %>
       <span class="carta-number">
         <input type="number" name="<%= prefix %>[<%=phi.id%>][cantidad]"
-            value="<%= phi.cantidad %>" class="pj-cantidad" id="<%=js_base_id%>-cantidad">
+            value="<%= phi.cantidad %>" class="pj-cantidad autosave-input" id="<%=js_base_id%>-cantidad"
+            data-update-url="<%= update_field_personaje_path(phi.personaje, field: 'item_cantidad', target_id: phi.id) %>">
       </span>
 
       <% if isInInventario %>

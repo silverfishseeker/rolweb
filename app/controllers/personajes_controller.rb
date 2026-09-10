@@ -226,6 +226,12 @@ class PersonajesController < ModelController
       end
       broadcast_upsert_item(phi, seq: params[:seq])
 
+    when "item_cantidad"
+      phi = @x.personajeHasItems.find(params[:target_id])
+      phi.cantidad = value.to_i
+      phi.save!
+      broadcast_update_many_divs(["phi-#{phi.id}-cantidad", "phi_iinv-#{phi.id}-cantidad"], phi.cantidad)
+
     when "item_crear_custom"
       phi = @x.personajeHasItems.new(cantidad: 1, isEquipped: false)
       phi.build_customitem(nombre: "Nuevo ítem personalizado")
