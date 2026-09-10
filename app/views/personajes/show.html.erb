@@ -144,15 +144,15 @@
         
         <div class="pj-tab-container">
           <div id="tab-activas" class="pj-tab_pane pj-tab_pane-active">
-            <% @personaje_has_habilidads.select { |phh| [0, 3, 5].include?(phh.habilidad.tipo) }.each do |phh| %>
+            <% @personaje_has_habilidads.select { |phh| [0, 3, 5].include?(phh.habilidad.tipo) }.sort_by(&:ordenado_position).each do |phh| %>
               <%= render "personajes/show_habilidad", phh: phh %>
             <% end %>
           </div>
           <div id="tab-pasivas" class="pj-tab_pane">
             <% (
-                @x.personajeHasClases +
+                @x.personajeHasClases.includes(:ordenados) +
                 @personaje_has_habilidads.select { |phh| phh.habilidad.tipo == 1 }
-              ).sort_by(&:position).each do |phc_phh| %>
+              ).sort_by(&:ordenado_position).each do |phc_phh| %>
               <% if phc_phh.is_a?(Pj::PersonajeHasClase) %>
                 <%= render "personajes/show_clase", phc: phc_phh %>
               <% else %>
@@ -161,12 +161,12 @@
             <% end %>
           </div>
           <div id="tab-otras" class="pj-tab_pane">
-            <% @personaje_has_habilidads.select { |phh| [2, 4, 6].include?(phh.habilidad.tipo) }.each do |phh| %>
+            <% @personaje_has_habilidads.select { |phh| [2, 4, 6].include?(phh.habilidad.tipo) }.sort_by(&:ordenado_position).each do |phh| %>
               <%= render "personajes/show_habilidad", phh: phh %>
             <% end %>
           </div>
           <div id="tab-equipo" class="pj-tab_pane">
-            <% @personaje_has_items.select(&:isEquipped).each do |phi| %>
+            <% @personaje_has_items.select(&:isEquipped).sort_by { |phi| phi.ordenado_position(:equipo) }.each do |phi| %>
               <%= render "personajes/show_item", phi: phi, isInInventario: false %>
             <% end %>
           </div>
@@ -216,7 +216,7 @@
               </div>
               <br>
               <div id="inventario-items">
-                <% @personaje_has_items.each do |phi| %>
+                <% @personaje_has_items.sort_by { |phi| phi.ordenado_position(:inventario) }.each do |phi| %>
                   <%= render "personajes/show_item", phi: phi, isInInventario: true %>
                 <% end %>
               </div>

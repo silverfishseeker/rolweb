@@ -9,8 +9,19 @@ class Habilidad < ApplicationRecord
   has_and_belongs_to_many :items
   has_and_belongs_to_many :categs
   has_and_belongs_to_many :mobs
+  has_many :personajeHasHabilidads, class_name: "Pj::PersonajeHasHabilidad"
 
   scope :hide, ->(secreto=false) { where(oculto: secreto) }
+
+  after_update if: :saved_change_to_tipo? do
+    new_list = Pj::PersonajeHasHabilidad::TIPO_TO_LIST.fetch(tipo)
+    personajeHasHabilidads.find_each do |phh|
+      ordenado = phh.ordenados.first
+      next if ordenado.list.to_sym == new_list
+      min = Pj::Ordenado.where(personaje_id: phh.personaje_id, list: new_list).minimum(:position) || 0
+      ordenado.update!(list: new_list, position: min - 1)
+    end
+  end
 
   def build_personaje_has_habilidad(personaje, clase)
     Pj::PersonajeHasHabilidad.new(habilidad: self, personaje: personaje, clase: clase, sobreescritura: nil)

@@ -44,10 +44,20 @@ Turbo.StreamActions.eliminar_item = function () {
 Turbo.StreamActions.upsert_item = function () {
   if (isFreshBroadcast(this, this.getAttribute("seq_key"))) {
     if (this.targetElements.length > 0) {
-      this.targetElements.forEach(card => window.setItemCardState(card, false));
+      const fresh = this.templateContent.firstElementChild;
+      this.targetElements.forEach(card => {
+        card.dataset.ordenadoId = fresh.dataset.ordenadoId;
+        card.dataset.position = fresh.dataset.position;
+        window.setItemCardState(card, false);
+      });
     } else {
       const container = document.getElementById(this.getAttribute("container"));
-      container.appendChild(this.templateContent);
+      const before = document.getElementById(this.getAttribute("before"));
+      const fragment = this.templateContent;
+      const posController = fragment.querySelector(".pjv-pos_controller"); // antes de insertar: el fragmento se vacía al insertarse
+      if (before) container.insertBefore(fragment, before);
+      else container.appendChild(fragment);
+      window.bindPositionController(posController);
     }
   }
 }
@@ -57,4 +67,16 @@ Turbo.StreamActions.remove_div = function () {
   this.targetElements.forEach(el => {
     if (isFreshBroadcast(this, seqKey)) el.remove();
   });
+}
+
+// Idempotente a propósito (mover algo justo antes de otro elemento no cambia nada si
+// ya está ahí), así no hace falta protegerlo con seq: da igual aplicarlo más de una vez.
+Turbo.StreamActions.move_before = function () {
+  const moved = document.getElementById(this.getAttribute("moved"));
+  const before = document.getElementById(this.getAttribute("before"));
+  if (moved && before) {
+    before.parentNode.insertBefore(moved, before);
+    moved.dataset.position = this.getAttribute("moved_position");
+    before.dataset.position = this.getAttribute("before_position");
+  }
 }

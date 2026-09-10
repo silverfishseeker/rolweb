@@ -50,8 +50,8 @@ class PersonajesController < ModelController
   def show
     # Se cargan una sola vez y en la vista se filtran/agrupan en memoria (antes se
     # repetía la misma consulta con distintos where para cada pestaña/sección).
-    @personaje_has_habilidads = @x.personajeHasHabilidads.includes(habilidad: [:categs, :mobs, :rich_text_efecto]).order(:position)
-    @personaje_has_items = @x.personajeHasItems.includes(item: [:categs, :clases, :rich_text_efecto]).order(:position)
+    @personaje_has_habilidads = @x.personajeHasHabilidads.includes(:ordenados, habilidad: [:categs, :mobs, :rich_text_efecto])
+    @personaje_has_items = @x.personajeHasItems.includes(:ordenados, item: [:categs, :clases, :rich_text_efecto])
   end
 
   def edit
@@ -124,10 +124,45 @@ class PersonajesController < ModelController
       @x,
       action: "upsert_item",
       target: dom_id,
-      attributes: { container: container_id, seq: seq, seq_key: phi.id },
+      attributes: {
+        container: container_id,
+        seq: seq,
+        seq_key: phi.id,
+        before: begin
+          list = isInInventario ? :inventario : :equipo
+          candidates = Pj::Ordenado
+              .where(personaje_id: @x.id, list: list)
+              .where("position > ?", phi.ordenado_for(list).position)
+              .order(:position)
+          sibling = list == :equipo ?
+            candidates.find { |o| o.ordenable.isEquipped }
+            : candidates.first
+          sibling && dom_id_for(sibling)
+        end
+      },
       partial: "personajes/show_item",
       locals: { phi: phi, isInInventario: isInInventario }
     )
+  end
+
+  def restore_ordenado_position(phi, list, remembered_position)
+    if remembered_position.present?
+      phi.ordenado_for(list).update!(position: remembered_position.to_i)
+    end
+  rescue ActiveRecord::RecordNotUnique # Si ya había otro en la posición, no lo movemos
+  end
+
+
+  def dom_id_for(ordenado)
+    owner = ordenado.ordenable
+    case owner
+    when Pj::PersonajeHasItem
+      "#{ordenado.equipo? ? 'phi' : 'phi_iinv'}-#{owner.id}"
+    when Pj::PersonajeHasClase
+      "phc-#{owner.id}"
+    when Pj::PersonajeHasHabilidad
+      "phh-#{owner.id}"
+    end
   end
 
   def update_field
@@ -223,6 +258,8 @@ class PersonajesController < ModelController
           phi.build_customitem(nombre: params[:customitem])
         end
         phi.save!
+        restore_ordenado_position(phi, :inventario, params[:inventario_position])
+        restore_ordenado_position(phi, :equipo, params[:equipo_position]) if phi.isEquipped
       end
       broadcast_upsert_item(phi, seq: params[:seq])
 
@@ -259,6 +296,21 @@ class PersonajesController < ModelController
       else
         @x.broadcast_action_to(@x, action: "remove_div", target: "phi-#{phi.id}", attributes: { seq: params[:seq], seq_key: phi.id }, render: false)
       end
+
+    when "reorder"
+      a = Pj::Ordenado.find(params[:a])
+      b = Pj::Ordenado.find(params[:b])
+      raise ActiveRecord::RecordNotFound unless a.personaje_id == @x.id && b.personaje_id == @x.id
+      Pj::Ordenado.transaction do
+        a.position, b.position = b.position, a.position
+        a.save!
+        b.save!
+      end
+      low, high = [a, b].sort_by(&:position)
+      @x.broadcast_action_to(@x, action: "move_before", target: nil, attributes: {
+        moved: dom_id_for(low), moved_position: low.position,
+        before: dom_id_for(high), before_position: high.position
+      }, render: false)
 
     else
       raise ActiveRecord::RecordNotFound, "Opción de actualización de campo desconocida: #{params[:field]}"
@@ -380,16 +432,6 @@ class PersonajesController < ModelController
     end
   end
 
-  # Al elimar o añadir elementos dejamos huecos o encontramos elementos sin position,
-  # las recalculamos todas manteniendo el orden anterior y añadiendo los nuevos la principio.
-  def recalculate_positions_for(personaje)
-    [personaje.personajeHasClases, personaje.personajeHasHabilidads, personaje.personajeHasItems].each do |association|
-      association.sort_by { |e| e.position || -Float::INFINITY }.each_with_index do |element, index|
-        element.update(position: index)
-      end
-    end
-  end
-
   # Procesa los parámetros complejos y actualiza/crea asociaciones en @personaje (que ya existe en @x)
   def process_associations_for(personaje)
     raise "Tipo de formulario no reconocido" unless Personaje::FORM_TYPES.values.include?(params[:form_type])
@@ -433,7 +475,6 @@ class PersonajesController < ModelController
     # CLASES
     params[:phc]&.each do |id, attrs|
       phc = personaje.personajeHasClases.find(id.to_i)
-      phc.position = attrs[:position].to_i
       process_contadores_for attrs[:calculados], phc
       phc.save!
     end
@@ -441,7 +482,6 @@ class PersonajesController < ModelController
     # HABILIDADES
     params[:phh]&.each do |id, attrs|
       phh = personaje.personajeHasHabilidads.find(id.to_i)
-      phh.position = attrs[:position].to_i
       process_contadores_for attrs[:calculados], phh
       phh.save!
     end
@@ -455,7 +495,6 @@ class PersonajesController < ModelController
         next
       end
       attrs = equiped_attrs || attrs
-      phi.position = attrs[:position].to_i
       phi.isEquipped = attrs[:isEquipped] == "1"
       phi.cantidad = attrs[:cantidad].to_i
       process_contadores_for attrs[:calculados], phi
@@ -472,8 +511,6 @@ class PersonajesController < ModelController
       phi.build_customitem(nombre: attrs[:customitem])
       phi.save!
     end
-
-    recalculate_positions_for personaje
   end
 
   def edit_process_associations_for(personaje)
@@ -693,7 +730,5 @@ class PersonajesController < ModelController
         phi.save!
       end
     end
-
-    recalculate_positions_for personaje
   end
 end

@@ -1,7 +1,7 @@
 
 import { adjustInputWidth } from "./utils.js";
 import { initTabs } from "./tabs.js";
-import { warnUnsaved, markUnsaved } from "./warnUnsaved.js";
+import { warnUnsaved } from "./warnUnsaved.js";
 import { createCloseModalHandler } from "./modals.js";
 import { nextSeq, extractId } from "./seqManager.js";
 
@@ -167,24 +167,22 @@ export function onTurboLoad() {
   function swapPosition(parent, beforeElement, afterElement) {
     if (parent && beforeElement && afterElement) {
       parent.insertBefore(afterElement, beforeElement);
-      const beforeElementPosition = document.getElementById(beforeElement.id + "-position");
-      const afterElementPosition = document.getElementById(afterElement.id + "-position");
-      const temp = beforeElementPosition.value;
-      beforeElementPosition.value = afterElementPosition.value;
-      afterElementPosition.value = temp;
-      markUnsaved();
+      fetch(
+        location.pathname + "/update_field/reorder" +
+        "?a=" + beforeElement.dataset.ordenadoId +
+        "&b=" + afterElement.dataset.ordenadoId);
     }
   }
   function visibleChildren(parent) {
     return Array.from(parent.children).filter(child => child.offsetParent !== null);
   }
+
   // Botones de mover posición
-  document.querySelectorAll(".pjv-pos_controller").forEach( controller => {
+  window.bindPositionController = function (controller) { // funcion a parte para que los nuevos lo pueda usar
     const upButton = document.getElementById(controller.dataset.idPrefix + "-pos_up");
     const downButton = document.getElementById(controller.dataset.idPrefix + "-pos_down");
     const element = document.getElementById(controller.dataset.idPrefix);
     const parent = element.parentElement;
-
 
     upButton.addEventListener("click", () => {
       const visible = visibleChildren(parent);
@@ -201,7 +199,8 @@ export function onTurboLoad() {
         swapPosition(parent, element, visible[pos + 1]);
       }
     });
-  });
+  };
+  document.querySelectorAll(".pjv-pos_controller").forEach(window.bindPositionController);
 
   //Filtrar intems por categoría
   let currentlySelected = [];

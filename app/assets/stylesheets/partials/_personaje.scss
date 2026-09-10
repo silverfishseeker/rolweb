@@ -266,6 +266,20 @@
   font-style: italic;
   text-decoration: line-through;
   background-color: var(--c_alternativo);
+  cursor: not-allowed;
+
+  * {
+    cursor: not-allowed;
+  }
+  .pjv-pos_controller .pjv-pos_button:hover {
+    cursor: not-allowed;
+  }
+  .item-equipar-btn, .item-desequipar-btn, .item-eliminar-btn {
+    cursor: not-allowed;
+  }
+  .pj-fila_borrada-restaurar_btn {
+    cursor: pointer;
+  }
 }
 
 .item-eliminar-btn, .pj-fila_borrada-restaurar_btn, .item-equipar-btn, .item-desequipar-btn {

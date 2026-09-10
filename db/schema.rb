@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_03_092839) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_10_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -381,6 +381,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_03_092839) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "pj_ordenados", force: :cascade do |t|
+    t.string "ordenable_type", null: false
+    t.bigint "ordenable_id", null: false
+    t.bigint "personaje_id", null: false
+    t.integer "list", null: false
+    t.integer "position", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ordenable_type", "ordenable_id", "list"], name: "index_pj_ordenados_on_ordenable_and_list", unique: true
+    t.index ["ordenable_type", "ordenable_id"], name: "index_pj_ordenados_on_ordenable"
+    t.index ["personaje_id", "list", "position"], name: "index_pj_ordenados_on_personaje_list_position"
+    t.unique_constraint ["personaje_id", "list", "position"], deferrable: :deferred, name: "uniq_pj_ordenados_personaje_list_position"
+  end
+
   create_table "pj_parte_cuerpos", force: :cascade do |t|
     t.string "nombre"
     t.integer "tipo"
@@ -401,7 +415,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_03_092839) do
     t.bigint "clase_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "position"
     t.index ["clase_id"], name: "index_pj_personaje_has_clases_on_clase_id"
     t.index ["personaje_id"], name: "index_pj_personaje_has_clases_on_personaje_id"
   end
@@ -412,7 +425,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_03_092839) do
     t.datetime "updated_at", null: false
     t.bigint "personaje_id"
     t.bigint "clase_id"
-    t.integer "position"
     t.index ["clase_id"], name: "index_pj_personaje_has_habilidads_on_clase_id"
     t.index ["habilidad_id"], name: "index_pj_personaje_has_habilidads_on_habilidad_id"
     t.index ["personaje_id"], name: "index_pj_personaje_has_habilidads_on_personaje_id"
@@ -424,7 +436,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_03_092839) do
     t.bigint "item_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "position"
     t.boolean "isEquipped", default: false, null: false
     t.index ["item_id"], name: "index_pj_personaje_has_items_on_item_id"
     t.index ["personaje_id"], name: "index_pj_personaje_has_items_on_personaje_id"

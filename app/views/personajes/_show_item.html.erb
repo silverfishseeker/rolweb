@@ -3,15 +3,14 @@
 <% item = phi.item %>
 <% prefix = isInInventario ? "phi_iinv" : "phi" %>
 <% js_base_id = "#{prefix}-#{phi.id}" %>
+<% ordenado = phi.ordenado_for(isInInventario ? :inventario : :equipo) %>
 <div class="carta carta_show inventario-item" id="<%= js_base_id %>"
     data-categs="<%= item.categs.map(&:id).join(",") if item %>"
-    data-item-id="<%= item&.id %>">
+    data-item-id="<%= item&.id %>"
+    data-ordenado-id="<%= ordenado.id %>"
+    data-position="<%= ordenado.position %>">
   <div class="carta-header carta-header-small">
-      <%= render "personajes/show_position_controller",
-          position: phi.position,
-          input_prefix: "#{prefix}[#{phi.id}]",
-          id_prefix: "#{prefix}-#{phi.id}"
-      %>
+      <%= render "personajes/show_position_controller", id_prefix: "#{prefix}-#{phi.id}" %>
       <span class="carta-number">
         <input type="number" name="<%= prefix %>[<%=phi.id%>][cantidad]"
             value="<%= phi.cantidad %>" class="pj-cantidad autosave-input" id="<%=js_base_id%>-cantidad"
@@ -65,6 +64,7 @@
                   const card = this.closest('.carta');
                   const isEquipped = !card.querySelector(`#${card.id}-desequipar`).hidden;
                   const customitemInput = card.querySelector('.carta-customitem');
+                  const equipoCard = document.getElementById('phi-<%= phi.id %>');
                   const seq = nextSeq('<%= phi.id %>');
 
                   setItemCardStateToBoth(card, false);
@@ -72,6 +72,8 @@
                     '<%= update_field_personaje_path(phi.personaje, field: 'item_restaurar', target_id: phi.id) %>'
                     + '?cantidad=' + encodeURIComponent(card.querySelector('.pj-cantidad').value)
                     + '&is_equipped=' + (isEquipped ? '1' : '0')
+                    + '&inventario_position=' + encodeURIComponent(card.dataset.position)
+                    + (equipoCard ? '&equipo_position=' + encodeURIComponent(equipoCard.dataset.position) : '')
                     + (customitemInput ? '&customitem=' + encodeURIComponent(customitemInput.value)
                       : '&item_id=' + encodeURIComponent(card.dataset.itemId))
                     + '&seq=' + seq);
