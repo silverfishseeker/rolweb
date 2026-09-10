@@ -15,17 +15,18 @@
       <span class="carta-number">
         <input type="number" name="<%= prefix %>[<%=phi.id%>][cantidad]"
             value="<%= phi.cantidad %>" class="pj-cantidad autosave-input" id="<%=js_base_id%>-cantidad"
-            data-update-url="<%= update_field_personaje_path(phi.personaje, field: 'item_cantidad', target_id: phi.id) %>">
+            data-update-url="<%= update_field_personaje_path(phi.personaje, field: 'item_cantidad', target_id: phi.id) %>"
+            data-seq-key="cantidad-<%= phi.id %>">
       </span>
 
       <% if isInInventario %>
         <span data-label="Equipar">
           <button type="button" class="btn btn-small btn-primary item-equipar-btn" <%= "hidden" if phi.isEquipped %> id="<%=js_base_id%>-equipar"
-              onclick="equiparItem(this.closest('.carta'), true, '<%= update_field_personaje_path(phi.personaje, field: 'item_equipar', target_id: phi.id) %>')">
+              onclick="equiparItem(this.closest('.carta'), true, '<%= update_field_personaje_path(phi.personaje, field: 'item_equipar', target_id: phi.id) %>', <%= phi.id %>)">
             Equipar
           </button>
           <button type="button" class="btn btn-small btn-secondary item-desequipar-btn" <%= "hidden" unless phi.isEquipped %> id="<%=js_base_id%>-desequipar"
-              onclick="equiparItem(this.closest('.carta'), false, '<%= update_field_personaje_path(phi.personaje, field: 'item_equipar', target_id: phi.id) %>')">
+              onclick="equiparItem(this.closest('.carta'), false, '<%= update_field_personaje_path(phi.personaje, field: 'item_equipar', target_id: phi.id) %>', <%= phi.id %>)">
             Retirar
           </button>
         </span>
@@ -41,8 +42,13 @@
         <%= link_to item.nombre, item, class:"carta-title" %>
 
         <%= render "personajes/show_contadores", has_calculados: phi, nombre: prefix %>
+      <% elsif isInInventario %>
+        <input type="text" class="carta-customitem autosave-input" name="<%= prefix %>[<%=phi.id%>][customitem]"
+            id="<%=js_base_id%>-customitem" value="<%=phi.customitem.nombre%>"
+            data-update-url="<%= update_field_personaje_path(phi.personaje, field: 'item_customitem', target_id: phi.id) %>"
+            data-seq-key="customitem-<%= phi.id %>">
       <% else %>
-        <input type="text" class="carta-customitem" name="<%= prefix %>[<%=phi.id%>][customitem]" value="<%=phi.customitem.nombre%>">
+        <span class="carta-customitem" id="<%=js_base_id%>-customitem"><%= phi.customitem.nombre %></span>
       <% end %>
       <% if isInInventario %>
         <span data-label="Borrar" style="margin-left: auto;">

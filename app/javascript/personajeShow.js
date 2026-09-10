@@ -29,8 +29,7 @@ window.setItemCardStateToBoth = function(card, isDeleted) {
   if (card_inventory) window.setItemCardState(card_inventory, isDeleted);
 }
 
-window.equiparItem = function (card, equip, url) {
-  const phiId = extractId(card.id);
+window.equiparItem = function (card, equip, url, phiId) {
   const seq = nextSeq(phiId);
   card.querySelector(`#${card.id}-equipar`).hidden = equip;
   card.querySelector(`#${card.id}-desequipar`).hidden = !equip;
@@ -48,8 +47,10 @@ export function onTurboLoad() {
   document.addEventListener("input", (e) => {
     const input = e.target;
     if (input.classList.contains("autosave-input")) {
-      input.dataset.lastInput = Date.now(); // Used to block turbo stream updates while typing
-      fetch(input.dataset.updateUrl+"?value="+encodeURIComponent(input.value));
+      input.dataset.lastInput = Date.now();
+      let url = input.dataset.updateUrl + "?value=" + encodeURIComponent(input.value);
+      if (input.dataset.seqKey) url += "&seq=" + nextSeq(input.dataset.seqKey);
+      fetch(url);
     }
   });
 

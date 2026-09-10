@@ -4,7 +4,9 @@ const TYPING_GRACE_MS = 1500;
 
 Turbo.StreamActions.update_div = function () {
   const value = this.getAttribute("value");
+  const seqKey = this.getAttribute("seq_key");
   this.targetElements.forEach(div => {
+    if (!isFreshBroadcast(this, seqKey)) return;
     if (div.tagName === "INPUT" || div.tagName === "TEXTAREA" || div.tagName === "SELECT") {
       if (!(document.activeElement === div && // no interrumpir mientras se está escribiendo ahí
           Date.now() - (div.dataset.lastInput || 0) < TYPING_GRACE_MS))
@@ -17,8 +19,9 @@ Turbo.StreamActions.update_div = function () {
 
 Turbo.StreamActions.set_hidden = function () {
   const value = this.getAttribute("value") === "true";
+  const seqKey = this.getAttribute("seq_key");
   this.targetElements.forEach(el => {
-    if (isFreshBroadcast(this, el.id))
+    if (isFreshBroadcast(this, seqKey))
       el.hidden = el.id.endsWith("-desequipar") ? !value : value;
   });
 }
@@ -31,14 +34,15 @@ Turbo.StreamActions.toggle_class = function () {
 }
 
 Turbo.StreamActions.eliminar_item = function () {
+  const seqKey = this.getAttribute("seq_key");
   this.targetElements.forEach(card => {
-    if (isFreshBroadcast(this, card.id) && !card.classList.contains("pj-fila_borrada"))
+    if (isFreshBroadcast(this, seqKey) && !card.classList.contains("pj-fila_borrada"))
       card.remove();
   });
 }
 
 Turbo.StreamActions.upsert_item = function () {
-  if (isFreshBroadcast(this, this.getAttribute("target"))) {
+  if (isFreshBroadcast(this, this.getAttribute("seq_key"))) {
     if (this.targetElements.length > 0) {
       this.targetElements.forEach(card => window.setItemCardState(card, false));
     } else {
@@ -49,7 +53,8 @@ Turbo.StreamActions.upsert_item = function () {
 }
 
 Turbo.StreamActions.remove_div = function () {
+  const seqKey = this.getAttribute("seq_key");
   this.targetElements.forEach(el => {
-    if (isFreshBroadcast(this, el.id)) el.remove();
+    if (isFreshBroadcast(this, seqKey)) el.remove();
   });
 }

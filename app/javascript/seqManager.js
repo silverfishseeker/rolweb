@@ -13,15 +13,13 @@ export function extractId(elementId) {
   return elementId.match(/-(\d+)(?:-|$)/)?.[1];
 }
 
-export function isFreshBroadcast(streamEl, elementId) {
+export function isFreshBroadcast(streamEl, key) {
   const seq = streamEl.getAttribute("seq");
-  if (seq === null || seq === undefined) return true;
-  const id = extractId(elementId);
-  if (!id) return true;
+  if (seq === null || seq === undefined || !key) return true;
 
-  const current = lastSeq.get(id);
+  const current = lastSeq.get(key);
   const numSeq = Number(seq);
   if (current !== undefined && numSeq < current) return false;
-  lastSeq.set(id, numSeq);
+  lastSeq.set(key, numSeq);
   return true;
 }

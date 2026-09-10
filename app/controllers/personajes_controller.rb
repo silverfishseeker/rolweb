@@ -88,11 +88,11 @@ class PersonajesController < ModelController
 
 
   # Acciones de guardado automático en el show
-  def broadcast_update_div(target, value)
-    @x.broadcast_action_to(@x, action: "update_div", target: target, attributes: { value: value }, render: false)
+  def broadcast_update_div(target, value, seq: nil, seq_key: nil)
+    @x.broadcast_action_to(@x, action: "update_div", target: target, attributes: { value: value, seq: seq, seq_key: seq_key }, render: false)
   end
-  def broadcast_update_many_divs(targets, value)
-    @x.broadcast_action_to(@x, action: "update_div", targets: targets.map { |tg| "##{tg}" }.join(", "), attributes: { value: value }, render: false)
+  def broadcast_update_many_divs(targets, value, seq: nil, seq_key: nil)
+    @x.broadcast_action_to(@x, action: "update_div", targets: targets.map { |tg| "##{tg}" }.join(", "), attributes: { value: value, seq: seq, seq_key: seq_key }, render: false)
   end
 
   # Un ítem equipado se muestra dos veces (inventario y equipo), así que su contador
@@ -115,7 +115,7 @@ class PersonajesController < ModelController
       broadcast_upsert_item_copy(phi, "phi-#{phi.id}", isInInventario: false, container_id: "tab-equipo", seq: seq)
     else
       # Puede que antes de eliminarse estuviera equipado y ahora se restaure sin estarlo: si queda una copia congelada en la pestaña de equipo, ya no corresponde a nada real y hay que quitarla.
-      @x.broadcast_action_to(@x, action: "remove_div", target: "phi-#{phi.id}", render: false)
+      @x.broadcast_action_to(@x, action: "remove_div", target: "phi-#{phi.id}", attributes: { seq: seq, seq_key: phi.id }, render: false)
     end
   end
 
@@ -124,7 +124,7 @@ class PersonajesController < ModelController
       @x,
       action: "upsert_item",
       target: dom_id,
-      attributes: { container: container_id, seq: seq },
+      attributes: { container: container_id, seq: seq, seq_key: phi.id },
       partial: "personajes/show_item",
       locals: { phi: phi, isInInventario: isInInventario }
     )
@@ -201,7 +201,7 @@ class PersonajesController < ModelController
         @x,
         action: "eliminar_item",
         targets: "#phi-#{phi.id}, #phi_iinv-#{phi.id}",
-        attributes: { seq: params[:seq] },
+        attributes: { seq: params[:seq], seq_key: phi.id },
         render: false
       )
 
@@ -230,7 +230,12 @@ class PersonajesController < ModelController
       phi = @x.personajeHasItems.find(params[:target_id])
       phi.cantidad = value.to_i
       phi.save!
-      broadcast_update_many_divs(["phi-#{phi.id}-cantidad", "phi_iinv-#{phi.id}-cantidad"], phi.cantidad)
+      broadcast_update_many_divs(["phi-#{phi.id}-cantidad", "phi_iinv-#{phi.id}-cantidad"], phi.cantidad, seq: params[:seq], seq_key: "cantidad-#{phi.id}")
+
+    when "item_customitem"
+      phi = @x.personajeHasItems.find(params[:target_id])
+      phi.customitem.update!(nombre: value)
+      broadcast_update_many_divs(["phi-#{phi.id}-customitem", "phi_iinv-#{phi.id}-customitem"], phi.customitem.nombre, seq: params[:seq], seq_key: "customitem-#{phi.id}")
 
     when "item_crear_custom"
       phi = @x.personajeHasItems.new(cantidad: 1, isEquipped: false)
@@ -246,13 +251,13 @@ class PersonajesController < ModelController
         @x,
         action: "set_hidden",
         targets: "#phi_iinv-#{phi.id}-equipar, #phi_iinv-#{phi.id}-desequipar",
-        attributes: { value: phi.isEquipped, seq: params[:seq] },
+        attributes: { value: phi.isEquipped, seq: params[:seq], seq_key: phi.id },
         render: false
       )
       if phi.isEquipped
         broadcast_upsert_item_copy(phi, "phi-#{phi.id}", isInInventario: false, container_id: "tab-equipo", seq: params[:seq])
       else
-        @x.broadcast_action_to(@x, action: "remove_div", target: "phi-#{phi.id}", attributes: { seq: params[:seq] }, render: false)
+        @x.broadcast_action_to(@x, action: "remove_div", target: "phi-#{phi.id}", attributes: { seq: params[:seq], seq_key: phi.id }, render: false)
       end
 
     else
