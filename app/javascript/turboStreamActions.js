@@ -1,11 +1,14 @@
 import { isFreshBroadcast } from "./seqManager.js";
 
+const TYPING_GRACE_MS = 1500;
+
 Turbo.StreamActions.update_div = function () {
   const value = this.getAttribute("value");
   this.targetElements.forEach(div => {
     if (div.tagName === "INPUT" || div.tagName === "TEXTAREA" || div.tagName === "SELECT") {
-      if (document.activeElement === div) return; // no interrumpir mientras se está escribiendo ahí
-      div.value = value;
+      if (!(document.activeElement === div && // no interrumpir mientras se está escribiendo ahí
+          Date.now() - (div.dataset.lastInput || 0) < TYPING_GRACE_MS))
+        div.value = value;
     } else {
       div.textContent = value;
     }

@@ -91,6 +91,23 @@ class PersonajesController < ModelController
   def broadcast_update_div(target, value)
     @x.broadcast_action_to(@x, action: "update_div", target: target, attributes: { value: value }, render: false)
   end
+  def broadcast_update_many_divs(targets, value)
+    @x.broadcast_action_to(@x, action: "update_div", targets: targets.map { |tg| "##{tg}" }.join(", "), attributes: { value: value }, render: false)
+  end
+
+  # Un ítem equipado se muestra dos veces (inventario y equipo), así que su contador
+  # necesita actualizar ambas copias; clase/habilidad solo tienen una.
+  def broadcast_contador(calculado, suffix, value)
+    owner = calculado.hasCalculados
+    case owner
+    when Pj::PersonajeHasItem
+      broadcast_update_many_divs(["phi_iinv-#{owner.id}-#{suffix}", "phi-#{owner.id}-#{suffix}"], value)
+    when Pj::PersonajeHasClase
+      broadcast_update_div("phc-#{owner.id}-#{suffix}", value)
+    when Pj::PersonajeHasHabilidad
+      broadcast_update_div("phh-#{owner.id}-#{suffix}", value)
+    end
+  end
 
   def broadcast_upsert_item(phi, seq: nil)
     broadcast_upsert_item_copy(phi, "phi_iinv-#{phi.id}", isInInventario: true, container_id: "inventario-items", seq: seq)
@@ -168,14 +185,14 @@ class PersonajesController < ModelController
       libre = calculado.calculado_libre || calculado.build_calculado_libre
       libre.base = value.to_i
       calculado.save!
-      broadcast_update_div("contador-base-#{calculado.id}", calculado.value)
+      broadcast_contador(calculado, "contador-base-#{calculado.id}", calculado.value)
 
     when "contador_rango"
       calculado = find_contador(params[:target_id])
       calculado.build_rango if calculado.rango.nil?
       calculado.rango.valor = value.to_i
       calculado.save!
-      broadcast_update_div("contador-rango-#{calculado.id}", calculado.rango.valor)
+      broadcast_contador(calculado, "contador-rango-#{calculado.id}", calculado.rango.valor)
 
     when "item_eliminar"
       phi = @x.personajeHasItems.find(params[:target_id])
@@ -245,7 +262,7 @@ class PersonajesController < ModelController
     calculado = Pj::Calculado.find_by(id: calculado_id)
     owner = calculado&.hasCalculados
     valid = case owner
-      when Pj::PersonajeHasClase, Pj::PersonajeHasHabilidad
+      when Pj::PersonajeHasClase, Pj::PersonajeHasHabilidad, Pj::PersonajeHasItem
         owner.personaje_id == @x.id
       else
         false
@@ -260,9 +277,7 @@ class PersonajesController < ModelController
     if phi
       phi.cantidad += cantidad
       phi.save!
-      @x.broadcast_action_to(@x, action: "update_div",
-          targets: "#phi-#{phi.id}-cantidad, #phi_iinv-#{phi.id}-cantidad",
-          attributes: { value: phi.cantidad }, render: false)
+      broadcast_update_many_divs(["phi-#{phi.id}-cantidad", "phi_iinv-#{phi.id}-cantidad"], phi.cantidad)
     else
       phi = @x.personajeHasItems.create!(
         item: item,

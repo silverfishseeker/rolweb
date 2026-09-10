@@ -16,7 +16,7 @@
 
       <%= link_to phc.clase.nombre, phc.clase, class:"carta-title" %>
 
-      <%= render "personajes/show_contadores", calculados: phc.calculados, prefix: "phc[#{phc.id}]" %>
+      <%= render "personajes/show_contadores", has_calculados: phc, nombre: "phc" %>
   </div>
   
   <div class="full_container">

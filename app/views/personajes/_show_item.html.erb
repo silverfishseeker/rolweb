@@ -39,10 +39,7 @@
 
         <%= link_to item.nombre, item, class:"carta-title" %>
 
-        <%# Cantidad y posición aún no están migradas al autoguardado (equipar/eliminar ya sí).
-            "personajes/show_contadores" ahora asume autoguardado (rutas update_contador_base/rango sin
-            comprobar el dueño para ítems), así que de momento se deja comentado para no romper nada. %>
-        <%# render "personajes/show_contadores", calculados: phi.calculados, prefix: "#{prefix}[#{phi.id}]" %>
+        <%= render "personajes/show_contadores", has_calculados: phi, nombre: prefix %>
       <% else %>
         <input type="text" class="carta-customitem" name="<%= prefix %>[<%=phi.id%>][customitem]" value="<%=phi.customitem.nombre%>">
       <% end %>

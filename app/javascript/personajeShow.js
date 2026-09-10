@@ -48,6 +48,7 @@ export function onTurboLoad() {
   document.addEventListener("input", (e) => {
     const input = e.target;
     if (input.classList.contains("autosave-input")) {
+      input.dataset.lastInput = Date.now(); // Used to block turbo stream updates while typing
       fetch(input.dataset.updateUrl+"?value="+encodeURIComponent(input.value));
     }
   });

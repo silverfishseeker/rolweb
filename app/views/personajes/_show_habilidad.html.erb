@@ -15,7 +15,7 @@
 
       <%= link_to habil.nombre, habil, class:"carta-title" %>
 
-      <%= render "personajes/show_contadores", calculados: phh.calculados, prefix: "phh[#{phh.id}]" %>
+      <%= render "personajes/show_contadores", has_calculados: phh, nombre: "phh" %>
   </div>
 
   <div class="full_container">
