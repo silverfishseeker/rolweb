@@ -3,15 +3,13 @@
 
 <%= turbo_stream_from @x %>
 
-<%= form_with(model: @x, html: { multipart: true, class: "pjv-form"}) do |f| %>
-  <%= hidden_field_tag :form_type, Personaje::FORM_TYPES[:show] %>
-
+<div class="pjv-form">
   <div class="pjv-header">
     <h1> <%=@x.nombre%></h1>
 
     <div class="options">
-      <%= f.submit "Guardar", class: "btn btn-primary" %>
-      <%= f.submit "Editar", name: "go_to_edit", class: "btn btn-primary" %>
+      <span id="save-status" class="pjv-save_status" hidden></span>
+      <%= link_to "Editar", edit_personaje_path(@x), class: "btn btn-primary" %>
     </div>
   </div>
   <p class="pjv-nivel"><b> Nivel <%= @x.nivel %> </b></p>
@@ -252,7 +250,7 @@
               </div>
             <% end%>
           </div>
-          <h3> Oro: <%= f.number_field :oro, step: 0.01,
+          <h3> Oro: <%= number_field_tag "personaje[oro]", @x.oro, step: 0.01,
                 class: "carta-number carta-coste pjv-modifier autosave-input",
                 id: "personaje-oro",
                 data: {
@@ -265,7 +263,7 @@
         </div>
       </div>
 
-      <div class="white_bk"><%= f.rich_text_area :descripcion,
+      <div class="white_bk"><%= rich_text_area "personaje", :descripcion, object: @x,
             class: "trix-content autosave-trix",
             id: "personaje-descripcion",
             data: {
@@ -283,5 +281,4 @@
       </p>
     </div>
   </div>
-
-<% end %>
+</div>

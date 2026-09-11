@@ -62,7 +62,6 @@ class PersonajesController < ModelController
     super do
       raise "No tienes permiso para editar este personaje." unless check_ownership
       process_associations_for(@x)
-      edit_personaje_path(@x) if params[:go_to_edit]
     end
   end
 
@@ -425,15 +424,6 @@ class PersonajesController < ModelController
     ]
   end
 
-  def cleanup_estados_alterados(estadosalterados)
-    estadosalterados&.each_value_with_object({}) do |attrs, cleaned|
-      id = attrs[:estadoalterado_id]
-      if !cleaned[id] || attrs[:_destroy] != "1" 
-        cleaned[id] = { valor: attrs[:valor], _destroy: attrs[:_destroy] }
-      end
-    end
-  end
-  
   # Procesa estados alterados para el personaje o una parte del cuerpo
   def process_estados_alterados(estadosalterados, target)
     return unless estadosalterados
@@ -495,87 +485,9 @@ class PersonajesController < ModelController
 
   # Procesa los parámetros complejos y actualiza/crea asociaciones en @personaje (que ya existe en @x)
   def process_associations_for(personaje)
-    raise "Tipo de formulario no reconocido" unless Personaje::FORM_TYPES.values.include?(params[:form_type])
     return unless require_level :player ||
         (require_level :admin if params[:user_id].present? && params[:user_id].to_i != current_user.id)
-    if params[:form_type] == Personaje::FORM_TYPES[:edit]
-      edit_process_associations_for(personaje)
-    else
-      show_process_associations_for(personaje)
-    end
-  end
 
-
-  def show_process_associations_for(personaje)
-    # ESTADISTICAS
-    params[:estadistics].each do |id, attrs|
-      stat = personaje.estadistics.find(id.to_i)
-      stat.modificable.active_mod = attrs[:active_mod].to_i
-      stat.save!
-    end
-
-    # ESTADO
-    params[:calculados].each do |id, attrs|
-      calculado = personaje.calculados.find(id.to_i)
-      calculado.modificable.active_mod = attrs[:active_mod].to_i
-      if attrs[:rango].present?
-        calculado.rango.valor = attrs[:rango].to_i
-      end
-      calculado.save!
-    end
-
-    # PARTES DEL CUERPO
-    params[:parte_cuerpos].each do |id, attrs|
-      pc = personaje.parteCuerpos.find(id.to_i)
-      pc.modificable.active_mod = attrs[:active_mod].to_i
-      pc.saludact = attrs[:saludact].to_i
-      process_estados_alterados attrs[:has_estadoalterados], pc
-      pc.save!
-    end
-    
-    # CLASES
-    params[:phc]&.each do |id, attrs|
-      phc = personaje.personajeHasClases.find(id.to_i)
-      process_contadores_for attrs[:calculados], phc
-      phc.save!
-    end
-
-    # HABILIDADES
-    params[:phh]&.each do |id, attrs|
-      phh = personaje.personajeHasHabilidads.find(id.to_i)
-      process_contadores_for attrs[:calculados], phh
-      phh.save!
-    end
-
-    # ITEMS
-    params[:phi_iinv]&.each do |id, attrs|
-      phi = personaje.personajeHasItems.find(id.to_i)
-      equiped_attrs = params.dig(:phi, id)
-      if attrs[:_destroy] == "1" || equiped_attrs && equiped_attrs[:_destroy] == "1"
-        phi.destroy
-        next
-      end
-      attrs = equiped_attrs || attrs
-      phi.isEquipped = attrs[:isEquipped] == "1"
-      phi.cantidad = attrs[:cantidad].to_i
-      process_contadores_for attrs[:calculados], phi
-      phi.customitem.nombre = attrs[:customitem] if attrs[:customitem].present?
-      phi.save!
-    end
-    params[:new_custom_item]&.each do |id, attrs|
-      next if attrs[:_destroy] == "1"
-      phi = personaje.personajeHasItems.build(
-        cantidad: attrs[:cantidad].to_i,
-        isEquipped: attrs[:isEquipped] == "1",
-        item: nil
-      )
-      phi.build_customitem(nombre: attrs[:customitem])
-      phi.save!
-    end
-  end
-
-  def edit_process_associations_for(personaje)
-    
     # PICTURE
     if params[:picture].present?
       pic_params = params[:picture]

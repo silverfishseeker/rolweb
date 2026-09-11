@@ -1,7 +1,7 @@
 
 import { adjustInputWidth } from "./utils.js";
 import { initTabs } from "./tabs.js";
-import { warnUnsaved } from "./warnUnsaved.js";
+import { initSaveStatus, refreshSaveStatus } from "./saveStatus.js";
 import { createCloseModalHandler } from "./modals.js";
 import { nextSeq, extractId } from "./seqManager.js";
 
@@ -40,7 +40,7 @@ window.equiparItem = function (card, equip, url, phiId) {
 export function onTurboLoad() {
 
   // Aviso de cambios sin guardar
-  warnUnsaved(document.querySelector(".pjv-form"));
+  initSaveStatus(document.getElementById("save-status"));
 
 
   // Autoguardado
@@ -67,6 +67,9 @@ export function onTurboLoad() {
 
     saveButton.addEventListener("click", () => {
       if (saveButton.disabled) return;
+      editor.dataset.dirty = "0";
+      saveButton.disabled = true;
+      refreshSaveStatus();
       fetch(editor.dataset.updateUrl, {
         method: "POST",
         headers: {
@@ -76,8 +79,6 @@ export function onTurboLoad() {
         body: "value=" + encodeURIComponent(editor.value)
       }).then(() => {
         editor.defaultValue = editor.value; // nueva base para detectar cambios futuros
-        editor.dataset.dirty = "0";
-        saveButton.disabled = true;
       });
     });
   });
@@ -87,7 +88,6 @@ export function onTurboLoad() {
     editor.dataset.dirty = "1";
     editor.toolbarElement.querySelector(".pjv-trix-save_btn").disabled = false;
   });
-
 
   // Data modifiers
   document.addEventListener("input", (e) => {

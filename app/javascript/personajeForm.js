@@ -6,8 +6,11 @@ import { warnUnsaved, markUnsaved } from "./warnUnsaved.js";
 
 export function onTurboLoad() {
 
-  // Aviso de cambios sin guardar
-  warnUnsaved(document.querySelector(".pj-form"));
+  warnUnsaved((setCantLeave) => {
+    setCantLeave(true);
+    document.querySelector(".pj-form").querySelector('input[type="submit"]')
+      .addEventListener("click", () => setCantLeave(false));
+  });
 
   //tabs
   initTabs(document.querySelector('.pj-form'));  

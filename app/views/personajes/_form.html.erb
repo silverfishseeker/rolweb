@@ -39,8 +39,6 @@
 
 <div>
   <%= form_with(model: @x, html: { multipart: true, class: "pj-form"}) do |f| %>
-    <%= hidden_field_tag :form_type, Personaje::FORM_TYPES[:edit] %>
-
     <% if @show_user %>
       <label>
         <%= f.label :user_id, "Usuario" %>

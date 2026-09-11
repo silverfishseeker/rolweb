@@ -382,7 +382,15 @@ fieldset[disabled] .btn-primary:hover {
     margin-top: auto;
     margin-left: auto;
     margin-right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
+}
+
+.pjv-save_status {
+  font-style: italic;
+  color: var(--c_grey);
 }
 
 .pjv-nivel{
@@ -588,6 +596,9 @@ $min-total-width: $min-width * 3 + 10px;
   &:not(:disabled) {
     box-shadow: none;
     cursor: pointer;
+    border: 2px solid var(--c_black);
+    border-radius: 4px;
+    font-weight: bold;
   }
 }
 

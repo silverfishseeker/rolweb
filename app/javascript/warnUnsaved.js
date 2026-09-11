@@ -6,17 +6,11 @@ export function markUnsaved() {
   cantLeave = true;
 }
 
-export function warnUnsaved(form) {
+// setup recibe un setter y engancha sus propios listeners para llamarlo cuando corresponda
+export function warnUnsaved(setup) {
   cantLeave = false;
 
-  form.addEventListener("input", () => { cantLeave = true; });
-  form.addEventListener("change", () => { cantLeave = true; });
-
-  form.querySelectorAll('input[type="submit"]').forEach(button => {
-    button.addEventListener("click", () => {
-      cantLeave = false;
-    });
-  });
+  setup((value) => { cantLeave = value; });
 
   // Con turbo no se quitan los listeners al navegar, los quitamos si hay uno anterior
   if (currentBeforeUnloadListener) window.removeEventListener("beforeunload", currentBeforeUnloadListener);
