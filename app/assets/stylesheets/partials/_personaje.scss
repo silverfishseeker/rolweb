@@ -570,6 +570,17 @@ $min-total-width: $min-width * 3 + 10px;
   }
 }
 
+// Botón de guardar dentro de la barra de Trix: hundido y bloqueado sin cambios pendientes
+.pjv-trix-save_btn {
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4);
+  cursor: not-allowed;
+
+  &:not(:disabled) {
+    box-shadow: none;
+    cursor: pointer;
+  }
+}
+
 .pjv-inventario {
   .pj-modal {
     width: 700px;

@@ -232,14 +232,19 @@
                 data: {
                   update_url: update_field_personaje_path(@x, field: "oro")
                 } %> </h3>
-          <div class="white_bk no_trix_toobar"><%= f.rich_text_area :descripcion %></div>
+          <%# Hueco libre aquí %>
         </div>
         <div class="pjv-subcolumn pjv-subcolumn-big">
           <%= render "shared/image_with_link", image: @x.picture&.image, cssclass: "pjv-image" %>
         </div>
       </div>
-      
-      <div class="white_bk"><%= f.rich_text_area :descripcion2 %></div>
+
+      <div class="white_bk"><%= f.rich_text_area :descripcion,
+            class: "trix-content autosave-trix",
+            id: "personaje-descripcion",
+            data: {
+              update_url: update_field_personaje_path(@x, field: "descripcion")
+            } %></div>
       <h4>Artículos relacionados</h4>
       <p>
         <% if @x.cuentos.any? %>

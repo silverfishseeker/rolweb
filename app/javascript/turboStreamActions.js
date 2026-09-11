@@ -17,6 +17,16 @@ Turbo.StreamActions.update_div = function () {
   });
 }
 
+Turbo.StreamActions.update_rich_text = function () {
+  const value = this.getAttribute("value");
+  this.targetElements.forEach(editor => {
+    editor.value = value; // también actualiza defaultValue, para no confundir esto con una edición real
+    editor.dataset.dirty = "0";
+    const saveButton = editor.toolbarElement.querySelector(".pjv-trix-save_btn");
+    if (saveButton) saveButton.disabled = true;
+  });
+}
+
 Turbo.StreamActions.set_hidden = function () {
   const value = this.getAttribute("value") === "true";
   const seqKey = this.getAttribute("seq_key");

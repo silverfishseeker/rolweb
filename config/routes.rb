@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     post :add_to_personaje, on: :collection
     post :add_items_to_personaje, on: :collection
     member do
-      get "update_field/:field(/:target_id)", action: :update_field, as: :update_field
+      match "update_field/:field(/:target_id)", action: :update_field, via: [:get, :post], as: :update_field
     end
   end
   

@@ -7,7 +7,7 @@ class PersonajesController < ModelController
     params.require(:personaje).permit(
       :nombre, :is_public, :nivel_clases, :nivel_habilidades,
       :nivel_estadisticas, :nivel_otro, :picture_id, :descripcion,
-      :descripcion2, :oro, :personajegroup_id, :user_id, cuento_ids: [])
+      :oro, :personajegroup_id, :user_id, cuento_ids: [])
   end
 
   configure_access level: :player
@@ -215,6 +215,16 @@ class PersonajesController < ModelController
       @x.save!
       broadcast_update_div("personaje-oro", @x.oro)
 
+    when "descripcion"
+      @x.descripcion = value
+      @x.save!
+      @x.broadcast_action_to(
+        @x,
+        action: "update_rich_text",
+        target: "personaje-descripcion",
+        attributes: { value: @x.descripcion.to_trix_html },
+        render: false)
+    
     when "contador_base"
       calculado = find_contador(params[:target_id])
       libre = calculado.calculado_libre || calculado.build_calculado_libre

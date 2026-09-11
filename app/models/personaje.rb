@@ -2,7 +2,6 @@ class Personaje < ApplicationRecord
   # attributes: nombre, nivel_clases, nivel_habilidades, nivel_estadisticas,
   #   nivel_otro, is_public, oro
   has_rich_text :descripcion
-  has_rich_text :descripcion2
 
   belongs_to :user
   belongs_to :personajegroup, optional: true

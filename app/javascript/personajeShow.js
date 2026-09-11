@@ -54,6 +54,40 @@ export function onTurboLoad() {
     }
   });
 
+  // Guardado de descripciones. Botón dedicado en vez de autoguardado.
+  document.querySelectorAll(".autosave-trix").forEach(editor => {
+    const buttonRow = editor.toolbarElement.querySelector(".trix-button-row");
+    const saveButton = document.createElement("button");
+    saveButton.type = "button";
+    saveButton.className = "trix-button pjv-trix-save_btn";
+    saveButton.title = "Guardar";
+    saveButton.textContent = "Guardar";
+    saveButton.disabled = true;
+    buttonRow.insertBefore(saveButton, buttonRow.firstChild);
+
+    saveButton.addEventListener("click", () => {
+      if (saveButton.disabled) return;
+      fetch(editor.dataset.updateUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: "value=" + encodeURIComponent(editor.value)
+      }).then(() => {
+        editor.defaultValue = editor.value; // nueva base para detectar cambios futuros
+        editor.dataset.dirty = "0";
+        saveButton.disabled = true;
+      });
+    });
+  });
+  document.addEventListener("trix-change", (e) => {
+    const editor = e.target;
+    if (editor.value === editor.defaultValue) return; // Trix dispara "trix-change" también al cargar el contenido inicial
+    editor.dataset.dirty = "1";
+    editor.toolbarElement.querySelector(".pjv-trix-save_btn").disabled = false;
+  });
+
 
   // Data modifiers
   document.addEventListener("input", (e) => {
