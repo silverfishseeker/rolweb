@@ -1,0 +1,27 @@
+<%# Expected params: hea, personaje %>
+<tr id="hea-<%= hea.id %>">
+  <% if hea.libre? %>
+    <td data-label="" colspan="2">
+      <input type="text" class="autosave-input" id="hea-<%= hea.id %>-libre"
+          value="<%= hea.origen.contenido %>"
+          data-update-url="<%= update_field_personaje_path(personaje, field: "estado_alt_libre", target_id: hea.id) %>">
+    </td>
+  <% else %>
+    <td data-label="Estado"><%= hea.origen.nombre %></td>
+    <td data-label="Valor">
+      <% if hea.origen.isNumeric %>
+        <input type="number" class="autosave-input" id="hea-<%= hea.id %>-valor"
+            value="<%= hea.valor %>"
+            data-update-url="<%= update_field_personaje_path(personaje, field: "estado_alt_valor", target_id: hea.id) %>">
+      <% else %>
+        —
+      <% end %>
+    </td>
+  <% end %>
+  <td data-label="Eliminar">
+    <span class="btn btn-small btn-danger estado-eliminar-btn"
+        onclick="fetch('<%= update_field_personaje_path(personaje, field: "estado_alt_eliminar", target_id: hea.id) %>')">
+      Eliminar
+    </span>
+  </td>
+</tr>

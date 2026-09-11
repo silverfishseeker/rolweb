@@ -2,6 +2,86 @@
 <div class="carta-grid_container carta-grid_container_form_habilidad"
     id="habilidades-list-<%= clase_id %>-<%= destroy %>">
   <% phHabilidades.each do |phh| %>
-    <%= render "form_habilidad", phh: phh, clase_id: clase_id, destroy: destroy %>
+    <% habilidad = phh.habilidad %>
+    <% divID = "habilidad_#{clase_id}-#{habilidad.id}" %>
+    <% base_name = "phhs[#{clase_id}-#{habilidad.id}]" %>
+    <% initial_text = phh.sobreescritura.presence || habilidad.efecto %>
+    <fieldset class="carta carta_form carta_form_habilidad" id="<%= divID %>" <%= "disabled" if destroy == "1" %>>
+      <input type="hidden" name="<%= base_name %>[habilidad_id]" value="<%= habilidad.id %>">
+      <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
+      <div id="original-efecto-<%= divID %>" style="display:none"><%= habilidad.efecto %></div>
+
+      <div class="carta-header carta-header_form">
+        <p class="carta-number carta-level">
+            <%= habilidad.nivel %>
+        </p>
+        <%= image_tag habilidad.tipoImagen, class: "carta-isactive" %>
+        <div class="carta-add_buttom"
+            data-carta_id="<%= divID %>"
+            data-alive_container="habilidades-list-<%= clase_id %>-0"
+            data-destroy_container="habilidades-list-<%= clase_id %>-1" >
+          <%= destroy == "1" ? "+" : "-" %>
+        </div>
+      </div>
+
+      <div class="carta-header carta-header_form">
+        <%= link_to habilidad.nombre, habilidad, class:"carta-title" %>
+      </div>
+
+      <div class="carta-subtitles">
+        <% habilidad.categs.each do |ct| %>
+            <%= link_to ct.nombre, ct %>
+        <% end %>
+        <% habilidad.mobs.each do |mb| %>
+            <%= link_to mb.nombre, mb %>
+        <% end %>
+      </div>
+
+      <div class="carta-description" id="efecto-modal-<%= divID %>">
+          <%= initial_text %>
+      </div>
+
+      <%= render "shared/modal",
+                buttom_content: "Editar texto de habilidad",
+                buttom_extra_css: "open_modal-habilidad",
+                header_text: "Editando #{habilidad.nombre}",
+                index: divID,
+                default_close: false,
+                close_buttom_extra_css: "modal-close-sobreescritura" do %>
+        <%= render "form_sobreescritura", base_name: base_name, id: divID, initial_text: initial_text %>
+      <% end %>
+
+
+      <%= render "shared/modal",
+                buttom_content: "Contadores",
+                buttom_extra_css: "open_modal-habilidad",
+                header_text: "Editando contadores de #{habilidad.nombre}",
+                index: divID + "-calculados",
+                close_buttom_extra_css: "" do %>
+        <%= render "personajes/form_has_calculados", hasCalcs: phh, prefix: "#{base_name}", html_id: divID + "-calculados" %>
+      <% end %>
+
+
+      <%= render "shared/modal",
+                buttom_content: "Cambiar clase",
+                buttom_extra_css: "open_modal-habilidad",
+                header_text: "Editando #{habilidad.nombre}",
+                index: divID + "-clase",
+                close_buttom_extra_css: "" do %>
+        <button type="button" class="btn btn-primary btn-small boton_reseteo_clase"
+            data-id_select="<%= divID %>-clase" data-id_clase="<%= clase_id %>">
+        Resetear Clase
+        </button>
+        <br>
+        <br>
+        <select name="<%= base_name %>[clase_id]" id="<%= divID %>-clase">
+          <% Clase.order(:nombre).each do |clase| %>
+            <option value="<%= clase.id %>" <%= "selected" if clase.id == clase_id %>>
+              <%= clase.nombre %>
+            </option>
+          <% end %>
+        </select>
+        <% end %>
+    </fieldset>
   <% end %>
 </div>

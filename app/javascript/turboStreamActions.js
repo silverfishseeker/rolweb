@@ -72,6 +72,14 @@ Turbo.StreamActions.upsert_item = function () {
   }
 }
 
+// Solo inserta si el elemento aún no existe (idempotente ante un broadcast duplicado/repetido).
+Turbo.StreamActions.append_row = function () {
+  if (this.targetElements.length === 0) {
+    const container = document.getElementById(this.getAttribute("container"));
+    if (container) container.appendChild(this.templateContent);
+  }
+}
+
 Turbo.StreamActions.remove_div = function () {
   const seqKey = this.getAttribute("seq_key");
   this.targetElements.forEach(el => {

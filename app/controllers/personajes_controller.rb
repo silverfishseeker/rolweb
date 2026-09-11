@@ -152,6 +152,21 @@ class PersonajesController < ModelController
   rescue ActiveRecord::RecordNotUnique # Si ya había otro en la posición, no lo movemos
   end
 
+  def estado_alt_dom_key(owner)
+    owner.is_a?(Personaje) ? "personaje" : "pc-#{owner.id}"
+  end
+
+  def estado_alt_belongs_to_x?(hea)
+    hea.target.is_a?(Personaje) ? hea.target_id == @x.id : hea.target.personaje_id == @x.id
+  end
+
+  def broadcast_estado_alt_summary(owner)
+    broadcast_update_div(
+      "resumen-#{estado_alt_dom_key(owner)}",
+      owner.hasEstadoalterados.map { |hea|
+        hea.libre? ? hea.origen.contenido : (hea.origen.isNumeric ? "#{hea.origen.nombre} #{hea.valor}" : hea.origen.nombre)
+      }.join(", "))
+  end
 
   def dom_id_for(ordenado)
     owner = ordenado.ordenable
@@ -321,6 +336,45 @@ class PersonajesController < ModelController
         moved: dom_id_for(low), moved_position: low.position,
         before: dom_id_for(high), before_position: high.position
       }, render: false)
+
+    when "estado_alt_crear"
+      owner = params[:owner_id].present? ? @x.parteCuerpos.find(params[:owner_id]) : @x
+      origen = params[:estadoalterado_id].present? ?
+        Estadoalterado.find(params[:estadoalterado_id]) :
+        Pj::EstadoalteradoLibre.new(contenido: "Nuevo estado personalizado")
+      hea = owner.hasEstadoalterados.create!(origen: origen, valor: (0 if origen.is_a?(Estadoalterado) && origen.isNumeric))
+      @x.broadcast_action_to(
+        @x,
+        action: "append_row",
+        target: "hea-#{hea.id}",
+        attributes: { container: "estados-body-#{estado_alt_dom_key(hea.target)}" },
+        partial: "personajes/show_estado_alterado_row",
+        locals: { hea: hea, personaje: @x }
+      )
+      broadcast_estado_alt_summary(hea.target)
+
+    when "estado_alt_valor"
+      hea = Pj::HasEstadoalterado.find(params[:target_id])
+      raise ActiveRecord::RecordNotFound unless estado_alt_belongs_to_x?(hea)
+      hea.valor = value.to_i
+      hea.save!
+      broadcast_update_div("hea-#{hea.id}-valor", hea.valor, seq: params[:seq], seq_key: "estado_alt-valor-#{hea.id}")
+      broadcast_estado_alt_summary(hea.target)
+
+    when "estado_alt_libre"
+      hea = Pj::HasEstadoalterado.find(params[:target_id])
+      raise ActiveRecord::RecordNotFound unless estado_alt_belongs_to_x?(hea)
+      hea.origen.update!(contenido: value)
+      broadcast_update_div("hea-#{hea.id}-libre", value, seq: params[:seq], seq_key: "estado_alt-libre-#{hea.id}")
+      broadcast_estado_alt_summary(hea.target)
+
+    when "estado_alt_eliminar"
+      hea = Pj::HasEstadoalterado.find(params[:target_id])
+      raise ActiveRecord::RecordNotFound unless estado_alt_belongs_to_x?(hea)
+      owner = hea.target
+      hea.destroy
+      @x.broadcast_action_to(@x, action: "remove_div", target: "hea-#{hea.id}", attributes: {}, render: false)
+      broadcast_estado_alt_summary(owner)
 
     else
       raise ActiveRecord::RecordNotFound, "Opción de actualización de campo desconocida: #{params[:field]}"

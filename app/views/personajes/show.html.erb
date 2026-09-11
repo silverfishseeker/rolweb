@@ -1,5 +1,4 @@
-<% importJS "personajeShow", "modals", "estadosAlterados" %>
-<%= render "personajes/estadoalterado-template" %> <%# Requerido por estadosAlterados %>
+<% importJS "personajeShow", "modals" %>
 <% content_for :main_content_class, 'main-content-margin_reduced' %>
 
 <%= turbo_stream_from @x %>
@@ -75,7 +74,15 @@
         </div>
       </div>
       <div class="pjv-section" id="parte-cuerpos-body">
-        <h3>Cuerpo</h3>
+        <div class="pjv-cuerpo_header">
+          <h3>Cuerpo</h3>
+          <%= render "personajes/show_estados_alterados",
+                owner: @x, personaje: @x,
+                buttom_content: image_tag("edit.png", alt: "Editar"),
+                buttom_extra_css: "btn-icon",
+                horizontal: true
+          %>
+        </div>
         <div class="pjv-vars_container pjv-vars_container-cuerpo">
           <% @x.parteCuerpos.each do |pc| %>
             <div class="pjv-var pjv-var-cuerpo
@@ -86,9 +93,8 @@
               </span>
               <span>
                 <span class="pjv-var-cuerpo-estados_alterados">
-                  <%= render "personajes/estados_alterados_parte_cuerpo",
-                    index: pc.id,
-                    target: pc,
+                  <%= render "personajes/show_estados_alterados",
+                    owner: pc, personaje: @x,
                     buttom_content: image_tag("edit.png", alt: "Editar"),
                     buttom_extra_css: "btn-icon",
                     horizontal: true
@@ -154,7 +160,27 @@
                 @personaje_has_habilidads.select { |phh| phh.habilidad.tipo == 1 }
               ).sort_by(&:ordenado_position).each do |phc_phh| %>
               <% if phc_phh.is_a?(Pj::PersonajeHasClase) %>
-                <%= render "personajes/show_clase", phc: phc_phh %>
+                <div class="carta carta_show" id="phc-<%= phc_phh.id %>" data-ordenado-id="<%= phc_phh.ordenado_for.id %>">
+                  <div class="carta-header carta-header-small">
+                      <%= render "personajes/show_position_controller", id_prefix: "phc-#{phc_phh.id}" %>
+
+                      <p class="carta-number carta-level">
+                          <%= phc_phh.nivel %>
+                      </p>
+
+                      <div class="carta-image carta-image-icon">
+                        <%= render "shared/image", image: phc_phh.clase.image %>
+                      </div>
+
+                      <%= link_to phc_phh.clase.nombre, phc_phh.clase, class:"carta-title" %>
+
+                      <%= render "personajes/show_contadores", has_calculados: phc_phh, nombre: "phc" %>
+                  </div>
+
+                  <div class="full_container">
+                    <%= render "clases/clase", clase: phc_phh.clase, sobreescritura: phc_phh.sobreescritura %>
+                  </div>
+                </div>
               <% else %>
                 <%= render "personajes/show_habilidad", phh: phc_phh %>
               <% end %>

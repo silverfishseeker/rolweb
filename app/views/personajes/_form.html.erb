@@ -1,6 +1,40 @@
 <%# expected params: @x (Personaje)%>
 <% importJS "personajeForm", "modals", "estadosAlterados" %>
-<%= render "personajes/estadoalterado-template" %> <%# Requerido por estadosAlterados %>
+<%# Requerido por estadosAlterados %>
+<!-- ================= AÑADIR ESTADO ALTERADO ================= -->
+<script type="text/template" id="estadoalterado-template">
+  <tr data-id="__id__">
+    <td data-label="Estado">
+      <select name="<%= "__nombre_input_base__[__id__][estadoalterado_id]" %>">
+        <% Estadoalterado.order(:nombre).each do |ea| %>
+          <option value="<%= ea.id %>"
+                data-is-numeric="<%= ea.isNumeric %>">
+            <%= ea.nombre %>
+          </option>
+        <% end %>
+      </select>
+    </td>
+    <td data-label="Valor">
+      <input type="number" name="<%= "__nombre_input_base__[__id__][valor]" %>" value="0">
+    </td>
+    <td data-label="Eliminar" class="checkbox-danger">
+      <input type="checkbox" name="<%= "__nombre_input_base__[__id__][_destroy]" %>" value="1">
+    </td>
+  </tr>
+</script>
+
+  <!-- ================= AÑADIR ESTADO ALTERADO LIBRE ================= -->
+
+<script type="text/template" id="estadoalterado-template-libre">
+  <tr data-id="__id__">
+    <td data-label="" colspan="2">
+      <input type="text" name="__nombre_input_base__[__id__][libre]">
+    </td>
+    <td data-label="Eliminar" class="checkbox-danger">
+      <input type="checkbox" name="__nombre_input_base__[__id__][_destroy]" value="1">
+    </td>
+  </tr>
+</script>
 <% content_for :main_content_class, 'main-content-margin_reduced' %>
 
 <div>
@@ -480,7 +514,27 @@
             <div id="habilidades-section">
               <% habilidades = @x.personajeHasHabilidads_by_clase %>
               <% Clase.includes(habilidads: [:categs, :mobs, :rich_text_efecto]).all.each do |clase| %>
-                <%= render "form_habilidades_from_clase", clase: clase, phHabilidades: habilidades[clase.id] || [] %>
+                <% phHabilidades = habilidades[clase.id] || [] %>
+                <div class="pj-selected_list" id="habilidades-list-<%= clase.id %>">
+                  <h3>Habilidades de <%= clase.nombre %></h3>
+                  <div class="detalle_section">
+                    <h4>Habilidades aprendidas</h4>
+                      <%= render "form_habilidades_list",
+                          phHabilidades: phHabilidades,
+                          clase_id: clase.id, destroy: "0" %>
+                  </div>
+                  <div class="detalle_section">
+                    <h4>El resto de habilidades</h4>
+                      <% remaining_habilidades = (
+                          clase.habilidads.sort_by { |h| [h.nivel, h.nombre] } - phHabilidades.map(&:habilidad)
+                        ).map do |habilidad|
+                          habilidad.build_personaje_has_habilidad(@x, clase)
+                        end
+                      %>
+                    <%= render "form_habilidades_list", phHabilidades: remaining_habilidades,
+                                clase_id: clase.id, destroy: "1" %>
+                  </div>
+                </div>
               <% end %>
             </div>
           </section>

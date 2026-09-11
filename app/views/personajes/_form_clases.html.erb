@@ -1,6 +1,58 @@
 <%# Expected params: phClases, destroy, oculto %>
 <div class="carta-grid_container carta-grid_container_form" id="clases_container_<%= oculto || destroy %>">
-  <% phClases.each do |phClase| %>
-    <%= render "form_clases_clase", phc: phClase, destroy: destroy, oculto: oculto %>
+  <% phClases.each do |phc| %>
+    <% id = phc.clase.id %>
+    <% base_name = "phcs[#{id}]" %>
+    <% initial_text = phc.sobreescritura.presence || phc.clase.efecto %>
+    <fieldset class="carta carta_form carta_form_clase" <%= "disabled" if destroy == "1" %>
+        id="clase_<%= id %>" data-list="habilidades-list-<%= id %>">
+      <input type="hidden" name="<%= base_name %>[_destroy]" value="<%= destroy %>">
+      <input type="hidden" name="<%= base_name %>[clase_id]" value="<%= id %>">
+      <div id="original-efecto-clase-<%= id %>" style="display:none"><%= phc.clase.efecto %></div>
+
+      <div>
+        <div class="carta-header">
+          <% if !oculto %>
+            <input type="number" name="<%= base_name %>[nivel]"
+                value="<%= phc.nivel %>"
+                class="carta-number carta-level carta-level_clase">
+          <% end %>
+          <%= link_to phc.clase.nombre, phc.clase, class:"carta-title carta-title_clase" %>
+          <div class="carta-image carta-image-icon">
+            <%= render "shared/image", image: phc.clase.image %>
+          </div>
+          <% if !oculto %>
+            <div class="carta-add_buttom" data-carta_id="clase_<%= id %>">
+              <%= destroy == "1" ? "+" : "-" %>
+            </div>
+          <% end %>
+        </div>
+        <%= clase_subtitulo(phc.clase) %>
+        <div class="carta-description carta-description_form <%= "carta-description_form_oculto" if oculto %>"
+              id="efecto-modal-clase-<%= id %>">
+          <%= initial_text %>
+        </div>
+
+        <% if !oculto %>
+          <%= render "shared/modal",
+                      buttom_content: "Editar texto de efecto de clase",
+                      buttom_extra_css: "open_modal-clase",
+                      header_text: "Editando #{phc.clase.nombre}",
+                      index: "clase-#{id}",
+                      default_close: false,
+                      close_buttom_extra_css: "modal-close-sobreescritura" do %>
+            <%= render "form_sobreescritura", base_name: base_name, id: "clase-#{id}", initial_text: initial_text %>
+          <% end %>
+          <%= render "shared/modal",
+                      buttom_content: "Contadores",
+                      buttom_extra_css: "",
+                      header_text: "Editando contadores de #{phc.clase.nombre}",
+                      index: "clase-contadores-#{id}",
+                      close_buttom_extra_css: "" do %>
+            <%= render "personajes/form_has_calculados", hasCalcs: phc, prefix: "#{base_name}", html_id: "clase-#{id}-calculados" %>
+          <% end %>
+        <% end %>
+      </div>
+    </fieldset>
   <% end %>
 </div>

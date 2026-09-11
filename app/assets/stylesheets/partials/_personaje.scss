@@ -282,7 +282,7 @@
   }
 }
 
-.item-eliminar-btn, .pj-fila_borrada-restaurar_btn, .item-equipar-btn, .item-desequipar-btn {
+.item-eliminar-btn, .pj-fila_borrada-restaurar_btn, .item-equipar-btn, .item-desequipar-btn, .estado-eliminar-btn {
   cursor: pointer;
 }
 
@@ -536,6 +536,16 @@ $min-total-width: $min-width * 3 + 10px;
 }
 .pjv-vars_container-cuerpo {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2px;
+}
+
+.pjv-cuerpo_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h3 {
+    margin: 0;
+  }
 }
 .pjv-image img {
   width: 100%;
