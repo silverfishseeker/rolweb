@@ -3,7 +3,7 @@ class Pj::ParteCuerpo < ApplicationRecord
   belongs_to :modificable, class_name: "Pj::Modificable", foreign_key: "pj_modificable_id", dependent: :destroy, autosave: true
   has_many :hasEstadoalterados,
     class_name: "Pj::HasEstadoalterado",
-    foreign_key: "pj_parte_cuerpo_id",
+    as: :target,
     dependent: :destroy,
     autosave: true
 

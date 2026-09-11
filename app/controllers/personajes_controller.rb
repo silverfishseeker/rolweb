@@ -390,16 +390,13 @@ class PersonajesController < ModelController
         if attrs[:_destroy] == "1"
           hea.destroy if hea
         else
-          if !hea
-            hea = target.hasEstadoalterados.build
-            hea.build_estadoalteradoLibre
-          end
-          hea.estadoalteradoLibre.contenido = attrs[:libre]
+          hea ||= target.hasEstadoalterados.build(origen: Pj::EstadoalteradoLibre.new)
+          hea.origen.contenido = attrs[:libre]
           hea.save!
         end
       else
         id = attrs[:estadoalterado_id]
-        if !cleaned[id] || attrs[:_destroy] != "1" 
+        if !cleaned[id] || attrs[:_destroy] != "1"
           cleaned[id] = {
             estadoalterado_id: id,
             valor: attrs[:valor],
@@ -408,12 +405,12 @@ class PersonajesController < ModelController
         end
       end
     end.each_value  do |attrs|
-      hea = target.hasEstadoalterados.find_by( estadoalterado_id: attrs[:estadoalterado_id])
+      hea = target.hasEstadoalterados.find_by(origen_type: "Estadoalterado", origen_id: attrs[:estadoalterado_id])
       if attrs[:_destroy] == "1"
         hea.destroy if hea
       else
-        hea ||= target.hasEstadoalterados.build( estadoalterado_id: attrs[:estadoalterado_id])
-        hea.valor = attrs[:valor].to_i if hea.estadoalterado.isNumeric
+        hea ||= target.hasEstadoalterados.build(origen: Estadoalterado.find(attrs[:estadoalterado_id]))
+        hea.valor = attrs[:valor].to_i if hea.origen.isNumeric
         hea.save!
       end
     end

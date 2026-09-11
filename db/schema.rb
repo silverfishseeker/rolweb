@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_11_000000) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_11_030000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -168,6 +168,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_11_000000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "isNumeric"
+    t.string "ambito"
   end
 
   create_table "etiquets", force: :cascade do |t|
@@ -350,16 +351,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_11_000000) do
 
   create_table "pj_has_estadoalterados", force: :cascade do |t|
     t.integer "valor"
-    t.bigint "personaje_id"
-    t.bigint "estadoalterado_id"
-    t.bigint "pj_parte_cuerpo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "pj_estadoalterado_libre_id"
-    t.index ["estadoalterado_id"], name: "index_pj_has_estadoalterados_on_estadoalterado_id"
-    t.index ["personaje_id"], name: "index_pj_has_estadoalterados_on_personaje_id"
-    t.index ["pj_estadoalterado_libre_id"], name: "index_pj_has_estadoalterados_on_pj_estadoalterado_libre_id"
-    t.index ["pj_parte_cuerpo_id"], name: "index_pj_has_estadoalterados_on_pj_parte_cuerpo_id"
+    t.string "target_type", null: false
+    t.bigint "target_id", null: false
+    t.string "origen_type", null: false
+    t.bigint "origen_id", null: false
+    t.index ["origen_type", "origen_id"], name: "index_pj_has_estadoalterados_on_origen"
+    t.index ["target_type", "target_id"], name: "index_pj_has_estadoalterados_on_target"
   end
 
   create_table "pj_meta_tipos", force: :cascade do |t|
@@ -552,10 +551,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_11_000000) do
   add_foreign_key "pj_estadistics", "personajes"
   add_foreign_key "pj_estadistics", "pj_meta_tipos", column: "tipo_estadistic_id"
   add_foreign_key "pj_estadistics", "pj_modificables"
-  add_foreign_key "pj_has_estadoalterados", "estadoalterados"
-  add_foreign_key "pj_has_estadoalterados", "personajes"
-  add_foreign_key "pj_has_estadoalterados", "pj_estadoalterado_libres"
-  add_foreign_key "pj_has_estadoalterados", "pj_parte_cuerpos"
   add_foreign_key "pj_meta_tipos", "pj_meta_tipos", column: "pj_tipo_estadistic_id"
   add_foreign_key "pj_parte_cuerpos", "personajes"
   add_foreign_key "pj_parte_cuerpos", "pj_modificables"
