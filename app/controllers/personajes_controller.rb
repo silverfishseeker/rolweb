@@ -62,6 +62,8 @@ class PersonajesController < ModelController
     super do
       raise "No tienes permiso para editar este personaje." unless check_ownership
       process_associations_for(@x)
+      @x.broadcast_action_to(@x, action: "reload", target: nil, attributes: {}, render: false) # forzar recarga para visualizar cambios
+      @x
     end
   end
 

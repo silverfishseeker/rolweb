@@ -80,6 +80,11 @@ Turbo.StreamActions.append_row = function () {
   }
 }
 
+// Usado en personaje show cuando personaje form actualiza el personaje
+Turbo.StreamActions.reload = function () {
+  window.location.reload();
+}
+
 Turbo.StreamActions.remove_div = function () {
   const seqKey = this.getAttribute("seq_key");
   this.targetElements.forEach(el => {
