@@ -1,12 +1,12 @@
 class Pj::PersonajeHasItem < ApplicationRecord
-  #attributes: cantidad, sobreescritura, position, isEquipped
+  #attributes: cantidad, sobreescritura, isEquipped
+  
   belongs_to :personaje
   belongs_to :item, optional: true
 
-  
   has_one :customitem, class_name: "Pj::Customitem", dependent: :destroy
   has_many :calculados, as: :hasCalculados, class_name: "Pj::Calculado", dependent: :destroy, autosave: true, inverse_of: :hasCalculados
-  
+
   has_rich_text :sobreescritura
 
   validate do
@@ -16,4 +16,9 @@ class Pj::PersonajeHasItem < ApplicationRecord
   end
 
   scope :ordered, -> { joins(:item).order("items.nombre") }
+
+  include Ordenable
+  def ordenado_lists
+    [:inventario, :equipo]
+  end
 end

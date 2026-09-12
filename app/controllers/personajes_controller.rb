@@ -7,13 +7,17 @@ class PersonajesController < ModelController
     params.require(:personaje).permit(
       :nombre, :is_public, :nivel_clases, :nivel_habilidades,
       :nivel_estadisticas, :nivel_otro, :picture_id, :descripcion,
-      :descripcion2, :oro, :personajegroup_id, :user_id, cuento_ids: [])
+      :oro, :personajegroup_id, :user_id, cuento_ids: [])
   end
 
   configure_access level: :player
   configure_access :index, level: :unlogged
-  before_action :set, only: %i[show edit destroy add_to_personaje add_items_to_personaje]
-  before_action :check_ownership, only: %i[show edit destroy]
+  before_action :set, only: %i[
+    show edit destroy add_to_personaje add_items_to_personaje update_field
+  ]
+  before_action :check_ownership, only: %i[
+    show edit destroy update_field
+  ]
   after_action only: %i[create update destroy] do
     cache_delete "#{current_user.id}_personajes" if user_signed_in?
   end
@@ -46,8 +50,8 @@ class PersonajesController < ModelController
   def show
     # Se cargan una sola vez y en la vista se filtran/agrupan en memoria (antes se
     # repetía la misma consulta con distintos where para cada pestaña/sección).
-    @personaje_has_habilidads = @x.personajeHasHabilidads.includes(habilidad: [:categs, :mobs, :rich_text_efecto]).order(:position)
-    @personaje_has_items = @x.personajeHasItems.includes(item: [:categs, :clases, :rich_text_efecto]).order(:position)
+    @personaje_has_habilidads = @x.personajeHasHabilidads.includes(:ordenados, habilidad: [:categs, :mobs, :rich_text_efecto])
+    @personaje_has_items = @x.personajeHasItems.includes(:ordenados, item: [:categs, :clases, :rich_text_efecto])
   end
 
   def edit
@@ -58,7 +62,8 @@ class PersonajesController < ModelController
     super do
       raise "No tienes permiso para editar este personaje." unless check_ownership
       process_associations_for(@x)
-      edit_personaje_path(@x) if params[:go_to_edit]
+      @x.broadcast_action_to(@x, action: "reload", target: nil, attributes: {}, render: false) # forzar recarga para visualizar cambios
+      @x
     end
   end
 
@@ -82,7 +87,317 @@ class PersonajesController < ModelController
     added_response("items")
   end
 
+
+  # Acciones de guardado automático en el show
+  def broadcast_update_div(target, value, seq: nil, seq_key: nil)
+    @x.broadcast_action_to(@x, action: "update_div", target: target, attributes: { value: value, seq: seq, seq_key: seq_key }, render: false)
+  end
+  def broadcast_update_many_divs(targets, value, seq: nil, seq_key: nil)
+    @x.broadcast_action_to(@x, action: "update_div", targets: targets.map { |tg| "##{tg}" }.join(", "), attributes: { value: value, seq: seq, seq_key: seq_key }, render: false)
+  end
+
+  # Un ítem equipado se muestra dos veces (inventario y equipo), así que su contador
+  # necesita actualizar ambas copias; clase/habilidad solo tienen una.
+  def broadcast_contador(calculado, suffix, value)
+    owner = calculado.hasCalculados
+    case owner
+    when Pj::PersonajeHasItem
+      broadcast_update_many_divs(["phi_iinv-#{owner.id}-#{suffix}", "phi-#{owner.id}-#{suffix}"], value)
+    when Pj::PersonajeHasClase
+      broadcast_update_div("phc-#{owner.id}-#{suffix}", value)
+    when Pj::PersonajeHasHabilidad
+      broadcast_update_div("phh-#{owner.id}-#{suffix}", value)
+    end
+  end
+
+  def broadcast_upsert_item(phi, seq: nil)
+    broadcast_upsert_item_copy(phi, "phi_iinv-#{phi.id}", isInInventario: true, container_id: "inventario-items", seq: seq)
+    if phi.isEquipped
+      broadcast_upsert_item_copy(phi, "phi-#{phi.id}", isInInventario: false, container_id: "tab-equipo", seq: seq)
+    else
+      # Puede que antes de eliminarse estuviera equipado y ahora se restaure sin estarlo: si queda una copia congelada en la pestaña de equipo, ya no corresponde a nada real y hay que quitarla.
+      @x.broadcast_action_to(@x, action: "remove_div", target: "phi-#{phi.id}", attributes: { seq: seq, seq_key: phi.id }, render: false)
+    end
+  end
+
+  def broadcast_upsert_item_copy(phi, dom_id, isInInventario:, container_id:, seq: nil)
+    @x.broadcast_action_to(
+      @x,
+      action: "upsert_item",
+      target: dom_id,
+      attributes: {
+        container: container_id,
+        seq: seq,
+        seq_key: phi.id,
+        before: begin
+          list = isInInventario ? :inventario : :equipo
+          candidates = Pj::Ordenado
+              .where(personaje_id: @x.id, list: list)
+              .where("position > ?", phi.ordenado_for(list).position)
+              .order(:position)
+          sibling = list == :equipo ?
+            candidates.find { |o| o.ordenable.isEquipped }
+            : candidates.first
+          sibling && dom_id_for(sibling)
+        end
+      },
+      partial: "personajes/show_item",
+      locals: { phi: phi, isInInventario: isInInventario }
+    )
+  end
+
+  def restore_ordenado_position(phi, list, remembered_position)
+    if remembered_position.present?
+      phi.ordenado_for(list).update!(position: remembered_position.to_i)
+    end
+  rescue ActiveRecord::RecordNotUnique # Si ya había otro en la posición, no lo movemos
+  end
+
+  def estado_alt_dom_key(owner)
+    owner.is_a?(Personaje) ? "personaje" : "pc-#{owner.id}"
+  end
+
+  def estado_alt_belongs_to_x?(hea)
+    hea.target.is_a?(Personaje) ? hea.target_id == @x.id : hea.target.personaje_id == @x.id
+  end
+
+  def broadcast_estado_alt_summary(owner)
+    broadcast_update_div(
+      "resumen-#{estado_alt_dom_key(owner)}",
+      owner.hasEstadoalterados.map { |hea|
+        hea.libre? ? hea.origen.contenido : (hea.origen.isNumeric ? "#{hea.origen.nombre} #{hea.valor}" : hea.origen.nombre)
+      }.join(", "))
+  end
+
+  def dom_id_for(ordenado)
+    owner = ordenado.ordenable
+    case owner
+    when Pj::PersonajeHasItem
+      "#{ordenado.equipo? ? 'phi' : 'phi_iinv'}-#{owner.id}"
+    when Pj::PersonajeHasClase
+      "phc-#{owner.id}"
+    when Pj::PersonajeHasHabilidad
+      "phh-#{owner.id}"
+    end
+  end
+
+  def update_field
+    value = params[:value]
+    case params[:field]
+    when "stat_mod"
+      stadistic = @x.estadistics.find(params[:target_id])
+      stadistic.modificable.active_mod = value.to_i
+      stadistic.save!
+      broadcast_update_div("stat-modifier-#{stadistic.id}", stadistic.modificable.active_mod)
+      broadcast_update_div("stat-val-#{stadistic.id}", stadistic.value)
+      broadcast_update_div("stat-mod-#{stadistic.id}", stadistic.mod_str)
+
+    when "calc_mod"
+      calculado = @x.calculados.find(params[:target_id])
+      calculado.modificable.active_mod = value.to_i
+      calculado.save!
+      broadcast_update_div("calc-modifier-#{calculado.id}", calculado.modificable.active_mod)
+      broadcast_update_div("calc-val-#{calculado.id}", calculado.value)
+
+    when "calc_rango"
+      calculado = @x.calculados.find(params[:target_id])
+      calculado.rango.valor = value.to_i
+      calculado.save!
+      broadcast_update_div("calc-rango-#{calculado.id}", calculado.rango.valor)
+
+    when "pc_mod"
+      pc = @x.parteCuerpos.find(params[:target_id])
+      pc.modificable.active_mod = value.to_i
+      pc.save!
+      broadcast_update_div("pcarm-modifier-#{pc.id}", pc.modificable.active_mod)
+      broadcast_update_div("pcarm-val-#{pc.id}", pc.modificable.passive_mod + pc.modificable.active_mod)
+
+    when "pc_salud"
+      pc = @x.parteCuerpos.find(params[:target_id])
+      pc.saludact += value.to_i # aquí "value" es un delta (+1/-1), no un valor absoluto
+      pc.save!
+      broadcast_update_div("pcsalud-act-#{pc.id}", pc.saludact)
+      broadcast_update_div("pcsalud-state-#{pc.id}", pc.state)
+      broadcast_update_div("pcsalud-hidden-#{pc.id}", pc.saludact)
+      @x.broadcast_action_to(
+        @x,
+        action:"toggle_class",
+        target: "pcsalud-row-#{pc.id}",
+        attributes: { "class-name" => "pjv-var-cuerpo-borrada", on: pc.saludact <= 0 },
+        render: false)
+
+    when "oro"
+      @x.oro = value.to_f
+      @x.save!
+      broadcast_update_div("personaje-oro", @x.oro)
+
+    when "descripcion"
+      @x.descripcion = value
+      @x.save!
+      @x.broadcast_action_to(
+        @x,
+        action: "update_rich_text",
+        target: "personaje-descripcion",
+        attributes: { value: @x.descripcion.to_trix_html },
+        render: false)
+    
+    when "contador_base"
+      calculado = find_contador(params[:target_id])
+      libre = calculado.calculado_libre || calculado.build_calculado_libre
+      libre.base = value.to_i
+      calculado.save!
+      broadcast_contador(calculado, "contador-base-#{calculado.id}", calculado.value)
+
+    when "contador_rango"
+      calculado = find_contador(params[:target_id])
+      calculado.build_rango if calculado.rango.nil?
+      calculado.rango.valor = value.to_i
+      calculado.save!
+      broadcast_contador(calculado, "contador-rango-#{calculado.id}", calculado.rango.valor)
+
+    when "item_eliminar"
+      phi = @x.personajeHasItems.find(params[:target_id])
+      phi.destroy
+      @x.broadcast_action_to(
+        @x,
+        action: "eliminar_item",
+        targets: "#phi-#{phi.id}, #phi_iinv-#{phi.id}",
+        attributes: { seq: params[:seq], seq_key: phi.id },
+        render: false
+      )
+
+    when "item_restaurar"
+      target_id = params[:target_id].to_i
+      existing = Pj::PersonajeHasItem.find_by(id: target_id)
+      if existing
+        raise ActiveRecord::RecordNotFound unless existing.personaje_id == @x.id
+        phi = existing
+      else
+        phi = @x.personajeHasItems.new(
+          id: target_id,
+          cantidad: params[:cantidad].to_i,
+          isEquipped: params[:is_equipped] == "1"
+        )
+        if params[:item_id].present?
+          phi.item_id = params[:item_id]
+        else
+          phi.build_customitem(nombre: params[:customitem])
+        end
+        phi.save!
+        restore_ordenado_position(phi, :inventario, params[:inventario_position])
+        restore_ordenado_position(phi, :equipo, params[:equipo_position]) if phi.isEquipped
+      end
+      broadcast_upsert_item(phi, seq: params[:seq])
+
+    when "item_cantidad"
+      phi = @x.personajeHasItems.find(params[:target_id])
+      phi.cantidad = value.to_i
+      phi.save!
+      broadcast_update_many_divs(["phi-#{phi.id}-cantidad", "phi_iinv-#{phi.id}-cantidad"], phi.cantidad, seq: params[:seq], seq_key: "cantidad-#{phi.id}")
+
+    when "item_customitem"
+      phi = @x.personajeHasItems.find(params[:target_id])
+      phi.customitem.update!(nombre: value)
+      broadcast_update_many_divs(["phi-#{phi.id}-customitem", "phi_iinv-#{phi.id}-customitem"], phi.customitem.nombre, seq: params[:seq], seq_key: "customitem-#{phi.id}")
+
+    when "item_crear_custom"
+      phi = @x.personajeHasItems.new(cantidad: 1, isEquipped: false)
+      phi.build_customitem(nombre: "Nuevo ítem personalizado")
+      phi.save!
+      broadcast_upsert_item(phi)
+
+    when "item_equipar"
+      phi = @x.personajeHasItems.find(params[:target_id])
+      phi.isEquipped = value == "1"
+      phi.save!
+      @x.broadcast_action_to(
+        @x,
+        action: "set_hidden",
+        targets: "#phi_iinv-#{phi.id}-equipar, #phi_iinv-#{phi.id}-desequipar",
+        attributes: { value: phi.isEquipped, seq: params[:seq], seq_key: phi.id },
+        render: false
+      )
+      if phi.isEquipped
+        broadcast_upsert_item_copy(phi, "phi-#{phi.id}", isInInventario: false, container_id: "tab-equipo", seq: params[:seq])
+      else
+        @x.broadcast_action_to(@x, action: "remove_div", target: "phi-#{phi.id}", attributes: { seq: params[:seq], seq_key: phi.id }, render: false)
+      end
+
+    when "reorder"
+      a = Pj::Ordenado.find(params[:a])
+      b = Pj::Ordenado.find(params[:b])
+      raise ActiveRecord::RecordNotFound unless a.personaje_id == @x.id && b.personaje_id == @x.id
+      Pj::Ordenado.transaction do
+        a.position, b.position = b.position, a.position
+        a.save!
+        b.save!
+      end
+      low, high = [a, b].sort_by(&:position)
+      @x.broadcast_action_to(@x, action: "move_before", target: nil, attributes: {
+        moved: dom_id_for(low), moved_position: low.position,
+        before: dom_id_for(high), before_position: high.position
+      }, render: false)
+
+    when "estado_alt_crear"
+      owner = params[:owner_id].present? ? @x.parteCuerpos.find(params[:owner_id]) : @x
+      origen = params[:estadoalterado_id].present? ?
+        Estadoalterado.find(params[:estadoalterado_id]) :
+        Pj::EstadoalteradoLibre.new(contenido: "Nuevo estado personalizado")
+      hea = owner.hasEstadoalterados.create!(origen: origen, valor: (0 if origen.is_a?(Estadoalterado) && origen.isNumeric))
+      @x.broadcast_action_to(
+        @x,
+        action: "append_row",
+        target: "hea-#{hea.id}",
+        attributes: { container: "estados-body-#{estado_alt_dom_key(hea.target)}" },
+        partial: "personajes/show_estado_alterado_row",
+        locals: { hea: hea, personaje: @x }
+      )
+      broadcast_estado_alt_summary(hea.target)
+
+    when "estado_alt_valor"
+      hea = Pj::HasEstadoalterado.find(params[:target_id])
+      raise ActiveRecord::RecordNotFound unless estado_alt_belongs_to_x?(hea)
+      hea.valor = value.to_i
+      hea.save!
+      broadcast_update_div("hea-#{hea.id}-valor", hea.valor, seq: params[:seq], seq_key: "estado_alt-valor-#{hea.id}")
+      broadcast_estado_alt_summary(hea.target)
+
+    when "estado_alt_libre"
+      hea = Pj::HasEstadoalterado.find(params[:target_id])
+      raise ActiveRecord::RecordNotFound unless estado_alt_belongs_to_x?(hea)
+      hea.origen.update!(contenido: value)
+      broadcast_update_div("hea-#{hea.id}-libre", value, seq: params[:seq], seq_key: "estado_alt-libre-#{hea.id}")
+      broadcast_estado_alt_summary(hea.target)
+
+    when "estado_alt_eliminar"
+      hea = Pj::HasEstadoalterado.find(params[:target_id])
+      raise ActiveRecord::RecordNotFound unless estado_alt_belongs_to_x?(hea)
+      owner = hea.target
+      hea.destroy
+      @x.broadcast_action_to(@x, action: "remove_div", target: "hea-#{hea.id}", attributes: {}, render: false)
+      broadcast_estado_alt_summary(owner)
+
+    else
+      raise ActiveRecord::RecordNotFound, "Opción de actualización de campo desconocida: #{params[:field]}"
+    end
+    head :ok
+  end
+
   private
+
+  # Busca un calculado "contador" (de clase o habilidad) comprobando que pertenece a @x
+  def find_contador(calculado_id)
+    calculado = Pj::Calculado.find_by(id: calculado_id)
+    owner = calculado&.hasCalculados
+    valid = case owner
+      when Pj::PersonajeHasClase, Pj::PersonajeHasHabilidad, Pj::PersonajeHasItem
+        owner.personaje_id == @x.id
+      else
+        false
+      end
+    raise ActiveRecord::RecordNotFound unless valid
+    calculado
+  end
 
   def add_item(item_id, cantidad)
     item = Item.find(item_id)
@@ -90,12 +405,14 @@ class PersonajesController < ModelController
     if phi
       phi.cantidad += cantidad
       phi.save!
+      broadcast_update_many_divs(["phi-#{phi.id}-cantidad", "phi_iinv-#{phi.id}-cantidad"], phi.cantidad)
     else
       phi = @x.personajeHasItems.create!(
         item: item,
         cantidad: cantidad,
         isEquipped: false
       )
+      broadcast_upsert_item(phi)
     end
   end
 
@@ -109,15 +426,6 @@ class PersonajesController < ModelController
     ]
   end
 
-  def cleanup_estados_alterados(estadosalterados)
-    estadosalterados&.each_value_with_object({}) do |attrs, cleaned|
-      id = attrs[:estadoalterado_id]
-      if !cleaned[id] || attrs[:_destroy] != "1" 
-        cleaned[id] = { valor: attrs[:valor], _destroy: attrs[:_destroy] }
-      end
-    end
-  end
-  
   # Procesa estados alterados para el personaje o una parte del cuerpo
   def process_estados_alterados(estadosalterados, target)
     return unless estadosalterados
@@ -128,16 +436,13 @@ class PersonajesController < ModelController
         if attrs[:_destroy] == "1"
           hea.destroy if hea
         else
-          if !hea
-            hea = target.hasEstadoalterados.build
-            hea.build_estadoalteradoLibre
-          end
-          hea.estadoalteradoLibre.contenido = attrs[:libre]
+          hea ||= target.hasEstadoalterados.build(origen: Pj::EstadoalteradoLibre.new)
+          hea.origen.contenido = attrs[:libre]
           hea.save!
         end
       else
         id = attrs[:estadoalterado_id]
-        if !cleaned[id] || attrs[:_destroy] != "1" 
+        if !cleaned[id] || attrs[:_destroy] != "1"
           cleaned[id] = {
             estadoalterado_id: id,
             valor: attrs[:valor],
@@ -146,12 +451,12 @@ class PersonajesController < ModelController
         end
       end
     end.each_value  do |attrs|
-      hea = target.hasEstadoalterados.find_by( estadoalterado_id: attrs[:estadoalterado_id])
+      hea = target.hasEstadoalterados.find_by(origen_type: "Estadoalterado", origen_id: attrs[:estadoalterado_id])
       if attrs[:_destroy] == "1"
         hea.destroy if hea
       else
-        hea ||= target.hasEstadoalterados.build( estadoalterado_id: attrs[:estadoalterado_id])
-        hea.valor = attrs[:valor].to_i if hea.estadoalterado.isNumeric
+        hea ||= target.hasEstadoalterados.build(origen: Estadoalterado.find(attrs[:estadoalterado_id]))
+        hea.valor = attrs[:valor].to_i if hea.origen.isNumeric
         hea.save!
       end
     end
@@ -180,104 +485,11 @@ class PersonajesController < ModelController
     end
   end
 
-  # Al elimar o añadir elementos dejamos huecos o encontramos elementos sin position,
-  # las recalculamos todas manteniendo el orden anterior y añadiendo los nuevos la principio.
-  def recalculate_positions_for(personaje)
-    [personaje.personajeHasClases, personaje.personajeHasHabilidads, personaje.personajeHasItems].each do |association|
-      association.sort_by { |e| e.position || -Float::INFINITY }.each_with_index do |element, index|
-        element.update(position: index)
-      end
-    end
-  end
-
   # Procesa los parámetros complejos y actualiza/crea asociaciones en @personaje (que ya existe en @x)
   def process_associations_for(personaje)
-    raise "Tipo de formulario no reconocido" unless Personaje::FORM_TYPES.values.include?(params[:form_type])
     return unless require_level :player ||
         (require_level :admin if params[:user_id].present? && params[:user_id].to_i != current_user.id)
-    if params[:form_type] == Personaje::FORM_TYPES[:edit]
-      edit_process_associations_for(personaje)
-    else
-      show_process_associations_for(personaje)
-    end
-  end
 
-
-  def show_process_associations_for(personaje)
-    # ESTADISTICAS
-    params[:estadistics].each do |id, attrs|
-      stat = personaje.estadistics.find(id.to_i)
-      stat.modificable.active_mod = attrs[:active_mod].to_i
-      stat.save!
-    end
-
-    # ESTADO
-    params[:calculados].each do |id, attrs|
-      calculado = personaje.calculados.find(id.to_i)
-      calculado.modificable.active_mod = attrs[:active_mod].to_i
-      if attrs[:rango].present?
-        calculado.rango.valor = attrs[:rango].to_i
-      end
-      calculado.save!
-    end
-
-    # PARTES DEL CUERPO
-    params[:parte_cuerpos].each do |id, attrs|
-      pc = personaje.parteCuerpos.find(id.to_i)
-      pc.modificable.active_mod = attrs[:active_mod].to_i
-      pc.saludact = attrs[:saludact].to_i
-      process_estados_alterados attrs[:has_estadoalterados], pc
-      pc.save!
-    end
-    
-    # CLASES
-    params[:phc]&.each do |id, attrs|
-      phc = personaje.personajeHasClases.find(id.to_i)
-      phc.position = attrs[:position].to_i
-      process_contadores_for attrs[:calculados], phc
-      phc.save!
-    end
-
-    # HABILIDADES
-    params[:phh]&.each do |id, attrs|
-      phh = personaje.personajeHasHabilidads.find(id.to_i)
-      phh.position = attrs[:position].to_i
-      process_contadores_for attrs[:calculados], phh
-      phh.save!
-    end
-
-    # ITEMS
-    params[:phi_iinv]&.each do |id, attrs|
-      phi = personaje.personajeHasItems.find(id.to_i)
-      equiped_attrs = params.dig(:phi, id)
-      if attrs[:_destroy] == "1" || equiped_attrs && equiped_attrs[:_destroy] == "1"
-        phi.destroy
-        next
-      end
-      attrs = equiped_attrs || attrs
-      phi.position = attrs[:position].to_i
-      phi.isEquipped = attrs[:isEquipped] == "1"
-      phi.cantidad = attrs[:cantidad].to_i
-      process_contadores_for attrs[:calculados], phi
-      phi.customitem.nombre = attrs[:customitem] if attrs[:customitem].present?
-      phi.save!
-    end
-    params[:new_custom_item]&.each do |id, attrs|
-      next if attrs[:_destroy] == "1"
-      phi = personaje.personajeHasItems.build(
-        cantidad: attrs[:cantidad].to_i,
-        isEquipped: attrs[:isEquipped] == "1",
-        item: nil
-      )
-      phi.build_customitem(nombre: attrs[:customitem])
-      phi.save!
-    end
-
-    recalculate_positions_for personaje
-  end
-
-  def edit_process_associations_for(personaje)
-    
     # PICTURE
     if params[:picture].present?
       pic_params = params[:picture]
@@ -493,7 +705,5 @@ class PersonajesController < ModelController
         phi.save!
       end
     end
-
-    recalculate_positions_for personaje
   end
 end

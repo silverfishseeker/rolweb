@@ -1,11 +1,7 @@
-<div class="carta carta_show" id="phh-<%= phh.id %>">
+<div class="carta carta_show" id="phh-<%= phh.id %>" data-ordenado-id="<%= phh.ordenado_for.id %>">
   <% habil = phh.habilidad %>
   <div class="carta-header carta-header-small">
-      <%= render "personajes/show_position_controller",
-          position: phh.position,
-          input_prefix: "phh[#{phh.id}]",
-          id_prefix: "phh-#{phh.id}"
-      %>
+      <%= render "personajes/show_position_controller", id_prefix: "phh-#{phh.id}" %>
 
       <p class="carta-number carta-level">
           <%= habil.nivel %>
@@ -15,7 +11,7 @@
 
       <%= link_to habil.nombre, habil, class:"carta-title" %>
 
-      <%= render "personajes/show_contadores", calculados: phh.calculados, prefix: "phh[#{phh.id}]" %>
+      <%= render "personajes/show_contadores", has_calculados: phh, nombre: "phh" %>
   </div>
 
   <div class="full_container">

@@ -21,7 +21,7 @@
     <%= local_assigns[:sobreescritura] || item.efecto %>
 </div>
 
-<% if user_signed_in? && controller.has_level?(:player) && !hide_add %>
+<% if !hide_add && user_signed_in? && controller.has_level?(:player) %>
   <hr>
   <h4>Añadir a personaje</h4>
     <% if current_user.personajes.any? %>

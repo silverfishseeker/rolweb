@@ -1,5 +1,7 @@
-<%# Expected params: calculados, prefix %>
-<% calculados.each do |contador| %>
+<%# Expected params: has_calculados (phi/phc/phh), nombre ("phi_iinv"/"phi"/"phc"/"phh") %>
+<% prefix = "#{nombre}[#{has_calculados.id}]" %>
+<% dom_id_prefix = "#{nombre}-#{has_calculados.id}" %>
+<% has_calculados.calculados.each do |contador| %>
   <div class="carta-contador">
     <input type="hidden"
         name="<%= prefix %>[calculados][<%= contador.id %>][id]"
@@ -8,12 +10,16 @@
       <input type="number" title="<%= contador.nombre %>"
           name="<%= prefix %>[calculados][<%= contador.id %>][rango]"
           value="<%= contador.rango.valor %>"
-          class="pj-cantidad">
+          class="pj-cantidad autosave-input"
+          data-update-url="<%= update_field_personaje_path(has_calculados.personaje, field: "contador_rango", target_id: contador.id) %>"
+          id="<%= dom_id_prefix %>-contador-rango-<%=contador.id%>">
       <b> / </b>
     <% end %>
     <input type="number" title="<%= contador.nombre %>"
         name="<%= prefix %>[calculados][<%= contador.id %>][base]"
         value="<%= contador.value %>"
-        class="pj-cantidad">
+        class="pj-cantidad autosave-input"
+        data-update-url="<%= update_field_personaje_path(has_calculados.personaje, field: "contador_base", target_id: contador.id) %>"
+        id="<%= dom_id_prefix %>-contador-base-<%=contador.id%>">
   </div>
 <% end %>

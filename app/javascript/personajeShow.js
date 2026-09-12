@@ -1,13 +1,93 @@
 
 import { adjustInputWidth } from "./utils.js";
 import { initTabs } from "./tabs.js";
-import { warnUnsaved, markUnsaved } from "./warnUnsaved.js";
+import { initSaveStatus, refreshSaveStatus } from "./saveStatus.js";
+import { createCloseModalHandler } from "./modals.js";
+import { nextSeq, extractId } from "./seqManager.js";
+
+
+// --- Gestión de ítems del inventario: eliminar / restaurar / crear personalizado ---
+
+window.setItemCardState = function (card, isDeleted) {
+  card.classList.toggle("pj-fila_borrada", isDeleted);
+  card.querySelectorAll("input, select, textarea, button").forEach(el => {
+    el.disabled = isDeleted;
+  });
+  // Eliminar/Restaurar solo existen en la copia del inventario, no en la de Equipo.
+  const eliminarBtn = card.querySelector(`#${card.id}-eliminar`);
+  const restaurarBtn = card.querySelector(`#${card.id}-restaurar`);
+  if (eliminarBtn) eliminarBtn.hidden = isDeleted;
+  if (restaurarBtn) restaurarBtn.hidden = !isDeleted;
+};
+
+// Busca el item en el inventario y el equipado
+window.setItemCardStateToBoth = function(card, isDeleted) {
+  const phiId = extractId(card.id);
+  const card_equipped = document.getElementById(`phi-${phiId}`);
+  const card_inventory = document.getElementById(`phi_iinv-${phiId}`);
+  if (card_equipped) window.setItemCardState(card_equipped, isDeleted);
+  if (card_inventory) window.setItemCardState(card_inventory, isDeleted);
+}
+
+window.equiparItem = function (card, equip, url, phiId) {
+  const seq = nextSeq(phiId);
+  card.querySelector(`#${card.id}-equipar`).hidden = equip;
+  card.querySelector(`#${card.id}-desequipar`).hidden = !equip;
+  if (!equip) document.getElementById(`phi-${phiId}`)?.remove();
+  fetch(url + "?value=" + (equip ? "1" : "0") + "&seq=" + seq);
+};
 
 export function onTurboLoad() {
 
   // Aviso de cambios sin guardar
-  warnUnsaved(document.querySelector(".pjv-form"));
+  initSaveStatus(document.getElementById("save-status"));
 
+
+  // Autoguardado
+  document.addEventListener("input", (e) => {
+    const input = e.target;
+    if (input.classList.contains("autosave-input")) {
+      input.dataset.lastInput = Date.now();
+      let url = input.dataset.updateUrl + "?value=" + encodeURIComponent(input.value);
+      if (input.dataset.seqKey) url += "&seq=" + nextSeq(input.dataset.seqKey);
+      fetch(url);
+    }
+  });
+
+  // Guardado de descripciones. Botón dedicado en vez de autoguardado.
+  document.querySelectorAll(".autosave-trix").forEach(editor => {
+    const buttonRow = editor.toolbarElement.querySelector(".trix-button-row");
+    const saveButton = document.createElement("button");
+    saveButton.type = "button";
+    saveButton.className = "trix-button pjv-trix-save_btn";
+    saveButton.title = "Guardar";
+    saveButton.textContent = "Guardar";
+    saveButton.disabled = true;
+    buttonRow.insertBefore(saveButton, buttonRow.firstChild);
+
+    saveButton.addEventListener("click", () => {
+      if (saveButton.disabled) return;
+      editor.dataset.dirty = "0";
+      saveButton.disabled = true;
+      refreshSaveStatus();
+      fetch(editor.dataset.updateUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: "value=" + encodeURIComponent(editor.value)
+      }).then(() => {
+        editor.defaultValue = editor.value; // nueva base para detectar cambios futuros
+      });
+    });
+  });
+  document.addEventListener("trix-change", (e) => {
+    const editor = e.target;
+    if (editor.value === editor.defaultValue) return; // Trix dispara "trix-change" también al cargar el contenido inicial
+    editor.dataset.dirty = "1";
+    editor.toolbarElement.querySelector(".pjv-trix-save_btn").disabled = false;
+  });
 
   // Data modifiers
   document.addEventListener("input", (e) => {
@@ -111,21 +191,6 @@ export function onTurboLoad() {
   //tabs de la columna central
   initTabs(document.querySelector('.pjv-column-tabs'));
 
-  // Estilo de filas borradas cuando la salud es 0 o menos
-  document.querySelectorAll(".pjv-var-cuerpo").forEach( pc => {
-    pc.addEventListener("turbo:frame-load", (event) => {
-      const frame = event.target;
-      const saludAct_span = frame.querySelector(".pjv-var-cuerpo-act");
-      const saludAct = parseInt(saludAct_span.innerHTML);
-      if (saludAct <= 0) {
-        pc.classList.add("pjv-var-cuerpo-borrada");
-      } else {
-        pc.classList.remove("pjv-var-cuerpo-borrada");
-      }
-      markUnsaved();
-    });
-  });
-
   // Ajustar ancho input cantidad
   document.querySelectorAll(".pj-cantidad").forEach(input => {
     adjustInputWidth(input);
@@ -136,24 +201,22 @@ export function onTurboLoad() {
   function swapPosition(parent, beforeElement, afterElement) {
     if (parent && beforeElement && afterElement) {
       parent.insertBefore(afterElement, beforeElement);
-      const beforeElementPosition = document.getElementById(beforeElement.id + "-position");
-      const afterElementPosition = document.getElementById(afterElement.id + "-position");
-      const temp = beforeElementPosition.value;
-      beforeElementPosition.value = afterElementPosition.value;
-      afterElementPosition.value = temp;
-      markUnsaved();
+      fetch(
+        location.pathname + "/update_field/reorder" +
+        "?a=" + beforeElement.dataset.ordenadoId +
+        "&b=" + afterElement.dataset.ordenadoId);
     }
   }
   function visibleChildren(parent) {
     return Array.from(parent.children).filter(child => child.offsetParent !== null);
   }
+
   // Botones de mover posición
-  document.querySelectorAll(".pjv-pos_controller").forEach( controller => {
+  window.bindPositionController = function (controller) { // funcion a parte para que los nuevos lo pueda usar
     const upButton = document.getElementById(controller.dataset.idPrefix + "-pos_up");
     const downButton = document.getElementById(controller.dataset.idPrefix + "-pos_down");
     const element = document.getElementById(controller.dataset.idPrefix);
     const parent = element.parentElement;
-
 
     upButton.addEventListener("click", () => {
       const visible = visibleChildren(parent);
@@ -170,11 +233,11 @@ export function onTurboLoad() {
         swapPosition(parent, element, visible[pos + 1]);
       }
     });
-  });
+  };
+  document.querySelectorAll(".pjv-pos_controller").forEach(window.bindPositionController);
 
   //Filtrar intems por categoría
   let currentlySelected = [];
-  const items =  document.getElementById("inventario-items").querySelectorAll(".inventario-item");
   const categorySelect = document.getElementById("inventario-selection");
   categorySelect.querySelectorAll(".inventario-categ").forEach( categ => {
     categ.addEventListener("click", () => {
@@ -186,7 +249,7 @@ export function onTurboLoad() {
         currentlySelected.push(categValue);
         categ.classList.add("carta-title-selected");
       }
-      
+      const items = document.getElementById("inventario-items").querySelectorAll(".inventario-item");
       if (currentlySelected.length === 0) {
         items.forEach( item => {
           item.style.display = "block";
@@ -204,24 +267,10 @@ export function onTurboLoad() {
     });
   });
 
-  //Añadir item custom
-  let nextCustomItemId = 1;
-  document.getElementById("new-customitem-buttom").addEventListener("click", event => {
-    const template = document.getElementById("customitem-template");
-    const html = template.innerHTML.replaceAll("__ID__",nextCustomItemId++);
-    document .getElementById("inventario-items").insertAdjacentHTML("beforeend", html);
-    markUnsaved();
-  });
-
-  //Marcar items a borrar
-  document.addEventListener("change", e => {
-    if (e.target.classList.contains("rm_input")) {
-      const input = e.target;
-      const carta = input.closest(".carta");
-      if (input.checked)
-        carta.classList.add("pj-fila_borrada");
-      else
-        carta.classList.remove("pj-fila_borrada");
-    }
-  });
+  // Quitar ítems marcados como borrados al cerrar el modal.
+  document.getElementById("inventario-selection").closest(".modal-container")
+    .addEventListener("click", createCloseModalHandler(() => {
+      document.querySelectorAll("#inventario-items .pj-fila_borrada, #tab-equipo .pj-fila_borrada")
+        .forEach(card => card.remove());
+    }));
 }

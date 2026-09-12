@@ -17,14 +17,14 @@
           <td data-label="" colspan="2">
             <input type="text"
                 name="<%=prefix%>[libre]"
-                value="<%=ea.estadoalteradoLibre.contenido%>">
+                value="<%=ea.origen.contenido%>">
           </td>
         <% else %>
           <td data-label="Estado">
-            <%= ea.estadoalterado.nombre %>
+            <%= ea.origen.nombre %>
           </td>
           <td data-label="Valor">
-            <% if ea.estadoalterado.isNumeric %>
+            <% if ea.origen.isNumeric %>
               <input type="number"
                     name="<%=prefix%>[valor]"
                     value="<%= ea.valor %>">
@@ -42,7 +42,7 @@
       <% if ea.libre? %>
         <%= hidden_field_tag "#{prefix}[id]", ea.id %>
       <% else %>
-        <%= hidden_field_tag "#{prefix}[estadoalterado_id]", ea.estadoalterado.id %>
+        <%= hidden_field_tag "#{prefix}[estadoalterado_id]", ea.origen.id %>
       <% end %>
       <% index += 1 %>
     <% end %>

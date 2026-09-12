@@ -1,9 +1,9 @@
 class Pj::ParteCuerpo < ApplicationRecord
   #attributes: nombre, tipo, mapeo, saludmax, saludact
-  belongs_to :modificable, class_name: "Pj::Modificable", foreign_key: "pj_modificable_id", dependent: :destroy, autosave: true
+  has_one :modificable, as: :owner, class_name: "Pj::Modificable", dependent: :destroy, autosave: true
   has_many :hasEstadoalterados,
     class_name: "Pj::HasEstadoalterado",
-    foreign_key: "pj_parte_cuerpo_id",
+    as: :target,
     dependent: :destroy,
     autosave: true
 
@@ -42,10 +42,6 @@ class Pj::ParteCuerpo < ApplicationRecord
     mapeo != DEFAULT_MAPEO_NAME
   end
 
-  def list_mapeo_to_s list_mapeo
-    list_mapeo.join("@")
-  end
-
   def str_mapeo_to_list str_mapeo
     if str_mapeo.include?("@")
       str_mapeo.split("@").map(&:strip)
@@ -65,14 +61,6 @@ class Pj::ParteCuerpo < ApplicationRecord
           str_mapeo_to_list(mapeo)
         end
       )[saludact] || DEFAULT_UNKNOWN_STATE
-    end
-  end
-
-  def mapeo_list
-    if mapeo == DEFAULT_MAPEO_NAME && DEFAULT_MAPEOS[saludmax]
-      DEFAULT_MAPEOS[saludmax]
-    else
-      str_mapeo_to_list(mapeo)
     end
   end
 

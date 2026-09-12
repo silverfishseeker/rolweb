@@ -1,0 +1,44 @@
+<%# Expected params: owner (Personaje o Pj::ParteCuerpo), personaje, (optional) buttom_content, buttom_extra_css, horizontal %>
+<% dom_key = owner.is_a?(Personaje) ? "personaje" : "pc-#{owner.id}" %>
+<div class="estado-resumen <%= "pjv-estados_alterados-horizontal" if local_assigns[:horizontal] %>"
+    id="resumen-<%= dom_key %>">
+  <%= owner.hasEstadoalterados.map { |hea|
+        hea.libre? ? hea.origen.contenido : (hea.origen.isNumeric ? "#{hea.origen.nombre} #{hea.valor}" : hea.origen.nombre)
+      }.join(", ") %>
+</div>
+<%= render "shared/modal",
+            buttom_content: local_assigns[:buttom_content] || "Ver / editar",
+            buttom_extra_css: local_assigns[:buttom_extra_css] || "",
+            header_text: "Estados alterados de #{owner.nombre}",
+            index: "estados-#{dom_key}" do %>
+  <table class="tabla-estadisticas" id="<%= ea_t_id(dom_key) %>">
+    <thead>
+      <tr>
+        <th>Estado</th>
+        <th>Valor</th>
+        <th>Eliminar</th>
+      </tr>
+    </thead>
+    <tbody id="estados-body-<%= dom_key %>">
+      <% owner.hasEstadoalterados.each do |hea| %>
+        <%= render "personajes/show_estado_alterado_row", hea: hea, personaje: personaje %>
+      <% end %>
+    </tbody>
+  </table>
+  <select onchange="
+      if (this.value) {
+        let url = '<%= update_field_personaje_path(personaje, field: "estado_alt_crear", owner_id: (owner.is_a?(Personaje) ? nil : owner.id)) %>';
+        url += (url.includes('?') ? '&' : '?') + 'estadoalterado_id=' + this.value;
+        fetch(url);
+        this.value = '';
+      }">
+    <option value="">Añadir estado alterado...</option>
+    <% available_estados_for(owner).each do |ea| %>
+      <option value="<%= ea.id %>"><%= ea.nombre %></option>
+    <% end %>
+  </select>
+  <span class="btn btn-small btn-primary"
+      onclick="fetch('<%= update_field_personaje_path(personaje, field: "estado_alt_crear", owner_id: (owner.is_a?(Personaje) ? nil : owner.id)) %>')">
+    Añadir personalizado
+  </span>
+<% end %>

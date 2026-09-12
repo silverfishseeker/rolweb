@@ -56,6 +56,18 @@
       inset -1px -1px 6px rgba(0, 0, 0, 0.9);
 }
 
+.btn-no_tachado {
+  display: inline-block;
+  font-style: normal;
+  text-decoration: none;
+
+  // Fijar "display" aquí arriba anula el atributo hidden (que solo oculta vía una regla
+  // display:none de la hoja de estilos por defecto) si no lo recuperamos explícitamente.
+  &[hidden] {
+    display: none;
+  }
+}
+
 .btn-icon{
   padding: 0;
   border: none;

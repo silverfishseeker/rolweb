@@ -149,9 +149,6 @@
     max-width: var(--ancho_pj_imagen);
   }
 }
-.pj-image-smaller img {
-  max-width: 400px;
-} 
 .pj-image-placeholder {
   width: var(--ancho_pj_imagen);
   height: var(--ancho_pj_imagen);
@@ -266,6 +263,24 @@
   font-style: italic;
   text-decoration: line-through;
   background-color: var(--c_alternativo);
+  cursor: not-allowed;
+
+  * {
+    cursor: not-allowed;
+  }
+  .pjv-pos_controller .pjv-pos_button:hover {
+    cursor: not-allowed;
+  }
+  .item-equipar-btn, .item-desequipar-btn, .item-eliminar-btn {
+    cursor: not-allowed;
+  }
+  .pj-fila_borrada-restaurar_btn {
+    cursor: pointer;
+  }
+}
+
+.item-eliminar-btn, .pj-fila_borrada-restaurar_btn, .item-equipar-btn, .item-desequipar-btn, .estado-eliminar-btn {
+  cursor: pointer;
 }
 
 fieldset[disabled] .open_modal {
@@ -364,7 +379,15 @@ fieldset[disabled] .btn-primary:hover {
     margin-top: auto;
     margin-left: auto;
     margin-right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
+}
+
+.pjv-save_status {
+  font-style: italic;
+  color: var(--c_grey);
 }
 
 .pjv-nivel{
@@ -503,6 +526,9 @@ $min-total-width: $min-width * 3 + 10px;
       }
     }
   }
+  .pjv-var-cuerpo-salud_btn {
+    cursor: pointer;
+  }
   .pjv-var-cuerpo-borrada {
     background-color: var(--c_grey);
     font-style: italic;
@@ -515,6 +541,16 @@ $min-total-width: $min-width * 3 + 10px;
 }
 .pjv-vars_container-cuerpo {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2px;
+}
+
+.pjv-cuerpo_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h3 {
+    margin: 0;
+  }
 }
 .pjv-image img {
   width: 100%;
@@ -546,6 +582,20 @@ $min-total-width: $min-width * 3 + 10px;
     img {
       height: 5px;
     }
+  }
+}
+
+// Botón de guardar dentro de la barra de Trix: hundido y bloqueado sin cambios pendientes
+.pjv-trix-save_btn {
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4);
+  cursor: not-allowed;
+
+  &:not(:disabled) {
+    box-shadow: none;
+    cursor: pointer;
+    border: 2px solid var(--c_black);
+    border-radius: 4px;
+    font-weight: bold;
   }
 }
 

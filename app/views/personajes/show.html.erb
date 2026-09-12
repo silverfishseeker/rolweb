@@ -1,16 +1,15 @@
-<% importJS "personajeShow", "modals", "estadosAlterados" %>
-<%= render "personajes/estadoalterado-template" %> <%# Requerido por estadosAlterados %>
+<% importJS "personajeShow", "modals" %>
 <% content_for :main_content_class, 'main-content-margin_reduced' %>
 
-<%= form_with(model: @x, html: { multipart: true, class: "pjv-form"}) do |f| %>
-  <%= hidden_field_tag :form_type, Personaje::FORM_TYPES[:show] %>
+<%= turbo_stream_from @x %>
 
+<div class="pjv-form">
   <div class="pjv-header">
     <h1> <%=@x.nombre%></h1>
 
     <div class="options">
-      <%= f.submit "Guardar", class: "btn btn-primary" %>
-      <%= f.submit "Editar", name: "go_to_edit", class: "btn btn-primary" %>
+      <span id="save-status" class="pjv-save_status" hidden></span>
+      <%= link_to "Editar", edit_personaje_path(@x), class: "btn btn-primary" %>
     </div>
   </div>
   <p class="pjv-nivel"><b> Nivel <%= @x.nivel %> </b></p>
@@ -27,10 +26,12 @@
         <input type="number"
             name="estadistics[<%= stat.id %>][active_mod]"
             value="<%= stat.modificable.active_mod %>"
-            class="pjv-modifier"
+            class="pjv-modifier autosave-input"
             data-base="stat-base-<%=stat.id%>"
             data-value="stat-val-<%=stat.id%>"
-            data-mod="stat-mod-<%=stat.id%>">
+            data-mod="stat-mod-<%=stat.id%>"
+            data-update-url="<%= update_field_personaje_path(@x, field: "stat_mod", target_id: stat.id) %>"
+            id="stat-modifier-<%=stat.id%>">
       </span>
     <% end %>
   </div>
@@ -48,16 +49,20 @@
                   <input type="number"
                         name="calculados[<%= calc.id %>][rango]"
                         value="<%= calc.rango.valor %>"
-                        class="pjv-input">
+                        class="pjv-input autosave-input"
+                        data-update-url="<%= update_field_personaje_path(@x, field: "calc_rango", target_id: calc.id) %>"
+                        id="calc-rango-<%=calc.id%>">
                   /
                 <% end %>
                 <span id="calc-val-<%=calc.id%>"><%= calc.value %></span>
                 <input type="number"
                     name="calculados[<%= calc.id %>][active_mod]"
                     value="<%= calc.modificable.active_mod %>"
-                    class="pjv-modifier"
+                    class="pjv-modifier autosave-input"
                     data-base="calc-base-<%=calc.id%>"
-                    data-value="calc-val-<%=calc.id%>">
+                    data-value="calc-val-<%=calc.id%>"
+                    data-update-url="<%= update_field_personaje_path(@x, field: "calc_mod", target_id: calc.id) %>"
+                    id="calc-modifier-<%=calc.id%>">
                 <span id="calc-base-<%=calc.id%>" style="display:none">
                   <%=calc.value%>
                 </span>
@@ -67,19 +72,27 @@
         </div>
       </div>
       <div class="pjv-section" id="parte-cuerpos-body">
-        <h3>Cuerpo</h3>
+        <div class="pjv-cuerpo_header">
+          <h3>Cuerpo</h3>
+          <%= render "personajes/show_estados_alterados",
+                owner: @x, personaje: @x,
+                buttom_content: image_tag("edit.png", alt: "Editar"),
+                buttom_extra_css: "btn-icon",
+                horizontal: true
+          %>
+        </div>
         <div class="pjv-vars_container pjv-vars_container-cuerpo">
           <% @x.parteCuerpos.each do |pc| %>
-            <div class="pjv-var pjv-var-cuerpo 
-                <%= "pjv-var-cuerpo-borrada" if pc.saludact <= 0 %>">
+            <div class="pjv-var pjv-var-cuerpo
+                <%= "pjv-var-cuerpo-borrada" if pc.saludact <= 0 %>"
+                id="pcsalud-row-<%=pc.id%>">
               <span class="pjv-var-cuerpo-nombre">
                 <%= pc.nombre %>:
               </span>
               <span>
                 <span class="pjv-var-cuerpo-estados_alterados">
-                  <%= render "personajes/estados_alterados_parte_cuerpo",
-                    index: pc.id,
-                    target: pc,
+                  <%= render "personajes/show_estados_alterados",
+                    owner: pc, personaje: @x,
                     buttom_content: image_tag("edit.png", alt: "Editar"),
                     buttom_extra_css: "btn-icon",
                     horizontal: true
@@ -93,15 +106,30 @@
                 <input type="number"
                     name="parte_cuerpos[<%= pc.id %>][active_mod]"
                     value="<%= pc.modificable.active_mod %>"
-                    class="pjv-modifier pjv-modifier-armadura"
+                    class="pjv-modifier pjv-modifier-armadura autosave-input"
                     data-base="pcarm-base-<%=pc.id%>"
                     data-value="pcarm-val-<%=pc.id%>"
                     data-link-aumentar-id="pcarm-<%=pc.id%>_aumentar"
-                    data-link-disminuir-id="pcarm-<%=pc.id%>_disminuir">
+                    data-link-disminuir-id="pcarm-<%=pc.id%>_disminuir"
+                    data-update-url="<%= update_field_personaje_path(@x, field: "pc_mod", target_id: pc.id) %>"
+                    id="pcarm-modifier-<%=pc.id%>">
                 <span id="pcarm-base-<%=pc.id%>" style="display:none">
                   <%=pc.modificable.passive_mod%>
                 </span>
-                <%= render "personajes/show_salud", pc: pc %>
+                <span class="pjv-var-cuerpo-big" id="pcsalud-state-<%=pc.id%>"><%= pc.state %></span>
+                <input type="hidden"
+                    name="parte_cuerpos[<%= pc.id %>][saludact]"
+                    value="<%= pc.saludact %>"
+                    id="pcsalud-hidden-<%=pc.id%>">
+                <span class="pjv-var-cuerpo-act" id="pcsalud-act-<%=pc.id%>"><%= pc.saludact %></span>
+                /
+                <%= pc.saludmax %>
+                <span class="btn btn-small btn-secondary pjv-var-cuerpo-salud_btn btn-no_tachado"
+                    onclick="fetch('<%= update_field_personaje_path(@x, field: "pc_salud", target_id: pc.id, value: 1) %>')"
+                    id="pcsalud-<%=pc.id%>_aumentar">+</span>
+                <span class="btn btn-small btn-danger pjv-var-cuerpo-salud_btn btn-no_tachado"
+                    onclick="fetch('<%= update_field_personaje_path(@x, field: "pc_salud", target_id: pc.id, value: -1) %>')"
+                    id="pcsalud-<%=pc.id%>_disminuir">-</span>
               </span>
             </div>
           <% end %>
@@ -120,29 +148,49 @@
         
         <div class="pj-tab-container">
           <div id="tab-activas" class="pj-tab_pane pj-tab_pane-active">
-            <% @personaje_has_habilidads.select { |phh| [0, 3, 5].include?(phh.habilidad.tipo) }.each do |phh| %>
+            <% @personaje_has_habilidads.select { |phh| [0, 3, 5].include?(phh.habilidad.tipo) }.sort_by(&:ordenado_position).each do |phh| %>
               <%= render "personajes/show_habilidad", phh: phh %>
             <% end %>
           </div>
           <div id="tab-pasivas" class="pj-tab_pane">
             <% (
-                @x.personajeHasClases +
+                @x.personajeHasClases.includes(:ordenados) +
                 @personaje_has_habilidads.select { |phh| phh.habilidad.tipo == 1 }
-              ).sort_by(&:position).each do |phc_phh| %>
+              ).sort_by(&:ordenado_position).each do |phc_phh| %>
               <% if phc_phh.is_a?(Pj::PersonajeHasClase) %>
-                <%= render "personajes/show_clase", phc: phc_phh %>
+                <div class="carta carta_show" id="phc-<%= phc_phh.id %>" data-ordenado-id="<%= phc_phh.ordenado_for.id %>">
+                  <div class="carta-header carta-header-small">
+                      <%= render "personajes/show_position_controller", id_prefix: "phc-#{phc_phh.id}" %>
+
+                      <p class="carta-number carta-level">
+                          <%= phc_phh.nivel %>
+                      </p>
+
+                      <div class="carta-image carta-image-icon">
+                        <%= render "shared/image", image: phc_phh.clase.image %>
+                      </div>
+
+                      <%= link_to phc_phh.clase.nombre, phc_phh.clase, class:"carta-title" %>
+
+                      <%= render "personajes/show_contadores", has_calculados: phc_phh, nombre: "phc" %>
+                  </div>
+
+                  <div class="full_container">
+                    <%= render "clases/clase", clase: phc_phh.clase, sobreescritura: phc_phh.sobreescritura %>
+                  </div>
+                </div>
               <% else %>
                 <%= render "personajes/show_habilidad", phh: phc_phh %>
               <% end %>
             <% end %>
           </div>
           <div id="tab-otras" class="pj-tab_pane">
-            <% @personaje_has_habilidads.select { |phh| [2, 4, 6].include?(phh.habilidad.tipo) }.each do |phh| %>
+            <% @personaje_has_habilidads.select { |phh| [2, 4, 6].include?(phh.habilidad.tipo) }.sort_by(&:ordenado_position).each do |phh| %>
               <%= render "personajes/show_habilidad", phh: phh %>
             <% end %>
           </div>
           <div id="tab-equipo" class="pj-tab_pane">
-            <% @personaje_has_items.select(&:isEquipped).each do |phi| %>
+            <% @personaje_has_items.select(&:isEquipped).sort_by { |phi| phi.ordenado_position(:equipo) }.each do |phi| %>
               <%= render "personajes/show_item", phi: phi, isInInventario: false %>
             <% end %>
           </div>
@@ -192,38 +240,35 @@
               </div>
               <br>
               <div id="inventario-items">
-                <% @personaje_has_items.each do |phi| %>
+                <% @personaje_has_items.sort_by { |phi| phi.ordenado_position(:inventario) }.each do |phi| %>
                   <%= render "personajes/show_item", phi: phi, isInInventario: true %>
                 <% end %>
               </div>
-              <div id="new-customitem-buttom" class="btn btn-primary btn-small" data-template="customitem-template">
+              <div class="btn btn-primary btn-small"
+                  onclick="fetch('<%= update_field_personaje_path(@x, field: "item_crear_custom") %>')">
                 Añadir nuevo ítem custom
               </div>
             <% end%>
-            <template id="customitem-template">
-              <div class="carta carta_show inventario-item" data-categs="">
-                <div class="carta-header carta-header-small">
-                  <span class="carta-number">
-                    <input type="number" name="new_custom_item[__ID__][cantidad]"
-                          value="1" class="pj-cantidad">
-                  </span>
-                  <span data-label="Equipar">
-                    <input type="checkbox" name="new_custom_item[__ID__][isEquipped]" value="1">
-                  </span>
-                  <input type="text" class="carta-customitem" name="new_custom_item[__ID__][customitem]">
-                </div>
-              </div>
-            </template>
           </div>
-          <h3> Oro: <%= f.number_field :oro, step: 0.01, class: "carta-number carta-coste pjv-modifier" %> </h3>
-          <div class="white_bk no_trix_toobar"><%= f.rich_text_area :descripcion %></div>
+          <h3> Oro: <%= number_field_tag "personaje[oro]", @x.oro, step: 0.01,
+                class: "carta-number carta-coste pjv-modifier autosave-input",
+                id: "personaje-oro",
+                data: {
+                  update_url: update_field_personaje_path(@x, field: "oro")
+                } %> </h3>
+          <%# Hueco libre aquí %>
         </div>
         <div class="pjv-subcolumn pjv-subcolumn-big">
           <%= render "shared/image_with_link", image: @x.picture&.image, cssclass: "pjv-image" %>
         </div>
       </div>
-      
-      <div class="white_bk"><%= f.rich_text_area :descripcion2 %></div>
+
+      <div class="white_bk"><%= rich_text_area "personaje", :descripcion, object: @x,
+            class: "trix-content autosave-trix",
+            id: "personaje-descripcion",
+            data: {
+              update_url: update_field_personaje_path(@x, field: "descripcion")
+            } %></div>
       <h4>Artículos relacionados</h4>
       <p>
         <% if @x.cuentos.any? %>
@@ -236,5 +281,4 @@
       </p>
     </div>
   </div>
-
-<% end %>
+</div>

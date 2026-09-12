@@ -36,9 +36,6 @@ class InfoController < ApplicationController
         @xs = Estadoalterado.all
     end
     
-    def lore
-    end
-
     def avisolegal
     end
 

@@ -10,6 +10,11 @@
   </div>
   <br>
   <div>
+    <%= form.label :ambito %><br>
+    <%= form.select :ambito, Estadoalterado::AMBITOS.map { |a| [a || "Sin ámbito", a] } %>
+  </div>
+  <br>
+  <div>
     <%= form.label :descripcion %><br>
     <%= form.rich_text_area :descripcion %>
   </div>

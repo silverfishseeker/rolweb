@@ -2,7 +2,6 @@ class Personaje < ApplicationRecord
   # attributes: nombre, nivel_clases, nivel_habilidades, nivel_estadisticas,
   #   nivel_otro, is_public, oro
   has_rich_text :descripcion
-  has_rich_text :descripcion2
 
   belongs_to :user
   belongs_to :personajegroup, optional: true
@@ -14,7 +13,7 @@ class Personaje < ApplicationRecord
     dependent: :destroy, autosave: true
   has_many :calculados, as: :hasCalculados, class_name: "Pj::Calculado", dependent: :destroy, autosave: true, inverse_of: :hasCalculados
   has_many :parteCuerpos, class_name: "Pj::ParteCuerpo", dependent: :destroy, autosave: true
-  has_many :hasEstadoalterados, class_name: "Pj::HasEstadoalterado", dependent: :destroy, autosave: true
+  has_many :hasEstadoalterados, class_name: "Pj::HasEstadoalterado", as: :target, dependent: :destroy, autosave: true
   has_many :personajeHasClases, class_name: "Pj::PersonajeHasClase", dependent: :destroy
   has_many :personajeHasHabilidads, class_name: "Pj::PersonajeHasHabilidad", dependent: :destroy
   has_many :personajeHasItems, class_name: "Pj::PersonajeHasItem", dependent: :destroy
@@ -22,8 +21,6 @@ class Personaje < ApplicationRecord
   has_and_belongs_to_many :etiquets
   has_and_belongs_to_many :cuentos
   has_and_belongs_to_many :viewUsers, class_name: "User", join_table: "personajes_users"
-
-  FORM_TYPES = {edit: "edit", show: "show"}.freeze
 
   def nivel
     sum_nil nivel_clases, nivel_estadisticas, nivel_habilidades, nivel_otro # sum_nil ignora nils

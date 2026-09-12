@@ -207,13 +207,6 @@ module Backup
     RestoreState.get != nil
   end
 
-  def self.sql_in_replication_role
-    ActiveRecord::Base.connection.execute("SET session_replication_role = 'replica';")
-    yield
-  ensure
-    ActiveRecord::Base.connection.execute("SET session_replication_role = 'origin';")
-  end
-
   require "active_record/fixtures"
   def self.brave_restore(restore_dir, allow_missing_imgs, skip_gifs, max_file_size_mb, gc, is_rollback: false)
     images_ids_map_file = Backup.images_ids_map_file(restore_dir)
