@@ -206,29 +206,34 @@
                 buttom_content: "Inventario",
                 header_text: "Inventario",
                 index: "inventario" do %>
-              <%= render "shared/modal",
-                  buttom_content: "Información",
-                  header_text: "Información sobre el uso del inventario",
-                  index: "inventario-info" do %>
-                <p> Usas las categorías para filtrar tus ítems, puedes seleccionar
-                  una o varias para filtrar ítems que compartan esas categorías.
-                </p>
-                <p> Para cada ítem tienes en orden:</p>
-                <ol>
-                  <li> Controles de posión del ítem en tu inventario. Úsalo para
-                    que sube o baje puestos. </li>
-                  <li>Cantidad que tienes de ese ítem.</li>
-                  <li>Check para equipar ese ítem y que aparezca en tu pestaña de equipo.</li>
-                  <li>Peso de ese ítem.</li>
-                  <li>Nombre del ítem.</li>
-                  <li>Check para eliminar ese ítem de tu inventario. (También lo quita de
-                    tu equipo.)
-                  </li>
-                </ol>
-                <p> Para lo ítems custom es igual pero sin peso. (No puedes cambiar su posición al
-                  crearlos, guarda el personaje antes.) </p>
-              <% end %>
-              <br>
+              <div class="pjv-inventario-toolbar">
+                <%= render "shared/modal",
+                    buttom_content: "Información",
+                    header_text: "Información sobre el uso del inventario",
+                    index: "inventario-info" do %>
+                  <p> Usas las categorías para filtrar tus ítems, puedes seleccionar
+                    una o varias para filtrar ítems que compartan esas categorías.
+                  </p>
+                  <p> Para cada ítem tienes en orden:</p>
+                  <ol>
+                    <li> Controles de posión del ítem en tu inventario. Úsalo para
+                      que sube o baje puestos. </li>
+                    <li>Cantidad que tienes de ese ítem.</li>
+                    <li>Check para equipar ese ítem y que aparezca en tu pestaña de equipo.</li>
+                    <li>Peso de ese ítem.</li>
+                    <li>Nombre del ítem.</li>
+                    <li>Check para eliminar ese ítem de tu inventario. (También lo quita de
+                      tu equipo.)
+                    </li>
+                  </ol>
+                  <p> Para lo ítems custom es igual pero sin peso. (No puedes cambiar su posición al
+                    crearlos, guarda el personaje antes.) </p>
+                <% end %>
+                <div class="btn btn-primary btn-small"
+                    onclick="fetch('<%= update_field_personaje_path(@x, field: "item_crear_custom") %>')">
+                  Añadir nuevo ítem custom
+                </div>
+              </div>
               <br>
               <div class="miniListadoClases" id="inventario-selection">
                 <% @personaje_has_items.each_with_object([]) do |phi, currCategs| %>
@@ -243,10 +248,6 @@
                 <% @personaje_has_items.sort_by { |phi| phi.ordenado_position(:inventario) }.each do |phi| %>
                   <%= render "personajes/show_item", phi: phi, isInInventario: true %>
                 <% end %>
-              </div>
-              <div class="btn btn-primary btn-small"
-                  onclick="fetch('<%= update_field_personaje_path(@x, field: "item_crear_custom") %>')">
-                Añadir nuevo ítem custom
               </div>
             <% end%>
           </div>

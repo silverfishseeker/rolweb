@@ -2,8 +2,10 @@
 
 :root {
   --ancho_pj_imagen:350px;
+  --carta_show-popup_reserve: calc(var(--ancho_carta) + 10px);
   @include respond-max {
     --ancho_pj_imagen:250px;
+    --carta_show-popup_reserve: 0px;
   }
 }
 
@@ -95,9 +97,12 @@
   }
 }
 
+.pj-tab_pane, #inventario-items {
+  padding-bottom: var(--carta_show-popup_reserve);
+}
 .pj-tab_pane {
   display: none;
-  .columns {  
+  .columns {
     max-width: 100%;
     display: flex;
     gap: 20px;
@@ -339,6 +344,13 @@ fieldset[disabled] .btn-primary:hover {
     margin: 20px;
     text-align:initial;
   }
+}
+
+.pjv-inventario-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .pj-selected_list {
