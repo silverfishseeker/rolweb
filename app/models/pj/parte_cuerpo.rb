@@ -1,6 +1,6 @@
 class Pj::ParteCuerpo < ApplicationRecord
   #attributes: nombre, tipo, mapeo, saludmax, saludact
-  belongs_to :modificable, class_name: "Pj::Modificable", foreign_key: "pj_modificable_id", dependent: :destroy, autosave: true
+  has_one :modificable, as: :owner, class_name: "Pj::Modificable", dependent: :destroy, autosave: true
   has_many :hasEstadoalterados,
     class_name: "Pj::HasEstadoalterado",
     as: :target,

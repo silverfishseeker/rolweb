@@ -1,9 +1,9 @@
 class Pj::Calculado < ApplicationRecord
   #attributes: no other attributes
   belongs_to :hasCalculados, polymorphic: true, inverse_of: :calculados
-  belongs_to :modificable,
+  has_one :modificable,
+    as: :owner,
     class_name: "Pj::Modificable",
-    foreign_key: "pj_modificable_id",
     dependent: :destroy,
     autosave: true
     

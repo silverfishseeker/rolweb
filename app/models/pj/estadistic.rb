@@ -4,9 +4,9 @@ class Pj::Estadistic < ApplicationRecord
   belongs_to :tipoEstadistic,
     class_name: "Pj::TipoEstadistic",
     foreign_key: "tipo_estadistic_id"
-  belongs_to :modificable,
+  has_one :modificable,
+    as: :owner,
     class_name: "Pj::Modificable",
-    foreign_key: "pj_modificable_id",
     dependent: :destroy,
     autosave: true
 

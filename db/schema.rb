@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_11_030000) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_12_020000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -312,13 +312,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_11_030000) do
 
   create_table "pj_calculados", force: :cascade do |t|
     t.bigint "tipoCalculado_id"
-    t.bigint "pj_modificable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "hasCalculados_type", null: false
     t.bigint "hasCalculados_id", null: false
     t.index ["hasCalculados_type", "hasCalculados_id"], name: "index_pj_calculados_on_hasCalculados"
-    t.index ["pj_modificable_id"], name: "index_pj_calculados_on_pj_modificable_id"
     t.index ["tipoCalculado_id"], name: "index_pj_calculados_on_tipoCalculado_id"
   end
 
@@ -335,11 +333,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_11_030000) do
     t.integer "lv_mod"
     t.bigint "personaje_id", null: false
     t.bigint "tipo_estadistic_id", null: false
-    t.bigint "pj_modificable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["personaje_id"], name: "index_pj_estadistics_on_personaje_id"
-    t.index ["pj_modificable_id"], name: "index_pj_estadistics_on_pj_modificable_id"
     t.index ["tipo_estadistic_id"], name: "index_pj_estadistics_on_tipo_estadistic_id"
   end
 
@@ -378,6 +374,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_11_030000) do
     t.integer "active_mod"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "owner_type", null: false
+    t.bigint "owner_id", null: false
+    t.index ["owner_type", "owner_id"], name: "index_pj_modificables_on_owner"
   end
 
   create_table "pj_ordenados", force: :cascade do |t|
@@ -403,9 +402,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_11_030000) do
     t.bigint "personaje_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "pj_modificable_id", null: false
     t.index ["personaje_id"], name: "index_pj_parte_cuerpos_on_personaje_id"
-    t.index ["pj_modificable_id"], name: "index_pj_parte_cuerpos_on_pj_modificable_id"
   end
 
   create_table "pj_personaje_has_clases", force: :cascade do |t|
@@ -546,14 +543,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_11_030000) do
   add_foreign_key "pictures", "personajes"
   add_foreign_key "pj_calculado_libres", "pj_calculados"
   add_foreign_key "pj_calculados", "pj_meta_tipos", column: "tipoCalculado_id"
-  add_foreign_key "pj_calculados", "pj_modificables"
   add_foreign_key "pj_customitems", "pj_personaje_has_items", column: "personaje_has_item_id"
   add_foreign_key "pj_estadistics", "personajes"
   add_foreign_key "pj_estadistics", "pj_meta_tipos", column: "tipo_estadistic_id"
-  add_foreign_key "pj_estadistics", "pj_modificables"
   add_foreign_key "pj_meta_tipos", "pj_meta_tipos", column: "pj_tipo_estadistic_id"
   add_foreign_key "pj_parte_cuerpos", "personajes"
-  add_foreign_key "pj_parte_cuerpos", "pj_modificables"
   add_foreign_key "pj_personaje_has_clases", "clases"
   add_foreign_key "pj_personaje_has_clases", "personajes"
   add_foreign_key "pj_personaje_has_habilidads", "clases"
