@@ -11,8 +11,4 @@ module ApplicationHelper
   def only_admin_content
     yield if controller.has_level? :admin
   end
-  
-  def compose_get_params(hash)
-    "?" + hash.map { |k, v| "#{k}=#{v}" }.join("&")
-  end
 end

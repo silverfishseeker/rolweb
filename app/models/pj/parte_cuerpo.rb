@@ -42,10 +42,6 @@ class Pj::ParteCuerpo < ApplicationRecord
     mapeo != DEFAULT_MAPEO_NAME
   end
 
-  def list_mapeo_to_s list_mapeo
-    list_mapeo.join("@")
-  end
-
   def str_mapeo_to_list str_mapeo
     if str_mapeo.include?("@")
       str_mapeo.split("@").map(&:strip)
@@ -65,14 +61,6 @@ class Pj::ParteCuerpo < ApplicationRecord
           str_mapeo_to_list(mapeo)
         end
       )[saludact] || DEFAULT_UNKNOWN_STATE
-    end
-  end
-
-  def mapeo_list
-    if mapeo == DEFAULT_MAPEO_NAME && DEFAULT_MAPEOS[saludmax]
-      DEFAULT_MAPEOS[saludmax]
-    else
-      str_mapeo_to_list(mapeo)
     end
   end
 
