@@ -72,8 +72,8 @@ class PersonajesController < ModelController
       render partial: "form_items_tab"
     when "items_for_categ"
       categ = Categ.includes(items: [:clases, :rich_text_efecto]).find(params[:target_id])
-      owned_items = @x.personajeHasItem_by_categ[categ.id] || []
-      ph_items = categ.items.map { |item| item.build_personaje_has_item(@x) } - owned_items
+      owned_item_ids = (@x.personajeHasItem_by_categ[categ.id] || []).map(&:item_id)
+      ph_items = categ.items.reject { |item| owned_item_ids.include?(item.id) }.map { |item| item.build_personaje_has_item(@x) }
       render partial: "form_items_for_categ", locals: { ph_items: ph_items, categ_id: categ.id }
     else
       raise "Sección de formulario desconocida: #{params[:section]}"

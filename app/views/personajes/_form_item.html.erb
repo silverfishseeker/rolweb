@@ -70,5 +70,5 @@
       data-input="equipado-<%=id%>">
     <%= phi.isEquipped ? "Equipado" : "Sin equipar" %>
   </button>
-  <input type="hidden" name="<%= base_name %>[isEquipped]" id="equipado-<%=id%>" value="<%= phi.isEquipped %>">
+  <input type="hidden" name="<%= base_name %>[isEquipped]" id="equipado-<%=id%>" value="<%= phi.isEquipped ? "1" : "0" %>">
 </fieldset>

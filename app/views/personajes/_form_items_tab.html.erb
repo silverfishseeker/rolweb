@@ -29,6 +29,7 @@
 
     <div id="items-lists">
       <h3>Disponibles</h3>
+      <% owned_item_ids = @x.personajeHasItems.map(&:item_id) %>
       <% categs.each do |ct| %>
         <div class="detalle_section pj-selected_list"
             id="items-list-<%= ct.id %>" data-loaded="<%= @x.persisted? ? "0" : "1" %>">
@@ -36,8 +37,7 @@
           <div class="carta-grid_container carta-grid_container_form_habilidad"
               id="items-list-<%= ct.id %>-destroy">
             <% if !@x.persisted? %>
-              <% ( ct.items.map{|i| i.build_personaje_has_item(@x)}
-                 ).each do |ph_item| %>
+              <% ct.items.reject { |item| owned_item_ids.include?(item.id) }.map { |item| item.build_personaje_has_item(@x) }.each do |ph_item| %>
                 <%= render "form_item", phi: ph_item, categ_id: ct.id, destroy: "1" %>
               <% end %>
             <% end %>

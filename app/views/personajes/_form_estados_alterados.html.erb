@@ -10,8 +10,8 @@
   </thead>
   <tbody>
     <% index = 0%>
-    <% prefix = "#{nombre_input_base}[#{index}]"%>
     <% listaEstadosAlterados.each do |ea| %>
+      <% prefix = "#{nombre_input_base}[#{index}]"%>
       <tr data-id="<%= index %>">
         <% if ea.libre? %>
           <td data-label="" colspan="2">

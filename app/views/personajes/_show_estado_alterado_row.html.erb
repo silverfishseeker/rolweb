@@ -4,7 +4,8 @@
     <td data-label="" colspan="2">
       <input type="text" class="autosave-input" id="hea-<%= hea.id %>-libre"
           value="<%= hea.origen.contenido %>"
-          data-update-url="<%= update_field_personaje_path(personaje, field: "estado_alt_libre", target_id: hea.id) %>">
+          data-update-url="<%= update_field_personaje_path(personaje, field: "estado_alt_libre", target_id: hea.id) %>"
+          data-seq-key="estado_alt-libre-<%= hea.id %>">
     </td>
   <% else %>
     <td data-label="Estado"><%= hea.origen.nombre %></td>
@@ -12,7 +13,8 @@
       <% if hea.origen.isNumeric %>
         <input type="number" class="autosave-input" id="hea-<%= hea.id %>-valor"
             value="<%= hea.valor %>"
-            data-update-url="<%= update_field_personaje_path(personaje, field: "estado_alt_valor", target_id: hea.id) %>">
+            data-update-url="<%= update_field_personaje_path(personaje, field: "estado_alt_valor", target_id: hea.id) %>"
+            data-seq-key="estado_alt-valor-<%= hea.id %>">
       <% else %>
         —
       <% end %>
