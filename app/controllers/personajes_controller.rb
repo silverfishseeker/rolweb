@@ -220,6 +220,9 @@ class PersonajesController < ModelController
       broadcast_update_div("stat-modifier-#{stadistic.id}", stadistic.modificable.active_mod)
       broadcast_update_div("stat-val-#{stadistic.id}", stadistic.value)
       broadcast_update_div("stat-mod-#{stadistic.id}", stadistic.mod_str)
+      @x.calculados.select { |c| c.tipoStatistic == stadistic.tipoEstadistic }.each do |calculado|
+        broadcast_update_div("calc-val-#{calculado.id}", calculado.value) # calculados no comparten estadística ahora, pero lo dejamos por si en el futuro sí
+      end
 
     when "calc_mod"
       calculado = @x.calculados.find(params[:target_id])
