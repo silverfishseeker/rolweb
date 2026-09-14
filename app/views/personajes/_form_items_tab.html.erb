@@ -1,0 +1,50 @@
+<%# Personaje nuevo (sin id todavía): no se puede pedir por fetch, se carga todo de golpe %>
+<section class="columns">
+
+  <div id="items-alive">
+    <h3>Inventario</h3>
+    <div class="carta-grid_container carta-grid_container_form_habilidad detalle_section"
+        id="items-list-alive">
+      <% @x.personajeHasItems.includes(item: [:clases, :rich_text_efecto]).each do |ph_item| %>
+        <% next unless ph_item.item%>
+        <%= render "form_item", phi: ph_item, categ_id: "pj", destroy: "0" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div>
+    <% categs = (
+        @x.persisted? ?
+        Categ.select(:id, :nombre) :
+        Categ.includes(items: [:clases, :rich_text_efecto])
+    ).order(:nombre) %>
+
+    <h3>Selecciona categoría</h3>
+    <div class="miniListadoClases" id="items-menu">
+      <% categs.each do |ct| %>
+        <span class="carta-title categ_selector" data-list="items-list-<%= ct.id %>" data-categ_id="<%= ct.id %>">
+          <%= ct.nombre %></span>
+      <% end %>
+    </div>
+
+    <div id="items-lists">
+      <h3>Disponibles</h3>
+      <% categs.each do |ct| %>
+        <div class="detalle_section pj-selected_list"
+            id="items-list-<%= ct.id %>" data-loaded="<%= @x.persisted? ? "0" : "1" %>">
+          <h4><%= ct.nombre %></h4>
+          <div class="carta-grid_container carta-grid_container_form_habilidad"
+              id="items-list-<%= ct.id %>-destroy">
+            <% if !@x.persisted? %>
+              <% ( ct.items.map{|i| i.build_personaje_has_item(@x)}
+                 ).each do |ph_item| %>
+                <%= render "form_item", phi: ph_item, categ_id: ct.id, destroy: "1" %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+</section>

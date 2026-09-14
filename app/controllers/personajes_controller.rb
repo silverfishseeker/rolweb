@@ -13,10 +13,10 @@ class PersonajesController < ModelController
   configure_access level: :player
   configure_access :index, level: :unlogged
   before_action :set, only: %i[
-    show edit destroy add_to_personaje add_items_to_personaje update_field
+    show edit destroy add_to_personaje add_items_to_personaje update_field form_lazy_section
   ]
   before_action :check_ownership, only: %i[
-    show edit destroy update_field
+    show edit destroy update_field form_lazy_section
   ]
   after_action only: %i[create update destroy] do
     cache_delete "#{current_user.id}_personajes" if user_signed_in?
@@ -56,6 +56,28 @@ class PersonajesController < ModelController
 
   def edit
     @show_user = has_level?(:admin)
+  end
+
+  def form_lazy_section
+    case params[:section]
+    when "clases_tab"
+      render partial: "form_clases_tab"
+    when "habilidades_for_clase"
+      clase = Clase.includes(habilidads: [:categs, :mobs, :rich_text_efecto]).find(params[:target_id])
+      phHabilidades = @x.personajeHasHabilidads_by_clase[clase.id] || []
+      remaining_habilidades = (clase.habilidads.sort_by { |h| [h.nivel, h.nombre] } - phHabilidades.map(&:habilidad)
+          ).map { |habilidad| habilidad.build_personaje_has_habilidad(@x, clase) }
+      render partial: "form_habilidades_for_clase", locals: { phHabilidades: phHabilidades, remaining_habilidades: remaining_habilidades, clase_id: clase.id }
+    when "items_tab"
+      render partial: "form_items_tab"
+    when "items_for_categ"
+      categ = Categ.includes(items: [:clases, :rich_text_efecto]).find(params[:target_id])
+      owned_items = @x.personajeHasItem_by_categ[categ.id] || []
+      ph_items = categ.items.map { |item| item.build_personaje_has_item(@x) } - owned_items
+      render partial: "form_items_for_categ", locals: { ph_items: ph_items, categ_id: categ.id }
+    else
+      raise "Sección de formulario desconocida: #{params[:section]}"
+    end
   end
 
   def update

@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     post :add_items_to_personaje, on: :collection
     member do
       match "update_field/:field(/:target_id)", action: :update_field, via: [:get, :post], as: :update_field
+      match "form_lazy_section/:section(/:target_id)", action: :form_lazy_section, via: [:get], as: :form_lazy_section
     end
   end
   

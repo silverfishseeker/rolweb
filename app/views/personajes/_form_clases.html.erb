@@ -22,7 +22,8 @@
             <%= render "shared/image", image: phc.clase.image %>
           </div>
           <% if !oculto %>
-            <div class="carta-add_buttom" data-carta_id="clase_<%= id %>">
+            <div class="carta-add_buttom" data-carta_id="clase_<%= id %>"
+                data-alive_container="clases_container_0" data-destroy_container="clases_container_1">
               <%= destroy == "1" ? "+" : "-" %>
             </div>
           <% end %>

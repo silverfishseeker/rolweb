@@ -1,19 +1,20 @@
-import { nextZIndex } from "./zIndexCounter.js";
-import { adjustInputWidth } from "./utils.js";
-import { createCloseModalHandler  }  from "./modals.js";
+import { adjustInputWidth, subAdjustInputWidth } from "./utils.js";
+import { createCloseModalHandler, initModals }  from "./modals.js";
 import { initTabs } from "./tabs.js";
 import { warnUnsaved, markUnsaved } from "./warnUnsaved.js";
 
 export function onTurboLoad() {
 
+  const form = document.querySelector(".pj-form");
+
   warnUnsaved((setCantLeave) => {
-    setCantLeave(true);
-    document.querySelector(".pj-form").querySelector('input[type="submit"]')
-      .addEventListener("click", () => setCantLeave(false));
+    form.addEventListener("input", () => setCantLeave(true));
+    form.addEventListener("change", () => setCantLeave(true));
+    form.querySelector('input[type="submit"]').addEventListener("click", () => setCantLeave(false));
   });
 
   //tabs
-  initTabs(document.querySelector('.pj-form'));  
+  initTabs(form);
 
   // Toggle rango (delegado)
   const c_body = document.getElementById("calculados-body");
@@ -30,7 +31,7 @@ export function onTurboLoad() {
 
 
   // Marcar/desmarcar filas borradas
-  document.addEventListener("change", e => {
+  form.addEventListener("change", e => {
     if (e.target.classList.contains("rm_input")) {
       const input = e.target;
       const row = input.closest("tr");
@@ -113,9 +114,17 @@ export function onTurboLoad() {
   });
 
 
-  // CLASES Y HABILIDADES
-  const clasesContainer = document.getElementById("clases-section");
-  const habilidadesContainer = document.getElementById("habilidades-section");
+  // CLASES, HABILIDADES, ITEMS
+
+  // Lazy loading of sections (clases, habilidades, items)
+  const basePath = form.dataset.basePath;
+  async function loadSectionInto(element, section, targetId) {
+    element.innerHTML = await (await fetch(
+      `${basePath}/form_lazy_section/${section}` + (targetId != null ? `/${targetId}` : "")
+    )).text();
+    initModals(element); // El HTML recién insertado no pasó por el arranque de la página
+    element.querySelectorAll(".pj-cantidad").forEach(input => subAdjustInputWidth(input));
+  }
 
   //Mover carta genérico
   function moveCarta(button, aliveContainer, destroyContainer) {
@@ -134,25 +143,18 @@ export function onTurboLoad() {
     markUnsaved();
   }
 
-  // Mover clase
-  const aliveClasesContainer = document.getElementById("clases_container_0");
-  const destroyClasesContainer = document.getElementById("clases_container_1");
-  clasesContainer.querySelectorAll(".carta-add_buttom").forEach(button => {
-    button.addEventListener("click", () => {
-      moveCarta(button, aliveClasesContainer, destroyClasesContainer);
-    });
-  });
-
-  // Mover habilidad
-  habilidadesContainer.querySelectorAll(".carta-add_buttom").forEach(button => {
-    button.addEventListener("click", () => {
+  // Mover clase/habilidad/ítem (delegado)
+  function attachMoveCartaDelegation(container) {
+    container.addEventListener("click", e => {
+      const button = e.target.closest(".carta-add_buttom");
+      if (!button) return;
       const aliveContainer = document.getElementById(button.dataset.alive_container);
       const destroyContainer = document.getElementById(button.dataset.destroy_container);
       moveCarta(button, aliveContainer, destroyContainer);
     });
-  });
+  }
 
-  // Modal sobreescritura clase y habilidad
+  // Modal sobreescritura clase, habilidad e ítem (delegado)
   function modalHandelers(container) {
     container.addEventListener("click", createCloseModalHandler((_, id, classList) => {
       if (classList.contains("modal-close-sobreescritura")) {
@@ -174,51 +176,8 @@ export function onTurboLoad() {
       }
     });
   }
-  modalHandelers(clasesContainer);
-  modalHandelers(habilidadesContainer);
 
-  // Reseteo clase de habilidad
-  habilidadesContainer.addEventListener("click", e => {
-    if (e.target.classList.contains("boton_reseteo_clase")) {
-      const select = document.getElementById(e.target.dataset.id_select);
-      select.value = e.target.dataset.id_clase;
-      markUnsaved();
-    }
-  });
-
-  // Abrir lista genérica
-  function selectListFromMenu(containerMenu, containerLists, menuClass) {
-    containerMenu.querySelectorAll(`.${menuClass}`).forEach(button => {
-      button.addEventListener("click", () => {
-        containerLists.querySelectorAll(".pj-selected_list").forEach(l => {
-          l.classList.remove("pj-selected_list-active");
-        });
-        containerMenu.querySelectorAll(`.${menuClass}`).forEach(button => {
-          button.classList.remove(`${menuClass}-selected`);
-        });
-        document.getElementById(button.dataset.list).classList.add("pj-selected_list-active");
-        button.classList.add(`${menuClass}-selected`);
-      });
-    });
-  }
-
-  // Abrir lista habilidades clase
-  selectListFromMenu(clasesContainer, habilidadesContainer, "carta_form_clase");
-
-  // Añadir contador de clase/habilidad/ítem
-  document.querySelectorAll(".add-contador").forEach(button => {
-    button.addEventListener("click", () => {
-      const conts_body = document.getElementById(button.dataset.conts_body);
-      const index = conts_body.querySelectorAll("tr").length;
-      const prefix = button.dataset.prefix+"[calculados]["+index+"]";
-      const template = document.getElementById("contador-template");
-      const html = template.innerHTML.replace(/__PREFIX__/g, prefix);
-      conts_body.insertAdjacentHTML("beforeend", html);
-      markUnsaved();
-    });
-  });
-
-  // Toggle rango contador clase/habilidad
+  // Toggle rango contador clase/habilidad (delegado)
   function addToggleRangoListener(container) {
     container.addEventListener("click", e => {
       if (e.target.classList.contains("toggle-rango")) {
@@ -226,39 +185,90 @@ export function onTurboLoad() {
       }
     });
   }
-  addToggleRangoListener(clasesContainer);
-  addToggleRangoListener(habilidadesContainer);
 
+  // Abrir lista genérica (menú -> lista), con carga diferida opcional de la lista
+  function selectListFromMenu(containerMenu, matchClass, selectedClass, listsScopeSelector, loadList) {
+    containerMenu.addEventListener("click", async e => {
+      const button = e.target.closest(`.${matchClass}`);
+      if (!button) return;
+
+      const target = document.getElementById(button.dataset.list);
+
+      if (loadList && target.dataset.loaded !== "1") {
+        target.dataset.loaded = "1";
+        await loadList(target, button);
+      }
+
+      document.querySelector(listsScopeSelector).querySelectorAll(".pj-selected_list").forEach(l => {
+        l.classList.remove("pj-selected_list-active");
+      });
+      containerMenu.querySelectorAll(`.${matchClass}`).forEach(b => {
+        b.classList.remove(`${selectedClass}-selected`);
+      });
+      target.classList.add("pj-selected_list-active");
+      button.classList.add(`${selectedClass}-selected`);
+    });
+  }
+
+
+  // CLASES Y HABILIDADES
+  const tabClases = document.getElementById("tab-clases");
+
+  attachMoveCartaDelegation(tabClases);
+  modalHandelers(tabClases);
+  addToggleRangoListener(tabClases);
+
+  // Reseteo clase de habilidad (delegado)
+  tabClases.addEventListener("click", e => {
+    if (e.target.classList.contains("boton_reseteo_clase")) {
+      const select = document.getElementById(e.target.dataset.id_select);
+      select.value = e.target.dataset.id_clase;
+      markUnsaved();
+    }
+  });
+
+  // Abrir lista habilidades clase, cargando esa clase la primera vez que se abre
+  selectListFromMenu(tabClases, "carta_form_clase", "carta_form_clase", "#habilidades-section",
+    target => loadSectionInto(
+      target.querySelector(".habilidades-list-content"),
+      "habilidades_for_clase",
+      target.dataset.clase_id));
+
+  // Carga diferida de la pestaña (clases + esqueleto de habilidades por clase)
+  const tabClasesNav = document.querySelector('[data_tab_target="#tab-clases"]');
+  const tabClasesContent = document.getElementById("tab-clases-content");
+  tabClasesNav.addEventListener("click", () => {
+    if (tabClasesContent.dataset.loaded === "1") return;
+    tabClasesContent.dataset.loaded = "1";
+    loadSectionInto(tabClasesContent, "clases_tab");
+  });
 
 
   // ITEMS
+  const tabItems = document.getElementById("tab-items");
 
-  const itemsContainer = document.getElementById("tab-items");
-  // Modal sobreescritura
-  modalHandelers(itemsContainer);
+  modalHandelers(tabItems);
+  attachMoveCartaDelegation(tabItems);
+  addToggleRangoListener(tabItems);
 
-  // Abrir lista items categoría
-  const menu = document.getElementById("items-menu");
-  const listsContainer = document.getElementById("items-lists");
-  selectListFromMenu(menu, listsContainer, "carta-title");
-
-  // Mover item
-  itemsContainer.querySelectorAll(".carta-add_buttom").forEach(button => {
-    button.addEventListener("click", () => {
-      const aliveContainer = document.getElementById("items-list-alive");
-      const destroyContainer = document.getElementById(button.dataset.destroy_container);
-      moveCarta(button, aliveContainer, destroyContainer);
-    });
+  // Ajustar ancho input cantidad (inicial + al escribir), incluidos los que se carguen luego
+  tabItems.querySelectorAll(".pj-cantidad").forEach(input => subAdjustInputWidth(input));
+  tabItems.addEventListener("input", e => {
+    if (e.target.classList.contains("pj-cantidad")) {
+      subAdjustInputWidth(e.target);
+    }
   });
 
-  // Ajustar ancho input cantidad
-  itemsContainer.querySelectorAll(".pj-cantidad").forEach(input => {
-    adjustInputWidth(input);
-  });
+  // Abrir lista items categoría, cargando esa categoría la primera vez que se abre
+  selectListFromMenu(tabItems, "categ_selector", "carta-title", "#items-lists",
+    (target, button) => loadSectionInto(
+      document.getElementById(target.id + "-destroy"),
+      "items_for_categ",
+      button.dataset.categ_id));
 
-  // Equipar/desquipar item
-  itemsContainer.addEventListener("click", e => {
-    if (e.target.classList.contains("equiper")) {
+  // Equipar/desquipar item (delegado)
+  tabItems.addEventListener("click", e => {
+    if (e.target.classList.contains("equipar")) {
       const button = e.target;
       const input = document.getElementById(button.dataset.input);
       const isEquipped = input.value !== "1";
@@ -267,5 +277,28 @@ export function onTurboLoad() {
       button.textContent = isEquipped ? "Equipado" : "Sin equipar";
       button.classList.toggle("btn-shadow", isEquipped);
     }
+  });
+
+  // Carga diferida de la pestaña (ítems propios + esqueleto por categoría)
+  const tabItemsNav = document.querySelector('[data_tab_target="#tab-items"]');
+  const tabItemsContent = document.getElementById("tab-items-content");
+  tabItemsNav.addEventListener("click", () => {
+    if (tabItemsContent.dataset.loaded === "1") return;
+    tabItemsContent.dataset.loaded = "1";
+    loadSectionInto(tabItemsContent, "items_tab");
+  });
+
+
+  // Añadir contador de clase/habilidad/ítem (delegado)
+  form.addEventListener("click", e => {
+    const button = e.target.closest(".add-contador");
+    if (!button) return;
+    const conts_body = document.getElementById(button.dataset.conts_body);
+    const index = conts_body.querySelectorAll("tr").length;
+    const prefix = button.dataset.prefix+"[calculados]["+index+"]";
+    const template = document.getElementById("contador-template");
+    const html = template.innerHTML.replace(/__PREFIX__/g, prefix);
+    conts_body.insertAdjacentHTML("beforeend", html);
+    markUnsaved();
   });
 }

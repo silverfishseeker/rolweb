@@ -1,0 +1,9 @@
+<%# Expected params: phHabilidades, remaining_habilidades, clase_id %>
+<div class="detalle_section">
+  <h4>Habilidades aprendidas</h4>
+  <%= render "form_habilidades_list", phHabilidades: phHabilidades, clase_id: clase_id, destroy: "0" %>
+</div>
+<div class="detalle_section">
+  <h4>El resto de habilidades</h4>
+  <%= render "form_habilidades_list", phHabilidades: remaining_habilidades, clase_id: clase_id, destroy: "1" %>
+</div>

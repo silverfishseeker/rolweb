@@ -1,0 +1,46 @@
+<%# Personaje nuevo (sin id todavía): no se puede pedir por fetch, se carga todo de golpe %>
+<section class="columns">
+  <div id="clases-section">
+    <h3>Clases</h3>
+    <div class="detalle_section">
+      <h4>Clases aprendidas</h4>
+      <%= render(
+          "form_clases",
+          phClases: Clase.where(oculto: true).map { |clase| clase.build_personaje_has_clase(@x) },
+          destroy: "1",
+          oculto: true) %>
+      <%= render "form_clases", phClases: @x.personajeHasClases, destroy: "0", oculto: false %>
+    </div>
+    <div class="detalle_section">
+      <h4>El resto de clases</h4>
+      <%= render(
+          "form_clases",
+          phClases: (
+            Clase.order(:nombre).where(oculto: false) - 
+            @x.personajeHasClases.includes(:clase).map(&:clase)).map do |clase|
+              clase.build_personaje_has_clase(@x) 
+            end,
+          destroy: "1",
+          oculto: false) %>
+    </div>
+  </div>
+  <div id="habilidades-section">
+    <% if @x.persisted?
+          Clase.select(:id, :nombre).order(:nombre)
+        else
+          Clase.includes(habilidads: [:categs, :mobs, :rich_text_efecto]).order(:nombre)
+        end.each do |clase| %>
+      <div class="pj-selected_list" id="habilidades-list-<%= clase.id %>" data-clase_id="<%= clase.id %>" data-loaded="<%= @x.persisted? ? "0" : "1" %>">
+        <h3>Habilidades de <%= clase.nombre %></h3>
+        <div class="habilidades-list-content">
+          <% if !@x.persisted? %>
+            <%= render "form_habilidades_for_clase",
+                phHabilidades: [],
+                remaining_habilidades: clase.habilidads.sort_by { |h| [h.nivel, h.nombre] }.map { |h| h.build_personaje_has_habilidad(@x, clase) },
+                clase_id: clase.id %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>

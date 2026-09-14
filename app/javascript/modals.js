@@ -22,9 +22,9 @@ export function createCloseModalHandler(extraAction = () => {}) {
   }
 }
 
-export function onTurboLoad() {
+export function initModals(root = document) {
   // Default open/close modals based on data attribute
-  document.querySelectorAll(".modal-container").forEach(container => {
+  root.querySelectorAll(".modal-container").forEach(container => {
     container.addEventListener("click", openModal);
     if (container.dataset.defaultClose === "true") {
       container.addEventListener("click", createCloseModalHandler());
@@ -32,7 +32,7 @@ export function onTurboLoad() {
   });
 
   // Modal dragging and send to front on click
-  document.querySelectorAll(".pj-modal").forEach(modal => {
+  root.querySelectorAll(".pj-modal").forEach(modal => {
     const header = modal.querySelector("header");
     let isDragging = false;
     let offsetX, offsetY;
@@ -64,4 +64,8 @@ export function onTurboLoad() {
       modal.classList.remove("dragging");
     });
   });
+}
+
+export function onTurboLoad() {
+  initModals();
 }

@@ -1,4 +1,4 @@
-function subAdjustInputWidth(input, modifier = 0) {
+export function subAdjustInputWidth(input, modifier = 0) {
   input.style.maxWidth = `${(input.value.length || 1) + 2 + modifier}ch`;
 }
 

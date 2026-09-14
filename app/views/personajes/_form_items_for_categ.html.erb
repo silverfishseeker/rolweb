@@ -1,0 +1,4 @@
+<%# Expected params: ph_items, categ_id %>
+<% ph_items.each do |ph_item| %>
+  <%= render "form_item", phi: ph_item, categ_id: categ_id, destroy: "1" %>
+<% end %>

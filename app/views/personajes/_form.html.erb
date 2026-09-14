@@ -38,7 +38,7 @@
 <% content_for :main_content_class, 'main-content-margin_reduced' %>
 
 <div>
-  <%= form_with(model: @x, html: { multipart: true, class: "pj-form"}) do |f| %>
+  <%= form_with(model: @x, html: { multipart: true, class: "pj-form", data: { base_path: (@x.persisted? ? personaje_path(@x) : nil) } }) do |f| %> <%# base_path is called dataset.basePath in JavaScript %>
     <% if @show_user %>
       <label>
         <%= f.label :user_id, "Usuario" %>
@@ -489,102 +489,36 @@
         </script>
 
         <!-- CLASES Y HABILIDADES -->
-        <div id="tab-clases" class="pj-tab_pane">
+        <div id="tab-clases" class="pj-tab_pane" data-lazy-section="clases_tab">
           <h4>Notas</h4>
           <p> Está permitido aprender habilidades de clases que no has aprendido. </p>
           <p> Si cambias la clase de una habilidad, la habilidad aparecerá en la sección de la clase a la que has cambiado, (incluso si no has aprendido esa clase).</p>
           <p> No puedes aprender la misma habilidad varias veces (desde clases distintas), si lo haces el sistema dará un aviso y seleccionará una aleatoriamente como la buena.</p>
-          <section class="columns">
-            <div id="clases-section">
-              <h3>Clases</h3>
-              <div class="detalle_section">
-                <h4>Clases aprendidas</h4>
-                <% clases_ocultas = Clase.where(oculto: true).map{ |clase| clase.build_personaje_has_clase(@x) } %>
-                <%= render "form_clases", phClases: clases_ocultas, destroy: "1", oculto: true %>
-                <%= render "form_clases", phClases: @x.personajeHasClases, destroy: "0", oculto: false %>
-              </div>
-              <div class="detalle_section">
-                <h4>El resto de clases</h4>
-                <% remaining_clases = (Clase.order(:nombre).where(oculto: false) - @x.personajeHasClases.includes(:clase).map(&:clase)).map{ |clase| clase.build_personaje_has_clase(@x) } %>
-                <%= render "form_clases", phClases: remaining_clases, destroy: "1", oculto: false %>
-              </div>
+          <% if @x.persisted? %>
+            <div id="tab-clases-content" data-loaded="0"></div>
+          <% else %>
+            <div id="tab-clases-content" data-loaded="1">
+              <%= render "form_clases_tab" %>
             </div>
-            <div id="habilidades-section">
-              <% habilidades = @x.personajeHasHabilidads_by_clase %>
-              <% Clase.includes(habilidads: [:categs, :mobs, :rich_text_efecto]).all.each do |clase| %>
-                <% phHabilidades = habilidades[clase.id] || [] %>
-                <div class="pj-selected_list" id="habilidades-list-<%= clase.id %>">
-                  <h3>Habilidades de <%= clase.nombre %></h3>
-                  <div class="detalle_section">
-                    <h4>Habilidades aprendidas</h4>
-                      <%= render "form_habilidades_list",
-                          phHabilidades: phHabilidades,
-                          clase_id: clase.id, destroy: "0" %>
-                  </div>
-                  <div class="detalle_section">
-                    <h4>El resto de habilidades</h4>
-                      <% remaining_habilidades = (
-                          clase.habilidads.sort_by { |h| [h.nivel, h.nombre] } - phHabilidades.map(&:habilidad)
-                        ).map do |habilidad|
-                          habilidad.build_personaje_has_habilidad(@x, clase)
-                        end
-                      %>
-                    <%= render "form_habilidades_list", phHabilidades: remaining_habilidades,
-                                clase_id: clase.id, destroy: "1" %>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-          </section>
+          <% end %>
         </div>
-      
+
         <!-- INVENTARIO -->
-        <div id="tab-items" class="pj-tab_pane">
+        <div id="tab-items" class="pj-tab_pane" data-lazy-section="items_tab">
           <h2>Oro: <%= f.number_field :oro, step: 0.01 %> </h2>
-          <p> Selecciona la cantidad de cada ítem que tienes en 
+          <p> Selecciona la cantidad de cada ítem que tienes en
             el número arriba a la izquierda. Puedes tener 0 de un ítem.</p>
           <p> No puedes tener el mismo ítem varias veces desde diferentes
              categorías, si lo haces el sistema dará un aviso y seleccionará
               una aleatoriamente como el bueno. Si quieres más de un mismo
               ítem, simplemente aumenta la cantidad.</p>
-          <section class="columns">
-            <div id="items-alive">
-              <h3>Inventario</h3>
-                <div class="carta-grid_container carta-grid_container_form_habilidad detalle_section"
-                    id="items-list-alive">
-                      <% @x.personajeHasItems.includes(item: [:clases, :rich_text_efecto]).each do |ph_item| %>
-                        <% next unless ph_item.item%>
-                        <%= render "form_item", phi: ph_item, categ_id: "pj", destroy: "0" %>
-                      <% end %>
-                </div>
+          <% if @x.persisted? %>
+            <div id="tab-items-content" data-loaded="0"></div>
+          <% else %>
+            <div id="tab-items-content" data-loaded="1">
+              <%= render "form_items_tab" %>
             </div>
-            <div>
-              <h3>Selecciona categoría</h3>
-              <div class="miniListadoClases" id="items-menu">
-                <% Categ.order(:nombre).each do |ct| %>
-                  <span class="carta-title" data-list="items-list-<%= ct.id %>">
-                    <%= ct.nombre %></span>
-                <% end %>
-              </div>
-              <div id="items-lists">
-                <h3>Disponibles</h3>
-                <% owned_items = @x.personajeHasItem_by_categ %>
-                <% Categ.includes(items: [:clases, :rich_text_efecto]).all.each do |ct| %>
-                  <div class="detalle_section pj-selected_list"
-                      id="items-list-<%= ct.id %>">
-                    <h4><%= ct.nombre %></h4>
-                    <div class="carta-grid_container carta-grid_container_form_habilidad"
-                        id="items-list-<%= ct.id %>-destroy">
-                      <% ph_items = ct.items.map{|i| i.build_personaje_has_item(@x)} - (owned_items[ct.id] || []) %>
-                      <% ph_items.each do |ph_item| %>
-                        <%= render "form_item", phi: ph_item, categ_id: ct.id, destroy: "1" %>
-                      <% end %>
-                    </div>
-                  </div>
-                <% end %>
-              </div>
-            </div>
-          </section>
+          <% end %>
         </div>
 
       </div>
