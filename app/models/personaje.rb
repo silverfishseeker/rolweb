@@ -3,6 +3,9 @@ class Personaje < ApplicationRecord
   #   nivel_otro, is_public, oro
 
   PESO_MODIFICADOR_NOMBRE = "Modificador de peso con nombre muy largo para que no se repita con otros items por chorra ya me jodería que se repitiera el nombre de un item y que se jodiera el calculo del peso actual XD"
+
+  Alerta = Struct.new(:nombre, :tipo, :tip) # tipo: :normal o :muerte
+
   has_rich_text :descripcion
 
   belongs_to :user
@@ -50,11 +53,47 @@ class Personaje < ApplicationRecord
   end
 
   def peso_calculado
-    calculados.find { |c| c.rango&.tipoRango&.clave == "peso" }
+    calculado_rango("peso")
   end
 
   def peso_modificador_item
     personajeHasItems.includes(:customitem).find { |phi| phi.customitem&.nombre == PESO_MODIFICADOR_NOMBRE }
+  end
+
+  def calculado_rango(clave)
+    calculados.find { |c| c.rango&.tipoRango&.clave == clave }
+  end
+
+  def alertas
+    out = []
+
+    if (sangre = calculado_rango("sangre"))
+      if sangre.rango.valor <= 0
+        out << Alerta.new("Sangre en 0", :muerte, "Tu sangre ha llegado a 0: debes realizar una tirada de muerte.")
+      elsif sangre.rango.valor <= sangre.value / 2.0
+        out << Alerta.new("Sangre baja", :normal, "Tu sangre está a la mitad o menos de tu máximo: obtienes desventaja en todas tus tiradas.")
+      end
+    end
+
+    if (estabilidad = calculado_rango("estabilidad")) && estabilidad.rango.valor <= 0
+      out << Alerta.new("Estabilidad en 0", :normal, "Todos los impactos que recibas se consideran críticos y no puedes moverte.")
+    end
+
+    if peso_calculado && peso_actual > peso_calculado.value
+      out << Alerta.new("Sobrecargado", :normal, "Pierdes estabilidad máxima y el valor de todas tus tiradas físicas por cada unidad de peso que excedas de tu máximo.")
+    end
+
+    parteCuerpos.each do |pc|
+      if pc.saludact == 0
+        out << Alerta.new("#{pc.nombre}: destruido", :muerte, "Debes realizar una tirada de muerte.")
+      elsif pc.state == "G"
+        out << Alerta.new("#{pc.nombre}: grave", :normal, "No puedes realizar acciones que la involucren; si se daña de nuevo, tirada de muerte (o pierdes la extremidad si es un apéndice).")
+      elsif pc.state == "H"
+        out << Alerta.new("#{pc.nombre}: herido", :normal, "Las acciones que la involucren obtienen desventaja acumulada por cada extremidad herida. Si te dañan esta parte del cuerpo, desangras.")
+      end
+    end
+
+    out
   end
 
   def calc_nivel_clases

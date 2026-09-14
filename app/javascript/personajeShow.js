@@ -110,6 +110,27 @@ export function onTurboLoad() {
     };
   });
 
+  // Tooltip de los chips de alerta
+  const alertTooltip = document.body.appendChild(document.createElement("div"));
+  alertTooltip.className = "pjv-alerta_tooltip-popup";
+  alertTooltip.hidden = true;
+
+  function toggleAlertTooltip(e, show) {
+    const chip = e.target.closest(".pjv-alerta_chip");
+    if (!chip) return;
+    alertTooltip.hidden = !show;
+    if (!show) return;
+    alertTooltip.textContent = chip.querySelector(".pjv-alerta_tooltip").textContent;
+    const chipRect = chip.getBoundingClientRect();
+    alertTooltip.style.left = Math.max(8, Math.min(
+      chipRect.left + chipRect.width / 2 - alertTooltip.offsetWidth / 2,
+      window.innerWidth - alertTooltip.offsetWidth - 8
+    )) + "px";
+    alertTooltip.style.top = (chipRect.top - alertTooltip.offsetHeight - 8) + "px";
+  }
+  [["pointerover", true], ["pointerout", false], ["focusin", true], ["focusout", false]]
+    .forEach(([evt, show]) => document.addEventListener(evt, e => toggleAlertTooltip(e, show)));
+
   // Resizable columns
   const styles = getComputedStyle(document.documentElement);
   const MIN_WIDTH = parseInt(styles.getPropertyValue("--pjv-columns-min-width"));

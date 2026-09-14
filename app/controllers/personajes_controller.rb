@@ -188,6 +188,16 @@ class PersonajesController < ModelController
     broadcast_update_div("peso-actual", @x.peso_actual)
   end
 
+  def broadcast_alertas
+    @x.broadcast_action_to(
+      @x,
+      action: "update",
+      target: "alertas-personaje",
+      partial: "personajes/show_alertas",
+      locals: { alertas: @x.alertas }
+    )
+  end
+
   def broadcast_estado_alt_summary(owner)
     @x.broadcast_action_to(
       @x,
@@ -217,31 +227,34 @@ class PersonajesController < ModelController
       stadistic = @x.estadistics.find(params[:target_id])
       stadistic.modificable.active_mod = value.to_i
       stadistic.save!
-      broadcast_update_div("stat-modifier-#{stadistic.id}", stadistic.modificable.active_mod)
+      broadcast_update_div("stat-modifier-#{stadistic.id}", stadistic.modificable.active_mod, seq: params[:seq], seq_key: "stat-modifier-#{stadistic.id}")
       broadcast_update_div("stat-val-#{stadistic.id}", stadistic.value)
       broadcast_update_div("stat-mod-#{stadistic.id}", stadistic.mod_str)
       @x.calculados.select { |c| c.tipoStatistic == stadistic.tipoEstadistic }.each do |calculado|
         broadcast_update_div("calc-val-#{calculado.id}", calculado.value) # calculados no comparten estadística ahora, pero lo dejamos por si en el futuro sí
       end
+      broadcast_alertas
 
     when "calc_mod"
       calculado = @x.calculados.find(params[:target_id])
       calculado.modificable.active_mod = value.to_i
       calculado.save!
-      broadcast_update_div("calc-modifier-#{calculado.id}", calculado.modificable.active_mod)
+      broadcast_update_div("calc-modifier-#{calculado.id}", calculado.modificable.active_mod, seq: params[:seq], seq_key: "calc-modifier-#{calculado.id}")
       broadcast_update_div("calc-val-#{calculado.id}", calculado.value)
+      broadcast_alertas
 
     when "calc_rango"
       calculado = @x.calculados.find(params[:target_id])
       calculado.rango.valor = value.to_i
       calculado.save!
-      broadcast_update_div("calc-rango-#{calculado.id}", calculado.rango.valor)
+      broadcast_update_div("calc-rango-#{calculado.id}", calculado.rango.valor, seq: params[:seq], seq_key: "calc-rango-#{calculado.id}")
+      broadcast_alertas
 
     when "pc_mod"
       pc = @x.parteCuerpos.find(params[:target_id])
       pc.modificable.active_mod = value.to_i
       pc.save!
-      broadcast_update_div("pcarm-modifier-#{pc.id}", pc.modificable.active_mod)
+      broadcast_update_div("pcarm-modifier-#{pc.id}", pc.modificable.active_mod, seq: params[:seq], seq_key: "pcarm-modifier-#{pc.id}")
       broadcast_update_div("pcarm-val-#{pc.id}", pc.modificable.passive_mod + pc.modificable.active_mod)
 
     when "pc_salud"
@@ -257,11 +270,12 @@ class PersonajesController < ModelController
         target: "pcsalud-row-#{pc.id}",
         attributes: { "class-name" => "pjv-var-cuerpo-borrada", on: pc.saludact <= 0 },
         render: false)
+      broadcast_alertas
 
     when "oro"
       @x.oro = value.to_f
       @x.save!
-      broadcast_update_div("personaje-oro", @x.oro)
+      broadcast_update_div("personaje-oro", @x.oro, seq: params[:seq], seq_key: "personaje-oro")
 
     when "descripcion"
       @x.descripcion = value
@@ -298,6 +312,7 @@ class PersonajesController < ModelController
         render: false
       )
       broadcast_peso_actual
+      broadcast_alertas
 
     when "item_restaurar"
       target_id = params[:target_id].to_i
@@ -322,6 +337,7 @@ class PersonajesController < ModelController
       end
       broadcast_upsert_item(phi, seq: params[:seq])
       broadcast_peso_actual
+      broadcast_alertas
 
     when "item_cantidad"
       phi = @x.personajeHasItems.find(params[:target_id])
@@ -329,6 +345,7 @@ class PersonajesController < ModelController
       phi.save!
       broadcast_update_many_divs(["phi-#{phi.id}-cantidad", "phi_iinv-#{phi.id}-cantidad"], phi.cantidad, seq: params[:seq], seq_key: "cantidad-#{phi.id}")
       broadcast_peso_actual
+      broadcast_alertas
 
     when "item_customitem"
       phi = @x.personajeHasItems.find(params[:target_id])
@@ -340,6 +357,7 @@ class PersonajesController < ModelController
       phi.customitem.update!(peso: value)
       broadcast_update_many_divs(["phi-#{phi.id}-peso", "phi_iinv-#{phi.id}-peso"], phi.customitem.peso, seq: params[:seq], seq_key: "customitem-peso-#{phi.id}")
       broadcast_peso_actual
+      broadcast_alertas
 
     when "item_crear_custom"
       phi = @x.personajeHasItems.new(cantidad: 1, isEquipped: false)
@@ -347,6 +365,7 @@ class PersonajesController < ModelController
       phi.save!
       broadcast_upsert_item(phi)
       broadcast_peso_actual
+      broadcast_alertas
 
     when "peso_modificador"
       phi = @x.peso_modificador_item
@@ -358,6 +377,7 @@ class PersonajesController < ModelController
         phi.save!
       end
       broadcast_peso_actual
+      broadcast_alertas
 
     when "item_equipar"
       phi = @x.personajeHasItems.find(params[:target_id])
@@ -468,6 +488,7 @@ class PersonajesController < ModelController
       broadcast_upsert_item(phi)
     end
     broadcast_peso_actual
+    broadcast_alertas
   end
 
   def added_response(id)

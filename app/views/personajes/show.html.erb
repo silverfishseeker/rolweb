@@ -6,13 +6,13 @@
 <div class="pjv-form">
   <div class="pjv-header">
     <h1> <%=@x.nombre%></h1>
+    <p class="pjv-nivel"><b> Nivel <%= @x.nivel %> </b></p>
 
     <div class="options">
       <span id="save-status" class="pjv-save_status" hidden></span>
       <%= link_to "Editar", edit_personaje_path(@x), class: "btn btn-primary" %>
     </div>
   </div>
-  <p class="pjv-nivel"><b> Nivel <%= @x.nivel %> </b></p>
 
   <div class="pjv-stats">
     <% @x.estadistics.ordered.each do |stat| %>
@@ -30,6 +30,7 @@
             data-base="stat-base-<%=stat.id%>"
             data-value="stat-val-<%=stat.id%>"
             data-mod="stat-mod-<%=stat.id%>"
+            data-seq-key="stat-modifier-<%=stat.id%>"
             data-update-url="<%= update_field_personaje_path(@x, field: "stat_mod", target_id: stat.id) %>"
             id="stat-modifier-<%=stat.id%>">
       </span>
@@ -50,6 +51,7 @@
                         name="calculados[<%= calc.id %>][rango]"
                         value="<%= calc.rango.valor %>"
                         class="pjv-input autosave-input"
+                        data-seq-key="calc-rango-<%=calc.id%>"
                         data-update-url="<%= update_field_personaje_path(@x, field: "calc_rango", target_id: calc.id) %>"
                         id="calc-rango-<%=calc.id%>">
                   /
@@ -61,6 +63,7 @@
                     class="pjv-modifier autosave-input"
                     data-base="calc-base-<%=calc.id%>"
                     data-value="calc-val-<%=calc.id%>"
+                    data-seq-key="calc-modifier-<%=calc.id%>"
                     data-update-url="<%= update_field_personaje_path(@x, field: "calc_mod", target_id: calc.id) %>"
                     id="calc-modifier-<%=calc.id%>">
                 <span id="calc-base-<%=calc.id%>" style="display:none">
@@ -109,6 +112,7 @@
                     data-value="pcarm-val-<%=pc.id%>"
                     data-link-aumentar-id="pcarm-<%=pc.id%>_aumentar"
                     data-link-disminuir-id="pcarm-<%=pc.id%>_disminuir"
+                    data-seq-key="pcarm-modifier-<%=pc.id%>"
                     data-update-url="<%= update_field_personaje_path(@x, field: "pc_mod", target_id: pc.id) %>"
                     id="pcarm-modifier-<%=pc.id%>">
                 <span id="pcarm-base-<%=pc.id%>" style="display:none">
@@ -241,6 +245,7 @@
                           class="pjv-modifier autosave-input"
                           data-base="calc-base-<%= @x.peso_calculado.id %>"
                           data-value="calc-val-<%= @x.peso_calculado.id %>"
+                          data-seq-key="calc-modifier-<%= @x.peso_calculado.id %>"
                           data-update-url="<%= update_field_personaje_path(@x, field: "calc_mod", target_id: @x.peso_calculado.id) %>"
                           id="calc-modifier-<%= @x.peso_calculado.id %>">
                       <span id="calc-base-<%= @x.peso_calculado.id %>" style="display:none"><%= @x.peso_calculado.value %></span>
@@ -273,9 +278,12 @@
                 class: "carta-number carta-coste pjv-modifier autosave-input",
                 id: "personaje-oro",
                 data: {
+                  seq_key: "personaje-oro",
                   update_url: update_field_personaje_path(@x, field: "oro")
                 } %> </h3>
-          <%# Hueco libre aquí %>
+          <div class="pjv-alertas" id="alertas-personaje">
+            <%= render "personajes/show_alertas", alertas: @x.alertas %>
+          </div>
         </div>
         <div class="pjv-subcolumn pjv-subcolumn-big">
           <%= render "shared/image_with_link", image: @x.picture&.image, cssclass: "pjv-image" %>

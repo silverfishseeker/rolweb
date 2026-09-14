@@ -1,0 +1,7 @@
+<%# Expected params: alertas %>
+<% alertas.each do |alerta| %>
+  <span class="pjv-alerta_chip<%= " pjv-alerta_chip-muerte" if alerta.tipo == :muerte %>" tabindex="0">
+    <%= alerta.nombre %>
+    <span class="pjv-alerta_tooltip"><%= alerta.tip %></span>
+  </span>
+<% end %>
