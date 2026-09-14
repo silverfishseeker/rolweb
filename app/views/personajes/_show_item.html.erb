@@ -33,7 +33,7 @@
 
       <% if item %>
         <% if isInInventario %>
-          <p class="carta-number carta-peso">
+          <p class="carta-number carta-peso" id="<%=js_base_id%>-peso">
             <%= item.peso %>
           </p>
         <% end %>
@@ -42,6 +42,10 @@
 
         <%= render "personajes/show_contadores", has_calculados: phi, nombre: prefix %>
       <% elsif isInInventario %>
+        <input type="number" class="carta-number carta-peso autosave-input" id="<%=js_base_id%>-peso"
+            value="<%=phi.customitem.peso%>"
+            data-update-url="<%= update_field_personaje_path(phi.personaje, field: 'item_customitem_peso', target_id: phi.id) %>"
+            data-seq-key="customitem-peso-<%= phi.id %>">
         <input type="text" class="carta-customitem autosave-input" name="<%= prefix %>[<%=phi.id%>][customitem]"
             id="<%=js_base_id%>-customitem" value="<%=phi.customitem.nombre%>"
             data-update-url="<%= update_field_personaje_path(phi.personaje, field: 'item_customitem', target_id: phi.id) %>"
@@ -75,6 +79,7 @@
                     + '&inventario_position=' + encodeURIComponent(card.dataset.position)
                     + (equipoCard ? '&equipo_position=' + encodeURIComponent(equipoCard.dataset.position) : '')
                     + (customitemInput ? '&customitem=' + encodeURIComponent(customitemInput.value)
+                        + '&peso=' + encodeURIComponent(card.querySelector('.carta-peso').value)
                       : '&item_id=' + encodeURIComponent(card.dataset.itemId))
                     + '&seq=' + seq);
               ">

@@ -1,6 +1,8 @@
 class Personaje < ApplicationRecord
   # attributes: nombre, nivel_clases, nivel_habilidades, nivel_estadisticas,
   #   nivel_otro, is_public, oro
+
+  PESO_MODIFICADOR_NOMBRE = "Modificador de peso con nombre muy largo para que no se repita con otros items por chorra ya me jodería que se repitiera el nombre de un item y que se jodiera el calculo del peso actual XD"
   has_rich_text :descripcion
 
   belongs_to :user
@@ -41,6 +43,18 @@ class Personaje < ApplicationRecord
         hash[categ.id] << phi
       end
     end
+  end
+
+  def peso_actual
+    personajeHasItems.includes(:item, :customitem).sum { |phi| (phi.item&.peso || phi.customitem&.peso || 0) * phi.cantidad }
+  end
+
+  def peso_calculado
+    calculados.find { |c| c.rango&.tipoRango&.clave == "peso" }
+  end
+
+  def peso_modificador_item
+    personajeHasItems.includes(:customitem).find { |phi| phi.customitem&.nombre == PESO_MODIFICADOR_NOMBRE }
   end
 
   def calc_nivel_clases

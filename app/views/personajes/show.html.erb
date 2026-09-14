@@ -41,7 +41,7 @@
       <div class="pjv-section">
         <h3>Estado</h3>
         <div class="pjv-vars_container">
-          <% @x.calculados.each do |calc| %>
+          <% @x.calculados.reject { |calc| calc.rango&.tipoRango&.clave == "peso" }.each do |calc| %>
             <div class="pjv-var">
               <span><%= calc.nombre %>: </span>
               <span>
@@ -226,9 +226,29 @@
                       tu equipo.)
                     </li>
                   </ol>
-                  <p> Para lo ítems custom es igual pero sin peso. (No puedes cambiar su posición al
-                    crearlos, guarda el personaje antes.) </p>
                 <% end %>
+                <div class="pjv-vars_container">
+                  <div class="pjv-var">
+                    <span>Peso: </span>
+                    <span>
+                      <span id="peso-actual"><%= @x.peso_actual %></span>
+                      <input type="number" class="pjv-input autosave-input"
+                          value="<%= @x.peso_modificador_item&.customitem&.peso || 0 %>"
+                          data-update-url="<%= update_field_personaje_path(@x, field: "peso_modificador") %>">
+                      /
+                      <span id="calc-val-<%= @x.peso_calculado.id %>"><%= @x.peso_calculado.value %></span>
+                      <input type="number"
+                          name="calculados[<%= @x.peso_calculado.id %>][active_mod]"
+                          value="<%= @x.peso_calculado.modificable.active_mod %>"
+                          class="pjv-modifier autosave-input"
+                          data-base="calc-base-<%= @x.peso_calculado.id %>"
+                          data-value="calc-val-<%= @x.peso_calculado.id %>"
+                          data-update-url="<%= update_field_personaje_path(@x, field: "calc_mod", target_id: @x.peso_calculado.id) %>"
+                          id="calc-modifier-<%= @x.peso_calculado.id %>">
+                      <span id="calc-base-<%= @x.peso_calculado.id %>" style="display:none"><%= @x.peso_calculado.value %></span>
+                    </span>
+                  </div>
+                </div>
                 <div class="btn btn-primary btn-small"
                     onclick="fetch('<%= update_field_personaje_path(@x, field: "item_crear_custom") %>')">
                   Añadir nuevo ítem custom

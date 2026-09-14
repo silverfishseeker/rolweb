@@ -51,7 +51,8 @@ class PersonajesController < ModelController
     # Se cargan una sola vez y en la vista se filtran/agrupan en memoria (antes se
     # repetía la misma consulta con distintos where para cada pestaña/sección).
     @personaje_has_habilidads = @x.personajeHasHabilidads.includes(:ordenados, habilidad: [:categs, :mobs, :rich_text_efecto])
-    @personaje_has_items = @x.personajeHasItems.includes(:ordenados, item: [:categs, :clases, :rich_text_efecto])
+    @personaje_has_items = @x.personajeHasItems.includes(:ordenados, :customitem, item: [:categs, :clases, :rich_text_efecto])
+      .reject { |phi| phi.customitem&.nombre == Personaje::PESO_MODIFICADOR_NOMBRE }
   end
 
   def edit
@@ -183,6 +184,10 @@ class PersonajesController < ModelController
     hea.target.is_a?(Personaje) ? hea.target_id == @x.id : hea.target.personaje_id == @x.id
   end
 
+  def broadcast_peso_actual
+    broadcast_update_div("peso-actual", @x.peso_actual)
+  end
+
   def broadcast_estado_alt_summary(owner)
     broadcast_update_div(
       "resumen-#{estado_alt_dom_key(owner)}",
@@ -287,6 +292,7 @@ class PersonajesController < ModelController
         attributes: { seq: params[:seq], seq_key: phi.id },
         render: false
       )
+      broadcast_peso_actual
 
     when "item_restaurar"
       target_id = params[:target_id].to_i
@@ -303,30 +309,50 @@ class PersonajesController < ModelController
         if params[:item_id].present?
           phi.item_id = params[:item_id]
         else
-          phi.build_customitem(nombre: params[:customitem])
+          phi.build_customitem(nombre: params[:customitem], peso: params[:peso])
         end
         phi.save!
         restore_ordenado_position(phi, :inventario, params[:inventario_position])
         restore_ordenado_position(phi, :equipo, params[:equipo_position]) if phi.isEquipped
       end
       broadcast_upsert_item(phi, seq: params[:seq])
+      broadcast_peso_actual
 
     when "item_cantidad"
       phi = @x.personajeHasItems.find(params[:target_id])
       phi.cantidad = value.to_i
       phi.save!
       broadcast_update_many_divs(["phi-#{phi.id}-cantidad", "phi_iinv-#{phi.id}-cantidad"], phi.cantidad, seq: params[:seq], seq_key: "cantidad-#{phi.id}")
+      broadcast_peso_actual
 
     when "item_customitem"
       phi = @x.personajeHasItems.find(params[:target_id])
       phi.customitem.update!(nombre: value)
       broadcast_update_many_divs(["phi-#{phi.id}-customitem", "phi_iinv-#{phi.id}-customitem"], phi.customitem.nombre, seq: params[:seq], seq_key: "customitem-#{phi.id}")
 
+    when "item_customitem_peso"
+      phi = @x.personajeHasItems.find(params[:target_id])
+      phi.customitem.update!(peso: value)
+      broadcast_update_many_divs(["phi-#{phi.id}-peso", "phi_iinv-#{phi.id}-peso"], phi.customitem.peso, seq: params[:seq], seq_key: "customitem-peso-#{phi.id}")
+      broadcast_peso_actual
+
     when "item_crear_custom"
       phi = @x.personajeHasItems.new(cantidad: 1, isEquipped: false)
       phi.build_customitem(nombre: "Nuevo ítem personalizado")
       phi.save!
       broadcast_upsert_item(phi)
+      broadcast_peso_actual
+
+    when "peso_modificador"
+      phi = @x.peso_modificador_item
+      if phi
+        phi.customitem.update!(peso: value)
+      else
+        phi = @x.personajeHasItems.new(cantidad: 1, isEquipped: false)
+        phi.build_customitem(nombre: Personaje::PESO_MODIFICADOR_NOMBRE, peso: value)
+        phi.save!
+      end
+      broadcast_peso_actual
 
     when "item_equipar"
       phi = @x.personajeHasItems.find(params[:target_id])
@@ -436,6 +462,7 @@ class PersonajesController < ModelController
       )
       broadcast_upsert_item(phi)
     end
+    broadcast_peso_actual
   end
 
   def added_response(id)
@@ -726,6 +753,16 @@ class PersonajesController < ModelController
         process_contadores_for attrs[:calculados], phi
         phi.save!
       end
+    end
+
+    # modificador de peso (item especial)
+    phi = personaje.peso_modificador_item
+    if phi
+      phi.customitem.update!(peso: params[:peso_modificador])
+    else
+      phi = personaje.personajeHasItems.new(cantidad: 1, isEquipped: false)
+      phi.build_customitem(nombre: Personaje::PESO_MODIFICADOR_NOMBRE, peso: params[:peso_modificador])
+      phi.save!
     end
   end
 end

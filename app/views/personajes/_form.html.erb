@@ -305,7 +305,17 @@
                       </td>
                       <%= render "personajes/form_calculado_row", calc: calc, index: index do %>
                           <td data-label="Valor actual">
-                          <% if isR %>
+                          <% if isR && tipo.clave == "peso" %>
+                            <input type="hidden" name="calculados[<%= index %>][rango]" value="<%= @x.peso_actual %>">
+                            <span title="El peso actual se calcula atumáticamente a partir de tu inventario, pero puedes modificarlo con el valor a la derecha.">
+                              <%= @x.peso_actual %>
+                            </span>
+                            <input type="number"
+                                  name="peso_modificador"
+                                  value="<%= @x.peso_modificador_item&.customitem&.peso || 0 %>"
+                                  class="rango-input"
+                                  title="Modificador manual del peso actual, para efectos especiales que no vengan de un ítem concreto.">
+                          <% elsif isR %>
                             <input type="number"
                                   name="calculados[<%= index %>][rango]"
                                   value="<%= calc&.rango&.valor || 0 %>"

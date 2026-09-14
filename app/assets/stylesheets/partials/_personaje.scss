@@ -507,11 +507,15 @@ $min-total-width: $min-width * 3 + 10px;
     background-color: var(--c_detalle);
     color: var(--c_white);
     border-radius: 5px;
-    padding: 2px;
+    padding: 2px 6px;
     display: grid;
     grid-template-columns: 1fr auto;
+    align-items: center;
     span {
       white-space: nowrap;
+    }
+    input {
+      vertical-align: middle;
     }
   }
   .pjv-var-cuerpo {

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_13_010000) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_14_143000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -325,6 +325,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_13_010000) do
     t.bigint "personaje_has_item_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "peso", default: "0.0", null: false
     t.index ["personaje_has_item_id"], name: "index_pj_customitems_on_personaje_has_item_id", unique: true
   end
 
