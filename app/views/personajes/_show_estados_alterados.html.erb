@@ -25,21 +25,16 @@
     </tbody>
   </table>
   <select onchange="
-      if (this.value) {
-        let url = '<%= update_field_personaje_path(personaje, field: "estado_alt_crear", owner_id: (owner.is_a?(Personaje) ? nil : owner.id)) %>';
+      let url = '<%= update_field_personaje_path(personaje, field: 'estado_alt_crear', owner_id: (owner.is_a?(Personaje) ? nil : owner.id)) %>';
+      if (this.value !== 'custom') {
         url += (url.includes('?') ? '&' : '?') + 'estadoalterado_id=' + this.value;
-        fetch(url);
-        this.value = '';
-      }">
-    <option value="">Añadir estado alterado...</option>
+      }
+      fetch(url);
+      this.value = '';">
+    <option value="" hidden selected>Añadir estado alterado...</option>
     <% available_estados_for(owner).each do |ea| %>
       <option value="<%= ea.id %>"><%= ea.nombre %></option>
     <% end %>
+    <option value="custom">Añadir personalizado...</option>
   </select>
-  <br>
-  <br>
-  <span class="btn btn-small btn-primary"
-      onclick="fetch('<%= update_field_personaje_path(personaje, field: "estado_alt_crear", owner_id: (owner.is_a?(Personaje) ? nil : owner.id)) %>')">
-    Añadir personalizado
-  </span>
 <% end %>
