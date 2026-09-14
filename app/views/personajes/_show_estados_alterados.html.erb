@@ -2,13 +2,12 @@
 <% dom_key = owner.is_a?(Personaje) ? "personaje" : "pc-#{owner.id}" %>
 <div class="estado-resumen <%= "pjv-estados_alterados-horizontal" if local_assigns[:horizontal] %>"
     id="resumen-<%= dom_key %>">
-  <%= owner.hasEstadoalterados.map { |hea|
-        hea.libre? ? hea.origen.contenido : (hea.origen.isNumeric ? "#{hea.origen.nombre} #{hea.valor}" : hea.origen.nombre)
-      }.join(", ") %>
+  <%= render "personajes/show_estados_alterados_resumen", hasEstadoalterados: owner.hasEstadoalterados %>
 </div>
 <%= render "shared/modal",
             buttom_content: local_assigns[:buttom_content] || "Ver / editar",
             buttom_extra_css: local_assigns[:buttom_extra_css] || "",
+            buttom_title: "Ver y editar los estados alterados de #{owner.nombre}",
             header_text: "Estados alterados de #{owner.nombre}",
             index: "estados-#{dom_key}" do %>
   <table class="tabla-estadisticas" id="<%= ea_t_id(dom_key) %>">
@@ -37,6 +36,8 @@
       <option value="<%= ea.id %>"><%= ea.nombre %></option>
     <% end %>
   </select>
+  <br>
+  <br>
   <span class="btn btn-small btn-primary"
       onclick="fetch('<%= update_field_personaje_path(personaje, field: "estado_alt_crear", owner_id: (owner.is_a?(Personaje) ? nil : owner.id)) %>')">
     Añadir personalizado

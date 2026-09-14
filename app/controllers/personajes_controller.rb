@@ -189,11 +189,13 @@ class PersonajesController < ModelController
   end
 
   def broadcast_estado_alt_summary(owner)
-    broadcast_update_div(
-      "resumen-#{estado_alt_dom_key(owner)}",
-      owner.hasEstadoalterados.map { |hea|
-        hea.libre? ? hea.origen.contenido : (hea.origen.isNumeric ? "#{hea.origen.nombre} #{hea.valor}" : hea.origen.nombre)
-      }.join(", "))
+    @x.broadcast_action_to(
+      @x,
+      action: "update",
+      target: "resumen-#{estado_alt_dom_key(owner)}",
+      partial: "personajes/show_estados_alterados_resumen",
+      locals: { hasEstadoalterados: owner.hasEstadoalterados }
+    )
   end
 
   def dom_id_for(ordenado)

@@ -528,8 +528,16 @@ $min-total-width: $min-width * 3 + 10px;
     .pjv-var-cuerpo-nombre {
       max-width: 120px;
     }
-    .pjv-var-cuerpo-estados_alterados {
+    .pjv-var-cuerpo-data {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .estado-resumen {
+      order: 1; // va después del resto pese a ser lo primero en el HTML
+      flex-basis: 100%; // fuerza su propia línea, sin mover nada más
       white-space: normal;
+      line-height: 0; // colapsa a 0 cuando está vacío (solo queda el espacio en blanco del ERB)
     }
     .pjv-var-cuerpo-armor {
       background-image: url('shield.webp');
@@ -577,7 +585,20 @@ $min-total-width: $min-width * 3 + 10px;
 .pjv-estados_alterados-horizontal {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 3px;
+  align-items: center;
+}
+
+.pjv-estado_chip {
+  display: inline-block;
+  line-height: 1.3; // restaura la altura normal dentro del chip (el padre tiene line-height: 0)
+  background-color: var(--c_base);
+  color: var(--c_white);
+  border: 1px solid var(--c_base_alt);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-size: 0.8em;
+  font-weight: bold;
 }
 
 .pjv-pos_controller {

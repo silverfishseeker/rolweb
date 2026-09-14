@@ -1,10 +1,11 @@
-<%# Expected params: buttom_content, header_text, index, &block, (optional) default_close = true, (optional) buttom_extra_css, (optional) close_buttom_extra_css %>
+<%# Expected params: buttom_content, header_text, index, &block, (optional) default_close = true, (optional) buttom_extra_css, (optional) buttom_title, (optional) close_buttom_extra_css %>
 <%# index must contain a prefix so it is unique between different kinds of models using the modals %>
 
 <span class="modal-container" data-default-close="<%= local_assigns[:default_close] || true %>">
   <button type="button"
           class="open_modal btn btn-primary btn-small <%= local_assigns[:buttom_extra_css] %>"
-          data-index="modal-<%=index%>">
+          data-index="modal-<%=index%>"
+          <% if local_assigns[:buttom_title] %>title="<%= local_assigns[:buttom_title] %>"<% end %>>
     <%= buttom_content %>
   </button>
   <div id="modal-<%=index%>" class="pj-modal">

@@ -89,15 +89,13 @@
               <span class="pjv-var-cuerpo-nombre">
                 <%= pc.nombre %>:
               </span>
-              <span>
-                <span class="pjv-var-cuerpo-estados_alterados">
-                  <%= render "personajes/show_estados_alterados",
-                    owner: pc, personaje: @x,
-                    buttom_content: image_tag("edit.png", alt: "Editar"),
-                    buttom_extra_css: "btn-icon",
-                    horizontal: true
-                  %>
-                </span>
+              <span class="pjv-var-cuerpo-data">
+                <%= render "personajes/show_estados_alterados",
+                  owner: pc, personaje: @x,
+                  buttom_content: image_tag("edit.png", alt: "Editar"),
+                  buttom_extra_css: "btn-icon",
+                  horizontal: true
+                %>
                 <span class="pjv-var-cuerpo-armor">
                   <span id="pcarm-val-<%=pc.id%>" class="inner">
                     <%= pc.modificable.passive_mod + pc.modificable.active_mod %>

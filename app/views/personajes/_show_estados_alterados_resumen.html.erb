@@ -1,0 +1,6 @@
+<%# Expected params: hasEstadoalterados %>
+<% hasEstadoalterados.each do |hea| %>
+  <span class="pjv-estado_chip">
+    <%= hea.libre? ? hea.origen.contenido : (hea.origen.isNumeric ? "#{hea.origen.nombre} #{hea.valor}" : hea.origen.nombre) %>
+  </span>
+<% end %>
