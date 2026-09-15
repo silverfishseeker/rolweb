@@ -1,3 +1,4 @@
+<% content_for :title, "Estados alterados" %>
 <ul>
     <% @xs.sort_by(&:nombre).each do |x| %>
         <li><%= render "estadoalteradoEdit", x:x%></li>

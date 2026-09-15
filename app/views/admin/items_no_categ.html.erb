@@ -1,3 +1,4 @@
+<% content_for :title, "Ítems sin categoría" %>
 <h2> Ítems sin categoría </h2>
 <div class="carta-grid_container">
     <% Item.all.includes(:categs, :clases, :rich_text_efecto).where(categs: { id: nil }).sort_by(&:nombre).each do |item| %>

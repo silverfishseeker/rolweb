@@ -1,3 +1,4 @@
+<% content_for :title, "Editar #{@x["name"]}" %>
 <%= form_with url: dndspell_path(@x["id"]), method: :put do |form| %>
   <div>
     <%= form.label :name %><br>

@@ -1,6 +1,7 @@
+<% content_for :title, "Editar #{@x.nombre}" %>
 <%= render "form", x: @x %>
 
-<%= link_to "Eliminar", 
+<%= link_to "Eliminar",
     personaje_path(@x),
     data: {turbo_method: :delete, turbo_confirm: "Are you sure?"},
     class: "btn btn-danger",
