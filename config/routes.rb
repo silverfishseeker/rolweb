@@ -70,6 +70,7 @@ Rails.application.routes.draw do
   get '/delete_disk_cache', to: 'admin#delete_disk_cache'
   get '/delete_all_cache', to: 'admin#delete_all_cache'
   get '/delete_session_data', to: 'admin#delete_session_data'
+  get '/reset_cuento_relations', to: 'admin#reset_cuento_relations'
   get '/backup', to: 'admin#backup'
   get '/prepare_backup', to: 'admin#prepare_backup'
   get '/create_backup', to: 'admin#create_backup'

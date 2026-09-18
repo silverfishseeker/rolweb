@@ -34,6 +34,12 @@ class AdminController < ApplicationController
         redirect_to "/control", notice: "Datos de sesión eliminados"
     end
     
+    include CuentosHelper
+    def reset_cuento_relations
+        Cuento.find_each { |cuento| calculate_cuento(cuento) }
+        redirect_to "/control", notice: "Relaciones padre-hijo de los cuentos recalculadas"
+    end
+    
     def backup
     end
 

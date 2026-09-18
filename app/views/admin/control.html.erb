@@ -46,6 +46,9 @@
         <br>
         <%= link_to "Borrar datos de sesión", "/delete_session_data" %>
         <br>
+        <%= link_to "Resetear padre-hijos de cuentos", "/reset_cuento_relations",
+              data: { turbo_confirm: "¿Recalcular las relaciones padre-hijo de todos los cuentos a partir de su texto?" } %>
+        <br>
         <%= link_to "Descargar logs actuales", "/download_logs" %>
         <br>
         <%= link_to "Email de prueba", "/test_mail" %>
