@@ -2,10 +2,6 @@ let cantLeave;
 let currentBeforeUnloadListener = null;
 let currentTurboVisitListener = null;
 
-export function markUnsaved() {
-  cantLeave = true;
-}
-
 // setup recibe un setter y engancha sus propios listeners para llamarlo cuando corresponda
 export function warnUnsaved(setup) {
   cantLeave = false;
