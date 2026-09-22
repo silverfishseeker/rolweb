@@ -20,7 +20,7 @@ module EnvVars
     "S3_REGION" =>                      [:str,  "us-east-1", []],
     "S3_BUCKET" =>                      [:str,  "cubo", []],
     "S3_FORCE_PATH_STYLE" =>            [:bool, true],
-    "MAIL_DELIVERY_METHOD" =>           [:str, "smtp", ["smtp", "mailgun_api"]], 
+    "MAIL_DELIVERY_METHOD" =>           [:str,  nil, ["smtp", "mailgun_api"]], 
     "MAIL_PASSWORD" =>                  [:str,  nil, []], # Required for mail sending
     "MAIL_DOMAIN" =>                    [:str,  nil, []], # Required for mail sending
     "MAIL_USER" =>                      [:str,  nil, []],  # Required for mail sending
@@ -111,6 +111,15 @@ module EnvVars
   def self.all
     VARS.keys.each_with_object({}) do |key, hash|
       hash[key] = self[key]
+    end
+  end
+
+  def self.mail_configured?
+    case self["MAIL_DELIVERY_METHOD"]
+    when "smtp"
+      self["MAIL_USER"].present? && self["MAIL_DOMAIN"].present? && self["MAIL_PASSWORD"].present? && self["MAIL_ADDRESS"].present?
+    when "mailgun_api"
+      self["MAILGUN_API_KEY"].present?
     end
   end
 end

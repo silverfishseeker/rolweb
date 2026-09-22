@@ -2,7 +2,7 @@ class TestMailer < ApplicationMailer
   def probe_email()
     @time = Time.current
     mail(
-      from: ActionMailer::Base.smtp_settings[:user_name],
+      from: "no-reply@#{EnvVars["MAIL_DOMAIN"]}",
       to: "silverfishseeker@gmail.com",
       subject: "Rolweb prueba Mailgun"
     )

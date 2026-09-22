@@ -16,6 +16,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  after_action do
+    if Thread.current[:mail_not_configured]
+      Thread.current[:mail_not_configured] = nil
+      flash[:notice] = nil
+      flash[:alert] = "El correo no está configurado: no se enviará ningún email."
+    end
+  end
+
   rescue_from Net::OpenTimeout do |e|
     Rails.logger.error e.full_message
 
