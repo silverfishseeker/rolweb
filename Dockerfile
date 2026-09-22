@@ -10,7 +10,6 @@ RUN bundle install
 COPY app/ app/
 COPY bin/ bin/
 COPY config/ config/
-COPY lib/ lib/
 COPY public/ public/
 COPY Rakefile .
 COPY config.ru .
