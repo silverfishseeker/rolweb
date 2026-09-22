@@ -1,4 +1,5 @@
 import { isFreshBroadcast } from "./seqManager.js";
+import { adjustInputWidth } from "./utils.js";
 
 const TYPING_GRACE_MS = 1500;
 
@@ -65,9 +66,11 @@ Turbo.StreamActions.upsert_item = function () {
       const before = document.getElementById(this.getAttribute("before"));
       const fragment = this.templateContent;
       const posController = fragment.querySelector(".pjv-pos_controller"); // antes de insertar: el fragmento se vacía al insertarse
+      const numberInputs = fragment.querySelectorAll('input[type="number"]'); // idem
       if (before) container.insertBefore(fragment, before);
       else container.appendChild(fragment);
       window.bindPositionController(posController);
+      numberInputs.forEach(input => adjustInputWidth(input));
     }
   }
 }
