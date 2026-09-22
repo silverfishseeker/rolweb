@@ -15,30 +15,36 @@ class Pj::ParteCuerpo < ApplicationRecord
 
   DEFAULT_UNKNOWN_STATE = "?"
 
-  DEFAULT_MAPEOS = {
-    1 => ["💀", "S"],
-    2 => ["💀", "G", "S"],
-    3 => ["💀", "G", "H", "S"],
-    4 => ["💀", "G", "H", "S", "S"],
-    5 => ["💀", "G", "H", "H", "S", "S"],
-    6 => ["💀", "G", "G", "H", "H", "S", "S"],
-    7 => ["💀", "G", "G", "H", "H", "S", "S", "S"],
-    8 => ["💀", "G", "G", "H", "H", "H", "S", "S", "S"],
-    9 => ["💀", "G", "G", "G", "H", "H", "H", "S", "S", "S"],
-  }
+  def default_mapeos sMax 
+    case sMax
+    when 1
+      ["💀", "S"]
+    when 2
+      ["💀", "G", "S"]
+    when 3
+      ["💀", "G", "H", "S"]
+    when 4
+      ["💀", "G", "H", "S", "S+"]
+    else
+      ss = sMax / 2 
+      hs = sMax - 1 - ss
+      ["💀"] + ["G"] + ["H"] * hs + ["S"] * ss
+    end
+  end
 
   DEFAULT_MAPEO_NAME = "DEFAULT_MAPEO"
 
   validate do
     if mapeo
-      unless
-          (mapeo == DEFAULT_MAPEO_NAME && DEFAULT_MAPEOS[saludmax]) ||
-          str_mapeo_to_list(mapeo).length == saludmax
-
+      unless mapeo == DEFAULT_MAPEO_NAME || str_mapeo_to_list(mapeo).length == saludmax
         errors.add(:mapeo, message: "mapeo: {#{mapeo}} saludmax: #{saludmax}")
       end
     else
       errors.add(:mapeo, "no puede ser nulo")
+    end
+
+    if saludmax < 1
+      errors.add(:saludmax, "debe ser mayor a 0")
     end
   end
 
@@ -59,8 +65,8 @@ class Pj::ParteCuerpo < ApplicationRecord
       DEFAULT_UNKNOWN_STATE
     else
       (@curr_mapeo ||=
-        if mapeo == DEFAULT_MAPEO_NAME && DEFAULT_MAPEOS[saludmax]
-          DEFAULT_MAPEOS[saludmax]
+        if mapeo == DEFAULT_MAPEO_NAME && default_mapeos(saludmax)
+          default_mapeos(saludmax)
         else
           ["💀"] + str_mapeo_to_list(mapeo)
         end
