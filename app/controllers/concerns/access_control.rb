@@ -53,8 +53,10 @@ module AccessControl
     if level == :superadmin
       session[:return_to] = request.fullpath
       redirect_to new_adminsession_path
-    else
+    elsif request.referer.present? && URI(request.referer).path != request.path
       redirect_back(fallback_location: root_path)
+    else
+      redirect_to root_path
     end
     false
   end
