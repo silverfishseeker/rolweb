@@ -19,8 +19,12 @@ export function warnUnsaved(setup) {
   };
 
   currentTurboVisitListener = (event) => { // Navegación Turbo (links internos)
-    if (cantLeave && !confirm( "Tienes cambios sin guardar. ¿Seguro que quieres salir de esta página?" ))
-      event.preventDefault();
+    if (cantLeave) {
+      if (confirm("Tienes cambios sin guardar. ¿Seguro que quieres salir de esta página?"))
+        cantLeave = false;
+      else
+        event.preventDefault();
+    }
   };
 
   window.addEventListener("beforeunload", currentBeforeUnloadListener);
