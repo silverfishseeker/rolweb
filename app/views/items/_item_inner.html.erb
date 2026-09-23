@@ -18,7 +18,7 @@
 
 <div class="carta-description">
     <%= item.ritual_description %>
-    <%= local_assigns[:sobreescritura] || item.efecto %>
+    <%= local_assigns[:sobreescritura].presence || item.efecto %>
 </div>
 
 <% if !hide_add && user_signed_in? && controller.has_level?(:player) %>
