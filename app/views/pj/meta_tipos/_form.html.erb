@@ -20,7 +20,7 @@
     <%= f.number_field :orden, class: "form-control" %>
   </div>
   <br>
-  <% if meta_tipo.respond_to?(:tipo_estadistic) %>
+  <% if meta_tipo.respond_to?(:tipoEstadistic) %>
     <div>
       <%= f.label :pj_tipo_estadistic_id, "Estadística base" %>
       <%= f.collection_select :pj_tipo_estadistic_id,

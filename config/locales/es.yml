@@ -18,6 +18,10 @@ es:
           attributes:
             clase:
               required: "La clase es requerida en personaje_has_clase."
+        pj/meta_tipo:
+          attributes:
+            orden:
+              blank: "no puede estar vacío"
         user:
           attributes:
             password:
