@@ -57,6 +57,7 @@
       </h1>
       <div class="options">
         <%= f.submit "Guardar", class: "btn btn-primary" %>
+        <%= f.button "Guardar y continuar editando", name: "commit", value: PersonajesController::COMMIT_TO_EDIT, class: "btn btn-primary" %>
         <%= link_to "Cancelar", @x, class: "btn btn-danger",
             data: { turbo_confirm: "¿Seguro que quieres cancelar? Se perderán los cambios." } %>
       </div>

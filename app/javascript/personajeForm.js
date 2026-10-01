@@ -10,7 +10,7 @@ export function onTurboLoad() {
   // Siempre se avisa al salir, sin comprobar si hay cambios reales de por medio.
   warnUnsaved((setCantLeave) => {
     setCantLeave(true);
-    form.querySelector('input[type="submit"]').addEventListener("click", () => setCantLeave(false));
+    form.querySelectorAll('input[type="submit"], button[type="submit"]').forEach(btn => btn.addEventListener("click", () => setCantLeave(false)));
   });
 
   //tabs
