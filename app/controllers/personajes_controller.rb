@@ -781,15 +781,5 @@ class PersonajesController < ModelController
         phi.save!
       end
     end
-
-    # modificador de peso (item especial)
-    phi = personaje.peso_modificador_item
-    if phi
-      phi.customitem.update!(peso: params[:peso_modificador])
-    else
-      phi = personaje.personajeHasItems.new(cantidad: 1, isEquipped: false)
-      phi.build_customitem(nombre: Personaje::PESO_MODIFICADOR_NOMBRE, peso: params[:peso_modificador])
-      phi.save!
-    end
   end
 end
