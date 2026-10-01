@@ -13,6 +13,7 @@ services:
     depends_on:
       - db
       - minio
+    restart: always
   
   db:
     image: postgres:16-alpine
@@ -24,6 +25,7 @@ services:
       - 5555:5432
     volumes:
       - ./db_data:/var/lib/postgresql/data
+    restart: always
     # command: ["sleep", "infinity"]
 
   minio:
@@ -37,3 +39,4 @@ services:
     volumes:
       - ./minio_data:/data
     command: server /data --console-address ":9001"
+    restart: always
