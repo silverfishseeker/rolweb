@@ -1,0 +1,22 @@
+<%# Expected params: tipo, calc, index, isR, orderable (default true), destroyable (default true) %>
+<% orderable = local_assigns.fetch(:orderable, true)
+   id_prefix = "calc-tipo-#{tipo.id}" if orderable %>
+<input type="hidden" name="calculados[<%= index %>][tipo_id]" value="<%= tipo.id %>">
+<input type="hidden" name="calculados[<%= index %>][is_rango]" value="<%= isR ? 1 : 0 %>">
+<tr data-index="<%= index %>" class="<%= "pj-fila_borrada" if orderable && !calc.present? %>"
+    <% if orderable && calc %>id="<%= id_prefix %>" data-ordenado-id="<%= calc.ordenado_for.id %>"<% end %>>
+  <td data-label="Nombre">
+    <strong><%= tipo.nombre %></strong>
+  </td>
+  <td data-label="Estadística base">
+    <%= tipo.tipoEstadistic ? tipo.tipoEstadistic.nombre : "—" %>
+  </td>
+  <td data-label="Valor base">
+    <%= @x.estadistics.find { |s| s.tipoEstadistic == tipo.tipoEstadistic }&.value || "—" %>
+  </td>
+  <%= render "personajes/form_calculado_celdas_comunes", calc: calc, index: index,
+      id_prefix: id_prefix, orderable: orderable,
+      destroyable: local_assigns.fetch(:destroyable, true) do %>
+    <%= yield %>
+  <% end %>
+</tr>

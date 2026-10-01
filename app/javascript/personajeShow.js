@@ -1,5 +1,5 @@
 
-import { adjustInputWidth } from "./utils.js";
+import { adjustInputWidth, makePositionBinder } from "./utils.js";
 import { initTabs } from "./tabs.js";
 import { initSaveStatus, refreshSaveStatus } from "./saveStatus.js";
 import { createCloseModalHandler } from "./modals.js";
@@ -219,42 +219,7 @@ export function onTurboLoad() {
 
 
   // Controles para mover de posición las cartas
-  function swapPosition(parent, beforeElement, afterElement) {
-    if (parent && beforeElement && afterElement) {
-      parent.insertBefore(afterElement, beforeElement);
-      fetch(
-        location.pathname + "/update_field/reorder" +
-        "?a=" + beforeElement.dataset.ordenadoId +
-        "&b=" + afterElement.dataset.ordenadoId);
-    }
-  }
-  function visibleChildren(parent) {
-    return Array.from(parent.children).filter(child => child.offsetParent !== null);
-  }
-
-  // Botones de mover posición
-  window.bindPositionController = function (controller) { // funcion a parte para que los nuevos lo pueda usar
-    const upButton = document.getElementById(controller.dataset.idPrefix + "-pos_up");
-    const downButton = document.getElementById(controller.dataset.idPrefix + "-pos_down");
-    const element = document.getElementById(controller.dataset.idPrefix);
-    const parent = element.parentElement;
-
-    upButton.addEventListener("click", () => {
-      const visible = visibleChildren(parent);
-      const pos = visible.indexOf(element);
-      if (pos > 0) {
-        swapPosition(parent, visible[pos - 1], element);
-      }
-    });
-
-    downButton.addEventListener("click", () => {
-      const visible = visibleChildren(parent);
-      const pos = visible.indexOf(element);
-      if (pos < visible.length - 1) {
-        swapPosition(parent, element, visible[pos + 1]);
-      }
-    });
-  };
+  window.bindPositionController = makePositionBinder(location.pathname); // funcion a parte para que los nuevos lo pueda usar
   document.querySelectorAll(".pjv-pos_controller").forEach(window.bindPositionController);
 
   //Filtrar intems por categoría

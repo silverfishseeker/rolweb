@@ -15,6 +15,11 @@ class Pj::ParteCuerpo < ApplicationRecord
 
   DEFAULT_UNKNOWN_STATE = "?"
 
+  include Ordenable
+  def ordenado_lists
+    [:partes_cuerpo]
+  end
+
   def default_mapeos sMax 
     case sMax
     when 1

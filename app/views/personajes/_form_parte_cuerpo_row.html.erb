@@ -1,6 +1,6 @@
 <%# Expected params: index, pc%>
 
-<tr index="<%=index%>">
+<tr index="<%=index%>" <% if pc %>id="pc-<%= pc.id %>" data-ordenado-id="<%= pc.ordenado_for.id %>"<% end %>>
   <td data-label="Parte">
     <input type="text"
           name="parte_cuerpos[<%=index%>][nombre]"
@@ -77,6 +77,13 @@
                     listaEstadosAlterados: pc ? pc.hasEstadoalterados : [],
                     nombre_input_base: "parte_cuerpos[#{index}][has_estadoalterados]",
                     table_id: index %>
+    <% end %>
+  </td>
+  <td data-label="Orden">
+    <% if pc %>
+      <%= render "personajes/show_position_controller", id_prefix: "pc-#{pc.id}" %>
+    <% else %>
+      <span class="pjv-pos_unavailable" title="<%= Pj::Ordenado::MENSAJE_ORDEN_PENDIENTE_GUARDAR %>">✕</span>
     <% end %>
   </td>
   <td data-label="Borrar" class="checkbox-danger">

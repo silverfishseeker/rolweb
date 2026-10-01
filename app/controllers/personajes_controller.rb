@@ -615,6 +615,7 @@ class PersonajesController < ModelController
         end
 
       if attrs[:_destroy] == "1"
+        raise "No se puede eliminar el calculado de peso de un personaje" if calculado.rango&.tipoRango&.clave == "peso"
         calculado.destroy
         next
       end

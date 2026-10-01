@@ -159,13 +159,18 @@
                     <th>Incremento de niveles</th>
                     <th>Incremento por efectos permanentes</th>
                     <th>Incremento por efectos temporales</th>
+                    <th>Orden</th>
                   </tr>
                 </thead>
                 <tbody>
 
-                <% Pj::TipoEstadistic.order(:orden).each do |tipo| %>
-                  <% stat = @x.estadistics.find { |s| s.tipoEstadistic == tipo } %>
-                  <tr class="<%= "pj-fila_borrada" if !stat %>">
+                <% Pj::TipoEstadistic.all.map do |tipo|
+                  [tipo, @x.estadistics.find { |s| s.tipoEstadistic == tipo }] # Obtener cada estadística que el personaje tenga
+                end.sort_by do |tipo, stat|
+                  [stat ? 0 : 1, stat&.ordenado_position || tipo.orden] # Al ordenar, agrupamos por estadisticas que tiene el personaje y que no. Las que tiene usan Ordenado y las que no usan el orden propio
+                end.each do |tipo, stat| %>
+                  <tr class="<%= "pj-fila_borrada" if !stat %>" id="est-<%= tipo.id %>"
+                      <% if stat %>data-ordenado-id="<%= stat.ordenado_for.id %>"<% end %>>
                     <td data-label="Aplicar">
                       <input type="checkbox"
                             name="estadistics[<%= tipo.id %>][apply]"
@@ -197,6 +202,13 @@
                       <input type="number"
                             name="estadistics[<%= tipo.id %>][active_mod]"
                             value="<%= stat&.modificable&.active_mod %>">
+                    </td>
+                    <td data-label="Orden">
+                      <% if stat %>
+                        <%= render "personajes/show_position_controller", id_prefix: "est-#{tipo.id}" %>
+                      <% else %>
+                        <span class="pjv-pos_unavailable" title="<%= Pj::Ordenado::MENSAJE_ORDEN_PENDIENTE_GUARDAR %>">✕</span>
+                      <% end %>
                     </td>
                   </tr>
                 <% end %>
@@ -273,49 +285,76 @@
                     <th>Incremento por efectos temporales</th>
                     <th>Valor calculado</th>
                     <th>Valor actual</th> <!-- si es un rango-->
+                    <th>Orden</th>
                     <th>Borrar</th>
                   </tr>
                 </thead>
                 <tbody id="calculados-body">
                   <% index = 0 %>
-                  <!-- ================= DEPENDIENTES ================= -->
-                  <% (Pj::TipoCalculado.all + Pj::TipoRango.all).each do |tipo| %>
-                    <% isR = tipo.is_a?(Pj::TipoRango)
-                      calc = @x.calculados.find do |c|
-                        if isR
-                          c.rango ? c.rango.tipoRango_id == tipo.id : false
-                        else
-                          c.tipoCalculado_id == tipo.id
-                        end
-                      end # It is allowed for calc to be nil
-                      estad = @x.estadistics.find do |s|
-                        s.tipoEstadistic == tipo.tipoEstadistic
-                      end %>
-                    <input type="hidden" name="calculados[<%= index %>][tipo_id]" value="<%= tipo.id %>">
-                    <input type="hidden" name="calculados[<%= index %>][is_rango]" value="<%= isR ? 1 : 0 %>">
-                    <tr data-index="<%= index %>" class="<%= "pj-fila_borrada" if !calc.present? %>">
-                      <td data-label="Nombre">
-                        <strong><%= tipo.nombre %></strong>
+                  <!-- ================= PESO (fija, sin orden) ================= -->
+                  <% peso_tipo = Pj::TipoRango.find_by(clave: "peso")
+                     peso_calc = @x.peso_calculado %>
+                  <% if peso_tipo %>
+                    <%= render "form_calculado_dependiente_row", tipo: peso_tipo, calc: peso_calc, index: index, isR: true, orderable: false, destroyable: false do %>
+                      <td data-label="Valor actual">
+                        <input type="hidden" name="calculados[<%= index %>][rango]" value="<%= @x.peso_actual %>">
+                        <span title="El peso actual se calcula automáticamente a partir de tu inventario.">
+                          <%= @x.peso_actual %>
+                        </span>
                       </td>
-                      <td data-label="Estadística base">
-                        <%= tipo.tipoEstadistic ? tipo.tipoEstadistic.nombre : "—" %>
-                      </td>
-                      <td data-label="Valor base">
-                        <%= estad&.value || "—" %>
-                      </td>
-                      <%= render "personajes/form_calculado_row", calc: calc, index: index do %>
+                    <% end %>
+                    <% index += 1 %>
+                  <% end %>
+
+                  <!-- ================= DEPENDIENTES + LIBRES (orden combinado) ================= -->
+                  <% dependientes = (Pj::TipoCalculado.order(:orden).to_a + Pj::TipoRango.order(:orden).to_a)
+                       .reject { |tipo| tipo == peso_tipo }
+                       .map do |tipo|
+                         isR = tipo.is_a?(Pj::TipoRango)
+                         calc = @x.calculados.find do |c|
+                           if isR
+                             c.rango ? c.rango.tipoRango_id == tipo.id : false
+                           else
+                             c.tipoCalculado_id == tipo.id
+                           end
+                         end # It is allowed for calc to be nil
+                         { tipo: tipo, isR: isR, calc: calc, libre: false }
+                       end
+                     libres = @x.calculados.select(&:calculado_libre).map { |calc| { calc: calc, libre: true } }
+                     filas = (dependientes + libres).sort_by.with_index { |fila, i| [fila[:calc] ? 0 : 1, fila[:calc]&.ordenado_position || i] } %>
+                  <% filas.each do |fila| %>
+                    <% calc = fila[:calc] %>
+                    <% if fila[:libre] %>
+                      <% libre = calc.calculado_libre
+                         id_prefix = "calc-#{calc.id}" %>
+                      <tr data-index="<%= index %>" id="<%= id_prefix %>" data-ordenado-id="<%= calc.ordenado_for.id %>">
+                        <td data-label="Nombre">
+                          <input type="text"
+                                name="calculados[<%= index %>][nombre]"
+                                value="<%= libre.nombre %>">
+                        </td>
+                        <td data-label="Estadística base">—</td>
+                        <td data-label="Valor base">
+                          <input type="number"
+                                name="calculados[<%= index %>][base]"
+                                value="<%= libre.base %>">
+                        </td>
+                        <%= render "personajes/form_calculado_celdas_comunes", calc: calc, index: index, id_prefix: id_prefix do %>
                           <td data-label="Valor actual">
-                          <% if isR && tipo.clave == "peso" %>
-                            <input type="hidden" name="calculados[<%= index %>][rango]" value="<%= @x.peso_actual %>">
-                            <span title="El peso actual se calcula atumáticamente a partir de tu inventario, pero puedes modificarlo con el valor a la derecha.">
-                              <%= @x.peso_actual %>
-                            </span>
                             <input type="number"
-                                  name="peso_modificador"
-                                  value="<%= @x.peso_modificador_item&.customitem&.peso || 0 %>"
+                                  name="calculados[<%= index %>][rango]"
+                                  value="<%= calc&.rango&.valor || 0 %>"
                                   class="rango-input"
-                                  title="Modificador manual del peso actual, para efectos especiales que no vengan de un ítem concreto.">
-                          <% elsif isR %>
+                                  <%= "disabled" unless calc&.rango.present? %>>
+                          <button type="button" class="toggle-rango">R</button>
+                          </td>
+                        <% end %>
+                      </tr>
+                    <% else %>
+                      <% tipo = fila[:tipo]; isR = fila[:isR] %>
+                      <%= render "form_calculado_dependiente_row", tipo: tipo, calc: calc, index: index, isR: isR do %>
+                        <td data-label="Valor actual">
+                          <% if isR %>
                             <input type="number"
                                   name="calculados[<%= index %>][rango]"
                                   value="<%= calc&.rango&.valor || 0 %>"
@@ -325,36 +364,7 @@
                           <% end %>
                         </td>
                       <% end %>
-                    </tr>
-                    <% index += 1 %>
-                  <% end %>
-
-                  <!-- ================= LIBRES ================= -->
-                  <% @x.calculados.select(&:calculado_libre).each do |calc| %>
-                    <% libre = calc.calculado_libre %>
-                    <tr data-index="<%= calc.id %>">
-                      <td data-label="Nombre">
-                        <input type="text"
-                              name="calculados[<%= index %>][nombre]"
-                              value="<%= libre.nombre %>">
-                      </td>
-                      <td data-label="Estadística base">—</td>
-                      <td data-label="Valor base">
-                        <input type="number"
-                              name="calculados[<%= index %>][base]"
-                              value="<%= libre.base %>">
-                      </td>
-                      <%= render "personajes/form_calculado_row", calc: calc, index: index do %>
-                        <td data-label="Valor actual">
-                          <input type="number"
-                                name="calculados[<%= index %>][rango]"
-                                value="<%= calc&.rango&.valor || 0 %>"
-                                class="rango-input"
-                                <%= "disabled" unless calc&.rango.present? %>>
-                        <button type="button" class="toggle-rango">R</button>
-                        </td>
-                      <% end %>
-                    </tr>
+                    <% end %>
                     <% index += 1 %>
                   <% end %>
 
@@ -389,6 +399,9 @@
                               disabled>
                         <button type="button" class="toggle-rango">R</button>
                       </td>
+                      <td data-label="Orden">
+                        <span class="pjv-pos_unavailable" title="<%= Pj::Ordenado::MENSAJE_ORDEN_PENDIENTE_GUARDAR %>">✕</span>
+                      </td>
                       <td data-label="Borrar" class="checkbox-danger">
                         <input type="checkbox"
                               name="calculados[__INDEX__][_destroy]"
@@ -397,7 +410,7 @@
                     </tr>
                   </script>
                   <tr>
-                    <td colspan="8">
+                    <td colspan="9">
                       <button type="button" id="add-calculado-libre" class="btn btn-primary">
                         + Añadir característica
                       </button>
@@ -431,12 +444,13 @@
                     <th>Armadura base</th>
                     <th>Modificador armadura</th>
                     <th>Estados alterados</th>
+                    <th>Orden</th>
                     <th>Borrar</th>
                   </tr>
                 </thead>
 
                 <tbody id="parte-cuerpos-body">
-                  <% @x.parteCuerpos.each_with_index do |pc, i| %>
+                  <% @x.parteCuerpos.sort_by(&:ordenado_position).each_with_index do |pc, i| %>
                     <%= render "form_parte_cuerpo_row", index: i, pc: pc %>
                   <% end %>
                   <tr style="display:none;" id="parte-cuerpos-next"> </tr>

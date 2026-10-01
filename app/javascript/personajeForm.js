@@ -1,4 +1,4 @@
-import { adjustInputWidth, subAdjustInputWidth } from "./utils.js";
+import { adjustInputWidth, subAdjustInputWidth, makePositionBinder } from "./utils.js";
 import { createCloseModalHandler, initModals }  from "./modals.js";
 import { initTabs } from "./tabs.js";
 import { warnUnsaved } from "./warnUnsaved.js";
@@ -111,8 +111,13 @@ export function onTurboLoad() {
 
   // CLASES, HABILIDADES, ITEMS
 
-  // Lazy loading of sections (clases, habilidades, items)
   const basePath = form.dataset.basePath;
+
+  // Controles para mover de posición estadísticas, calculados y partes del cuerpo
+  const bindPositionController = makePositionBinder(basePath);
+  document.querySelectorAll(".pjv-pos_controller").forEach(bindPositionController);
+
+  // Lazy loading of sections (clases, habilidades, items)
   async function loadSectionInto(element, section, targetId) {
     element.innerHTML = await (await fetch(
       `${basePath}/form_lazy_section/${section}` + (targetId != null ? `/${targetId}` : "")

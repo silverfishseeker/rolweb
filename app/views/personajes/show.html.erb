@@ -16,7 +16,7 @@
   </div>
 
   <div class="pjv-stats">
-    <% @x.estadistics.ordered.each do |stat| %>
+    <% @x.estadistics.sort_by(&:ordenado_position).each do |stat| %>
       <span class="carta-number">
         <%=stat.tipoEstadistic.siglas%>
         <span id="stat-base-<%=stat.id%>" style="display:none">
@@ -43,7 +43,7 @@
       <div class="pjv-section">
         <h3>Estado</h3>
         <div class="pjv-vars_container">
-          <% @x.calculados.reject { |calc| calc.rango&.tipoRango&.clave == "peso" }.each do |calc| %>
+          <% @x.calculados.includes(:ordenados).reject { |calc| calc.rango&.tipoRango&.clave == "peso" }.sort_by(&:ordenado_position).each do |calc| %>
             <div class="pjv-var">
               <span><%= calc.nombre %>: </span>
               <span>
@@ -86,7 +86,7 @@
           %>
         </div>
         <div class="pjv-vars_container pjv-vars_container-cuerpo">
-          <% @x.parteCuerpos.each do |pc| %>
+          <% @x.parteCuerpos.includes(:ordenados).sort_by(&:ordenado_position).each do |pc| %>
             <div class="pjv-var pjv-var-cuerpo
                 <%= "pjv-var-cuerpo-borrada" if pc.saludact <= 0 %>"
                 id="pcsalud-row-<%=pc.id%>">
@@ -230,29 +230,34 @@
                     </li>
                   </ol>
                 <% end %>
-                <div class="pjv-vars_container">
-                  <div class="pjv-var">
-                    <span>Peso: </span>
-                    <span>
-                      <span id="peso-actual"><%= @x.peso_actual %></span>
-                      <input type="number" class="pjv-input autosave-input"
-                          value="<%= @x.peso_modificador_item&.customitem&.peso || 0 %>"
-                          data-update-url="<%= update_field_personaje_path(@x, field: "peso_modificador") %>">
-                      /
-                      <span id="calc-val-<%= @x.peso_calculado.id %>"><%= @x.peso_calculado.value %></span>
-                      <input type="number"
-                          name="calculados[<%= @x.peso_calculado.id %>][active_mod]"
-                          value="<%= @x.peso_calculado.modificable.active_mod %>"
-                          class="pjv-modifier autosave-input"
-                          data-base="calc-base-<%= @x.peso_calculado.id %>"
-                          data-value="calc-val-<%= @x.peso_calculado.id %>"
-                          data-seq-key="calc-modifier-<%= @x.peso_calculado.id %>"
-                          data-update-url="<%= update_field_personaje_path(@x, field: "calc_mod", target_id: @x.peso_calculado.id) %>"
-                          id="calc-modifier-<%= @x.peso_calculado.id %>">
-                      <span id="calc-base-<%= @x.peso_calculado.id %>" style="display:none"><%= @x.peso_calculado.value %></span>
-                    </span>
+                <% peso_calculado = @x.peso_calculado %>
+                <% if peso_calculado %>
+                  <div class="pjv-vars_container">
+                    <div class="pjv-var">
+                      <span>Peso: </span>
+                      <span>
+                        <span id="peso-actual"><%= @x.peso_actual %></span>
+                        <input type="number" class="pjv-input autosave-input"
+                            value="<%= @x.peso_modificador_item&.customitem&.peso || 0 %>"
+                            data-update-url="<%= update_field_personaje_path(@x, field: "peso_modificador") %>">
+                        /
+                        <span id="calc-val-<%= peso_calculado.id %>"><%= peso_calculado.value %></span>
+                        <input type="number"
+                            name="calculados[<%= peso_calculado.id %>][active_mod]"
+                            value="<%= peso_calculado.modificable.active_mod %>"
+                            class="pjv-modifier autosave-input"
+                            data-base="calc-base-<%= peso_calculado.id %>"
+                            data-value="calc-val-<%= peso_calculado.id %>"
+                            data-seq-key="calc-modifier-<%= peso_calculado.id %>"
+                            data-update-url="<%= update_field_personaje_path(@x, field: "calc_mod", target_id: peso_calculado.id) %>"
+                            id="calc-modifier-<%= peso_calculado.id %>">
+                        <span id="calc-base-<%= peso_calculado.id %>" style="display:none"><%= peso_calculado.value %></span>
+                      </span>
+                    </div>
                   </div>
-                </div>
+                <% else %>
+                  <span class="flash-error">Error: este personaje no tiene peso asignado.</span>
+                <% end %>
                 <div class="btn btn-primary btn-small"
                     onclick="fetch('<%= update_field_personaje_path(@x, field: "item_crear_custom") %>')">
                   Añadir nuevo ítem custom

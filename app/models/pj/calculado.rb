@@ -36,6 +36,15 @@ class Pj::Calculado < ApplicationRecord
     end
   end
 
+  include Ordenable
+  def ordenado_lists
+    hasCalculados_type == "Personaje" ? [:calculados] : []
+  end
+
+  def personaje_id
+    hasCalculados_id if hasCalculados_type == "Personaje"
+  end
+
   def has_libre?
     calculado_libre.present?
   end

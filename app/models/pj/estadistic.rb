@@ -12,6 +12,11 @@ class Pj::Estadistic < ApplicationRecord
 
   scope :ordered, -> { joins(:tipoEstadistic).order(:orden) }
 
+  include Ordenable
+  def ordenado_lists
+    [:estadisticas]
+  end
+
   def value
     sum_nil base, lv_mod, modificable.passive_mod, modificable.active_mod # sum_nil ignora nils
   end

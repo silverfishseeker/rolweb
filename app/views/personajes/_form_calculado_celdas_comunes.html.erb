@@ -1,0 +1,34 @@
+<input type="hidden" name="calculados[<%= index %>][id]" value="<%= calc&.id %>">
+<td data-label="Incremento por efectos permanentes">
+  <input type="number"
+        name="calculados[<%= index %>][passive_mod]"
+        value="<%= calc&.modificable&.passive_mod || 0%>">
+</td>
+<td data-label="Incremento por efectos temporales">
+  <input type="number"
+        name="calculados[<%= index %>][active_mod]"
+        value="<%= calc&.modificable&.active_mod || 0 %>">
+</td>
+<td data-label="Valor calculado">
+  <%= calc&.value || "ninguno" %>
+</td>
+<%= yield %>
+<td data-label="Orden">
+  <% if local_assigns[:orderable] == false %>
+    <span class="pjv-pos_unavailable" title="Esta fila tiene una posición fija y no se puede reordenar">✕</span>
+  <% elsif calc %>
+    <%= render "personajes/show_position_controller", id_prefix: id_prefix %>
+  <% else %>
+    <span class="pjv-pos_unavailable" title="<%= Pj::Ordenado::MENSAJE_ORDEN_PENDIENTE_GUARDAR %>">✕</span>
+  <% end %>
+</td>
+<td data-label="Borrar" class="checkbox-danger">
+  <% if local_assigns[:destroyable] != false %>
+    <input type="checkbox"
+          name="calculados[<%= index %>][_destroy]"
+          value="1"
+          <%= "checked" if !calc.present? %>
+          class="rm_input"
+          data-rm_type="0">
+  <% end %>
+</td>
