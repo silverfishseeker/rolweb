@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_14_143000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_01_120200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -231,11 +231,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_14_143000) do
     t.boolean "usecategloot", default: true
   end
 
-  create_table "items_mobs", id: false, force: :cascade do |t|
+  create_table "mob_has_items", force: :cascade do |t|
+    t.integer "cantidad"
     t.bigint "mob_id", null: false
     t.bigint "item_id", null: false
-    t.index ["item_id", "mob_id"], name: "index_items_mobs_on_item_id_and_mob_id"
-    t.index ["mob_id", "item_id"], name: "index_items_mobs_on_mob_id_and_item_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_mob_has_items_on_item_id"
+    t.index ["mob_id"], name: "index_mob_has_items_on_mob_id"
   end
 
   create_table "mobs", force: :cascade do |t|
@@ -539,6 +542,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_14_143000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "mob_has_items", "items"
+  add_foreign_key "mob_has_items", "mobs"
   add_foreign_key "personajes", "personajegroups"
   add_foreign_key "personajes", "users"
   add_foreign_key "pictures", "personajes"

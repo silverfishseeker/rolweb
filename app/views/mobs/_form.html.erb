@@ -1,3 +1,5 @@
+<% importJS "modals" %>
+
 <%= form_with model: mob do |form| %>
   <div>
     <%= form.label :nombre %><br>
@@ -53,7 +55,22 @@
   </div>
   <br>
 
-  <%= render "shared/fcs", p:"item", form: form %>
+  <%= render "shared/modal",
+      buttom_content: "Seleccionar ítems de loot",
+      header_text: "Ítems de loot",
+      index: "mob-items" do %>
+    <% Item.order(:nombre).each do |item| %>
+      <%= form.fields_for :mob_has_items, mob.mob_has_items.find { |mhi| mhi.item_id == item.id } || MobHasItem.new do |mhi_form| %>
+        <div>
+          <%= mhi_form.check_box :item_id, { multiple: false }, item.id, nil %>
+          <%= item.nombre %>
+          <%= mhi_form.number_field :cantidad, value: (mhi_form.object.cantidad || 1), min: 1, step: 1 %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+  <br>
+  <br>
 
   <div>
     <%= form.label :habilidadsOfMob_ids, 'Habilidades que tiene' %><br>

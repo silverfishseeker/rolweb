@@ -14,8 +14,9 @@
         <div class="mob-descripcion"><%=mob.descripcion%></div>
     </div>
     <div class="carta-subtitles mob-listado">
-        <% mob.items.each do |it| %>
-            <%= link_to it.nombre, it %>
+        <% mob.mob_has_items.each do |mhi| %>
+            <% strCantidad = mhi.cantidad != 1 ? " (x#{mhi.cantidad})" : "" %>
+            <%= link_to "#{mhi.item.nombre}#{strCantidad}", mhi.item %>
         <% end %>
     </div>
 </div>

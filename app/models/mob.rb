@@ -5,7 +5,9 @@ class Mob < ApplicationRecord
     
     mount_image_uploader
 
-    has_and_belongs_to_many :items
+    has_many :mob_has_items, dependent: :destroy
+    accepts_nested_attributes_for :mob_has_items, allow_destroy: true
+
     has_and_belongs_to_many :habilidads
     has_and_belongs_to_many :habilidadsOfMob, class_name: "Habilidad", join_table: 'mobs_has_habils'
 end
