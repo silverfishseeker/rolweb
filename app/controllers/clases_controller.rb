@@ -23,6 +23,6 @@ class ClasesController < ModelController
   end
 
   def model_params
-    params.require(:clase).permit(:efecto, :descripcion, :nombre, :image, :oculto, :raza, :radical, parent_ids: [], child_ids: [], categ_ids: [], habilidad_ids: [])
+    params.require(:clase).permit(:efecto, :descripcion, :nombre, :image, :oculto, :raza, :radical, parent_ids: [], child_ids: [], categ_ids: [])
   end
 end
