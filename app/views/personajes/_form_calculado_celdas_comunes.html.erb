@@ -1,3 +1,4 @@
+<%# Expected params: index, calc %>
 <input type="hidden" name="calculados[<%= index %>][id]" value="<%= calc&.id %>">
 <td data-label="Incremento por efectos permanentes">
   <input type="number"
@@ -16,13 +17,12 @@
 <td data-label="Orden">
   <% if local_assigns[:orderable] == false %>
     <span class="pjv-pos_unavailable" title="Esta fila tiene una posición fija y no se puede reordenar">✕</span>
-  <% elsif calc %>
-    <%= render "personajes/show_position_controller", id_prefix: id_prefix %>
   <% else %>
-    <span class="pjv-pos_unavailable" title="<%= Pj::Ordenado::MENSAJE_ORDEN_PENDIENTE_GUARDAR %>">✕</span>
+    <input type="hidden" class="pjv-orden_input" name="calculados[<%= index %>][orden]" value="<%= index %>">
+    <%= render "personajes/position_controller", id_prefix: id_prefix %>
   <% end %>
 </td>
-<td data-label="Borrar" class="checkbox-danger">
+<td data-label="Borrar">
   <% if local_assigns[:destroyable] != false %>
     <input type="checkbox"
           name="calculados[<%= index %>][_destroy]"
@@ -30,5 +30,7 @@
           <%= "checked" if !calc.present? %>
           class="rm_input"
           data-rm_type="0">
+  <% else %>
+    <span title="No se puede eliminar: todos los personajes deben tenerlo.">✖</span>
   <% end %>
 </td>

@@ -1,7 +1,7 @@
 <div class="carta carta_show" id="phh-<%= phh.id %>" data-ordenado-id="<%= phh.ordenado_for.id %>">
   <% habil = phh.habilidad %>
   <div class="carta-header carta-header-small">
-      <%= render "personajes/show_position_controller", id_prefix: "phh-#{phh.id}" %>
+      <%= render "personajes/position_controller", id_prefix: "phh-#{phh.id}" %>
 
       <p class="carta-number carta-level">
           <%= habil.nivel %>

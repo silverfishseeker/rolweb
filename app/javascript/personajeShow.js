@@ -1,5 +1,5 @@
 
-import { adjustInputWidth, makePositionBinder } from "./utils.js";
+import { adjustInputWidth, bindShowPositionController } from "./utils.js";
 import { initTabs } from "./tabs.js";
 import { initSaveStatus, refreshSaveStatus } from "./saveStatus.js";
 import { createCloseModalHandler } from "./modals.js";
@@ -219,7 +219,7 @@ export function onTurboLoad() {
 
 
   // Controles para mover de posición las cartas
-  window.bindPositionController = makePositionBinder(location.pathname); // funcion a parte para que los nuevos lo pueda usar
+  window.bindPositionController = controller => bindShowPositionController(location.pathname, controller); // funcion a parte para que los nuevos lo pueda usar
   document.querySelectorAll(".pjv-pos_controller").forEach(window.bindPositionController);
 
   //Filtrar intems por categoría

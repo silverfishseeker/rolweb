@@ -163,7 +163,7 @@
               <% if phc_phh.is_a?(Pj::PersonajeHasClase) %>
                 <div class="carta carta_show" id="phc-<%= phc_phh.id %>" data-ordenado-id="<%= phc_phh.ordenado_for.id %>">
                   <div class="carta-header carta-header-small">
-                      <%= render "personajes/show_position_controller", id_prefix: "phc-#{phc_phh.id}" %>
+                      <%= render "personajes/position_controller", id_prefix: "phc-#{phc_phh.id}" %>
 
                       <p class="carta-number carta-level">
                           <%= phc_phh.nivel %>

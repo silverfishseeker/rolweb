@@ -1,5 +1,5 @@
 <%# Expected params: id_prefix %>
-<%# Parent must define data-ordenado-id attribute %>
+<%# El elemento con id=id_prefix debe cumplir el contrato del binder que lo use (ver utils.js)%>
 <div class="pjv-pos_controller" data-id-prefix="<%= id_prefix %>">
   <button type="button" class="pjv-pos_button" title="Mover arriba" id="<%= id_prefix %>-pos_up">
     <%= image_tag "upwards-button.png" %>

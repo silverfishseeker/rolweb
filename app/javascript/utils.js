@@ -9,42 +9,56 @@ export function adjustInputWidth(input, modifier = 0) {
   subAdjustInputWidth(input, modifier);
 }
 
-// Controles para mover de posición filas/cartas ordenables (Pj::Ordenado)
-export function makePositionBinder(basePath) {
-  function visibleOrderedChildren(parent) {
-    return Array.from(parent.children).filter(child => child.offsetParent !== null && child.dataset.ordenadoId);
+function bindOrderButtons(controller, isOrderable, swapFn) {
+  const upButton = document.getElementById(controller.dataset.idPrefix + "-pos_up");
+  const downButton = document.getElementById(controller.dataset.idPrefix + "-pos_down");
+  const element = document.getElementById(controller.dataset.idPrefix);
+  const parent = element.parentElement;
+
+  function visibleOrderedSiblings() {
+    return Array.from(parent.children).filter(
+      child => child.offsetParent !== null && isOrderable(child)
+    );
   }
 
-  function swapPosition(parent, beforeElement, afterElement) {
-    if (parent && beforeElement && afterElement) {
+  upButton.addEventListener("click", () => {
+    const visible = visibleOrderedSiblings();
+    const pos = visible.indexOf(element);
+    if (pos > 0) swapFn(parent, visible[pos - 1], element);
+  });
+
+  downButton.addEventListener("click", () => {
+    const visible = visibleOrderedSiblings();
+    const pos = visible.indexOf(element);
+    if (pos < visible.length - 1) swapFn(parent, element, visible[pos + 1]);
+  });
+}
+
+// Persiste el orden al hacer click
+export function bindShowPositionController(basePath, controller) {
+  bindOrderButtons(
+    controller,
+    element => !!element.dataset.ordenadoId,
+    (parent, beforeElement, afterElement) => {
       parent.insertBefore(afterElement, beforeElement);
       fetch(
         basePath + "/update_field/reorder" +
         "?a=" + beforeElement.dataset.ordenadoId +
         "&b=" + afterElement.dataset.ordenadoId);
     }
-  }
+  );
+}
 
-  return function bindPositionController(controller) {
-    const upButton = document.getElementById(controller.dataset.idPrefix + "-pos_up");
-    const downButton = document.getElementById(controller.dataset.idPrefix + "-pos_down");
-    const element = document.getElementById(controller.dataset.idPrefix);
-    const parent = element.parentElement;
-
-    upButton.addEventListener("click", () => {
-      const visible = visibleOrderedChildren(parent);
-      const pos = visible.indexOf(element);
-      if (pos > 0) {
-        swapPosition(parent, visible[pos - 1], element);
-      }
-    });
-
-    downButton.addEventListener("click", () => {
-      const visible = visibleOrderedChildren(parent);
-      const pos = visible.indexOf(element);
-      if (pos < visible.length - 1) {
-        swapPosition(parent, element, visible[pos + 1]);
-      }
-    });
-  };
+// No persiste directamente, prepara campo de orden para el formulario
+export function bindFormPositionController(controller) {
+  bindOrderButtons(
+    controller,
+    element => !!element.querySelector(".pjv-orden_input"),
+    (parent, beforeElement, afterElement) =>{
+      parent.insertBefore(afterElement, beforeElement);
+      const beforeInput = beforeElement.querySelector(".pjv-orden_input");
+      const afterInput = afterElement.querySelector(".pjv-orden_input");
+      [beforeInput.value, afterInput.value] = [afterInput.value, beforeInput.value];
+    }
+  );
 }

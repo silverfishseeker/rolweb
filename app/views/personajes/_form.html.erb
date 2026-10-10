@@ -169,9 +169,8 @@
                   [tipo, @x.estadistics.find { |s| s.tipoEstadistic == tipo }] # Obtener cada estadística que el personaje tenga
                 end.sort_by do |tipo, stat|
                   [stat ? 0 : 1, stat&.ordenado_position || tipo.orden] # Al ordenar, agrupamos por estadisticas que tiene el personaje y que no. Las que tiene usan Ordenado y las que no usan el orden propio
-                end.each do |tipo, stat| %>
-                  <tr class="<%= "pj-fila_borrada" if !stat %>" id="est-<%= tipo.id %>"
-                      <% if stat %>data-ordenado-id="<%= stat.ordenado_for.id %>"<% end %>>
+                end.each.with_index do |(tipo, stat), orden_rank| %>
+                  <tr class="<%= "pj-fila_borrada" if !stat %>" id="est-<%= tipo.id %>">
                     <td data-label="Aplicar">
                       <input type="checkbox"
                             name="estadistics[<%= tipo.id %>][apply]"
@@ -205,11 +204,8 @@
                             value="<%= stat&.modificable&.active_mod %>">
                     </td>
                     <td data-label="Orden">
-                      <% if stat %>
-                        <%= render "personajes/show_position_controller", id_prefix: "est-#{tipo.id}" %>
-                      <% else %>
-                        <span class="pjv-pos_unavailable" title="<%= Pj::Ordenado::MENSAJE_ORDEN_PENDIENTE_GUARDAR %>">✕</span>
-                      <% end %>
+                      <input type="hidden" class="pjv-orden_input" name="estadistics[<%= tipo.id %>][orden]" value="<%= orden_rank %>">
+                      <%= render "personajes/position_controller", id_prefix: "est-#{tipo.id}" %>
                     </td>
                   </tr>
                 <% end %>
@@ -328,7 +324,7 @@
                     <% if fila[:libre] %>
                       <% libre = calc.calculado_libre
                          id_prefix = "calc-#{calc.id}" %>
-                      <tr data-index="<%= index %>" id="<%= id_prefix %>" data-ordenado-id="<%= calc.ordenado_for.id %>">
+                      <tr data-index="<%= index %>" id="<%= id_prefix %>">
                         <td data-label="Nombre">
                           <input type="text"
                                 name="calculados[<%= index %>][nombre]"
@@ -371,7 +367,7 @@
 
                   <!-- ================= AÑADIR LIBRE ================= -->
                   <script type="text/template" id="calculado-libre-template">
-                    <tr data-index="__INDEX__">
+                    <tr data-index="__INDEX__" id="calc-new-__INDEX__">
                       <td data-label="Nombre">
                         <input type="text"
                               name="calculados[__INDEX__][nombre]">
@@ -401,7 +397,8 @@
                         <button type="button" class="toggle-rango">R</button>
                       </td>
                       <td data-label="Orden">
-                        <span class="pjv-pos_unavailable" title="<%= Pj::Ordenado::MENSAJE_ORDEN_PENDIENTE_GUARDAR %>">✕</span>
+                        <input type="hidden" class="pjv-orden_input" name="calculados[__INDEX__][orden]" value="__INDEX__">
+                        <%= render "personajes/position_controller", id_prefix: "calc-new-__INDEX__" %>
                       </td>
                       <td data-label="Borrar" class="checkbox-danger">
                         <input type="checkbox"
@@ -451,7 +448,7 @@
                 </thead>
 
                 <tbody id="parte-cuerpos-body">
-                  <% @x.parteCuerpos.sort_by(&:ordenado_position).each_with_index do |pc, i| %>
+                  <% @x.parteCuerpos.sort_by { |pc| pc.ordenado_position || Float::INFINITY }.each_with_index do |pc, i| %>
                     <%= render "form_parte_cuerpo_row", index: i, pc: pc %>
                   <% end %>
                   <tr style="display:none;" id="parte-cuerpos-next"> </tr>

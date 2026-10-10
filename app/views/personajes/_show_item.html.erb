@@ -10,7 +10,7 @@
     data-ordenado-id="<%= ordenado.id %>"
     data-position="<%= ordenado.position %>">
   <div class="carta-header carta-header-small">
-      <%= render "personajes/show_position_controller", id_prefix: "#{prefix}-#{phi.id}" %>
+      <%= render "personajes/position_controller", id_prefix: "#{prefix}-#{phi.id}" %>
       <span class="carta-number">
         <input type="number" name="<%= prefix %>[<%=phi.id%>][cantidad]"
             value="<%= phi.cantidad %>" class="pj-cantidad autosave-input" id="<%=js_base_id%>-cantidad"

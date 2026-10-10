@@ -602,6 +602,7 @@ class PersonajesController < ModelController
         stat.lv_mod = attrs[:lv_mod].to_i
         stat.modificable.passive_mod = attrs[:passive_mod].to_i
         stat.modificable.active_mod  = attrs[:active_mod].to_i
+        stat.set_orden(attrs[:orden].to_i)
       elsif stat
         stat.destroy
       end
@@ -650,6 +651,7 @@ class PersonajesController < ModelController
         calculado.calculado_libre&.destroy
       end
 
+      calculado.set_orden(attrs[:orden].to_i) if attrs[:orden].present? # Peso is the only current exception
       calculado.save!
     end
 
@@ -680,6 +682,7 @@ class PersonajesController < ModelController
       pc.modificable.active_mod  = attrs[:active_mod].to_i
       # Estados alterados por parte
       process_estados_alterados attrs[:has_estadoalterados], pc
+      pc.set_orden(attrs[:orden].to_i)
       pc.save!
     end
 

@@ -1,4 +1,4 @@
-import { adjustInputWidth, subAdjustInputWidth, makePositionBinder } from "./utils.js";
+import { adjustInputWidth, subAdjustInputWidth, bindFormPositionController } from "./utils.js";
 import { createCloseModalHandler, initModals }  from "./modals.js";
 import { initTabs } from "./tabs.js";
 import { warnUnsaved } from "./warnUnsaved.js";
@@ -42,6 +42,9 @@ export function onTurboLoad() {
     }
   });
 
+  // Controles para mover de posición estadísticas, calculados y partes del cuerpo
+  document.querySelectorAll(".pjv-pos_controller").forEach(bindFormPositionController);
+
   // NIVELES
   const tabla_niveles = document.getElementById("pj-niveles-table");
   tabla_niveles.querySelectorAll("input").forEach(input => {
@@ -68,6 +71,7 @@ export function onTurboLoad() {
     const html = template.innerHTML.replace(/__INDEX__/g, index);
     const addRow = document.getElementById("add-calculado-libre").closest("tr");
     addRow.insertAdjacentHTML("beforebegin", html);
+    addRow.previousElementSibling.querySelectorAll(".pjv-pos_controller").forEach(bindFormPositionController);
   });
 
 
@@ -106,16 +110,13 @@ export function onTurboLoad() {
     const html = template.innerHTML.replace(/__INDEX__/g, index);
     const addRow = document.getElementById("parte-cuerpos-next");
     addRow.insertAdjacentHTML("beforebegin", html);
+    addRow.previousElementSibling.querySelectorAll(".pjv-pos_controller").forEach(bindFormPositionController);
   });
 
 
   // CLASES, HABILIDADES, ITEMS
 
   const basePath = form.dataset.basePath;
-
-  // Controles para mover de posición estadísticas, calculados y partes del cuerpo
-  const bindPositionController = makePositionBinder(basePath);
-  document.querySelectorAll(".pjv-pos_controller").forEach(bindPositionController);
 
   // Lazy loading of sections (clases, habilidades, items)
   async function loadSectionInto(element, section, targetId) {
