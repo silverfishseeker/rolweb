@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_01_120200) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_12_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -388,7 +388,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_01_120200) do
     t.bigint "ordenable_id", null: false
     t.bigint "personaje_id", null: false
     t.integer "list", null: false
-    t.integer "position", null: false
+    t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ordenable_type", "ordenable_id", "list"], name: "index_pj_ordenados_on_ordenable_and_list", unique: true

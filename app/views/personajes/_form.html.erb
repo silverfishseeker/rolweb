@@ -448,7 +448,7 @@
                 </thead>
 
                 <tbody id="parte-cuerpos-body">
-                  <% @x.parteCuerpos.sort_by { |pc| pc.ordenado_position || Float::INFINITY }.each_with_index do |pc, i| %>
+                  <% @x.parteCuerpos.sort_by { |pc| pc.ordenado_position }.each_with_index do |pc, i| %>
                     <%= render "form_parte_cuerpo_row", index: i, pc: pc %>
                   <% end %>
                   <tr style="display:none;" id="parte-cuerpos-next"> </tr>

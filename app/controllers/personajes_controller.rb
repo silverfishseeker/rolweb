@@ -651,7 +651,7 @@ class PersonajesController < ModelController
         calculado.calculado_libre&.destroy
       end
 
-      calculado.set_orden(attrs[:orden].to_i) if attrs[:orden].present? # Peso is the only current exception
+      calculado.set_orden( attrs[:orden]&.to_i ) # Peso is the only current exception which is not ordered. As it is now, a "malicious" post could force order on Peso, but we don't care
       calculado.save!
     end
 

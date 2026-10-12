@@ -24,7 +24,7 @@ module Ordenable
   end
 
   def ordenado_position(list = ordenado_lists.first)
-    ordenado_for(list)&.position
+    ordenado_for(list)&.position || -Float::INFINITY
   end
 
   def set_orden(list = ordenado_lists.first, position)
