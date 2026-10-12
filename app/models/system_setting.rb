@@ -1,9 +1,4 @@
 class SystemSetting < ApplicationRecord
-  mount_image_uploader mode: :original
-
-  belongs_to :habilidades_independientes_clase,
-             class_name: "Clase",
-             optional: true
   def self.instance
     first_or_create!
   end
@@ -11,4 +6,10 @@ class SystemSetting < ApplicationRecord
   def self.arbol_image
     SystemSetting.instance.image
   end
+  
+  mount_image_uploader mode: :original # Arbol de Clases
+
+  belongs_to :habilidades_independientes_clase, # Clase de Habilidades Independientes
+             class_name: "Clase",
+             optional: true
 end

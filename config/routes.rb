@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   resources :contextoloots
   resources :cuentos
   resources :personajegroups
+  resources :documentos
   resource :system_setting, only: [:edit, :update]
   resources :personajes do
     post :add_to_personaje, on: :collection

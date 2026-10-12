@@ -1,0 +1,7 @@
+<% only_admin_content do %>
+    <div class="admin-actions">
+        <%= link_to "Edit", edit_documento_path(@x), class: "btn btn-primary" %>
+    </div>
+<% end %>
+
+<%= documento.html %>

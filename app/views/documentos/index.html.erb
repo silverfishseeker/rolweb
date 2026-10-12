@@ -1,0 +1,11 @@
+<% content_for :title, "Documentos" %>
+
+<h1>Documentos</h1>
+
+<% @xs.each do |documento| %>
+  <%= link_to documento.title, documento %>
+  <%= link_to "Destroy", documento_path(documento), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
+<% end %>
+
+<%= link_to "Nuevo", new_documento_path, class: "btn btn-primary" %>
+

@@ -2,7 +2,6 @@
 <%= form_with model: @setting do |f| %>
   <div>
     <%= f.label :habilidades_independientes_clase_id, "Clase de Habilidades Independientes" %>
-
     <%= f.collection_select(
       :habilidades_independientes_clase_id,
       Clase.order(:nombre),
@@ -11,7 +10,6 @@
       include_blank: "Ninguna"
     ) %>
   </div>
-
   
   <div>
     <%= f.label :image, "Ábol de clases" %>
