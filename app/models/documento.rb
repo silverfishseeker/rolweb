@@ -7,6 +7,10 @@ class Documento < ApplicationRecord
     render_contenido[:html]
   end
 
+  def toc
+    render_contenido[:toc]
+  end
+
   def title
     render_contenido[:title]
   end
@@ -49,16 +53,36 @@ class Documento < ApplicationRecord
         html << %(<h#{level} id="#{anchor}">#{text}</h#{level}>\n)
       end
 
+      # Table of contents generation
       toc = if headings.empty?
-        ""
+        "".html_safe
       else
-        items = headings.map do |level, text, anchor|
-          %(<li class="toc-nivel-#{level}"><a href="##{anchor}">#{text}</a></li>)
-        end
-        %(<ul class="toc">#{items.join}</ul>\n)
-      end 
+        toc_html = +"<ul>"
+        stack = []
 
-      { html: (toc + html).html_safe, title: title }
+        headings.each do |level, text, anchor|
+          if stack.empty?
+            stack.push(level)
+          elsif level > stack.last
+            toc_html << "<ul>"
+            stack.push(level)
+          else
+            while stack.size > 1 && level < stack.last
+              toc_html << "</li></ul>"
+              stack.pop
+            end
+            toc_html << "</li>"
+            stack[-1] = level
+          end
+          toc_html << %(<li><a href="##{anchor}">#{text}</a>)
+        end
+
+        toc_html << "</li>" << ("</ul></li>" * (stack.size - 1)) << "</ul>"
+
+        %(<nav class="reglas-indice"><h2>Índice</h2>#{toc_html}</nav>).html_safe
+      end
+
+      { html: html.html_safe, toc: toc, title: title }
     end
   end
 end

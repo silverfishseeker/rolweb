@@ -1,6 +1,24 @@
 <%= form_with(model: documento) do |form| %>
-  <div>
-    <%= form.textarea :contenido %>
+  <div class="documento-form">
+    <div class="documento-form_contenido">
+      <%= form.textarea :contenido %>
+    </div>
+
+    <div class="documento-form_guia">
+      <h3>Sintaxis</h3>
+      <ul>
+        <li>Título: <code># texto</code></li>
+        <li>Negrita: <code>**texto**</code></li>
+        <li>Cursiva: <code>*texto*</code></li>
+        <li>Enlace: <code>[texto](ruta)</code></li>
+        <li>Lista: <code>- texto</code></li>
+        <li>Lista ordenada: <code>.- texto</code></li>
+        <li>Línea horizontal: <code>---</code></li>
+        <li>Cita: <code>> texto</code></li>
+        <li>Tabla: <code>| col | col |</code></li>
+        <li>HTML crudo: línea empieza por <code>&lt;</code></li>
+      </ul>
+    </div>
   </div>
 
   <div>

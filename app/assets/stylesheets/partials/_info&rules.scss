@@ -133,3 +133,26 @@
     border: 2px solid var(--c_base);
     margin-top: 5px;
 }
+
+
+.documento-form {
+  display: flex;
+  gap: 20px;
+}
+
+.documento-form_contenido {
+  flex: 4;
+  textarea {
+    width: 100%;
+    height: 500px;
+  }
+}
+
+.documento-form_guia {
+  flex: 1;
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+}
+
