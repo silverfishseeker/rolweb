@@ -23,6 +23,7 @@ class Documento < ApplicationRecord
   ITALIC = /\*(.+?)\*/
   LINK = /\[([^\]]+)\]\(([^)]+)\)/
   HEADING_LINE = /\A(\#{1,6})\s+(.+)\z/
+  ANCHOR_TAG = /<a[^>]*>(.*?)<\/a>/
   HR_LINE = /\A-{3,}\z/
   QUOTE_LINE = /\A>\s?(.*)\z/
   UL_ITEM = /\A( *)-\s+(.+)\z/
@@ -35,7 +36,7 @@ class Documento < ApplicationRecord
   def render_inline(text)
     text.gsub(BOLD, '<strong>\1</strong>')
       .gsub(ITALIC, '<em>\1</em>')
-      .gsub(LINK, '<a href="\2">\1</a>')
+      .gsub(LINK, '<a href="\2" class="reglas-font_color">\1</a>')
   end
 
 
@@ -58,7 +59,8 @@ class Documento < ApplicationRecord
           level = m[1].length
           text = m[2].strip
           anchor = "#{text.parameterize}-#{headings.size}"
-          headings << [level, render_inline(text), anchor]
+          toc_text = render_inline(text).gsub(ANCHOR_TAG, '\1')
+          headings << [level, toc_text, anchor]
           title ||= text
           html << %(<h#{level} id="#{anchor}">#{render_inline(text)}</h#{level}>\n)
           i += 1
@@ -82,6 +84,7 @@ class Documento < ApplicationRecord
           items = []
           while i < lines.length
             case
+            when lines[i].empty?
             when uli = UL_ITEM.match(lines[i])
               items << [uli[1].length, "ul", uli[2].rstrip]
             when oli = OL_ITEM.match(lines[i])
