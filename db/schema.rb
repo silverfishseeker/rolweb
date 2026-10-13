@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_12_175320) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_13_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -523,7 +523,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_12_175320) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "image"
+    t.bigint "reglas_documento_id"
+    t.bigint "ayuda_documento_id"
+    t.bigint "avisolegal_documento_id"
+    t.index ["avisolegal_documento_id"], name: "index_system_settings_on_avisolegal_documento_id"
+    t.index ["ayuda_documento_id"], name: "index_system_settings_on_ayuda_documento_id"
     t.index ["habilidades_independientes_clase_id"], name: "index_system_settings_on_habilidades_independientes_clase_id"
+    t.index ["reglas_documento_id"], name: "index_system_settings_on_reglas_documento_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -576,4 +582,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_12_175320) do
   add_foreign_key "ritual_ritual_nivel_rel_rituals", "ritual_rituals", column: "ritual_id"
   add_foreign_key "ritual_rituals", "items"
   add_foreign_key "system_settings", "clases", column: "habilidades_independientes_clase_id"
+  add_foreign_key "system_settings", "documentos", column: "avisolegal_documento_id", on_delete: :nullify
+  add_foreign_key "system_settings", "documentos", column: "ayuda_documento_id", on_delete: :nullify
+  add_foreign_key "system_settings", "documentos", column: "reglas_documento_id", on_delete: :nullify
 end

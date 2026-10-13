@@ -56,12 +56,9 @@ Rails.application.routes.draw do
 
   get 'images/:id/download', to: 'images#download', as: 'download_image'
 
-  get '/reglas', to: 'info#reglas'
   get '/estadosAlterados', to: 'info#estadosAlterados'
-  get '/avisolegal', to: 'info#avisolegal'
   get '/clases-arbol', to: 'info#arbol'
   get '/get_random_element', to: 'info#get_random_element'
-  get '/newPlayersHelp', to: 'info#newPlayersHelp'
   get '/rangosInfo', to: 'info#rangosInfo'
 
   get '/control', to: 'admin#control'

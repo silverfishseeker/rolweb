@@ -1,6 +1,7 @@
 class DocumentosController < ModelController
 
-    configure_access :index
+    configure_access level: :superadmin
+    configure_access :show, level: :unlogged
 
     def tipo; Documento end
 

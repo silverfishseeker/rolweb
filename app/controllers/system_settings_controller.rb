@@ -14,6 +14,7 @@ class SystemSettingsController < ApplicationController
 
   def setting_params
     params.require(:system_setting)
-          .permit(:habilidades_independientes_clase_id, :image)
+          .permit(:habilidades_independientes_clase_id, :image,
+                   :reglas_documento_id, :ayuda_documento_id, :avisolegal_documento_id)
   end
 end
