@@ -2,7 +2,6 @@
 <%= form_with model: @setting do |f| %>
   <div>
     <%= f.label :habilidades_independientes_clase_id, "Clase de Habilidades Independientes" %>
-
     <%= f.collection_select(
       :habilidades_independientes_clase_id,
       Clase.order(:nombre),
@@ -11,11 +10,29 @@
       include_blank: "Ninguna"
     ) %>
   </div>
-
   
   <div>
     <%= f.label :image, "Ábol de clases" %>
     <%= f.file_field :image %>
+  </div>
+
+  <div>
+    <%= f.label :reglas_documento_id, "Documento de Reglas" %>
+    <%= f.collection_select(:reglas_documento_id, Documento.all, :id, :title, include_blank: "Ninguno") %>
+  </div>
+
+  <div>
+    <%= f.label :ayuda_documento_id, "Documento de Ayuda para nuevos jugadores" %>
+    <%= f.collection_select(:ayuda_documento_id, Documento.all, :id, :title, include_blank: "Ninguno") %>
+  </div>
+
+  <div>
+    <%= f.label :avisolegal_documento_id, "Documento de Aviso legal" %>
+    <%= f.collection_select(:avisolegal_documento_id, Documento.all, :id, :title, include_blank: "Ninguno") %>
+  </div>
+
+  <div>
+    <%= link_to "Documentos", documentos_path %>
   </div>
 
   <%= f.submit "Guardar" %>

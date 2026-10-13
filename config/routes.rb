@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   resources :contextoloots
   resources :cuentos
   resources :personajegroups
+  resources :documentos
   resource :system_setting, only: [:edit, :update]
   resources :personajes do
     post :add_to_personaje, on: :collection
@@ -55,12 +56,9 @@ Rails.application.routes.draw do
 
   get 'images/:id/download', to: 'images#download', as: 'download_image'
 
-  get '/reglas', to: 'info#reglas'
   get '/estadosAlterados', to: 'info#estadosAlterados'
-  get '/avisolegal', to: 'info#avisolegal'
   get '/clases-arbol', to: 'info#arbol'
   get '/get_random_element', to: 'info#get_random_element'
-  get '/newPlayersHelp', to: 'info#newPlayersHelp'
   get '/rangosInfo', to: 'info#rangosInfo'
 
   get '/control', to: 'admin#control'

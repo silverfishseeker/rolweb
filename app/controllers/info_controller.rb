@@ -29,20 +29,11 @@ class InfoController < ApplicationController
         end
     end
 
-    def reglas
-    end
-
     def estadosAlterados
         @xs = Estadoalterado.all
     end
-    
-    def avisolegal
-    end
 
     def arbol
-    end
-
-    def newPlayersHelp
     end
 
     def rangosInfo

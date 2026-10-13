@@ -39,11 +39,11 @@
         <%= cache_fetch("navbar_shared") do capture do %>
 
           <div class="submenu">
-            <a href="/reglas" class="nblink">Información</a>
+            <%= documento_link_to "Información", SystemSetting.instance.reglas_documento, class: "nblink" %>
             <div class="submenu-content">
-                <a href="/reglas">Reglas</a>
+                <%= documento_link_to "Reglas", SystemSetting.instance.reglas_documento %>
                 <a href="/estadosAlterados">Estados Alterados</a>
-                <a href="/newPlayersHelp">Ayuda para nuevos jugadores</a>
+                <%= documento_link_to "Ayuda para nuevos jugadores", SystemSetting.instance.ayuda_documento %>
                 <% if navbar_cache_encyclopedia_tree.nil? %>
                   <a>No existen cuentos</a>
                 <% else %>
@@ -191,7 +191,7 @@
     <footer class="footbar">
       <div> <%# Este div no sobra.%> </div>
       <div>
-        <%= link_to "Información legal", "/avisolegal"%>
+        <%= documento_link_to "Información legal", SystemSetting.instance.avisolegal_documento %>
       </div>
       <div>
         <div class="footbar-admin_button">

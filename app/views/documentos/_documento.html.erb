@@ -1,0 +1,12 @@
+<% if controller.has_level?(:superadmin) %>
+    <div class="admin-actions">
+        <%= link_to "Regresar a documentos", documentos_path, class: "btn btn-primary" %>
+        <%= link_to "Edit", edit_documento_path(@x), class: "btn btn-primary" %>
+    </div>
+<% end %>
+
+<%= documento.toc %>
+
+<div class="texto_info texto_info-margins">
+  <%= documento.html %>
+</div>
