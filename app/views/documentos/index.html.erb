@@ -2,6 +2,8 @@
 
 <h1>Documentos</h1>
 
+<br> <br> <br>
+
 <% @xs.each do |documento| %>
   <%= link_to documento.title, documento %>
   <%= link_to "Destroy", documento_path(documento), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger" %>
@@ -9,4 +11,5 @@
 <% end %>
 <br> <br> <br>
 <%= link_to "Nuevo", new_documento_path, class: "btn btn-primary" %>
+<%= link_to "Volver a configuración del sistema", edit_system_setting_path, class: "btn btn-primary" %>
 

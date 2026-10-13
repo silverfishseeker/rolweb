@@ -31,9 +31,11 @@
     <%= f.collection_select(:avisolegal_documento_id, Documento.all, :id, :title, include_blank: "Ninguno") %>
   </div>
 
-  <div>
-    <%= link_to "Documentos", documentos_path %>
-  </div>
 
   <%= f.submit "Guardar" %>
+  
+  <br><br><br><br>
+  <div>
+    <%= link_to "Documentos", documentos_path, class: "btn btn-primary" %>
+  </div>
 <% end %>

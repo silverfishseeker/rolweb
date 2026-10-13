@@ -2,6 +2,8 @@
 class SystemSettingsController < ApplicationController
   include UnlimitedCache
 
+  configure_access level: :superadmin
+
   def edit
     @setting = SystemSetting.instance
   end

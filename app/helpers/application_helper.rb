@@ -12,6 +12,10 @@ module ApplicationHelper
     yield if controller.has_level? :admin
   end
 
+  def only_superadmin_content
+    yield if controller.has_level? :superadmin
+  end
+
   def documento_link_to(text, documento, **options)
     return text unless documento
     link_to text, documento_path(documento), **options

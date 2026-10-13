@@ -27,8 +27,10 @@
             <%= link_to "vars rango", pj_tipo_rangos_path %>
         <br>
         <%= link_to "Hechizos D&D", dndspells_path %>
-        <br>
-        <%= link_to "Configuración de datos", edit_system_setting_path %>
+        <% only_superadmin_content do %>
+            <br>
+            <%= link_to "Configuración de datos", edit_system_setting_path %>
+        <% end %>
         <br>
         <br>
         <%= link_to "Habilidades ocultas", "/habilidads_ocultas"%>
