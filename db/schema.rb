@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_13_100000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_13_110000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -117,6 +117,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_13_100000) do
     t.string "nombre"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "contextoloots_habilidads", id: false, force: :cascade do |t|
+    t.bigint "contextoloot_id", null: false
+    t.bigint "habilidad_id", null: false
+    t.index ["contextoloot_id", "habilidad_id"], name: "idx_on_contextoloot_id_habilidad_id_8e246f768f"
+    t.index ["habilidad_id", "contextoloot_id"], name: "idx_on_habilidad_id_contextoloot_id_1124e492da"
   end
 
   create_table "contextoloots_items", id: false, force: :cascade do |t|

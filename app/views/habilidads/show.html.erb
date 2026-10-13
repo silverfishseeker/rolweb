@@ -21,10 +21,18 @@
     </div>
 </div>
 
-<% if @x.items.any? %>
+<%
+    item_ids = @x.item_ids
+    @x.contextoloots.each do |cl|
+        item_ids += cl.item_ids
+        cl.categs.each { |categ| item_ids += categ.items.where(usecategloot: true).ids }
+    end
+    item_ids.uniq!
+%>
+<% if item_ids.any? %>
     <h1>Items relacionados:</h1>
     <div class="carta-grid_container">
-        <% @x.items.includes(:clases, :rich_text_efecto).order(:nombre).each do |it| %>
+        <% Item.where(id: item_ids).includes(:clases, :rich_text_efecto).order(:nombre).each do |it| %>
             <%= render "items/item", item: it %>
         <% end %>
     </div>

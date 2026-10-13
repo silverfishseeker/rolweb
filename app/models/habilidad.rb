@@ -9,6 +9,7 @@ class Habilidad < ApplicationRecord
   has_and_belongs_to_many :items
   has_and_belongs_to_many :categs
   has_and_belongs_to_many :mobs
+  has_and_belongs_to_many :contextoloots
   has_many :personajeHasHabilidads, class_name: "Pj::PersonajeHasHabilidad"
 
   scope :hide, ->(secreto=false) { where(oculto: secreto) }
