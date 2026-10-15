@@ -11,7 +11,8 @@ class AdminsessionsController < ApplicationController
       session[:admin] = true
       redirect_to session.delete(:return_to) || root_path, notice: "Sesión iniciada"
     else
-      render :new
+      flash.now[:alert] = "Contraseña incorrecta"
+      render :new, status: :unprocessable_entity
     end
   end
 
