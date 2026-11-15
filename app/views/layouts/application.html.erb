@@ -1,7 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for?(:title) ? "#{yield(:title)} | Varacia" : "Varacia" %></title>
+    <% titulo = content_for?(:title) ? "#{yield(:title)} | Varacia" : "Varacia" %>
+    <title><%= titulo %></title>
+
+    <% descripcion = "Un juego de rol de mesa original de verdad, y gratis. Fácil de aprender y con miles de opciones para crear tu personaje." %>
+    <% imagen = image_url("og-default.png") %>
+    <% alt = "Varacia, juego de rol de mesa original y gratuito. Un guerrero con una espada luminosa junto al título." %>
+    <%= tag.meta name: "description", content: descripcion %>
+    <%= tag.meta property: "og:site_name", content: "Varacia" %>
+    <%= tag.meta property: "og:type", content: "website" %>
+    <%= tag.meta property: "og:locale", content: "es_ES" %>
+    <%= tag.meta property: "og:title", content: titulo %>
+    <%= tag.meta property: "og:description", content: descripcion %>
+    <%= tag.meta property: "og:url", content: "#{request.base_url}#{request.path}" %>
+    <%= tag.meta property: "og:image", content: imagen %>
+    <%= tag.meta property: "og:image:width", content: 1200 %>
+    <%= tag.meta property: "og:image:height", content: 630 %>
+    <%= tag.meta property: "og:image:alt", content: alt %>
+    <%= tag.meta name: "twitter:card", content: "summary_large_image" %>
+    <%= tag.meta name: "twitter:title", content: titulo %>
+    <%= tag.meta name: "twitter:description", content: descripcion %>
+    <%= tag.meta name: "twitter:image", content: imagen %>
+    <%= tag.meta name: "twitter:image:alt", content: alt %>
+
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="google-site-verification" content="vBzitV_gqrvlj-fq7lXP_3VrUQ3XnNW2QhR4wrTBDCQ" />
     <%= csrf_meta_tags %>
