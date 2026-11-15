@@ -5,6 +5,7 @@ import "trix"
 import "@rails/actiontext"
 import "./navbar.js"
 import "./turboStreamActions.js"
+import "./themeColor.js"
 
 Trix.config.blockAttributes.heading1.tagName = "h4"
 
